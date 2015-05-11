@@ -7,16 +7,36 @@
 //
 
 import UIKit
+import AudioToolbox
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    let audioSession = AVAudioSession.sharedInstance()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        //Log.info("Launched")
+        initAudio()
         return true
+    }
+    
+    func initAudio() {
+        var categoryError: NSError?
+        let categorySuccess = audioSession.setCategory(AVAudioSessionCategoryPlayback, error: &categoryError)
+        if(!categorySuccess) {
+            Log.info("Failed to initialize audio category")
+            return
+        }
+        var activationError: NSError?
+        let activationSuccess = audioSession.setActive(true, error: &activationError)
+        if(!activationSuccess) {
+            Log.info("Failed to activate audio session")
+        }
+        Log.info("Audio session initialized.")
     }
 
     func applicationWillResignActive(application: UIApplication) {
