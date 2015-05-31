@@ -10,25 +10,53 @@ import Foundation
 import AudioToolbox
 import AVFoundation
 
-class LocalPlayer: NSObject {
-    
+class LocalPlayer: NSObject, PlayerType {
     static let sharedInstance = LocalPlayer()
     static let statusKeyPath = "status"
     
     private var localPlaylist = LocalPlaylist()
     
-    var playlist: LocalPlaylist { get { return localPlaylist } }
-    
+    var playlist: PlaylistType { get { return localPlaylist } }
     var playerInfo: PlayerInfo? = nil
     var player: AVPlayer? { get { return playerInfo?.player } }
     private var timeObserver: AnyObject? = nil
     private var itemStatusContext = 0
     private var playerStatusContext = 1
     private let notificationCenter = NSNotificationCenter.defaultCenter()
-    let stateEvent = Event<PlayerState>()
+    let stateEvent = Event<PlaybackState>()
     let timeEvent = Event<Float>()
     let trackEvent = Event<Track>()
+    let volumeEvent = Event<Int>()
+    let muteEvent = Event<Bool>()
     
+    func open() {
+        
+    }
+    func close() {
+        
+    }
+    func current() -> PlayerState {
+        let list = localPlaylist.current()
+        let pos = Int(position() ?? 0)
+        return PlayerState(
+            track: playerInfo?.track,
+            state: playbackState(),
+            position: pos,
+            volume: 40,
+            mute: false,
+            playlist: list.tracks,
+            playlistIndex: list.index)
+    }
+    func playbackState() -> PlaybackState {
+        if let p = playerInfo?.player {
+            if (p.error != nil) {
+                return PlaybackState.Unknown
+            }
+            return p.rate > 0 ? .Playing : .Paused
+        } else {
+            return .NoMedia
+        }
+    }
     func play() {
         if let playerInfo = playerInfo {
             // TODO see if we can sync this better by only raising the event after confirmation that the player is playing
@@ -49,7 +77,17 @@ class LocalPlayer: NSObject {
         var posTime = CMTimeMakeWithSeconds(pos64, scale)
         player?.seekToTime(posTime)
     }
+    
     func duration() -> Float? {
+        if let metas = player?.currentItem?.asset?.metadata as? [AVMetadataItem] {
+            for meta: AVMetadataItem in metas {
+                let key = meta.key
+                let value = meta.stringValue
+                let keyStr = key.description
+            }
+        } else {
+            info ("No meta")
+        }
         if let duration = player?.currentItem?.asset?.duration {
             let secs = CMTimeGetSeconds(duration)
             if(secs.isNormal) {
@@ -70,17 +108,17 @@ class LocalPlayer: NSObject {
         }
         return nil
     }
-    func next() -> Track? {
-        return playFromPlaylist({ $0.next() })
+    func next() {
+        playFromPlaylist({ $0.next() })
     }
-    func prev() -> Track? {
-        return playFromPlaylist({ $0.prev() })
+    func prev() {
+        playFromPlaylist({ $0.prev() })
     }
-    func skip(index: Int) -> Track? {
-        return playFromPlaylist({ $0.skip(index) })
+    func skip(index: Int) {
+        playFromPlaylist({ $0.skip(index) })
     }
     private func playFromPlaylist(f: LocalPlaylist -> Track?) -> Track? {
-        if let track = f(playlist) {
+        if let track = f(localPlaylist) {
             closePlayer()
             initAndPlay(track)
             return track
@@ -92,16 +130,13 @@ class LocalPlayer: NSObject {
     }
     func resetAndPlay(tracks: [Track]) {
         closePlayer()
-        playlist.reset(tracks)
+        localPlaylist.reset(tracks)
         if let first = tracks.first {
             initAndPlay(first)
         }
     }
     private func initAndPlay(track: Track) {
-        let urlString = "\(track.url)?u=\(track.username)&p=\(track.password)"
-        info("Playing: \(urlString)")
-        let url = NSURL(string: urlString)
-        let playerItem = AVPlayerItem(URL: url) // , automaticallyLoadedAssetKeys: ["duration"]
+        let playerItem = AVPlayerItem(URL: track.url)
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,

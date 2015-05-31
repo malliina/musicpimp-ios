@@ -13,15 +13,16 @@ class HttpClient {
         let encoded = encodable.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
         return "\(HttpClient.BASIC) \(encoded)"
     }
-    
-    func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: (NSData, NSError) -> Void) {
-        get(url, headers: headers, completionHandler: handlify(onResponse, onError: onError))
+    func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
+        get(NSURL(string: url)!, headers: headers) { (data, response, error) -> Void in
+            if let error = error {
+                onError(RequestFailure(data: data))
+            }
+            if let httpResponse = response as? NSHTTPURLResponse {
+                onResponse(data, httpResponse)
+            }
+        }
     }
-
-    func get(url: String, headers: [String: String] = [:], completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
-        get(NSURL(string: url)!, headers: headers, completionHandler: completionHandler)
-    }
-
     func get(url: NSURL, headers: [String: String] = [:], completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
         executeRequest(
             url,
@@ -33,32 +34,33 @@ class HttpClient {
             },
             completionHandler: completionHandler)
     }
-    
-    func toJson(data: NSData) {
-        //let data = "".dataUsingEncoding(NSUTF8StringEncoding)!
-        var error: NSError?
-        let anyObj: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &error)
+    func postJSON(url: String, headers: [String: String] = [:], payload: AnyObject, onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
         
+        postJSON(NSURL(string: url)!, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
+                if let error = error {
+                    onError(RequestFailure(data: data))
+                }
+                if let httpResponse = response as? NSHTTPURLResponse {
+                    onResponse(data, httpResponse)
+                }
+        }
     }
 
-    func postJSON2(url: String, payload: AnyObject, onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: (NSData, NSError) -> Void) {
-        postJSON(NSURL(string: url)!, jsonObj: payload, completionHandler: handlify(onResponse, onError: onError))
-    }
-
-    func postJSON(url: NSURL, jsonObj: AnyObject, completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
+    func postJSON(url: NSURL, headers: [String: String] = [:], jsonObj: AnyObject, completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
         executeRequest(
             url,
-            f: {
-                (req) -> Void in
+            f: { (req) -> (Void) in
                 req.HTTPMethod = HttpClient.POST
-                req.addValue(HttpClient.JSON, forHTTPHeaderField: HttpClient.ACCEPT)
-                req.addValue(HttpClient.JSON, forHTTPHeaderField: HttpClient.CONTENT_TYPE)
+                for (key, value) in headers {
+                    req.addValue(value, forHTTPHeaderField: key)
+                }
                 var err: NSError?
-                req.HTTPBody = NSJSONSerialization.dataWithJSONObject(jsonObj, options: nil, error: &err)
+                //let isValid = NSJSONSerialization.isValidJSONObject(jsonObj)
+                let body = NSJSONSerialization.dataWithJSONObject(jsonObj, options: nil, error: &err)
+                req.HTTPBody = body
             },
             completionHandler: completionHandler)
     }
-    
     func executeRequest(
         url: NSURL,
         f: NSMutableURLRequest -> Void,
@@ -69,16 +71,5 @@ class HttpClient {
         let task = session.dataTaskWithRequest(req, completionHandler: completionHandler)
         task.resume()
     }
-
-    func handlify(onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: (NSData, NSError) -> Void) -> ((NSData!, NSURLResponse!, NSError!) -> Void)? {
-        return {
-            (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-            if let error = error {
-                onError(data, error)
-            }
-            if let httpResponse = response as? NSHTTPURLResponse {
-                onResponse(data, httpResponse)
-            }
-        }
-    }
 }
+

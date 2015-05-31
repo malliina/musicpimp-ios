@@ -12,4 +12,7 @@ public class Log {
     static func info<T>(msg: T) -> Void {
         println(msg)
     }
+    static func error<T>(msg: T) -> Void {
+        println(msg)
+    }
 }

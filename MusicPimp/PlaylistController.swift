@@ -9,17 +9,12 @@
 import Foundation
 import UIKit
 
-class PlaylistController: UITableViewController {
-    let player = LocalPlayer.sharedInstance
-    
+class PlaylistController: PimpTableController {
     var current: Playlist = Playlist.empty
     var tracks: [Track] { get { return current.tracks } }
     var selected: MusicItem? = nil
     var listeners: [Disposable] = []
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     override func viewWillAppear(animated: Bool) {
         let playlistDisposable = player.playlist.playlistEvent.addHandler(self, handler: { (plc: PlaylistController) -> Playlist -> () in
             plc.onNewPlaylist
@@ -28,8 +23,7 @@ class PlaylistController: UITableViewController {
             plc.onIndexChanged
         })
         listeners = [playlistDisposable, indexDisposable]
-        current = player.playlist.current()
-        renderTable()
+//        onNewPlaylist(player.playlist.current())
     }
     override func viewWillDisappear(animated: Bool) {
         for listener in listeners {
@@ -39,6 +33,7 @@ class PlaylistController: UITableViewController {
     }
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
+        info("New playlist with \(tracks.count) tracks")
         renderTable()
     }
     func onIndexChanged(index: Int?) {
@@ -56,28 +51,20 @@ class PlaylistController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         let index = indexPath.row
-        let tappedItem: MusicItem = tracks[index]
-        if let track = tappedItem as? Track {
-            player.skip(index)
-        }
+//        let tappedItem: Track = items[index]
+        player.skip(index)
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let index = indexPath.row
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+
 //        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         player.playlist.removeIndex(index)
+//        tracks = current.tracks
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tracks.count
-    }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    func renderTable() {
-        Util.onUiThread({ () in self.tableView.reloadData()})
-    }
-    func info(s: String){
-        Log.info(s)
     }
 }

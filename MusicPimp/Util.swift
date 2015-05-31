@@ -16,4 +16,15 @@ class Util {
             ()
         })
     }
+    class func urlDecode(s: String) -> String {
+        let unplussed = s.stringByReplacingOccurrencesOfString("+", withString: " ")
+        return unplussed.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? unplussed
+    }
+    class func urlEncode(s: String) -> String {
+        let plussed = s.stringByReplacingOccurrencesOfString(" ", withString: "+")
+        return plussed.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? plussed
+    }
+    class func test() {
+        let ws = SRWebSocket()
+    }
 }

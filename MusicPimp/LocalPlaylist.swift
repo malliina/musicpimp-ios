@@ -8,13 +8,11 @@
 
 import Foundation
 
-class LocalPlaylist {
+class LocalPlaylist: BasePlaylist, PlaylistType {
     static let sharedInstance = LocalPlaylist()
     
     private var ts: [Track] = []
     private var p: Int? = nil
-    let indexEvent = Event<Int?>()
-    let playlistEvent = Event<Playlist>()
     
     func current() -> Playlist {
         return Playlist(tracks: ts, index: p)
@@ -31,7 +29,6 @@ class LocalPlaylist {
     func next() -> Track? {
         return positionTransform({$0 + 1})
     }
-    
     func prev() -> Track? {
         return positionTransform({$0 - 1})
     }
@@ -46,9 +43,10 @@ class LocalPlaylist {
     }
     func reset(tracks: [Track]) {
         ts = tracks
-        playlistUpdated()
         p = ts.count > 0 ? 0 : nil
+        playlistUpdated()
         indexEvent.raise(p)
+        onTracksAdded(tracks)
     }
     func add(track: Track) {
         add([track])
@@ -56,6 +54,12 @@ class LocalPlaylist {
     func add(tracks: [Track]) {
         ts.extend(tracks)
         playlistUpdated()
+        onTracksAdded(tracks)
+    }
+    private func onTracksAdded(ts: [Track]) {
+        for track in ts {
+            trackAdded.raise(track)
+        }
     }
     func removeIndex(index: Int) {
         ts.removeAtIndex(index)

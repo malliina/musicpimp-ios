@@ -10,7 +10,7 @@ import Foundation
 class PimpJson {
     static let sharedInstance = PimpJson()
     
-    static let ID = "id", SERVER_TYPE = "serverType", NAME = "name", PROTO = "proto", ADDRESS = "address", PORT = "port", USERNAME = "username", PASSWORD = "password"
+    static let ID = "id", SERVER_TYPE = "serverType", NAME = "name", PROTO = "proto", ADDRESS = "address", PORT = "port", USERNAME = "username", PASSWORD = "password", SSL = "ssl"
     
     func jsonStringified(e: Endpoint) -> String? {
         return stringify(toJson(e))
@@ -21,7 +21,7 @@ class PimpJson {
             PimpJson.ID: e.id,
             PimpJson.SERVER_TYPE: e.serverType.rawValue,
             PimpJson.NAME: e.name,
-            PimpJson.PROTO: e.proto.rawValue,
+            PimpJson.SSL: e.ssl,
             PimpJson.ADDRESS: e.address,
             PimpJson.PORT:  e.port,
             PimpJson.USERNAME: e.username,
@@ -33,12 +33,12 @@ class PimpJson {
         if let id = dict[PimpJson.ID] as? String {
             if let serverType = dict[PimpJson.SERVER_TYPE] as? String {
                 if let name = dict[PimpJson.NAME] as? String {
-                    if let proto = dict[PimpJson.PROTO] as? String {
+                    if let ssl = dict[PimpJson.SSL] as? Bool {
                         if let address = dict[PimpJson.ADDRESS] as? String {
                             if let port = dict[PimpJson.PORT] as? Int {
                                 if let user = dict[PimpJson.USERNAME] as? String {
                                     if let pass = dict[PimpJson.PASSWORD] as? String {
-                                        return Endpoint(id: id, serverType: ServerType(rawValue: serverType)!, name: name, proto: Protocol(rawValue: proto)!, address: address, port: port, username: user, password: pass)
+                                        return Endpoint(id: id, serverType: ServerType(rawValue: serverType)!, name: name, ssl: ssl, address: address, port: port, username: user, password: pass)
                                     }
                                 }
                             }

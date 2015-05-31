@@ -1,5 +1,5 @@
 //
-//  ItemsViewController.swift
+//  LibraryController.swift
 //  MusicPimp
 //
 //  Created by Michael Skogberg on 02/03/15.
@@ -9,41 +9,46 @@
 import Foundation
 import UIKit
 
-class ItemsViewController: MusicItemsController {
+class LibraryController: PimpTableController {
     static let LIBRARY = "library", PLAYER = "player"
-    let client = PimpHttpClient(baseURL: "http://localhost:8456", username: "mle", password: "mac")
     
     var musicItems: [MusicItem] = []
     var selected: MusicItem? = nil
     
+    private var socket: PimpSocket? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let folderId = selected?.id ?? "root"
-//        Log.info("Loading: \(folderId)")
         if let folderID = selected?.id {
             loadFolder(folderID)
         } else {
             loadRoot()
         }
+        LibraryManager.sharedInstance.libraryChanged.addHandler(self, handler: { (ivc) -> LibraryType -> () in
+            ivc.onLibraryChanged
+        })
+    }
+    func onLibraryChanged(e: LibraryType) {
+        if let navController = navigationController {
+            navController.popToRootViewControllerAnimated(false)
+            loadRoot()
+        }
     }
     func loadFolder(id: String) {
-        client.folder(id, f: onFolder)
+        library.folder(id, onError: onError, f: onFolder)
     }
     func loadRoot() {
-        client.rootFolder(onFolder)
+        library.rootFolder(onError, f: onFolder)
     }
     func onFolder(f: MusicFolder) {
+        //info("Loaded \(f.folder.title) with \(f.tracks.count) tracks")
         let fs: [MusicItem] = f.folders
         let ts: [MusicItem] = f.tracks
         let items: [MusicItem] = fs + ts
         musicItems = items
         renderTable()
     }
-    func renderTable() {
-       Util.onUiThread({ () in self.tableView.reloadData()})
-    }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+    func onError(error: PimpError) {
+        info(PimpErrorUtil.stringify(error))
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.musicItems.count
@@ -73,37 +78,35 @@ class ItemsViewController: MusicItemsController {
         return [addAction]
     }
     func addFolder(id: String) {
-        client.tracks(id, f: addTracks)
+        library.tracks(id, onError: onError, f: addTracks)
     }
     func addTracks(tracks: [Track]) {
-        LocalPlayer.sharedInstance.playlist.add(tracks)
-    }
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.Right:
-                println("Swiped right")
-            case UISwipeGestureRecognizerDirection.Down:
-                println("Swiped down")
-            default:
-                break
+        player.playlist.add(tracks)
+        if(!library.isLocal) {
+            for track in tracks.take(10) {
+                startDownload(track)
             }
-        }    }
-    
+        }
+    }
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         let tappedItem: MusicItem = musicItems[indexPath.row]
         if let track = tappedItem as? Track {
-            LocalPlayer.sharedInstance.resetAndPlay(track)
+            player.resetAndPlay(track)
+            if(!library.isLocal) {
+                startDownload(track)
+            }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
-    
+    private func startDownload(track: Track) {
+        Downloader.musicDownloader.download(track.url, relativePath: track.path)
+    }
     // Performs segue if the user clicked a folder
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
-        if identifier == ItemsViewController.LIBRARY {
+        if identifier == LibraryController.LIBRARY {
             if let row = self.tableView.indexPathForSelectedRow() {
                 var index = row.item
                 return musicItems.count > index && musicItems[index] is Folder
@@ -120,7 +123,7 @@ class ItemsViewController: MusicItemsController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let navController = segue.destinationViewController as? UINavigationController {
             let destController: AnyObject = navController.viewControllers[0]
-            if let itemsController = destController as? ItemsViewController {
+            if let itemsController = destController as? LibraryController {
                 var row = self.tableView.indexPathForSelectedRow()!
                 var item = musicItems[row.item]
                 itemsController.selected = item
@@ -136,14 +139,13 @@ class ItemsViewController: MusicItemsController {
     
     @IBAction func unwindToItems(segue: UIStoryboardSegue) {
         Log.info("Unwinding")
-        if let id = (segue.sourceViewController as? ItemsViewController)?.selected?.id {
+        if let id = (segue.sourceViewController as? LibraryController)?.selected?.id {
             loadFolder(id)
         } else {
             loadRoot()
         }
-        if let previous = segue.sourceViewController as? ItemsViewController {
+        if let previous = segue.sourceViewController as? LibraryController {
             let title = previous.selected?.title
         }
     }
-    
 }

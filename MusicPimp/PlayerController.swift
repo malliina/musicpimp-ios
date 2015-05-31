@@ -12,7 +12,14 @@ import UIKit
 class PlayerController: UIViewController {
     let defaultDuration = Float(100)
     let defaultPosition = Float(0)
-    var player = LocalPlayer.sharedInstance
+    var playerManager: PlayerManager { get { return PlayerManager.sharedInstance } }
+    var player: PlayerType { get { return playerManager.active } }
+    
+    @IBOutlet var titleLabel: UILabel!
+    
+    @IBOutlet var albumLabel: UILabel!
+    
+    @IBOutlet var artistLabel: UILabel!
     
     @IBOutlet var playPause: UIButton!
     
@@ -24,30 +31,56 @@ class PlayerController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
+            pc.onNewPlayer
+        })
     }
     override func viewWillAppear(animated: Bool) {
-        let listener = player.timeEvent.addHandler(self, handler: { (pc) -> Float -> () in
-            pc.onTimeUpdated
-        })
-        let trackListener = player.trackEvent.addHandler(self, handler: { (pc) -> Track -> () in
-            pc.updateTrack
-        })
-        if let track = player.playerInfo?.track {
+        listen(player)
+        let current = player.current()
+        if let track = current.track {
             updateTrack(track)
+            seek.value = Float(current.position)
+        } else {
+            updateNoMedia()
         }
-        listeners = [listener, trackListener]
     }
     override func viewDidDisappear(animated: Bool) {
+        unlisten()
+    }
+    func onNewPlayer(newPlayer: PlayerType) {
+        unlisten()
+        listen(newPlayer)
+    }
+    private func listen(targetPlayer: PlayerType) {
+        let listener = targetPlayer.timeEvent.addHandler(self, handler: { (pc) -> Float -> () in
+            pc.onTimeUpdated
+        })
+        let trackListener = targetPlayer.trackEvent.addHandler(self, handler: { (pc) -> Track -> () in
+            pc.updateTrack
+        })
+        listeners = [listener, trackListener]
+
+    }
+    private func unlisten() {
         for listener in listeners {
             listener.dispose()
         }
         listeners = []
     }
+    private func updateNoMedia() {
+        seek.value = defaultPosition
+        seek.maximumValue = defaultDuration
+        titleLabel.text = "No track"
+        albumLabel.text = ""
+        artistLabel.text = ""
+    }
     private func updateTrack(track: Track) {
-        let duration = player.duration() ?? defaultDuration
-        seek.maximumValue = duration
-        let position = player.position() ?? defaultPosition
-        seek.setValue(position, animated: true)
+        seek.value = Float(0)
+        seek.maximumValue = Float(track.duration)
+        titleLabel.text = track.title
+        albumLabel.text = track.album
+        artistLabel.text = track.artist
     }
     private func onTimeUpdated(position: Float) {
         seek.setValue(position, animated: true)

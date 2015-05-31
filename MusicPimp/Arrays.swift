@@ -16,7 +16,8 @@ extension Array {
         return Array(self[1..<self.count])
     }
     func take(n: Int) -> [T] {
-        return Array(self[0..<n])
+        let to = min(n, self.count)
+        return Array(self[0..<to])
     }
     func drop(n: Int) -> [T] {
         return Array(self[n..<self.count])
@@ -35,4 +36,30 @@ extension Array {
         }
         return nil
     }
+    func flatMapOpt<U>(f: T -> U?) -> [U] {
+        return self.map({ f($0) }).filter({ $0 != nil}).map({ $0! })
+    }
+    func partition(f: T -> Bool) -> ([T], [T]) {
+        var trues: [T] = []
+        var falses: [T] = []
+        for item in self {
+            if f(item) {
+                trues.append(item)
+            } else {
+                falses.append(item)
+            }
+        }
+        return (trues, falses)
+    }
+//    func mkString(sep: String) -> String {
+//        var ret = ""
+//        for (idx, element) in enumerate(self) {
+//            ret += element
+//            let isLast = idx == self.count-1
+//            if !isLast {
+//                ret += sep
+//            }
+//        }
+//        return ret
+//    }
 }
