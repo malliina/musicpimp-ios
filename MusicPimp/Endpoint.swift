@@ -9,7 +9,7 @@
 import Foundation
 
 class Endpoint: Printable {
-    static let Local = Endpoint(id: "local", serverType: .MusicPimp, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")
+    static let Local = Endpoint(id: "local", serverType: ServerTypes.Local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")
     
     let id: String
     let serverType: ServerType
@@ -29,6 +29,37 @@ class Endpoint: Printable {
         self.port = port
         self.username = username
         self.password = password
+    }
+    init(id: String, cloudID: String, username: String, password: String) {
+        self.id = id
+        self.serverType = ServerTypes.Cloud
+        self.name = cloudID
+        self.ssl = true
+        self.address = "cloud.musicpimp.org"
+        self.port = 443
+        self.username = username
+        self.password = password
+    }
+    
+    // TODO polymorphism
+    
+    var authHeader: String {
+        get {
+            if serverType.isCloud {
+                return HttpClient.authHeader("Pimp", unencoded: "\(name):\(username):\(password)")
+            } else {
+                return HttpClient.authHeader("Basic", unencoded: "\(username):\(password)")
+            }
+        }
+    }
+    var authQueryString: String {
+        get {
+            if serverType.isCloud {
+                return "s=\(name)&u=\(username)&p=\(password)"
+            } else {
+                return "u=\(username)&p=\(password)"
+            }
+        }
     }
     
     var description: String { get { return "Endpoint \(name) at \(username)@\(httpBaseUrl)" } }

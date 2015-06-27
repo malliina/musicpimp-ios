@@ -9,20 +9,24 @@
 import Foundation
 
 class PimpPlaylist: BasePlaylist, PlaylistType {
-    let client: PimpHttpClient
-    let helper: PimpEndpoint
-    init(client: PimpHttpClient) {
-        self.client = client
-        self.helper = PimpEndpoint(client: client)
+    //let client: PimpHttpClient
+    //let helper: PimpEndpoint
+    let socket: PimpSocket
+    init(socket: PimpSocket) {
+        self.socket = socket
+        //self.client = client
+        //self.helper = PimpEndpoint(endpoint: endpoint, client: client)
     }
-    func skip(index: Int) {
-        helper.postValued(JsonKeys.SKIP, value: index)
+    func skip(index: Int) {1
+        socket.send(PimpEndpoint.valuedCommand(JsonKeys.SKIP, value: index))
+        //helper.postValued(JsonKeys.SKIP, value: index)
     }
     func add(track: Track) {
-        helper.postDict([
+        let payload = [
             JsonKeys.CMD: JsonKeys.ADD,
             JsonKeys.TRACK: track.id
-        ])
+        ]
+        socket.send(payload)
     }
     func add(tracks: [Track]) {
         for track in tracks {
@@ -30,30 +34,7 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
         }
     }
     func removeIndex(index: Int) {
-        helper.postValued(JsonKeys.REMOVE, value: index)
-    }
-    private func parseStatus(obj: AnyObject) -> PlayerState? {
-        if let dict = obj as? NSDictionary {
-            if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary {
-                let trackOpt = helper.parseTrack(trackDict)
-                if let stateName = dict[JsonKeys.STATE] as? String {
-                    if let state = PlaybackState(rawValue: stateName) {
-                        if let position = dict[JsonKeys.POSITION] as? Int {
-                            if let mute = dict[JsonKeys.MUTE] as? Bool {
-                                if let volume = dict[JsonKeys.VOLUME] as? Int {
-                                    if let playlist = dict[JsonKeys.PLAYLIST] as? [NSDictionary] {
-                                        let tracks = playlist.flatMapOpt(helper.parseTrack)
-                                        if let playlistIndex = dict[JsonKeys.PLAYLIST_INDEX] as? Int {
-                                            return PlayerState(track: trackOpt, state: state, position: position, volume: volume, mute: mute, playlist: tracks, playlistIndex: playlistIndex)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return nil
+        let payload = PimpEndpoint.valuedCommand(JsonKeys.REMOVE, value: index)
+        socket.send(payload)
     }
 }

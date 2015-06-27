@@ -20,23 +20,25 @@ class Endpoints {
 
 class PimpHttpClient: HttpClient {
     let baseURL: String
-    let username: String
-    let password: String
+    //let username: String
+    //let password: String
     let defaultHeaders: [String: String]
     let postHeaders: [String: String]
     
-    init(baseURL: String, username: String, password: String) {
+    static let PIMP_VERSION_18 = "application/vnd.musicpimp.v18+json"
+    
+    init(baseURL: String, authValue: String) {
         if(baseURL.endsWith("/")) {
             self.baseURL = baseURL.dropLast()
         } else {
             self.baseURL = baseURL
         }
-        self.username = username
-        self.password = password
-        let authValue = HttpClient.basicAuthValue(username, password: password)
+        //self.username = username
+        //self.password = password
+        //let authValue = HttpClient.basicAuthValue(username, password: password)
         let headers = [
             HttpClient.AUTHORIZATION: authValue,
-            HttpClient.ACCEPT: HttpClient.JSON
+            HttpClient.ACCEPT: PimpHttpClient.PIMP_VERSION_18
         ]
         self.defaultHeaders = headers
         var postHeaders = headers
@@ -70,7 +72,7 @@ class PimpHttpClient: HttpClient {
             baseURL + resource,
             headers: defaultHeaders,
             onResponse: { (data, response) -> Void in
-                self.responseHandler(data, response: response, f: f, onError: onError)
+                self.responseHandler(resource, data: data, response: response, f: f, onError: onError)
             },
             onError: { (err) -> Void in
                 onError(.NetworkFailure(err))
@@ -82,13 +84,13 @@ class PimpHttpClient: HttpClient {
             headers: postHeaders,
             payload: payload,
             onResponse: { (data, response) -> Void in
-                self.responseHandler(data, response: response, f: f, onError: onError)
+                self.responseHandler(resource, data: data, response: response, f: f, onError: onError)
             },
             onError: { (err) -> Void in
                 onError(.NetworkFailure(err))
             })
     }
-    func responseHandler(data: NSData, response: NSHTTPURLResponse, f: NSData -> Void, onError: PimpError -> Void) {
+    func responseHandler(resource: String, data: NSData, response: NSHTTPURLResponse, f: NSData -> Void, onError: PimpError -> Void) {
         let statusCode = response.statusCode
         let isStatusOK = (statusCode >= 200) && (statusCode < 300)
         if isStatusOK {
@@ -98,7 +100,7 @@ class PimpHttpClient: HttpClient {
             if let json = Json.asJson(data, error: nil) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
-            onError(.ResponseFailure(statusCode, errorMessage))
+            onError(.ResponseFailure(resource, statusCode, errorMessage))
         }
     }
     func onRequestError(data: NSData, error: NSError) -> Void {

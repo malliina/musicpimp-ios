@@ -17,5 +17,16 @@ class Json {
     static func asJson(data: NSData, error: NSErrorPointer) -> AnyObject? {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: error)
     }
-
+    static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
+        return stringify(value, prettyPrinted: prettyPrinted)
+    }
+    private static func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
+        var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
+        if NSJSONSerialization.isValidJSONObject(value) {
+            if let data = NSJSONSerialization.dataWithJSONObject(value, options: options, error: nil) {
+                return NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+            }
+        }
+        return nil
+    }
 }

@@ -8,9 +8,9 @@
 
 import Foundation
 
-class PlayerState {
+class PlayerStateClass {
     
-    static let empty = PlayerState(track: nil, state: .NoMedia, position: 0, volume: 40, mute: false, playlist: [], playlistIndex: nil)
+    static let empty = PlayerStateClass(track: nil, state: .NoMedia, position: 0, volume: 40, mute: false, playlist: [], playlistIndex: nil)
     
     let track: Track?
     let state: PlaybackState
@@ -19,6 +19,8 @@ class PlayerState {
     let mute: Bool
     let playlist: [Track]
     let playlistIndex: Int?
+    
+    var isPlaying: Bool { get { return state == .Playing } }
     
     init(track: Track?, state: PlaybackState, position: Int, volume: Int, mute: Bool, playlist: [Track], playlistIndex: Int?) {
         self.track = track
@@ -29,4 +31,15 @@ class PlayerState {
         self.playlist = playlist
         self.playlistIndex = playlistIndex
     }
+}
+struct PlayerState {
+    static let empty = PlayerState(track: nil, state: .NoMedia, position: UInt(0).seconds, volume: 40, mute: false, playlist: [], playlistIndex: nil)
+    var track: Track?
+    var state: PlaybackState
+    var position: Duration
+    var volume: Int
+    var mute: Bool
+    var playlist: [Track]
+    var playlistIndex: Int?
+    var isPlaying: Bool { get { return state == .Playing } }
 }

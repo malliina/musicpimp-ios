@@ -10,19 +10,34 @@ import Foundation
 
 enum PimpError {
     case ParseError
-    case ResponseFailure(Int, String?)
+    case ResponseFailure(String, Int, String?)
     case NetworkFailure(RequestFailure)
     case SimpleError(ErrorMessage)
 }
 class PimpErrorUtil {
     static func stringify(error: PimpError) -> String {
         switch error {
-        case .ParseError: return "Parse error"
-        case .ResponseFailure(let code, let message):
-            let msg = message ?? "none"
-            return "Invalid code: \(code), message: \(msg)"
-        case .NetworkFailure(let failure): return "Network failure"
-        case .SimpleError(let message): return message.message
+        case .ParseError:
+            return "Parse error"
+        case .ResponseFailure(let resource, let code, let message):
+            switch code {
+            case 400: // Bad Request
+                return "A network request was rejected"
+            case 401:
+                return "Check your username/password"
+            case 404:
+                return "Resource not found: \(resource)"
+            default:
+                if let message = message {
+                    return "Error code: \(code), message: \(message)"
+                } else {
+                    return "Error code: \(code)"
+                }
+            }
+        case .NetworkFailure(let failure):
+            return "Unable to connect"
+        case .SimpleError(let message):
+            return message.message
         }
     }
 }

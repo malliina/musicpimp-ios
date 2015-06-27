@@ -8,87 +8,103 @@
 
 import Foundation
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
-//    class Endpoints {
-//        static let PLAYBACK = "/playback"
-//    }
-    let endpoint: Endpoint
+    var isLocal: Bool { get { return false } }
     let stateEvent = Event<PlaybackState>()
-    let timeEvent = Event<Float>()
-    let trackEvent = Event<Track>()
+    let timeEvent = Event<Duration>()
+    let trackEvent = Event<Track?>()
     let volumeEvent = Event<Int>()
     let muteEvent = Event<Bool>()
 
     let playlist: PlaylistType
+    let socket: PimpSocket
     
     private var currentState = PlayerState.empty
     
-    var socket: PimpSocket? = nil
-    
     init(e: Endpoint) {
-        self.endpoint = e
-        let client = PimpHttpClient(baseURL: e.httpBaseUrl, username: e.username, password: e.password)
-        self.playlist = PimpPlaylist(client: client)
-        super.init(client: client)
+        let client = PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader)
+        self.socket = PimpSocket(baseURL: e.wsBaseUrl + Endpoints.WS_PLAYBACK, authValue: e.authHeader)
+        self.playlist = PimpPlaylist(socket: self.socket)
+        super.init(endpoint: e, client: client)
     }
-    // idempotent
     func open() {
-        if self.socket == nil {
-            self.socket = PimpSocket(baseURL: endpoint.wsBaseUrl + Endpoints.WS_PLAYBACK, username: endpoint.username, password: endpoint.password, delegate: self)
-            self.socket?.open()
-        }
+        self.socket.delegate = self
+        self.socket.open()
     }
     func close() {
-        self.socket?.close()
-        self.socket = nil
+        //self.socket.delegate = nil
+        self.socket.close()
     }
     func current() -> PlayerState {
         return currentState
     }
     func resetAndPlay(track: Track) {
-        postDict([
+        socket.send([
             JsonKeys.CMD: JsonKeys.PLAY,
             JsonKeys.TRACK: track.id
         ])
     }
     func play() {
-        postPlayback(JsonKeys.RESUME)
+        sendSimple(JsonKeys.RESUME)
     }
     func pause() {
-        postPlayback(JsonKeys.STOP)
+        sendSimple(JsonKeys.STOP)
     }
-    func seek(position: Float) {
-        postValued(JsonKeys.SEEK, value: position)
+    func seek(position: Duration) {
+        sendValued(JsonKeys.SEEK, value: Int(position.seconds))
     }
     func next() {
-        postPlayback(JsonKeys.NEXT)
+        sendSimple(JsonKeys.NEXT)
     }
     func prev() {
-        postPlayback(JsonKeys.PREV)
+        sendSimple(JsonKeys.PREV)
     }
     func skip(index: Int) {
-        postValued(JsonKeys.SKIP, value: index)
+        sendValued(JsonKeys.SKIP, value: index)
     }
-    func onTimeUpdated(pos: Int) {
-        timeEvent.raise(Float(pos))
+    func sendValued(cmd: String, value: AnyObject) {
+        let payload = PimpEndpoint.valuedCommand(cmd, value: value)
+        socket.send(payload)
+    }
+    func sendSimple(cmd: String) {
+        let payload = PimpEndpoint.simpleCommand(cmd)
+        socket.send(payload)
+    }
+    func onTimeUpdated(pos: Duration) {
+        currentState.position = pos
+        timeEvent.raise(pos)
     }
     func onTrackChanged(track: Track?) {
-        if let track = track {
-            trackEvent.raise(track)
-        }
+        currentState.track = track
+        trackEvent.raise(track)
     }
     func onMuteToggled(mute: Bool) {
+        currentState.mute = mute
         muteEvent.raise(mute)
     }
     func onVolumeChanged(volume: Int) {
+        currentState.volume = volume
         volumeEvent.raise(volume)
     }
     func onStateChanged(state: PlaybackState) {
+        currentState.state = state
         stateEvent.raise(state)
     }
     func onIndexChanged(index: Int?) {
+        currentState.playlistIndex = index
         playlist.indexEvent.raise(index)
     }
     func onPlaylistModified(tracks: [Track]) {
+        currentState.playlist = tracks
         playlist.playlistEvent.raise(Playlist(tracks: tracks, index: currentState.playlistIndex))
+    }
+    func onState(state: PlayerState) {
+        currentState = state
+        onPlaylistModified(state.playlist)
+        onIndexChanged(state.playlistIndex)
+        onTrackChanged(state.track)
+        onMuteToggled(state.mute)
+        onVolumeChanged(state.volume)
+        onTimeUpdated(state.position)
+        onStateChanged(state.state)
     }
 }

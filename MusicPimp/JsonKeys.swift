@@ -37,6 +37,7 @@ class JsonKeys {
     VOLUME = "volume",
     PLAYLIST = "playlist",
     PLAYLIST_INDEX = "playlist_index",
+    INDEX="index",
     ADD = "add",
     REMOVE = "remove",
     ERROR = "error",
@@ -49,5 +50,6 @@ class JsonKeys {
     MUTE_TOGGLED = "mute_toggled",
     VOLUME_CHANGED = "volume_changed",
     WELCOME = "welcome",
-    PING = "ping"
+    PING = "ping",
+    STATUS = "status"
 }

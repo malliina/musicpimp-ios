@@ -15,7 +15,7 @@ class BaseTableController: UITableViewController {
         return 1
     }
     func renderTable() {
-        Util.onUiThread({ () in self.tableView.reloadData()})
+        Util.onUiThread({ () in self.tableView.reloadData() })
     }
     func info(s: String){
         Log.info(s)

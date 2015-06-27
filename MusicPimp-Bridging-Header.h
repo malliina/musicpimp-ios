@@ -10,5 +10,8 @@
 #define MusicPimp_SocketRocket_Bridging_Header_h
 
 #import "SocketRocket/SRWebSocket.h"
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
+#import "UIImage+FontAwesome.h"
 
 #endif

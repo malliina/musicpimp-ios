@@ -8,11 +8,21 @@ import Foundation
 class HttpClient {
     static let JSON = "application/json", CONTENT_TYPE = "Content-Type", ACCEPT = "Accept", GET = "GET", POST = "POST", AUTHORIZATION = "Authorization", BASIC = "Basic"
 
-    static func basicAuthValue(username:String, password:String) -> String {
+    static func basicAuthValue(username: String, password: String) -> String {
         let encodable = "\(username):\(password)"
-        let encoded = encodable.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+        let encoded = encodeBase64(encodable)
         return "\(HttpClient.BASIC) \(encoded)"
     }
+    
+    static func authHeader(word: String, unencoded: String) -> String {
+        let encoded = HttpClient.encodeBase64(unencoded)
+        return "\(word) \(encoded)"
+    }
+    
+    static func encodeBase64(unencoded: String) -> String {
+        return unencoded.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+    }
+    
     func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
         get(NSURL(string: url)!, headers: headers) { (data, response, error) -> Void in
             if let error = error {

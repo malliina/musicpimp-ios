@@ -8,7 +8,9 @@
 
 import Foundation
 class PimpLibrary: PimpEndpoint, LibraryType {
+    
     var isLocal: Bool { get { return false } }
+    
     func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         client.pingAuth(onError, f: f)
     }
@@ -34,39 +36,33 @@ class PimpLibrary: PimpEndpoint, LibraryType {
             }
         }
     }
-    func parseMusicFolder(obj: AnyObject) -> MusicFolder? {
-        if let dict = obj as? NSDictionary {
-            if let folderJSON = dict[JsonKeys.FOLDER] as? NSDictionary {
-                if let foldersJSON = dict[JsonKeys.FOLDERS] as? NSArray {
-                    if let tracksJSON = dict[JsonKeys.TRACKS] as? NSArray {
-                        if let root = parseFolder(folderJSON) {
-                            if let foldObjects = foldersJSON as? [NSDictionary] {
-                                let folders: [Folder] = foldObjects.flatMapOpt(parseFolder)
-                                if let trackObjects = tracksJSON as? [NSDictionary] {
-                                    let tracks: [Track] = trackObjects.flatMapOpt(parseTrack)
-                                    return MusicFolder(folder: root, folders: folders, tracks: tracks)
-                                }
-                                
-                            }
-                        }
-                    }
-                }
-            }
+    func parseFolder(obj: NSDictionary) -> Folder? {
+        if let id = obj[JsonKeys.ID] as? String,
+            title = obj[JsonKeys.TITLE] as? String,
+            path = obj[JsonKeys.PATH] as? String {
+                return Folder(
+                    id: id,
+                    title: title,
+                    path: path)
         }
-        Log.info("Unable to parse \(obj) as music folder")
         return nil
     }
-    func parseFolder(obj: NSDictionary) -> Folder? {
-        if let id = obj[JsonKeys.ID] as? String {
-            if let title = obj[JsonKeys.TITLE] as? String {
-                if let path = obj[JsonKeys.PATH] as? String {
-                    return Folder(
-                        id: id,
-                        title: title,
-                        path: path)
+
+    func parseMusicFolder(obj: AnyObject) -> MusicFolder? {
+        if let dict = obj as? NSDictionary,
+            folderJSON = dict[JsonKeys.FOLDER] as? NSDictionary,
+            foldersJSON = dict[JsonKeys.FOLDERS] as? NSArray,
+            tracksJSON = dict[JsonKeys.TRACKS] as? NSArray,
+            root = parseFolder(folderJSON) {
+                if let foldObjects = foldersJSON as? [NSDictionary] {
+                    let folders: [Folder] = foldObjects.flatMapOpt(parseFolder)
+                    if let trackObjects = tracksJSON as? [NSDictionary] {
+                        let tracks: [Track] = trackObjects.flatMapOpt(parseTrack)
+                        return MusicFolder(folder: root, folders: folders, tracks: tracks)
+                    }
                 }
-            }
         }
+        Log.info("Unable to parse \(obj) as music folder")
         return nil
     }
 }

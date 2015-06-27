@@ -9,7 +9,7 @@
 import Foundation
 
 class Util {
-    class func onUiThread(f: () -> Any) {
+    class func onUiThread(f: () -> Void) {
         dispatch_async(dispatch_get_main_queue(), {
             () -> Void in
             f()

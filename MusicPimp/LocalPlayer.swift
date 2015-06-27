@@ -14,6 +14,8 @@ class LocalPlayer: NSObject, PlayerType {
     static let sharedInstance = LocalPlayer()
     static let statusKeyPath = "status"
     
+    var isLocal: Bool { get { return true } }
+    
     private var localPlaylist = LocalPlaylist()
     
     var playlist: PlaylistType { get { return localPlaylist } }
@@ -24,8 +26,8 @@ class LocalPlayer: NSObject, PlayerType {
     private var playerStatusContext = 1
     private let notificationCenter = NSNotificationCenter.defaultCenter()
     let stateEvent = Event<PlaybackState>()
-    let timeEvent = Event<Float>()
-    let trackEvent = Event<Track>()
+    let timeEvent = Event<Duration>()
+    let trackEvent = Event<Track?>()
     let volumeEvent = Event<Int>()
     let muteEvent = Event<Bool>()
     
@@ -37,7 +39,7 @@ class LocalPlayer: NSObject, PlayerType {
     }
     func current() -> PlayerState {
         let list = localPlaylist.current()
-        let pos = Int(position() ?? 0)
+        let pos = position() ?? Duration.Zero
         return PlayerState(
             track: playerInfo?.track,
             state: playbackState(),
@@ -70,15 +72,15 @@ class LocalPlayer: NSObject, PlayerType {
             stateEvent.raise(.Paused)
         }
     }
-    func seek(position: Float) {
+    func seek(position: Duration) {
         // fucking hell
-        var scale: Int32 = 1;
-        var pos64 = Float64(position)
+        var scale: Int32 = 1
+        var pos64 = Float64(position.seconds)
         var posTime = CMTimeMakeWithSeconds(pos64, scale)
         player?.seekToTime(posTime)
     }
     
-    func duration() -> Float? {
+    func duration() -> Duration? {
         if let metas = player?.currentItem?.asset?.metadata as? [AVMetadataItem] {
             for meta: AVMetadataItem in metas {
                 let key = meta.key
@@ -91,20 +93,22 @@ class LocalPlayer: NSObject, PlayerType {
         if let duration = player?.currentItem?.asset?.duration {
             let secs = CMTimeGetSeconds(duration)
             if(secs.isNormal) {
-                return Float(secs)
+                return secs.seconds
             }
         }
-        if let duration = playerInfo?.track.duration {
-            let secs = Float(duration)
-            if(secs.isNormal) {
-                return secs
-            }
-        }
-        return nil
+        return playerInfo?.track.duration
+        //if let duration = playerInfo?.track.duration {
+            //let secs = Float(duration)
+            //if(secs.isNormal) {
+              //  return secs.seconds
+            //}
+       //     return duration
+       // }
+        //return nil
     }
-    func position() -> Float? {
+    func position() -> Duration? {
         if let currentTime = player?.currentTime() {
-            return Float(CMTimeGetSeconds(currentTime))
+            return Float(CMTimeGetSeconds(currentTime)).seconds
         }
         return nil
     }
@@ -136,6 +140,7 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     private func initAndPlay(track: Track) {
+        //info("Playing \(track.title)")
         let playerItem = AVPlayerItem(URL: track.url)
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
@@ -152,8 +157,11 @@ class LocalPlayer: NSObject, PlayerType {
         trackEvent.raise(track)
         timeObserver = player?.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(1, 1), queue: dispatch_get_main_queue()) { (time) -> Void in
             let secs = CMTimeGetSeconds(time)
-            let secsFloat = Float(secs)
-            self.timeEvent.raise(secsFloat)
+            if let duration = secs.seconds {
+                self.timeEvent.raise(duration)
+            } else {
+                Log.info("Unable to convert time to Duration: \(secs)")
+            }
         }
         play()
     }
@@ -170,7 +178,7 @@ class LocalPlayer: NSObject, PlayerType {
             if let item = object as? AVPlayerItem {
                 switch(item.status) {
                 case AVPlayerItemStatus.Failed:
-                    info("Failed")
+                    info("AVPlayerItemStatus.Failed")
                     closePlayer()
                 default:
                     let temp = 0

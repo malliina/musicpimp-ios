@@ -66,6 +66,6 @@ class PimpSettings {
     func serialize(es: [Endpoint]) -> String? {
         let jsonified = es.map(PimpJson.sharedInstance.toJson)
         let blob = [PimpSettings.ENDPOINTS: jsonified]
-        return PimpJson.sharedInstance.stringify(blob, prettyPrinted: true)
+        return Json.stringifyObject(blob, prettyPrinted: true)
     }
 }

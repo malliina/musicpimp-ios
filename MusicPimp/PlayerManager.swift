@@ -15,21 +15,24 @@ class PlayerManager: EndpointManager {
     let playerChanged = Event<PlayerType>()
     
     init() {
+        //Log.info("Init PlayerManager")
         var settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
         changed.addHandler(self, handler: { (lm) -> Endpoint -> () in
             lm.onNewPlayerEndpoint
         })
-        activePlayer.open()
+        // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)
+        // activePlayer.open()
     }
-    static func toURL(s:String) -> NSURL {
+    static func toURL(s: String) -> NSURL {
         return NSURL(string: s)!
     }
     private func onNewPlayerEndpoint(endpoint: Endpoint) {
         activePlayer.close()
         let p = Players.fromEndpoint(endpoint)
         activePlayer = p
+        Log.info("Set player to \(endpoint.name) \(p.isLocal)")
         activePlayer.open() // async
         playerChanged.raise(p)
     }

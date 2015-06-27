@@ -11,13 +11,32 @@ import UIKit
 
 class LibraryController: PimpTableController {
     static let LIBRARY = "library", PLAYER = "player"
+    static let TABLE_CELL_HEIGHT_PLAIN = 44
     
     var musicItems: [MusicItem] = []
     var selected: MusicItem? = nil
     
-    private var socket: PimpSocket? = nil
+    //private var socket: PimpSocket? = nil
+    
+    var header: UIView? = nil
+    var feedback: UILabel? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        activityView.frame = CGRect(x: 0, y: 0, width: 320, height: LibraryController.TABLE_CELL_HEIGHT_PLAIN)
+        activityView.startAnimating()
+        self.tableView.tableHeaderView = activityView
+        
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+        let feedbackLabel = UILabel(frame: CGRect(x: 16, y: 0, width: 300, height: 44))
+        feedbackLabel.text = "hey you"
+        feedbackLabel.textColor = UIColor.blueColor()
+        headerView.addSubview(feedbackLabel)
+        self.feedback = feedbackLabel
+        self.header = headerView
+        //self.tableView.tableHeaderView = headerView
+        
         if let folderID = selected?.id {
             loadFolder(folderID)
         } else {
@@ -45,10 +64,22 @@ class LibraryController: PimpTableController {
         let ts: [MusicItem] = f.tracks
         let items: [MusicItem] = fs + ts
         musicItems = items
-        renderTable()
+        Util.onUiThread({ () in
+            self.tableView.tableHeaderView = nil
+            self.tableView.reloadData()
+        })
     }
     func onError(error: PimpError) {
-        info(PimpErrorUtil.stringify(error))
+        let message = PimpErrorUtil.stringify(error)
+        Util.onUiThread({
+            () in
+            self.feedback?.text = message
+            self.tableView.tableHeaderView = nil
+            if let header = self.header {
+                self.tableView.tableHeaderView = header
+            }
+        })
+        info(message)
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.musicItems.count
@@ -66,7 +97,7 @@ class LibraryController: PimpTableController {
     }
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         var addAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Add") {
-            (action:UITableViewRowAction!, indexPath: NSIndexPath!) -> Void in
+            (action: UITableViewRowAction!, indexPath: NSIndexPath!) -> Void in
             let tappedItem: MusicItem = self.musicItems[indexPath.row]
             if let track = tappedItem as? Track {
                 self.addTracks([track])
@@ -82,11 +113,7 @@ class LibraryController: PimpTableController {
     }
     func addTracks(tracks: [Track]) {
         player.playlist.add(tracks)
-        if(!library.isLocal) {
-            for track in tracks.take(10) {
-                startDownload(track)
-            }
-        }
+        downloadIfNeeded(tracks)
     }
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -94,15 +121,20 @@ class LibraryController: PimpTableController {
         let tappedItem: MusicItem = musicItems[indexPath.row]
         if let track = tappedItem as? Track {
             player.resetAndPlay(track)
-            if(!library.isLocal) {
-                startDownload(track)
-            }
+            downloadIfNeeded([track])
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
+    private func downloadIfNeeded(tracks: [Track]) {
+        if !library.isLocal && player.isLocal {
+            for track in tracks.take(10) {
+                startDownload(track)
+            }
+        }
+    }
     private func startDownload(track: Track) {
-        Downloader.musicDownloader.download(track.url, relativePath: track.path)
+        //Downloader.musicDownloader.download(track.url, relativePath: track.path)
     }
     // Performs segue if the user clicked a folder
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
@@ -133,7 +165,7 @@ class LibraryController: PimpTableController {
                 
             }
         } else {
-            Log.info("Unknown navigation controller")
+            Log.error("Unknown navigation controller")
         }
     }
     

@@ -23,7 +23,9 @@ class PlaylistController: PimpTableController {
             plc.onIndexChanged
         })
         listeners = [playlistDisposable, indexDisposable]
-//        onNewPlaylist(player.playlist.current())
+        let state = player.current()
+        let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
+        onNewPlaylist(currentPlaylist)
     }
     override func viewWillDisappear(animated: Bool) {
         for listener in listeners {
@@ -33,7 +35,7 @@ class PlaylistController: PimpTableController {
     }
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
-        info("New playlist with \(tracks.count) tracks")
+//        info("New playlist with \(tracks.count) tracks")
         renderTable()
     }
     func onIndexChanged(index: Int?) {
@@ -59,7 +61,6 @@ class PlaylistController: PimpTableController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let index = indexPath.row
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-
 //        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         player.playlist.removeIndex(index)
 //        tracks = current.tracks

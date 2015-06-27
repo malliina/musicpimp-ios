@@ -8,21 +8,26 @@
 
 import Foundation
 protocol PlayerEventDelegate {
+    func parseStatus(json: NSDictionary) -> PlayerState?
     func parseTrack(json: NSDictionary) -> Track?
-    func onTimeUpdated(pos: Int)
+    func onTimeUpdated(pos: Duration)
     func onTrackChanged(track: Track?)
     func onMuteToggled(mute: Bool)
     func onVolumeChanged(volume: Int)
     func onStateChanged(state: PlaybackState)
     func onIndexChanged(index: Int?)
     func onPlaylistModified(tracks: [Track])
+    func onState(state: PlayerState)
 }
 
 class LoggingDelegate : PlayerEventDelegate {
+    func parseStatus(json: NSDictionary) -> PlayerState? {
+        return nil
+    }
     func parseTrack(json: NSDictionary) -> Track? {
         return nil
     }
-    func onTimeUpdated(pos: Int) {
+    func onTimeUpdated(pos: Duration) {
         log("Time: \(pos)")
     }
     func onTrackChanged(track: Track?) {
@@ -42,6 +47,9 @@ class LoggingDelegate : PlayerEventDelegate {
     }
     func onPlaylistModified(tracks: [Track]) {
         log("Tracks: \(tracks.description)")
+    }
+    func onState(state: PlayerState) {
+        log("Status")
     }
     func log(s: String) {
         Log.info(s)

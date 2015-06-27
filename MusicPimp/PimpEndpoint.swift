@@ -9,16 +9,18 @@
 import Foundation
 
 class PimpEndpoint {
+    let endpoint: Endpoint
     let client: PimpHttpClient
-    init(client: PimpHttpClient) {
+    init(endpoint: Endpoint, client: PimpHttpClient) {
+        self.endpoint = endpoint
         self.client = client
     }
     func postPlayback(cmd: String) {
-        let dict = simpleCommand(cmd)
+        let dict = PimpEndpoint.simpleCommand(cmd)
         postDict(dict)
     }
     func postValued(cmd: String, value: AnyObject) {
-        let dict = valuedCommand(cmd, value: value)
+        let dict = PimpEndpoint.valuedCommand(cmd, value: value)
         postDict(dict)
     }
     func postDict(dict: [String: AnyObject]) {
@@ -31,45 +33,55 @@ class PimpEndpoint {
         let str = PimpErrorUtil.stringify(error)
         Log.info("Player error: \(str)")
     }
-    func simpleCommand(cmd: String) -> [String: String] {
+    static func simpleCommand(cmd: String) -> [String: String] {
         return [
             JsonKeys.CMD: cmd
         ]
     }
-    func valuedCommand(cmd: String, value: AnyObject) -> [String: AnyObject] {
+    static func valuedCommand(cmd: String, value: AnyObject) -> [String: AnyObject] {
         return [
             JsonKeys.CMD: cmd,
             JsonKeys.VALUE: value
         ]
     }
     func parseTrack(obj: NSDictionary) -> Track? {
-        if let id = obj[JsonKeys.ID] as? String {
-            if let title = obj[JsonKeys.TITLE] as? String {
-                if let artist = obj[JsonKeys.ARTIST] as? String {
-                    if let album = obj[JsonKeys.ALBUM] as? String {
-                        if let size = obj[JsonKeys.SIZE] as? Int {
-                            if let duration = obj[JsonKeys.DURATION] as? Int {
-                                return Track(
-                                    id: id,
-                                    title: title,
-                                    album: album,
-                                    artist: artist,
-                                    duration: duration,
-                                    path: Util.urlDecode(id),
-                                    size: Int64(size),
-                                    url: self.urlFor(id),
-                                    username: client.username,
-                                    password: client.password)
-                            }
-                        }
-                    }
-                }
-            }
+        if let id = obj[JsonKeys.ID] as? String,
+            title = obj[JsonKeys.TITLE] as? String,
+            artist = obj[JsonKeys.ARTIST] as? String,
+            album = obj[JsonKeys.ALBUM] as? String,
+            size = obj[JsonKeys.SIZE] as? Int,
+            duration = obj[JsonKeys.DURATION] as? Int,
+            durDuration = duration.seconds {
+                return Track(
+                    id: id,
+                    title: title,
+                    album: album,
+                    artist: artist,
+                    duration: durDuration,
+                    path: Util.urlDecode(id),
+                    size: Int64(size),
+                    url: self.urlFor(id))
         }
         return nil
     }
-
+    func parseStatus(dict: NSDictionary) -> PlayerState? {
+        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
+            stateName = dict[JsonKeys.STATE] as? String,
+            state = PlaybackState.fromName(stateName),
+            position = dict[JsonKeys.POSITION] as? Int,
+            posDuration = position.seconds,
+            mute = dict[JsonKeys.MUTE] as? Bool,
+            volume = dict[JsonKeys.VOLUME] as? Int,
+            playlist = dict[JsonKeys.PLAYLIST] as? [NSDictionary],
+            playlistIndex = dict[JsonKeys.INDEX] as? Int {
+            let trackOpt = parseTrack(trackDict)
+            let tracks = playlist.flatMapOpt(parseTrack)
+            return PlayerState(track: trackOpt, state: state, position: posDuration, volume: volume, mute: mute, playlist: tracks, playlistIndex: playlistIndex)
+        }
+        return nil
+    }
+    // for cloud, keys s, u, p
     func urlFor(trackID: String) -> NSURL {
-        return NSURL(string: "\(client.baseURL)/tracks/\(trackID)?u=\(client.username)&p=\(client.password)")!
+        return NSURL(string: "\(endpoint.httpBaseUrl)/tracks/\(trackID)?\(endpoint.authQueryString)")!
     }
 }

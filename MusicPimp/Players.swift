@@ -9,15 +9,14 @@
 import Foundation
 class Players {
     static func fromEndpoint(e: Endpoint) -> PlayerType {
-        if e.id == Endpoint.Local.id {
+        let serverType = e.serverType
+        switch serverType.name {
+        case ServerTypes.MusicPimp.name:
+            return PimpPlayer(e: e)
+        case ServerTypes.Cloud.name:
+            return PimpPlayer(e: e)
+        default:
             return LocalPlayer.sharedInstance
-        } else {
-            switch e.serverType {
-            case .MusicPimp:
-                return PimpPlayer(e: e)
-            default:
-                return LocalPlayer.sharedInstance
-            }
         }
     }
 }

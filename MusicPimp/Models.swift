@@ -44,22 +44,22 @@ class Folder: MusicItem {
 class Track: MusicItem {
     let album: String
     let artist: String
-    let duration: Int
+    let duration: Duration
     let path: String
     let size: Int64
     let url: NSURL
-    let username: String
-    let password: String
+    //let username: String
+    //let password: String
     
-    init(id: String, title: String, album: String, artist: String, duration: Int, path: String, size: Int64, url: NSURL, username: String, password: String) {
+    init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: Int64, url: NSURL) {
         self.album = album
         self.artist = artist
         self.duration = duration
         self.path = path
         self.size = size
         self.url = url
-        self.username = username
-        self.password = password
+        //self.username = username
+        //self.password = password
         super.init(id: id, title: title)
     }
 }

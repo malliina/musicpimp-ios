@@ -12,7 +12,7 @@ class Libraries {
         if e.id == Endpoint.Local.id {
             return LocalLibrary.sharedInstance
         } else {
-            return PimpLibrary(client: PimpHttpClient(baseURL: e.httpBaseUrl, username: e.username, password: e.password))
+            return PimpLibrary(endpoint: e, client: PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader))
         }
     }
 }

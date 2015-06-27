@@ -7,21 +7,34 @@
 //
 
 import Foundation
+
 class PimpSocket: PlayerSocket {
-    let delegate: PlayerEventDelegate
-    init(baseURL: String, username: String, password: String, delegate: PlayerEventDelegate) {
-        let authValue = HttpClient.basicAuthValue(username, password: password)
-        self.delegate = delegate
-        super.init(baseURL: baseURL, authHeaderValue: authValue)
+    var delegate: PlayerEventDelegate = LoggingDelegate()
+    init(baseURL: String, authValue: String) {
+        let headers = [
+            HttpClient.AUTHORIZATION: authValue,
+            HttpClient.ACCEPT: PimpHttpClient.PIMP_VERSION_18
+        ]
+        super.init(baseURL: baseURL, headers: headers)
     }
+    
+    func send(dict: [String: AnyObject]) -> Bool {
+        if let payload = Json.stringifyObject(dict, prettyPrinted: false), socket = socket {
+            socket.send(payload)
+            return true
+        }
+        return false
+    }
+    
     override func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
         if let message = message as? String {
             if let dict = Json.asJson(message, error: nil) as? NSDictionary {
                 if let event = dict[JsonKeys.EVENT] as? String {
                     switch event {
                     case JsonKeys.TIME_UPDATED:
-                        if let position = dict[JsonKeys.POSITION] as? Int {
-                            delegate.onTimeUpdated(position)
+                        if let position = dict[JsonKeys.POSITION] as? Int,
+                        posDuration = position.seconds {
+                            delegate.onTimeUpdated(posDuration)
                         }
                         break
                     case JsonKeys.TRACK_CHANGED:
@@ -60,7 +73,15 @@ class PimpSocket: PlayerSocket {
                             delegate.onPlaylistModified(tracks)
                         }
                         break
+                    case JsonKeys.STATUS:
+                        if let state = delegate.parseStatus(dict) {
+                            delegate.onState(state)
+                        } else {
+                            Log.error("Unable to parse status: \(message)")
+                        }
+                        break
                     case JsonKeys.WELCOME:
+                        socket?.send(Json.stringifyObject([JsonKeys.CMD: JsonKeys.STATUS]))
                         break
                     case JsonKeys.PING:
                         break
@@ -68,9 +89,11 @@ class PimpSocket: PlayerSocket {
                         Log.error("Unknown event: \(event)")
                     }
                 }
+            } else {
+                Log.error("Message is not a JSON object: \(message)")
             }
         } else {
             Log.error("WebSocket message is not a string: \(message)")
         }
     }
-    }
+}

@@ -54,16 +54,12 @@ class LocalLibrary: BaseLibrary, LibraryType {
                 }
                 
                 let relativePath = relativize(absolutePath)
-                if let artist = artist {
-                    if let album = album {
-                        if let track = track {
-                            if let dur = duration(asset) {
-                                if let url = url {
-                                    return Track(id: Util.urlEncode(relativePath), title: track, album: album, artist: artist, duration: Int(dur), path: relativePath, size: size, url: url, username: "", password: "")
-                                }
-                            }
-                        }
-                    }
+                if let artist = artist,
+                    album = album,
+                    track = track,
+                    dur = duration(asset),
+                    url = url {
+                        return Track(id: Util.urlEncode(relativePath), title: track, album: album, artist: artist, duration: dur, path: relativePath, size: size, url: url)
                 }
             }
         }
@@ -85,11 +81,11 @@ class LocalLibrary: BaseLibrary, LibraryType {
         }
     }
     
-    func duration(asset: AVAsset) -> Float? {
+    func duration(asset: AVAsset) -> Duration? {
         let time = asset.duration
         let secs = CMTimeGetSeconds(time)
         if(secs.isNormal) {
-            return Float(secs)
+            return secs.seconds
         }
         return nil
     }

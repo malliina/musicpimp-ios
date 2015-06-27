@@ -13,13 +13,14 @@ class PimpJson {
     static let ID = "id", SERVER_TYPE = "serverType", NAME = "name", PROTO = "proto", ADDRESS = "address", PORT = "port", USERNAME = "username", PASSWORD = "password", SSL = "ssl"
     
     func jsonStringified(e: Endpoint) -> String? {
-        return stringify(toJson(e))
+        return Json.stringifyObject(toJson(e))
     }
     
     func toJson(e: Endpoint) -> [String: AnyObject] {
         return [
             PimpJson.ID: e.id,
-            PimpJson.SERVER_TYPE: e.serverType.rawValue,
+//            PimpJson.CLOUD_ID: e.cl
+            PimpJson.SERVER_TYPE: e.serverType.name,
             PimpJson.NAME: e.name,
             PimpJson.SSL: e.ssl,
             PimpJson.ADDRESS: e.address,
@@ -30,34 +31,18 @@ class PimpJson {
     }
     
     func asEndpoint(dict: NSDictionary) -> Endpoint? {
-        if let id = dict[PimpJson.ID] as? String {
-            if let serverType = dict[PimpJson.SERVER_TYPE] as? String {
-                if let name = dict[PimpJson.NAME] as? String {
-                    if let ssl = dict[PimpJson.SSL] as? Bool {
-                        if let address = dict[PimpJson.ADDRESS] as? String {
-                            if let port = dict[PimpJson.PORT] as? Int {
-                                if let user = dict[PimpJson.USERNAME] as? String {
-                                    if let pass = dict[PimpJson.PASSWORD] as? String {
-                                        return Endpoint(id: id, serverType: ServerType(rawValue: serverType)!, name: name, ssl: ssl, address: address, port: port, username: user, password: pass)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        if let id = dict[PimpJson.ID] as? String,
+            serverTypeName = dict[PimpJson.SERVER_TYPE] as? String,
+            serverType = ServerTypes.fromName(serverTypeName),
+            name = dict[PimpJson.NAME] as? String,
+            ssl = dict[PimpJson.SSL] as? Bool,
+            address = dict[PimpJson.ADDRESS] as? String,
+            port = dict[PimpJson.PORT] as? Int,
+            user = dict[PimpJson.USERNAME] as? String,
+            pass = dict[PimpJson.PASSWORD] as? String {
+            return Endpoint(id: id, serverType: serverType, name: name, ssl: ssl, address: address, port: port, username: user, password: pass)
             }
-        }
         return nil
     }
-    
-    func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
-        var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
-        if NSJSONSerialization.isValidJSONObject(value) {
-            if let data = NSJSONSerialization.dataWithJSONObject(value, options: options, error: nil) {
-                return NSString(data: data, encoding: NSUTF8StringEncoding) as String?
-            }
-        }
-        return nil
-    }
-
 }
+
