@@ -9,11 +9,9 @@
 import Foundation
 
 class EndpointManager {
-//    let settings = PimpSettings.sharedInstance
     let key: String
     let settings: PimpSettings
     let changed = Event<Endpoint>()
-    //let activeChanged = Event<T>()
     
     init(key: String, settings: PimpSettings) {
         self.key = key

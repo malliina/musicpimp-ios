@@ -19,8 +19,14 @@
 		7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA98B1AF6940B008F72EC /* SettingsController.swift */; };
 		7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA98F1AF69950008F72EC /* Endpoint.swift */; };
 		7D0CA9921AF6999E008F72EC /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9911AF6999E008F72EC /* Protocol.swift */; };
+		7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DC1B40412200C2D634 /* CoverService.swift */; };
+		7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */; };
+		7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */; };
+		7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */; };
 		7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */; };
 		7D61A7011AA4E14F00F21622 /* LibraryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D61A7001AA4E14F00F21622 /* LibraryController.swift */; };
+		7D66863E1B498200003C92E4 /* CacheLimitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D66863D1B498200003C92E4 /* CacheLimitController.swift */; };
+		7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D66863F1B49AC34003C92E4 /* CacheInfoController.swift */; };
 		7D6756B31AF94BE100BC0CA9 /* ServerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756B21AF94BE100BC0CA9 /* ServerType.swift */; };
 		7D6756B51AFD4D8A00BC0CA9 /* FilePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756B41AFD4D8A00BC0CA9 /* FilePersistence.swift */; };
 		7D6756B71AFD55A200BC0CA9 /* PimpSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756B61AFD55A200BC0CA9 /* PimpSettings.swift */; };
@@ -83,6 +89,8 @@
 		7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359771B3F0A51003B01B6 /* Volume.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
+		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
+		7DDE24701B656DD5007D810E /* PimpUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246F1B656DD5007D810E /* PimpUtils.swift */; };
 		7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00B1AED50B300F25B9B /* Arrays.swift */; };
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
 /* End PBXBuildFile section */
@@ -119,8 +127,14 @@
 		7D0CA98B1AF6940B008F72EC /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		7D0CA98F1AF69950008F72EC /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		7D0CA9911AF6999E008F72EC /* Protocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
+		7D4FF8DC1B40412200C2D634 /* CoverService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverService.swift; sourceTree = "<group>"; };
+		7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPExtensions.swift; sourceTree = "<group>"; };
+		7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageSize.swift; sourceTree = "<group>"; };
+		7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheTableController.swift; sourceTree = "<group>"; };
 		7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPlaylist.swift; sourceTree = "<group>"; };
 		7D61A7001AA4E14F00F21622 /* LibraryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryController.swift; sourceTree = "<group>"; };
+		7D66863D1B498200003C92E4 /* CacheLimitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheLimitController.swift; sourceTree = "<group>"; };
+		7D66863F1B49AC34003C92E4 /* CacheInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheInfoController.swift; sourceTree = "<group>"; };
 		7D6756B21AF94BE100BC0CA9 /* ServerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerType.swift; sourceTree = "<group>"; };
 		7D6756B41AFD4D8A00BC0CA9 /* FilePersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePersistence.swift; sourceTree = "<group>"; };
 		7D6756B61AFD55A200BC0CA9 /* PimpSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSettings.swift; sourceTree = "<group>"; };
@@ -190,6 +204,8 @@
 		7DC359771B3F0A51003B01B6 /* Volume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Volume.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
+		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
+		7DDE246F1B656DD5007D810E /* PimpUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpUtils.swift; sourceTree = "<group>"; };
 		7DF5C00B1AED50B300F25B9B /* Arrays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrays.swift; sourceTree = "<group>"; };
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -247,8 +263,19 @@
 			children = (
 				7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */,
 				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
+				7D4FF8DC1B40412200C2D634 /* CoverService.swift */,
+				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
 			);
 			name = Network;
+			sourceTree = "<group>";
+		};
+		7D4FF8E01B41AC8700C2D634 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				7DB1B3A51B108CD60012B8AE /* Files.swift */,
+				7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */,
+			);
+			name = Files;
 			sourceTree = "<group>";
 		};
 		7D9E48A81ADA78C500D5CDDF /* Audio */ = {
@@ -280,6 +307,7 @@
 				7DB1B3B11B1102270012B8AE /* PimpPlaylist.swift */,
 				7DB1B3B51B11D0590012B8AE /* PimpEndpoint.swift */,
 				7D0660051B1B573500C6DB15 /* PimpSocket.swift */,
+				7DDE246F1B656DD5007D810E /* PimpUtils.swift */,
 			);
 			name = Pimp;
 			sourceTree = "<group>";
@@ -290,6 +318,7 @@
 				7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */,
 				7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */,
 				7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */,
+				7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */,
 			);
 			name = Local;
 			sourceTree = "<group>";
@@ -325,6 +354,9 @@
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DC359721B371426003B01B6 /* TabNavController.swift */,
+				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
+				7D66863D1B498200003C92E4 /* CacheLimitController.swift */,
+				7D66863F1B49AC34003C92E4 /* CacheInfoController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -362,7 +394,7 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
-				7DC359741B3EEB41003B01B6 /* Time */,
+				7D4FF8E01B41AC8700C2D634 /* Files */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
@@ -372,7 +404,6 @@
 				7D6756CE1B08B26200BC0CA9 /* EndpointManager.swift */,
 				7D78C2901AF3B73D001F0A65 /* Event.swift */,
 				7D6756B41AFD4D8A00BC0CA9 /* FilePersistence.swift */,
-				7DB1B3A51B108CD60012B8AE /* Files.swift */,
 				7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */,
 				7DC206AF1A1547370032C01D /* Images.xcassets */,
 				7D6756BE1B012B9600BC0CA9 /* Json.swift */,
@@ -394,6 +425,7 @@
 				7D0730301B1A0400000D416D /* SRWebSocket.m */,
 				7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */,
 				7DC206A41A1547370032C01D /* Supporting Files */,
+				7DC359741B3EEB41003B01B6 /* Time */,
 				7D6756BA1B01092E00BC0CA9 /* UserPrefs.swift */,
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
@@ -564,8 +596,10 @@
 				7D6756C91B07CDD500BC0CA9 /* PlayerSettingController.swift in Sources */,
 				7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */,
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
+				7DDE24701B656DD5007D810E /* PimpUtils.swift in Sources */,
 				7D6756D11B08E5ED00BC0CA9 /* EndpointSelectController.swift in Sources */,
 				7DBCD7A01B26121A006460D1 /* CloudPlayer.swift in Sources */,
+				7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */,
 				7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */,
 				7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */,
 				7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */,
@@ -574,6 +608,7 @@
 				7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */,
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
+				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,
 				7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,
@@ -592,6 +627,7 @@
 				7DB1B3B41B1102C50012B8AE /* PlayerState.swift in Sources */,
 				7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */,
 				7D6756D71B0A64E100BC0CA9 /* LibraryType.swift in Sources */,
+				7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */,
 				7D0CA9881AF68EC6008F72EC /* EditEndpointController.swift in Sources */,
 				7DC359671B35EE3E003B01B6 /* PlayerNavController.swift in Sources */,
 				7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */,
@@ -609,14 +645,18 @@
 				7DC359691B35F196003B01B6 /* PimpTabBarController.swift in Sources */,
 				7DC3595E1B35C7B3003B01B6 /* String+FontAwesome.swift in Sources */,
 				7D6756BB1B01092E00BC0CA9 /* UserPrefs.swift in Sources */,
+				7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */,
 				7D6756C51B0744B100BC0CA9 /* PimpError.swift in Sources */,
 				7DB1B3B81B11D2B20012B8AE /* BasePlaylist.swift in Sources */,
 				7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */,
 				7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */,
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,
+				7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */,
 				7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */,
 				7D6756D51B09200300BC0CA9 /* PlaylistType.swift in Sources */,
+				7D66863E1B498200003C92E4 /* CacheLimitController.swift in Sources */,
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,
+				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 			);

@@ -10,9 +10,7 @@ import Foundation
 import UIKit
 
 class EndpointsController: BaseTableController {
-    
-    let settings = PimpSettings.sharedInstance
-    
+        
     var endpoints: [Endpoint] = []
     
     override func viewDidLoad() {

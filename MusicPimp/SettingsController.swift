@@ -9,35 +9,70 @@
 import Foundation
 import UIKit
 
-class SettingsController: BaseTableController {
+class SettingsController: CacheInfoController {
+    let libraryManager = LibraryManager.sharedInstance
+    let playerManager = PlayerManager.sharedInstance
     
-    let settings = PimpSettings.sharedInstance
-    var endpoints: [Endpoint] = []
-    var activeLibrary: Endpoint? = nil
-    var activePlayer: Endpoint? = nil
+    var activeLibrary: Endpoint { return libraryManager.loadActive() }
+    var activePlayer: Endpoint  { return playerManager.loadActive() }
     //var listener: Disposable? = nil
     
+    @IBOutlet var libraryDetail: UILabel!
+    @IBOutlet var playerDetail: UILabel!
     @IBOutlet var sourcePicker: UIPickerView!
     
-    override func viewWillAppear(animated: Bool) {
-        endpoints = settings.endpoints()
-        activeLibrary = LibraryManager.sharedInstance.loadActive()
-        activePlayer = PlayerManager.sharedInstance.loadActive()
+    @IBOutlet var cacheDetail: UILabel!
+    override func viewDidLoad() {
+        let libraryManager = LibraryManager.sharedInstance
+        let playerManager = PlayerManager.sharedInstance
+        libraryManager.changed.addHandler(self, handler: { (sc) -> Endpoint -> () in
+            sc.onLibraryChanged
+        })
+        playerManager.changed.addHandler(self, handler: { (sc) -> Endpoint -> () in
+            sc.onPlayerChanged
+        })
+        settings.cacheEnabledChanged.addHandler(self, handler: { (sc) -> Bool -> () in
+            sc.onCacheEnabledChanged
+        })
+        settings.cacheLimitChanged.addHandler(self, handler: { (sc) -> StorageSize -> () in
+            sc.onCacheLimitChanged
+        })
+    }
+    private func onLibraryChanged(newLibrary: Endpoint) {
+        renderTable()
+    }
+    private func onPlayerChanged(newPlayer: Endpoint) {
+        renderTable()
+    }
+    private func onCacheEnabledChanged(newEnabled: Bool) {
+        renderTable()
+    }
+    private func onCacheLimitChanged(newLimit: StorageSize) {
         renderTable()
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let c = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        switch indexPath.row {
-        case 0:
-            c.detailTextLabel?.text = activeLibrary?.name ?? "none"
-            break
-        case 1:
-            c.detailTextLabel?.text = activePlayer?.name ?? "none"
-            break
-        default:
-            break
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        if let reuseIdentifier = cell.reuseIdentifier {
+            var text: String? = nil
+            switch reuseIdentifier {
+                case "MusicSource":
+                    text = activeLibrary.name
+                break
+                case "PlaybackDevice":
+                    text = activePlayer.name
+                break
+                case "Cache":
+                    let detail = settings.cacheEnabled ? currentLimitDescription : "off"
+                    text = detail
+                break
+                default:
+                break
+            }
+            if let text = text {
+                cell.detailTextLabel?.text = text
+            }
         }
-        return c
+        return cell
     }
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2

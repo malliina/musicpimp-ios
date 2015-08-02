@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+
 class Duration: Printable, Comparable {
     static let Zero = Duration(millis: 0)
     let millis: UInt64

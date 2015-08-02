@@ -64,6 +64,9 @@ class LocalPlayer: NSObject, PlayerType {
             // TODO see if we can sync this better by only raising the event after confirmation that the player is playing
             playerInfo.player.play()
             stateEvent.raise(.Playing)
+            Log.info("Playback should now start")
+        } else {
+            Log.error("There is no player; will not play.")
         }
     }
     func pause() {
@@ -97,14 +100,6 @@ class LocalPlayer: NSObject, PlayerType {
             }
         }
         return playerInfo?.track.duration
-        //if let duration = playerInfo?.track.duration {
-            //let secs = Float(duration)
-            //if(secs.isNormal) {
-              //  return secs.seconds
-            //}
-       //     return duration
-       // }
-        //return nil
     }
     func position() -> Duration? {
         if let currentTime = player?.currentTime() {
@@ -126,8 +121,11 @@ class LocalPlayer: NSObject, PlayerType {
             closePlayer()
             initAndPlay(track)
             return track
+        } else {
+            Log.info("Unable to find track from playlist")
+            return nil
         }
-        return nil
+        
     }
     func resetAndPlay(track: Track) {
         resetAndPlay([track])
@@ -140,8 +138,9 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     private func initAndPlay(track: Track) {
-        //info("Playing \(track.title)")
-        let playerItem = AVPlayerItem(URL: track.url)
+        info("Playing \(track.title)")
+        let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
+        let playerItem = AVPlayerItem(URL: preferredUrl)
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,
@@ -160,7 +159,7 @@ class LocalPlayer: NSObject, PlayerType {
             if let duration = secs.seconds {
                 self.timeEvent.raise(duration)
             } else {
-                Log.info("Unable to convert time to Duration: \(secs)")
+                Log.error("Unable to convert time to Duration: \(secs)")
             }
         }
         play()

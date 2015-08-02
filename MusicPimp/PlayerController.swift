@@ -31,10 +31,14 @@ class PlayerController: UIViewController {
     @IBOutlet var positionLabel: UILabel!
     @IBOutlet var durationLabel: UILabel!
     
-    private var listeners: [Disposable] = []
+    @IBOutlet var coverImage: UIImageView!
+    
+    private var loadedListeners: [Disposable] = []
+    private var appearedListeners: [Disposable] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        listenWhenLoaded(player)
         playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
             pc.onNewPlayer
         })
@@ -52,41 +56,55 @@ class PlayerController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        listen(player)
+        listenWhenAppeared(player)
         let current = player.current()
         updatePlayPause(current.isPlaying)
         if let track = current.track {
             updateTrack(track)
-            seek.value = Float(current.position.seconds)
+            seek.value = current.position.secondsFloat
         } else {
             updateNoMedia()
         }
     }
     override func viewDidDisappear(animated: Bool) {
-        unlisten()
+        unlistenWhenAppeared()
     }
     func onNewPlayer(newPlayer: PlayerType) {
-        unlisten()
-        listen(newPlayer)
+        reinstallListeners(newPlayer)
     }
-    private func listen(targetPlayer: PlayerType) {
-        let listener = targetPlayer.timeEvent.addHandler(self, handler: { (pc) -> Duration -> () in
-            pc.onTimeUpdated
-        })
+    private func listenWhenLoaded(targetPlayer: PlayerType) {
         let trackListener = targetPlayer.trackEvent.addHandler(self, handler: { (pc) -> Track? -> () in
             pc.updateTrack
+        })
+        loadedListeners = [trackListener]
+    }
+    private func unlistenWhenLoaded() {
+        for listener in loadedListeners {
+            listener.dispose()
+        }
+        loadedListeners = []
+    }
+    private func listenWhenAppeared(targetPlayer: PlayerType) {
+        unlistenWhenAppeared()
+        let listener = targetPlayer.timeEvent.addHandler(self, handler: { (pc) -> Duration -> () in
+            pc.onTimeUpdated
         })
         let stateListener = targetPlayer.stateEvent.addHandler(self, handler: { (pc) -> PlaybackState -> () in
             pc.onStateChanged
         })
-        listeners = [listener, trackListener, stateListener]
-
+        appearedListeners = [listener, stateListener]
     }
-    private func unlisten() {
-        for listener in listeners {
+    private func unlistenWhenAppeared() {
+        for listener in appearedListeners {
             listener.dispose()
         }
-        listeners = []
+        appearedListeners = []
+    }
+    private func reinstallListeners(targetPlayer: PlayerType) {
+        unlistenWhenAppeared()
+        unlistenWhenLoaded()
+        listenWhenLoaded(targetPlayer)
+        listenWhenAppeared(targetPlayer)
     }
     private func updateTrack(track: Track?) {
         if let track = track {
@@ -105,10 +123,20 @@ class PlayerController: UIViewController {
     }
     private func updateMedia(track: Track) {
         updateDuration(track.duration)
-        //updatePosition(defaultPosition)
         titleLabel.text = track.title
         albumLabel.text = track.album
         artistLabel.text = track.artist
+        updateCover(track)
+    }
+    private func updateCover(track: Track) {
+        CoverService.sharedInstance.cover(track.artist, album: track.album) {
+            (result) -> () in
+            if let image = result.image where self.player.current().track?.title == track.title {
+                Util.onUiThread {
+                    self.coverImage.image = image
+                }
+            }
+        }
     }
     private func updateDuration(duration: Duration) {
         seek.maximumValue = duration.secondsFloat

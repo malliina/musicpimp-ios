@@ -9,6 +9,7 @@
 import UIKit
 import AudioToolbox
 import AVFoundation
+import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        Log.info("Launched")
         initAudio()
         PlayerManager.sharedInstance.active.open()
         test()
@@ -27,23 +27,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     private func test() {
         let i = Duration(hours: 5)
+        //CoverService.sharedInstance.cover("iron maiden", album: "somewhere in time")
+        let rootDir = LocalLibrary.sharedInstance.musicRootPath
+        let contents = Files.sharedInstance.listContents(rootDir)
+        for dir in contents.folders {
+            Log.info("\(dir.name)")
+        }
+        for file in contents.files {
+            Log.info("\(file.name), size: \(file.size)")
+        }
+        let dirs = contents.folders.count
+        let files = contents.files.count
+        let size = Files.sharedInstance.folderSize(rootDir)
+        Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
-    
     func initAudio() {
-        var categoryError: NSError?
-        let categorySuccess = audioSession.setCategory(AVAudioSessionCategoryPlayback, error: &categoryError)
-        if(!categorySuccess) {
+        let categorySuccess = audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
+        if categorySuccess {
+            ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.sharedCommandCenter())
+        } else {
             Log.info("Failed to initialize audio category")
             return
         }
-        var activationError: NSError?
-        let activationSuccess = audioSession.setActive(true, error: &activationError)
-        if(!activationSuccess) {
+        let activationSuccess = audioSession.setActive(true, error: nil)
+        if !activationSuccess {
             Log.info("Failed to activate audio session")
         }
-        Log.info("Audio session initialized.")
+        Log.info("Audio session initialized")
     }
 
+//    override func remoteControlReceivedWithEvent(event: UIEvent) {
+//        switch event.subtype {
+//        case UIEventSubtype.RemoteControlPlay:
+//            break;
+//        case UIEventSubtype.RemoteControlPause:
+//            break;
+//        case UIEventSubtype.RemoteControlStop:
+//            break;
+//        case UIEventSubtype.RemoteControlNextTrack:
+//            break;
+//        case UIEventSubtype.RemoteControlPreviousTrack:
+//            break;
+//        case UIEventSubtype.RemoteControlTogglePlayPause:
+//            break;
+//        case UIEventSubtype.RemoteControlBeginSeekingForward:
+//            break;
+//        case UIEventSubtype.RemoteControlEndSeekingForward:
+//            break;
+//        case UIEventSubtype.RemoteControlBeginSeekingBackward:
+//            break;
+//        case UIEventSubtype.RemoteControlEndSeekingBackward:
+//            break;
+//        default:
+//            Log.error("Unknown remote control event: \(event.subtype)")
+//        }
+//    }
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

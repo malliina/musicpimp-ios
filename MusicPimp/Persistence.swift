@@ -10,6 +10,7 @@ import Foundation
 
 protocol Persistence {
     //typealias ErrorMessage = String
-    func save(contents: String, key: String) -> String?
+    var changes: Event<Setting> { get }
+    func save(contents: String, key: String) -> ErrorMessage?
     func load(key: String) -> String?
 }

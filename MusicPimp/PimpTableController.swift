@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class PimpTableController: BaseTableController {
-    var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
-    var library: LibraryType { get { return LibraryManager.sharedInstance.active } }
+    var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
+    var playerManager: PlayerManager { return PlayerManager.sharedInstance }
+    var library: LibraryType { return libraryManager.active }
+    var player: PlayerType { return playerManager.active }
 }

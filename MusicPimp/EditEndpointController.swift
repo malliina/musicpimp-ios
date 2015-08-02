@@ -22,12 +22,12 @@ class EditEndpointController: UIViewController {
     @IBOutlet var portLabel: UILabel!
     @IBOutlet var addressLabel: UILabel!
     @IBOutlet var cloudIDField: UITextField!
-    
     @IBOutlet var cloudIDLabel: UILabel!
     @IBOutlet var feedbackText: UITextView!
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
+    var segueID: String? = nil
     var editedItem: Endpoint? = nil
     
     override func viewDidLoad() {
@@ -41,7 +41,7 @@ class EditEndpointController: UIViewController {
             return
         }
         if let endpoint = parseEndpoint() {
-            info("Save \(endpoint)")
+            //info("Save \(endpoint)")
             PimpSettings.sharedInstance.save(endpoint)
         }
     }

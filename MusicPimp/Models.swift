@@ -48,8 +48,6 @@ class Track: MusicItem {
     let path: String
     let size: Int64
     let url: NSURL
-    //let username: String
-    //let password: String
     
     init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: Int64, url: NSURL) {
         self.album = album
@@ -58,8 +56,6 @@ class Track: MusicItem {
         self.path = path
         self.size = size
         self.url = url
-        //self.username = username
-        //self.password = password
         super.init(id: id, title: title)
     }
 }

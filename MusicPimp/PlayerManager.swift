@@ -25,9 +25,6 @@ class PlayerManager: EndpointManager {
         // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)
         // activePlayer.open()
     }
-    static func toURL(s: String) -> NSURL {
-        return NSURL(string: s)!
-    }
     private func onNewPlayerEndpoint(endpoint: Endpoint) {
         activePlayer.close()
         let p = Players.fromEndpoint(endpoint)

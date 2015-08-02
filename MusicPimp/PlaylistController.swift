@@ -51,9 +51,8 @@ class PlaylistController: PimpTableController {
         return cell
     }
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        //let cell = tableView.cellForRowAtIndexPath(indexPath)
         let index = indexPath.row
-//        let tappedItem: Track = items[index]
         player.skip(index)
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }

@@ -8,12 +8,11 @@
 
 import Foundation
 
-class PimpEndpoint {
-    let endpoint: Endpoint
+class PimpEndpoint: PimpUtils {
     let client: PimpHttpClient
     init(endpoint: Endpoint, client: PimpHttpClient) {
-        self.endpoint = endpoint
         self.client = client
+        super.init(endpoint: endpoint)
     }
     func postPlayback(cmd: String) {
         let dict = PimpEndpoint.simpleCommand(cmd)
@@ -44,7 +43,7 @@ class PimpEndpoint {
             JsonKeys.VALUE: value
         ]
     }
-    func parseTrack(obj: NSDictionary) -> Track? {
+    static func parseTrack(obj: NSDictionary, urlMaker: String -> NSURL) -> Track? {
         if let id = obj[JsonKeys.ID] as? String,
             title = obj[JsonKeys.TITLE] as? String,
             artist = obj[JsonKeys.ARTIST] as? String,
@@ -60,9 +59,12 @@ class PimpEndpoint {
                     duration: durDuration,
                     path: Util.urlDecode(id),
                     size: Int64(size),
-                    url: self.urlFor(id))
+                    url: urlMaker(id))
         }
         return nil
+    }
+    func parseTrack(obj: NSDictionary) -> Track? {
+        return PimpEndpoint.parseTrack(obj, urlMaker: { (id) -> NSURL in self.urlFor(id) })
     }
     func parseStatus(dict: NSDictionary) -> PlayerState? {
         if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
@@ -80,8 +82,5 @@ class PimpEndpoint {
         }
         return nil
     }
-    // for cloud, keys s, u, p
-    func urlFor(trackID: String) -> NSURL {
-        return NSURL(string: "\(endpoint.httpBaseUrl)/tracks/\(trackID)?\(endpoint.authQueryString)")!
-    }
+    
 }

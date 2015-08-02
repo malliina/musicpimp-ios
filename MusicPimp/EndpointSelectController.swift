@@ -10,14 +10,31 @@ import Foundation
 import UIKit
 
 class EndpointSelectController: BaseTableController {
-    
-    let endpoints = PimpSettings.sharedInstance.endpoints()
+
+    var endpoints: [Endpoint] = []
     
     var selectedIndex: Int? = nil
     // override this shit. thanks for abstract classes, Apple
     var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
+    var segueID: String { get { return "MusicSource" } }
+    
+    @IBAction func unwindToSelf(segue: UIStoryboardSegue) {
+        endpoints = settings.endpoints()
+        renderTable()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let navController = segue.destinationViewController as? UINavigationController {
+            let destController: AnyObject = navController.viewControllers[0]
+            if let editController = destController as? EditEndpointController,
+                endpoint = sender as? Endpoint {
+                    editController.editedItem = endpoint
+            }
+        }
+    }
     
     override func viewDidLoad() {
+        endpoints = settings.endpoints()
         let id = manager.loadActive().id
         if id == Endpoint.Local.id {
             selectedIndex = 0
@@ -59,5 +76,38 @@ class EndpointSelectController: BaseTableController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return endpoints.count + 1 // +1 for local endpoint
     }
-
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    }
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let rowIndex = indexPath.row
+        if rowIndex > 0 {
+            var edit = endpointRowAction(tableView, title: "Edit") {
+                (index: Int) -> Void in
+                let isPlayer = self.manager as? PlayerManager != nil
+                let segueID = isPlayer ? "EditPlayer" : "EditSource"
+                self.performSegueWithIdentifier(segueID, sender: self.endpoints[index])
+            }
+            var remove = endpointRowAction(tableView, title: "Remove") {
+                (index: Int) -> Void in
+                // TODO make EndpointsService with operations on endpoints, then listen for endpointsChanged events and react instead
+                self.endpoints.removeAtIndex(index)
+                self.settings.saveAll(self.endpoints)
+                let visualIndex = NSIndexPath(forRow: index + 1, inSection: 0)
+                tableView.deleteRowsAtIndexPaths([visualIndex], withRowAnimation: UITableViewRowAnimation.Fade)
+            }
+            return [edit, remove]
+        }
+        // "this device" is not editable
+        return []
+    }
+    func endpointRowAction(tableView: UITableView, title: String, f: Int -> Void) -> UITableViewRowAction {
+        return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
+            (action: UITableViewRowAction!, indexPath: NSIndexPath!) -> Void in
+            let endIndex = indexPath.row - 1
+            if endIndex >= 0 && self.endpoints.count > endIndex {
+                f(endIndex)
+            }
+            tableView.setEditing(false, animated: true)
+        }
+    }
 }

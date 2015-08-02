@@ -20,8 +20,6 @@ class Endpoints {
 
 class PimpHttpClient: HttpClient {
     let baseURL: String
-    //let username: String
-    //let password: String
     let defaultHeaders: [String: String]
     let postHeaders: [String: String]
     

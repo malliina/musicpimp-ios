@@ -13,6 +13,10 @@ enum PimpError {
     case ResponseFailure(String, Int, String?)
     case NetworkFailure(RequestFailure)
     case SimpleError(ErrorMessage)
+    
+    static func stringify(error: PimpError) -> String {
+        return PimpErrorUtil.stringify(error)
+    }
 }
 class PimpErrorUtil {
     static func stringify(error: PimpError) -> String {

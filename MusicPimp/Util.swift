@@ -9,12 +9,29 @@
 import Foundation
 
 class Util {
+    private static var GlobalMainQueue: dispatch_queue_t {
+        return dispatch_get_main_queue()
+    }
+    
+    private static var GlobalUserInteractiveQueue: dispatch_queue_t {
+        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INTERACTIVE.value), 0)
+    }
+    
+    private static var GlobalUserInitiatedQueue: dispatch_queue_t {
+        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.value), 0)
+    }
+    
+    private static var GlobalUtilityQueue: dispatch_queue_t {
+        return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.value), 0)
+    }
+    private static var GlobalBackgroundQueue: dispatch_queue_t {
+        return dispatch_get_global_queue(Int(QOS_CLASS_BACKGROUND.value), 0)
+    }
     class func onUiThread(f: () -> Void) {
-        dispatch_async(dispatch_get_main_queue(), {
-            () -> Void in
-            f()
-            ()
-        })
+        dispatch_async(GlobalMainQueue, f)
+    }
+    class func onBackgroundThread(f: () -> Void) {
+        dispatch_async(GlobalBackgroundQueue, f)
     }
     class func urlDecode(s: String) -> String {
         let unplussed = s.stringByReplacingOccurrencesOfString("+", withString: " ")
@@ -24,7 +41,7 @@ class Util {
         let plussed = s.stringByReplacingOccurrencesOfString(" ", withString: "+")
         return plussed.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? plussed
     }
-    class func test() {
-        let ws = SRWebSocket()
+    static func url(s: String) -> NSURL {
+        return NSURL(string: s)!
     }
 }

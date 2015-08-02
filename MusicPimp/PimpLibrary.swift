@@ -7,20 +7,26 @@
 //
 
 import Foundation
-class PimpLibrary: PimpEndpoint, LibraryType {
-    
-    var isLocal: Bool { get { return false } }
-    
-    func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
+class PimpLibrary: BaseLibrary {
+    let endpoint: Endpoint
+    let client: PimpHttpClient
+    let helper: PimpUtils
+    init(endpoint: Endpoint, client: PimpHttpClient) {
+        self.endpoint = endpoint
+        self.client = client
+        self.helper = PimpUtils(endpoint: endpoint)
+    }
+
+    override func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         client.pingAuth(onError, f: f)
     }
-    func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
         client.pimpGetParsed(Endpoints.FOLDERS, parse: parseMusicFolder, f: f, onError: onError)
     }
-    func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
         client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder, f: f, onError: onError)
     }
-    func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
+    override func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
         tracksInner(id,  others: [], acc: [], f: f, onError: onError)
     }
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
@@ -46,6 +52,10 @@ class PimpLibrary: PimpEndpoint, LibraryType {
                     path: path)
         }
         return nil
+    }
+    
+    func parseTrack(dict: NSDictionary) -> Track? {
+        return PimpEndpoint.parseTrack(dict, urlMaker: { (id) -> NSURL in self.helper.urlFor(id) })
     }
 
     func parseMusicFolder(obj: AnyObject) -> MusicFolder? {

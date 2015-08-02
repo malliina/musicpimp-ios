@@ -18,7 +18,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
     
     init(baseURL: String, headers: [String: String]) {
         self.baseURL = baseURL
-        let url = PlayerManager.toURL(baseURL)
+        let url = Util.url(baseURL)
         request = NSMutableURLRequest(URL: url)
         for (key, value) in headers {
             request.addValue(value, forHTTPHeaderField: key)

@@ -9,19 +9,49 @@
 import Foundation
 
 class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library"
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit"
     
     static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsEvent = Event<[Endpoint]>()
     let playerChanged = Event<Endpoint>()
     let libraryChanged = Event<Endpoint>()
+    let cacheLimitChanged = Event<StorageSize>()
+    let cacheEnabledChanged = Event<Bool>()
     
     let impl: Persistence
     init(impl: Persistence) {
         self.impl = impl
     }
     
+    var changes: Event<Setting> { get { return impl.changes } }
+    
+    var cacheEnabled: Bool {
+        get { return impl.load(PimpSettings.CACHE_ENABLED) != "false" }
+        set(value) {
+            let errors = impl.save("\(value)", key: PimpSettings.CACHE_ENABLED)
+            if errors == nil {
+                cacheEnabledChanged.raise(value)
+            }
+        }
+    }
+    let defaultLimit = StorageSize(gigs: 10)
+    var cacheLimit: StorageSize {
+        get {
+            if let bytesAsString = impl.load(PimpSettings.CACHE_LIMIT) {
+                if let asLong = NSNumberFormatter().numberFromString(bytesAsString)?.longLongValue {
+                    return StorageSize.fromBytes(asLong) ?? defaultLimit
+                }
+            }
+            return defaultLimit
+        }
+        set(newLimit) {
+            let errors = impl.save("\(newLimit.toBytes)", key: PimpSettings.CACHE_LIMIT)
+            if errors == nil {
+                cacheLimitChanged.raise(newLimit)
+            }
+        }
+    }
     func endpoints() -> [Endpoint] {
         if let str = impl.load(PimpSettings.ENDPOINTS) {
             var error: NSError?

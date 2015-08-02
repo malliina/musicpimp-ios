@@ -10,10 +10,11 @@ import Foundation
 import AudioToolbox
 import AVFoundation
 
-class LocalLibrary: BaseLibrary, LibraryType {
+class LocalLibrary: BaseLibrary {
     static let sharedInstance = LocalLibrary()
+    static let currentVersion = Version(version: "1.0.0")
     
-    static let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask,true)[0] as! String
+    static let documentsPath = Files.documentsPath
     override var isLocal: Bool { get { return true } }
     let supportedExtensions = ["mp3"]
     
@@ -25,6 +26,46 @@ class LocalLibrary: BaseLibrary, LibraryType {
     
     let fileManager = NSFileManager.defaultManager()
     
+    var size: StorageSize { return Files.sharedInstance.folderSize(musicRootPath) }
+    
+    func url(track: Track) -> NSURL? {
+        let path = track.path
+        let absolutePath = pathTo(path)
+        if Files.exists(absolutePath) {
+            let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
+            if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
+                let localSize = sizeNum.longLongValue
+                let trackSize = track.size
+                if trackSize == localSize {
+                    Log.info("Found local track at \(path)")
+                    return NSURL(fileURLWithPath: absolutePath)
+                } else {
+                    Log.info("Local size of \(localSize) does not match track size of \(trackSize), ignoring local")
+                }
+            } else {
+                Log.error("Unable to get file size for \(path)")
+            }
+        } else {
+            Log.info("Local track not found for \(path)")
+        }
+        return nil
+    }
+    
+    func contains(track: Track) -> Bool {
+        return url(track) != nil
+    }
+    
+    func pathTo(relativePath: String) -> String {
+        return self.musicRootPath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
+    }
+
+    func deleteContents() -> Bool {
+        let deleteSuccess = fileManager.removeItemAtPath(musicRootPath, error: nil)
+        let dirRecreateSuccess = self.fileManager.createDirectoryAtPath(musicRootPath, withIntermediateDirectories: true, attributes: nil, error: nil)
+        contentsUpdated.raise(nil)
+        return deleteSuccess && dirRecreateSuccess
+    }
+    
     func parseTrack(absolutePath: String) -> Track? {
         let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
         if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
@@ -35,37 +76,44 @@ class LocalLibrary: BaseLibrary, LibraryType {
                 var album: String? = nil
                 var track: String? = nil
                 if let metas = asset.metadata as? [AVMetadataItem] {
+                    // parses any tags
                     for meta in metas {
                         let value = meta.stringValue
                         switch meta.key.description {
-                        case LocalLibrary.ARTIST:
-                            artist = value
+                        case LocalLibrary.TRACK:
+                            track = value
                             break
                         case LocalLibrary.ALBUM:
                             album = value
                             break
-                        case LocalLibrary.TRACK:
-                            track = value
+                        case LocalLibrary.ARTIST:
+                            artist = value
                             break
                         default:
                             break
                         }
                     }
                 }
-                
                 let relativePath = relativize(absolutePath)
-                if let artist = artist,
-                    album = album,
-                    track = track,
-                    dur = duration(asset),
+                // falls back to filepath-based parsing
+                let relativeDir = relativePath.stringByDeletingLastPathComponent
+                
+                let actualTrack = track ?? relativePath.lastPathComponent.stringByDeletingPathExtension
+                let actualAlbum = album ?? relativeDir.lastPathComponent
+                let actualArtist = artist ?? relativeDir.stringByDeletingLastPathComponent.lastPathComponent
+                
+                if let dur = duration(asset),
                     url = url {
-                        return Track(id: Util.urlEncode(relativePath), title: track, album: album, artist: artist, duration: dur, path: relativePath, size: size, url: url)
+                        return Track(id: Util.urlEncode(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
+                } else {
+                    Log.error("Unable to parse duration and URL of \(absolutePath)")
                 }
             }
+        } else {
+            Log.error("Unable to determine file size of \(absolutePath)")
         }
         return nil
     }
-    
     func parseFolder(absolute: String) -> Folder {
         let path = relativize(absolute)
         //Log.info("Abs: \(absolute), relative: \(path)")
@@ -80,7 +128,6 @@ class LocalLibrary: BaseLibrary, LibraryType {
             return path
         }
     }
-    
     func duration(asset: AVAsset) -> Duration? {
         let time = asset.duration
         let secs = CMTimeGetSeconds(time)
@@ -89,15 +136,10 @@ class LocalLibrary: BaseLibrary, LibraryType {
         }
         return nil
     }
-    
-    func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
-        f(Version(version: "1.0.0"))
+    override func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
+        f(LocalLibrary.currentVersion)
     }
-    
-    func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
-        f([])
-    }
-    func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
         let path = Util.urlDecode(id)
         let folder = parseFolder(path)
         //Log.info("ID: \(id)")
@@ -106,15 +148,7 @@ class LocalLibrary: BaseLibrary, LibraryType {
     func isSupportedFile(path: String) -> Bool {
         return supportedExtensions.exists({ path.hasSuffix($0) })
     }
-    func isNotDirectory(path: String) -> Bool {
-        var isDirectory: ObjCBool = false
-        let exists = self.fileManager.fileExistsAtPath(path, isDirectory: &isDirectory)
-        if !exists {
-            Log.info("Path does not exist: \(path)")
-        }
-        return !isDirectory
-    }
-    func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
         folderAtPath(Folder.root, f: f)
     }
     func folderAtPath(folder: Folder, f: MusicFolder -> Void) {
@@ -122,14 +156,14 @@ class LocalLibrary: BaseLibrary, LibraryType {
         let items: [String] = fileManager.contentsOfDirectoryAtPath(absolutePath, error: nil) as? [String] ?? []
         let paths = items.map({ absolutePath.stringByAppendingString("/" + $0) })
         var isDirectory: ObjCBool = false
-        let (files, directories) = paths.partition(isNotDirectory)
+        let (directories, files) = paths.partition(Files.isDirectory)
+        Log.info("Files in \(folder.path):")
+        for file in files {
+            Log.info(file)
+        }
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
         //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")
         f(MusicFolder(folder: folder, folders: folders, tracks: tracks))
-    }
-
-    func urlFor(trackID: String) -> NSURL {
-       return NSURL(string: "http://www.google.com")!
     }
 }

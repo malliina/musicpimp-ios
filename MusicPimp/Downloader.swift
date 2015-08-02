@@ -16,34 +16,63 @@ class Downloader {
     init(basePath: String) {
         self.basePath = basePath
     }
-    func download(url: NSURL, relativePath: String) {
-        download(url, relativePath: relativePath, onError: { Log.info($0) })
+    func download(url: NSURL, relativePath: String, replace: Bool = false) {
+        download(
+            url,
+            relativePath: relativePath,
+            replace: replace,
+            onError: { (err: PimpError) -> Void in
+                let msg = PimpErrorUtil.stringify(err)
+                Log.error(msg)
+            },
+            onSuccess: { (destPath: String) -> Void in
+                
+                
+            }
+        )
     }
-    func download(url: NSURL, relativePath: String, onError: ErrorMessage -> Void) {
-        let destPath = self.basePath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
-        if !Files.exists(destPath) {
-            Log.info("Downloading \(url) to \(relativePath)")
+    func download(url: NSURL, relativePath: String, replace: Bool = false, onError: PimpError -> Void, onSuccess: String -> Void) {
+        let destPath = pathTo(relativePath)
+        if replace || !Files.exists(destPath) {
+            Log.info("Downloading \(url) to \(destPath)")
             let request = NSURLRequest(URL: url)
             NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()) { (response, data, err) -> Void in
                 if(err != nil) {
-                    onError(ErrorMessage(message: "Error \(err)"))
-                } else if(data != nil) {
-                    let dir = destPath.stringByDeletingLastPathComponent
-                    let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
-                    if(dirSuccess) {
-                        let fileSuccess = data.writeToFile(destPath, atomically: false)
-                        if(fileSuccess) {
-                            Log.info("Downloaded \(relativePath)")
+                    onError(self.simpleError("Error \(err)"))
+                } else {
+                    if let response = response as? NSHTTPURLResponse {
+                        if response.isSuccess {
+                            if(data != nil) {
+                                let dir = destPath.stringByDeletingLastPathComponent
+                                let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
+                                if(dirSuccess) {
+                                    let fileSuccess = data.writeToFile(destPath, atomically: true)
+                                    if(fileSuccess) {
+                                        //let size = Files.sharedInstance.fileSize(destPath) crashes
+                                        Log.info("Downloaded \(destPath)")
+                                        onSuccess(destPath)
+                                    } else {
+                                        onError(self.simpleError("Unable to write \(destPath)"))
+                                    }
+                                } else {
+                                    onError(self.simpleError("Unable to create directory: \(dir)"))
+                                }
+                            }
                         } else {
-                            onError(ErrorMessage(message: "Unable to write \(destPath)"))
+                            onError(.ResponseFailure("\(url)", response.statusCode, nil))
                         }
-                    } else {
-                        onError(ErrorMessage(message: "Unable to ensure directory exists: \(dir)"))
                     }
                 }
             }
         } else {
+            onSuccess(destPath)
             Log.info("Already exists, not downloading \(relativePath)")
         }
+    }
+    func pathTo(relativePath: String) -> String {
+        return self.basePath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
+    }
+    func simpleError(message: String) -> PimpError {
+        return PimpError.SimpleError(ErrorMessage(message: message))
     }
 }
