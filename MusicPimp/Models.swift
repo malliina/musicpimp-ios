@@ -41,15 +41,17 @@ class Folder: MusicItem {
     }
 }
 
-class Track: MusicItem {
+class Track: MusicItem, Hashable {
     let album: String
     let artist: String
     let duration: Duration
     let path: String
-    let size: Int64
+    let size: StorageSize
     let url: NSURL
     
-    init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: Int64, url: NSURL) {
+    var hashValue : Int { get { return self.id.hashValue } }
+    
+    init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: StorageSize, url: NSURL) {
         self.album = album
         self.artist = artist
         self.duration = duration
@@ -60,12 +62,17 @@ class Track: MusicItem {
     }
 }
 
+func ==(lhs: Track, rhs: Track) -> Bool {
+    return lhs.id == rhs.id
+}
+
 class MusicFolder {
     static let empty = MusicFolder(folder: Folder.empty, folders: [], tracks: [])
     
     let folder: Folder
     let folders: [Folder]
     let tracks: [Track]
+    let items: [MusicItem]
     
     //var description: String = "Folder \(folder.title) with \(folders.count) subfolders and \(tracks.count) tracks"
     
@@ -73,6 +80,10 @@ class MusicFolder {
         self.folder = folder
         self.folders = folders
         self.tracks = tracks
+        // folders + tracks doesn't work
+        let foldersAsItems: [MusicItem] = folders
+        let tracksAsItems: [MusicItem] = tracks
+        items = foldersAsItems + tracksAsItems
     }
 }
 

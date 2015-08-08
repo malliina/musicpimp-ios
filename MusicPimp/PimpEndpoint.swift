@@ -48,7 +48,8 @@ class PimpEndpoint: PimpUtils {
             title = obj[JsonKeys.TITLE] as? String,
             artist = obj[JsonKeys.ARTIST] as? String,
             album = obj[JsonKeys.ALBUM] as? String,
-            size = obj[JsonKeys.SIZE] as? Int,
+            sizeRaw = obj[JsonKeys.SIZE] as? Int,
+            size = StorageSize.fromBytes(sizeRaw),
             duration = obj[JsonKeys.DURATION] as? Int,
             durDuration = duration.seconds {
                 return Track(
@@ -58,7 +59,7 @@ class PimpEndpoint: PimpUtils {
                     artist: artist,
                     duration: durDuration,
                     path: Util.urlDecode(id),
-                    size: Int64(size),
+                    size: size,
                     url: urlMaker(id))
         }
         return nil

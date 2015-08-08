@@ -33,7 +33,7 @@ class LibraryNavController: UINavigationController {
             lm.onContentsUpdated
         })
     }
-    func onLibraryChanged(e: LibraryType) {
+    func onLibraryChanged(newLibrary: LibraryType) {
         Log.info("Library changed")
         Util.onUiThread({ () in
             self.pop()

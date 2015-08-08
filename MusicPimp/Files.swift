@@ -22,6 +22,13 @@ class File: Path {
         let bytes = Files.numberKey(url, key: NSURLFileSizeKey) ?? 0
         return bytes.unsignedLongLongValue.bytes
     }
+    static func fromPath(absolutePath: String) -> File? {
+        if let url = NSURL(fileURLWithPath: absolutePath) {
+            return File(url: url)
+        } else {
+            return nil
+        }
+    }
 }
 class FolderContents {
     let folders: [Path]

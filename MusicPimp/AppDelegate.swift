@@ -18,9 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let audioSession = AVAudioSession.sharedInstance()
     
+    var downloadCompletionHandlers: [String: () -> Void] = [:]
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         initAudio()
+        BackgroundDownloader.musicDownloader.setupSession()
         PlayerManager.sharedInstance.active.open()
         test()
         return true
@@ -56,32 +59,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Audio session initialized")
     }
 
-//    override func remoteControlReceivedWithEvent(event: UIEvent) {
-//        switch event.subtype {
-//        case UIEventSubtype.RemoteControlPlay:
-//            break;
-//        case UIEventSubtype.RemoteControlPause:
-//            break;
-//        case UIEventSubtype.RemoteControlStop:
-//            break;
-//        case UIEventSubtype.RemoteControlNextTrack:
-//            break;
-//        case UIEventSubtype.RemoteControlPreviousTrack:
-//            break;
-//        case UIEventSubtype.RemoteControlTogglePlayPause:
-//            break;
-//        case UIEventSubtype.RemoteControlBeginSeekingForward:
-//            break;
-//        case UIEventSubtype.RemoteControlEndSeekingForward:
-//            break;
-//        case UIEventSubtype.RemoteControlBeginSeekingBackward:
-//            break;
-//        case UIEventSubtype.RemoteControlEndSeekingBackward:
-//            break;
-//        default:
-//            Log.error("Unknown remote control event: \(event.subtype)")
-//        }
-//    }
+    
+    func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+        Log.info("Complete: \(identifier)")
+        downloadCompletionHandlers[identifier] = completionHandler
+    }
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -110,6 +92,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    //    override func remoteControlReceivedWithEvent(event: UIEvent) {
+    //        switch event.subtype {
+    //        case UIEventSubtype.RemoteControlPlay:
+    //            break;
+    //        case UIEventSubtype.RemoteControlPause:
+    //            break;
+    //        case UIEventSubtype.RemoteControlStop:
+    //            break;
+    //        case UIEventSubtype.RemoteControlNextTrack:
+    //            break;
+    //        case UIEventSubtype.RemoteControlPreviousTrack:
+    //            break;
+    //        case UIEventSubtype.RemoteControlTogglePlayPause:
+    //            break;
+    //        case UIEventSubtype.RemoteControlBeginSeekingForward:
+    //            break;
+    //        case UIEventSubtype.RemoteControlEndSeekingForward:
+    //            break;
+    //        case UIEventSubtype.RemoteControlBeginSeekingBackward:
+    //            break;
+    //        case UIEventSubtype.RemoteControlEndSeekingBackward:
+    //            break;
+    //        default:
+    //            Log.error("Unknown remote control event: \(event.subtype)")
+    //        }
+    //    }
 
 
 }

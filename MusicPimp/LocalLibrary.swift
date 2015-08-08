@@ -33,14 +33,13 @@ class LocalLibrary: BaseLibrary {
         let absolutePath = pathTo(path)
         if Files.exists(absolutePath) {
             let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
-            if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
-                let localSize = sizeNum.longLongValue
+            if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, localStorageSize = StorageSize.fromBytes(sizeNum.longLongValue) {
                 let trackSize = track.size
-                if trackSize == localSize {
+                if trackSize == localStorageSize {
                     Log.info("Found local track at \(path)")
                     return NSURL(fileURLWithPath: absolutePath)
                 } else {
-                    Log.info("Local size of \(localSize) does not match track size of \(trackSize), ignoring local")
+                    Log.info("Local size of \(localStorageSize) does not match track size of \(trackSize), ignoring local")
                 }
             } else {
                 Log.error("Unable to get file size for \(path)")
@@ -68,8 +67,7 @@ class LocalLibrary: BaseLibrary {
     
     func parseTrack(absolutePath: String) -> Track? {
         let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
-        if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
-            let size = sizeNum.longLongValue
+        if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, size = StorageSize.fromBytes(sizeNum.longLongValue) {
             let url = NSURL(fileURLWithPath: absolutePath)
             if let asset = AVAsset.assetWithURL(url) as? AVAsset {
                 var artist: String? = nil
@@ -157,10 +155,6 @@ class LocalLibrary: BaseLibrary {
         let paths = items.map({ absolutePath.stringByAppendingString("/" + $0) })
         var isDirectory: ObjCBool = false
         let (directories, files) = paths.partition(Files.isDirectory)
-        Log.info("Files in \(folder.path):")
-        for file in files {
-            Log.info(file)
-        }
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
         //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")

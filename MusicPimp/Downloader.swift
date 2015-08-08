@@ -8,15 +8,18 @@
 
 import Foundation
 class Downloader {
-    static let musicDownloader = Downloader(basePath: LocalLibrary.sharedInstance.musicRootPath)
+
+    typealias RelativePath = String
+    
     let fileManager = NSFileManager.defaultManager()
     let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-    
     let basePath: String
+    
     init(basePath: String) {
         self.basePath = basePath
     }
-    func download(url: NSURL, relativePath: String, replace: Bool = false) {
+    
+    func download(url: NSURL, relativePath: RelativePath, replace: Bool = false) {
         download(
             url,
             relativePath: relativePath,
@@ -31,7 +34,8 @@ class Downloader {
             }
         )
     }
-    func download(url: NSURL, relativePath: String, replace: Bool = false, onError: PimpError -> Void, onSuccess: String -> Void) {
+    
+    func download(url: NSURL, relativePath: RelativePath, replace: Bool = false, onError: PimpError -> Void, onSuccess: String -> Void) {
         let destPath = pathTo(relativePath)
         if replace || !Files.exists(destPath) {
             Log.info("Downloading \(url) to \(destPath)")
@@ -69,10 +73,24 @@ class Downloader {
             Log.info("Already exists, not downloading \(relativePath)")
         }
     }
-    func pathTo(relativePath: String) -> String {
+    
+    func prepareDestination(relativePath: RelativePath) -> String? {
+        let destPath = pathTo(relativePath)
+        let dir = destPath.stringByDeletingLastPathComponent
+        let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
+        return dirSuccess ? destPath : nil
+    }
+    
+    func pathTo(relativePath: RelativePath) -> String {
         return self.basePath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
     }
+    
     func simpleError(message: String) -> PimpError {
         return PimpError.SimpleError(ErrorMessage(message: message))
     }
+    
+    func info(s: String) {
+        Log.info(s)
+    }
+
 }

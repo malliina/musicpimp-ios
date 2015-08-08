@@ -51,15 +51,21 @@ extension Array {
         }
         return (trues, falses)
     }
-//    func mkString(sep: String) -> String {
-//        var ret = ""
-//        for (idx, element) in enumerate(self) {
-//            ret += element
-//            let isLast = idx == self.count-1
-//            if !isLast {
-//                ret += sep
-//            }
-//        }
-//        return ret
-//    }
+    func mkString(sep: String) -> String {
+        return mkString("", sep: sep, suffix: "")
+    }
+    func mkString(prefix: String, sep: String, suffix: String) -> String {
+        let count = self.count
+        var ret = count > 0 ? prefix : ""
+        for (idx, element) in enumerate(self) {
+            ret += "\(element)"
+            let isLast = idx == count - 1
+            if isLast {
+                ret += suffix
+            } else {
+                ret += sep
+            }
+        }
+        return ret
+    }
 }

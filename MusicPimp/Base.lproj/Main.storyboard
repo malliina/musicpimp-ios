@@ -38,7 +38,7 @@
                                     <segue destination="bku-Sh-rNV" kind="show" identifier="library" id="o8w-CK-YQI"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TrackCell" textLabel="avB-aC-cUF" style="IBUITableViewCellStyleDefault" id="2lY-Vs-Qvf">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TrackCell" textLabel="avB-aC-cUF" style="IBUITableViewCellStyleDefault" id="2lY-Vs-Qvf" customClass="PimpMusicItemCell" customModule="MusicPimp" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2lY-Vs-Qvf" id="weG-c3-fN0">
                                     <autoresizingMask key="autoresizingMask"/>

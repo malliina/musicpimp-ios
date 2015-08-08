@@ -9,18 +9,30 @@
 import Foundation
 import UIKit
 
+class TrackProgress {
+    let track: Track
+    let dpu: DownloadProgressUpdate
+    
+    var progress: Float { return Float(Double(dpu.written.toBytes) / Double(track.size.toBytes)) }
+    
+    init(track: Track, dpu: DownloadProgressUpdate) {
+        self.track = track
+        self.dpu = dpu
+    }
+}
+
 class LibraryController: PimpTableController {
     static let LIBRARY = "library", PLAYER = "player"
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     
-    static var libraryListener: Disposable? = nil
-    static var contentListener: Disposable? = nil
-    
-    var musicItems: [MusicItem] = []
+    var folder: MusicFolder = MusicFolder.empty
+    var musicItems: [MusicItem] { return folder.items }
     var selected: MusicItem? = nil
     
     var header: UIView? = nil
     var feedback: UILabel? = nil
+    private var downloadUpdates: Disposable? = nil
+    private var downloadState: [Track: TrackProgress] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,43 +54,40 @@ class LibraryController: PimpTableController {
             loadRoot()
         }
     }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self, handler: { (lc) -> DownloadProgressUpdate -> () in
+            lc.onDownloadProgressUpdate
+        })
+    }
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        downloadUpdates?.dispose()
+        downloadUpdates = nil
+    }
+    func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
+        let tracks = folder.tracks
+        if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
+            index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
+            if track.size == dpu.written {
+                downloadState.removeValueForKey(track)
+            } else {
+                downloadState[track] = TrackProgress(track: track, dpu: dpu)
+            }
+            let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
+
+            Util.onUiThread({
+                self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+            })
+//            self.tableView.reloadData()
+        }
+    }
     @IBAction func refreshClicked(sender: UIBarButtonItem) {
         info("Refresh from \(self)")
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     private func resetLibrary() {
         loadRoot()
-    }
-    // Calls popToRootViewControllerAnimated on the deepest UINavigationController
-    private func popAll(ctrl: UIViewController) -> [AnyObject] {
-        let stack = navStack(ctrl, acc: [])
-        let dfs = stack.reverse()
-        var popped: [AnyObject] = []
-        for nav in dfs {
-            info("Popping \(nav)")
-            popped = popped + (nav.popToRootViewControllerAnimated(false) ?? [])
-        }
-        return popped
-    }
-    private func deepestNavController(ctrl: UIViewController) -> UINavigationController? {
-        if let parent = ctrl.parentViewController {
-            return deepestNavController(parent) ?? parent.navigationController
-        } else {
-            return nil
-        }
-    }
-    private func navStack(ctrl: UIViewController, acc: [UINavigationController]) -> [UINavigationController] {
-        if let parent = ctrl.parentViewController {
-            if let nav = parent.navigationController {
-                let newAcc = acc + [nav]
-                return navStack(parent, acc: newAcc)
-            } else {
-                return acc
-            }
-        } else {
-            return acc
-        }
- 
     }
     func loadFolder(id: String) {
         library.folder(id, onError: onError, f: onFolder)
@@ -88,11 +97,7 @@ class LibraryController: PimpTableController {
         library.rootFolder(onError, f: onFolder)
     }
     func onFolder(f: MusicFolder) {
-        //info("Loaded \(f.folder.title) with \(f.tracks.count) tracks")
-        let fs: [MusicItem] = f.folders
-        let ts: [MusicItem] = f.tracks
-        let items: [MusicItem] = fs + ts
-        musicItems = items
+        folder = f
         Util.onUiThread({ () in
             self.tableView.tableHeaderView = nil
             self.tableView.reloadData()
@@ -111,15 +116,34 @@ class LibraryController: PimpTableController {
         info(message)
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.musicItems.count
+        return musicItems.count
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
-        let (prototypeID, accessoryType) = (item as? Folder != nil) ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
-        let cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as! UITableViewCell
-        cell.textLabel?.text = item.title
-        cell.accessoryType = accessoryType
-        return cell
+        let isFolder = item as? Folder != nil
+        let (prototypeID, accessoryType) = isFolder ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
+        var cell: UITableViewCell? = nil
+        if isFolder {
+            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as? UITableViewCell
+        } else {
+            let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
+            if let pimpCell = arr[0] as? PimpMusicItemCell {
+                cell = pimpCell
+                if let track = item as? Track {
+                    if let downloadProgress = downloadState[track] {
+                        //info("Setting progress to \(downloadProgress.progress)")
+                        pimpCell.progressView.progress = downloadProgress.progress
+                        pimpCell.progressView.hidden = false
+                    } else {
+                        pimpCell.progressView.hidden = true
+                    }
+                }
+                
+            }
+        }
+        cell?.textLabel?.text = item.title
+        cell?.accessoryType = accessoryType
+        return cell!
     }
     // When this method is defined, cells become swipeable
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -161,15 +185,18 @@ class LibraryController: PimpTableController {
             addTracks(tracks.tail())
         }
     }
+    
     func addFolder(id: String) {
         info("Adding folder")
         library.tracks(id, onError: onError, f: addTracks)
     }
+    
     func addTracks(tracks: [Track]) {
         info("Adding \(tracks.count) tracks")
         player.playlist.add(tracks)
         downloadIfNeeded(tracks)
     }
+    
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //let cell = tableView.cellForRowAtIndexPath(indexPath)
@@ -180,10 +207,12 @@ class LibraryController: PimpTableController {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
+    
     private func playAndDownload(track: Track) {
         player.resetAndPlay(track)
         downloadIfNeeded([track])
     }
+    
     private func downloadIfNeeded(tracks: [Track]) {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
@@ -192,9 +221,11 @@ class LibraryController: PimpTableController {
             }
         }
     }
+    
     private func startDownload(track: Track) {
-        Downloader.musicDownloader.download(track.url, relativePath: track.path, replace: true)
+        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
     }
+    
     // Performs segue if the user clicked a folder
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
         if identifier == LibraryController.LIBRARY {

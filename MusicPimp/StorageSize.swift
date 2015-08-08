@@ -35,13 +35,21 @@ class StorageSize: Printable, Comparable {
     var toTeras: UInt64 { return toGigs / StorageSize.k64 }
     
     var description: String {
-        if toTeras > 10 { return "\(toTeras) terabytes" }
-        else if toGigs > 10 { return "\(toGigs) gigabytes" }
-        else if toMegs > 10 { return "\(toMegs) megabytes" }
-        else if toKilos > 10 { return "\(toKilos) kilobytes" }
-        else { return "\(toBytes) bytes" }
+            return shortDescription
     }
-    
+    var longDescription: String {
+        return describe("bytes", kilos: "kilobytes", megas: "megabytes", gigas: "gigabytes", teras: "terabytes")
+    }
+    var shortDescription: String {
+        return describe("B", kilos: "KB", megas: "MB", gigas: "GB", teras: "TB")
+    }
+    private func describe(bytes: String, kilos: String, megas: String, gigas: String, teras: String) -> String {
+        if toTeras > 10 { return "\(toTeras) \(teras)" }
+        else if toGigs > 10 { return "\(toGigs) \(gigas)" }
+        else if toMegs > 10 { return "\(toMegs) \(megas)" }
+        else if toKilos > 10 { return "\(toKilos) \(kilos)" }
+        else { return "\(toBytes) \(bytes)" }
+    }
     static func fromBytes(bytes: Int64) -> StorageSize? {
         return bytes >= 0 ? StorageSize(bytes: UInt64(bytes)) : nil
     }

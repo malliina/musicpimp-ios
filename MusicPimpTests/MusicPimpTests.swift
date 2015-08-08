@@ -21,6 +21,11 @@ class MusicPimpTests: XCTestCase {
         super.tearDown()
     }
     
+    func testStringPathTest() {
+        let s = "".lastPathComponent.stringByDeletingPathExtension.stringByDeletingLastPathComponent.lastPathComponent
+        XCTAssert(s == "", "String methods should return the empty string if operating on one")
+    }
+    
     func testExample() {
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")

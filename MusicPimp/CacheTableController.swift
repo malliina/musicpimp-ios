@@ -27,7 +27,7 @@ class CacheTableController: CacheInfoController {
     }
     
     private func updateCacheUsageLabel() {
-        currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.description
+        currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.shortDescription
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
