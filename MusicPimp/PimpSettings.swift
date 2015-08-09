@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit"
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks"
     
     static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
@@ -54,8 +54,7 @@ class PimpSettings {
     }
     func endpoints() -> [Endpoint] {
         if let str = impl.load(PimpSettings.ENDPOINTS) {
-            var error: NSError?
-            if let json: AnyObject = Json.asJson(str, error: &error) {
+            if let json: AnyObject = Json.asJson(str, error: nil) {
                 if let dict = json as? NSDictionary {
                     if let endArray = dict[PimpSettings.ENDPOINTS] as? [NSDictionary] {
                         // TODO Fix
@@ -91,11 +90,37 @@ class PimpSettings {
         } else {
             Log.error("Unable to save endpoints")
         }
-        
     }
     func serialize(es: [Endpoint]) -> String? {
         let jsonified = es.map(PimpJson.sharedInstance.toJson)
         let blob = [PimpSettings.ENDPOINTS: jsonified]
         return Json.stringifyObject(blob, prettyPrinted: true)
+    }
+    
+    func tasks(sid: String) -> [Int: DownloadInfo] {
+        let key = taskKey(sid)
+        if let str = impl.load(key),
+            json = Json.asJson(str, error: nil) as? NSDictionary,
+            tasks = PimpJson.sharedInstance.asTasks(json) {
+            return tasks
+        }
+        return [:]
+    }
+    
+    func saveTasks(sid: String, tasks: [Int: DownloadInfo]) {
+        if let stringified = serialize(tasks) {
+            impl.save(stringified, key: taskKey(sid))
+        } else {
+            Log.error("Unable to save tasks")
+        }
+    }
+    
+    func taskKey(sid: String) -> String {
+        return "\(PimpSettings.TASKS)-\(sid)"
+    }
+    
+    func serialize(tasks: [Int: DownloadInfo]) -> String? {
+        let jsonified = PimpJson.sharedInstance.toJson(tasks)
+        return Json.stringifyObject(jsonified, prettyPrinted: true)
     }
 }

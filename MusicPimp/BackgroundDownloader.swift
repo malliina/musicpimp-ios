@@ -9,8 +9,8 @@
 import Foundation
 
 typealias SessionID = String
-typealias RelativePath = String
-typealias DestinationURL = NSURL
+public typealias RelativePath = String
+public typealias DestinationURL = NSURL
 
 class DownloadProgressUpdate {
     let info: DownloadInfo
@@ -33,11 +33,11 @@ class DownloadProgressUpdate {
     }
 }
 
-class DownloadInfo {
-    let relativePath: RelativePath
-    let destinationURL: DestinationURL
+public class DownloadInfo {
+    public let relativePath: RelativePath
+    public let destinationURL: DestinationURL
     
-    init(relativePath: RelativePath, destinationURL: DestinationURL) {
+    public init(relativePath: RelativePath, destinationURL: DestinationURL) {
         self.relativePath = relativePath
         self.destinationURL = destinationURL
     }
@@ -55,24 +55,66 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     let basePath: String
     
     private let sessionID: SessionID
-    private var session: NSURLSession? = nil
     private var tasks: [TaskID: DownloadInfo] = [:]
+    let lockQueue: dispatch_queue_attr_t!
+    
+    lazy var session: NSURLSession = self.setupSession()
     
     init(basePath: String, sessionID: SessionID) {
         self.basePath = basePath
         self.sessionID = sessionID
+        self.tasks = PimpSettings.sharedInstance.tasks(sessionID)
+        self.lockQueue = dispatch_queue_create(sessionID, nil)
     }
     
-    // TODO do a lazy var instead
-    func setupSession() {
+    func setup() {
+        let s = session
+    }
+    
+    private func stringify(state: NSURLSessionTaskState) -> String {
+        switch state {
+        case .Completed: return "Completed"
+        case .Running: return "Running"
+        case .Canceling: return "Canceling"
+        case .Suspended: return "Suspended"
+        }
+    }
+    
+    private func setupSession() -> NSURLSession {
         let conf = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(sessionID)
         conf.sessionSendsLaunchEvents = true
         conf.discretionary = true
-        self.session = NSURLSession(configuration: conf, delegate: self, delegateQueue: nil)
-        info("Initialized music session \(sessionID)")
+        let session = NSURLSession(configuration: conf, delegate: self, delegateQueue: nil)
+        session.getTasksWithCompletionHandler { (datas, uploads, downloads) -> Void in
+            // removes outdated tasks
+            if let downloads = downloads as? [NSURLSessionDownloadTask] {
+                let taskIDs = downloads.map({ (t) -> String in
+                    let stateDescribed = self.stringify(t.state)
+                    return "\(t.taskIdentifier): \(stateDescribed)"
+                })
+                self.synchronized {
+                    let actualTasks = self.tasks.filter({ (taskID, value) -> Bool in
+                        downloads.exists({ (task) -> Bool in
+                            return task.taskIdentifier == taskID
+                        })
+                    })
+                    if !taskIDs.isEmpty {
+                        self.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
+                    }
+                    self.tasks = actualTasks
+                }
+            }
+        }
+        return session
     }
     
-    func download(url: NSURL, relativePath: RelativePath, replace: Bool = false) -> ErrorMessage? {
+    func synchronized(f: () -> Void) {
+        dispatch_async(self.lockQueue) {
+            f()
+        }
+    }
+    
+    func download(url: NSURL, relativePath: RelativePath) -> ErrorMessage? {
         info("Preparing download of \(relativePath)")
         if let destPath = prepareDestination(relativePath), destURL = NSURL(fileURLWithPath: destPath) {
             let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
@@ -84,13 +126,29 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     func download(src: NSURL, info: DownloadInfo) -> ErrorMessage? {
         let request = NSURLRequest(URL: src)
-        if let task = session?.downloadTaskWithRequest(request) {
-            tasks[task.taskIdentifier] = info
-            task.resume()
-            return nil
-        } else {
-            return ErrorMessage(message: "No session. Cannot download \(src).")
+        let task = session.downloadTaskWithRequest(request)
+        saveTask(task.taskIdentifier, di: info)
+        task.resume()
+        return nil
+    }
+    
+    func saveTask(taskID: Int, di: DownloadInfo) {
+        synchronized {
+            self.tasks[taskID] = di
+            self.persistTasks()
         }
+    }
+    
+    func removeTask(taskID: Int) {
+        synchronized {
+            self.tasks.removeValueForKey(taskID)
+            self.persistTasks()
+        }
+    }
+    
+    func persistTasks() {
+        info("Saving \(tasks)")
+        PimpSettings.sharedInstance.saveTasks(self.sessionID, tasks: self.tasks)
     }
     
     func prepareDestination(relativePath: RelativePath) -> String? {
@@ -114,14 +172,14 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
         let taskID = downloadTask.taskIdentifier
-        info("Finished downloading \(taskID) to \(location)")
         if let downloadInfo = tasks[taskID] {
             let destURL = downloadInfo.destinationURL
-            let copySuccess = fileManager.copyItemAtURL(location, toURL: destURL, error: nil)
+            let copySuccess = fileManager.moveItemAtURL(location, toURL: destURL, error: nil)
+            let relPath = downloadInfo.relativePath
             if copySuccess {
-                info("Downloaded file to \(destURL)")
+                info("Completed download of \(relPath)")
             } else {
-                info("File copy failed to \(destURL)")
+                info("File copy of \(relPath) failed to \(destURL)")
             }
         }
     }
@@ -150,7 +208,7 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
         } else {
             info("Task \(taskID) complete.")
         }
-        tasks.removeValueForKey(taskID)
+        removeTask(taskID)
     }
     
     func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {

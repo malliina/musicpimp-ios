@@ -14,18 +14,24 @@ class PlaylistController: PimpTableController {
     var tracks: [Track] { get { return current.tracks } }
     var selected: MusicItem? = nil
     var listeners: [Disposable] = []
+    private var downloadState: [Track: TrackProgress] = [:]
 
     override func viewWillAppear(animated: Bool) {
+        downloadState = [:]
         let playlistDisposable = player.playlist.playlistEvent.addHandler(self, handler: { (plc: PlaylistController) -> Playlist -> () in
             plc.onNewPlaylist
         })
         let indexDisposable = player.playlist.indexEvent.addHandler(self, handler: { (plc: PlaylistController) -> Int? -> () in
             plc.onIndexChanged
         })
-        listeners = [playlistDisposable, indexDisposable]
+        let downloadProgressDisposable = BackgroundDownloader.musicDownloader.events.addHandler(self, handler: { (plc) -> DownloadProgressUpdate -> () in
+            plc.onDownloadProgressUpdate
+        })
+        listeners = [playlistDisposable, indexDisposable, downloadProgressDisposable]
         let state = player.current()
         let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
         onNewPlaylist(currentPlaylist)
+        
     }
     override func viewWillDisappear(animated: Bool) {
         for listener in listeners {
@@ -42,13 +48,54 @@ class PlaylistController: PimpTableController {
         self.current = Playlist(tracks: current.tracks, index: index)
         renderTable()
     }
+    func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
+        if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
+            index = tracks.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
+                let isDownloadComplete = track.size == dpu.written
+                if isDownloadComplete {
+                    downloadState.removeValueForKey(track)
+                } else {
+                    downloadState[track] = TrackProgress(track: track, dpu: dpu)
+                }
+                let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
+                
+                Util.onUiThread({
+                    self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+                })
+        }
+    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
-        let item = tracks[index]
-        let prototypeID = index == current.index ? "CurrentPlaylistItem" : "PlaylistItem"
-        let cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as! UITableViewCell
-        cell.textLabel?.text = item.title
-        return cell
+        let track = tracks[index]
+        let isCurrent = index == current.index
+        
+        var cell: UITableViewCell? = nil
+        let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
+        if let pimpCell = arr[0] as? PimpMusicItemCell {
+            if let downloadProgress = downloadState[track] {
+                //info("Setting progress to \(downloadProgress.progress)")
+                pimpCell.progressView.progress = downloadProgress.progress
+                pimpCell.progressView.hidden = false
+            } else {
+                pimpCell.progressView.hidden = true
+            }
+            cell = pimpCell
+        } else {
+            let prototypeID = isCurrent ? "CurrentPlaylistItem" : "PlaylistItem"
+            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as? UITableViewCell
+        }
+        if let cell = cell {
+            cell.textLabel?.text = track.title
+            if isCurrent {
+                cell.selectionStyle = UITableViewCellSelectionStyle.Blue
+                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            } else {
+                cell.selectionStyle = UITableViewCellSelectionStyle.Default
+                cell.accessoryType = UITableViewCellAccessoryType.None
+            }
+
+        }
+        return cell!
     }
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //let cell = tableView.cellForRowAtIndexPath(indexPath)

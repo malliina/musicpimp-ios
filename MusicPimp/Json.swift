@@ -7,20 +7,21 @@
 //
 
 import Foundation
-class Json {
-    static func asJson(input: String, error: NSErrorPointer) -> AnyObject? {
+
+public class Json {
+    public static func asJson(input: String, error: NSErrorPointer) -> AnyObject? {
         if let data = input.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
             return asJson(data, error: error)
         }
         return nil
     }
-    static func asJson(data: NSData, error: NSErrorPointer) -> AnyObject? {
+    public static func asJson(data: NSData, error: NSErrorPointer) -> AnyObject? {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: error)
     }
-    static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
+    public static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
         return stringify(value, prettyPrinted: prettyPrinted)
     }
-    private static func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
+    public static func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
         var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
         if NSJSONSerialization.isValidJSONObject(value) {
             if let data = NSJSONSerialization.dataWithJSONObject(value, options: options, error: nil) {

@@ -38,7 +38,7 @@ class Downloader {
     func download(url: NSURL, relativePath: RelativePath, replace: Bool = false, onError: PimpError -> Void, onSuccess: String -> Void) {
         let destPath = pathTo(relativePath)
         if replace || !Files.exists(destPath) {
-            Log.info("Downloading \(url) to \(destPath)")
+            Log.info("Downloading \(url)")
             let request = NSURLRequest(URL: url)
             NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()) { (response, data, err) -> Void in
                 if(err != nil) {

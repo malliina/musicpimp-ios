@@ -8,6 +8,8 @@
 
 import UIKit
 import XCTest
+import Foundation
+import MusicPimp
 
 class MusicPimpTests: XCTestCase {
     
@@ -29,6 +31,22 @@ class MusicPimpTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")
+    }
+    
+    func testJson() {
+        let testURL = "file:///www.google.com"
+        let testData: [Int: DownloadInfo] = [1: DownloadInfo(relativePath: "abba/mammamia.music", destinationURL: NSURL(string: testURL)!)]
+        let jsValue = PimpJson.sharedInstance.toJson(testData)
+        let isValidJson = NSJSONSerialization.isValidJSONObject(jsValue)
+        XCTAssert(isValidJson, "Serializer produces valid JSON")
+        let s = Json.stringifyObject(jsValue, prettyPrinted: true)
+        let containsGoogle = s!.rangeOfString("google") != nil
+        XCTAssert(containsGoogle, "Serialized value contains original content")
+        let json = Json.asJson(s!, error: nil)! as! NSDictionary
+        let tasks = PimpJson.sharedInstance.asTasks(json)!
+        let deURL = tasks[1]?.destinationURL.absoluteString!
+        let isUrlCorrect = deURL == testURL
+        XCTAssert(isUrlCorrect, "Deserializes back to original content")
     }
     
     func testPerformanceExample() {

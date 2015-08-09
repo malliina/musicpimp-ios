@@ -7,10 +7,13 @@
 //
 
 import Foundation
-class PimpJson {
-    static let sharedInstance = PimpJson()
+
+public class PimpJson {
+    public static let sharedInstance = PimpJson()
     
     static let ID = "id", SERVER_TYPE = "serverType", NAME = "name", PROTO = "proto", ADDRESS = "address", PORT = "port", USERNAME = "username", PASSWORD = "password", SSL = "ssl"
+    
+    static let RELATIVE_PATH = "relativePath", DESTINATION_URL = "destinationUrl", TASK = "task", TASKS = "tasks", SESSION = "session", SESSIONS = "sessions"
     
     func jsonStringified(e: Endpoint) -> String? {
         return Json.stringifyObject(toJson(e))
@@ -28,6 +31,41 @@ class PimpJson {
             PimpJson.USERNAME: e.username,
             PimpJson.PASSWORD: e.password
         ]
+    }
+    
+    public func toJson(tasks: [Int: DownloadInfo]) -> [String: AnyObject] {
+        let tasksArray = Swift.map(tasks, { (e) -> [String: AnyObject] in
+            let (key, value) = e
+            var obj = self.toJson(value)
+            obj[PimpJson.TASK] = key
+            return obj
+        })
+        return [ PimpJson.TASKS: tasksArray ]
+    }
+    
+    func toJson(di: DownloadInfo) -> [String: AnyObject] {
+        return [
+            PimpJson.RELATIVE_PATH: di.relativePath,
+            PimpJson.DESTINATION_URL: di.destinationURL.absoluteString ?? ""
+        ]
+    }
+    
+    public func asTasks(dict: NSDictionary) -> [Int: DownloadInfo]? {
+        let arr: AnyObject? = dict[PimpJson.TASKS]
+        if let ts = arr as? [[String: AnyObject]] {
+            return Dictionary(ts.flatMapOpt(asDownloadInfo))
+        }
+        return nil
+    }
+    
+    func asDownloadInfo(dict: [String: AnyObject]) -> (Int, DownloadInfo)? {
+        if let relPath = dict[PimpJson.RELATIVE_PATH] as? String,
+            dest = dict[PimpJson.DESTINATION_URL] as? String,
+            destURL = NSURL(string: dest),
+            task = dict[PimpJson.TASK] as? Int {
+                return (task, DownloadInfo(relativePath: relPath, destinationURL: destURL))
+        }
+        return nil
     }
     
     func asEndpoint(dict: NSDictionary) -> Endpoint? {

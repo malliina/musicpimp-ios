@@ -56,12 +56,18 @@ class LibraryController: PimpTableController {
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        downloadState = [:]
         downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self, handler: { (lc) -> DownloadProgressUpdate -> () in
             lc.onDownloadProgressUpdate
         })
     }
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
+        if downloadState.isEmpty {
+            disposeDownloadProgress()
+        }
+    }
+    func disposeDownloadProgress() {
         downloadUpdates?.dispose()
         downloadUpdates = nil
     }
@@ -69,17 +75,21 @@ class LibraryController: PimpTableController {
         let tracks = folder.tracks
         if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
             index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
-            if track.size == dpu.written {
+            let isDownloadComplete = track.size == dpu.written
+            if isDownloadComplete {
                 downloadState.removeValueForKey(track)
+                let isVisible = (isViewLoaded() && view.window != nil)
+                if !isVisible && downloadState.isEmpty {
+                    disposeDownloadProgress()
+                }
             } else {
                 downloadState[track] = TrackProgress(track: track, dpu: dpu)
             }
             let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
 
-            Util.onUiThread({
+            Util.onUiThread {
                 self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
-            })
-//            self.tableView.reloadData()
+            }
         }
     }
     @IBAction func refreshClicked(sender: UIBarButtonItem) {
@@ -138,7 +148,6 @@ class LibraryController: PimpTableController {
                         pimpCell.progressView.hidden = true
                     }
                 }
-                
             }
         }
         cell?.textLabel?.text = item.title
@@ -216,7 +225,7 @@ class LibraryController: PimpTableController {
     private func downloadIfNeeded(tracks: [Track]) {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
-            for track in newTracks.take(10) {
+            for track in newTracks {
                 startDownload(track)
             }
         }

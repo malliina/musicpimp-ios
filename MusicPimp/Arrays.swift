@@ -69,3 +69,29 @@ extension Array {
         return ret
     }
 }
+
+// http://stackoverflow.com/questions/24116271/whats-the-cleanest-way-of-applying-map-to-a-dictionary-in-swift
+extension Dictionary {
+    init(_ pairs: [Element]) {
+        self.init()
+        for (k, v) in pairs {
+            self[k] = v
+        }
+    }
+    
+    func mapValues<OutValue>(transform: Value -> OutValue) -> [Key: OutValue] {
+        return self.map { (key, value) -> (Key, OutValue) in
+            (key, transform(value))
+        }
+    }
+    
+    func map<OutKey: Hashable, OutValue>(transform: Element -> (OutKey, OutValue)) -> [OutKey: OutValue] {
+        let pairs = Swift.map(self) { (e) in (transform(e)) }
+        return Dictionary<OutKey, OutValue>(pairs)
+    }
+
+    func filter(includeElement: Element -> Bool) -> [Key: Value] {
+        let pairs = Swift.filter(self, includeElement)
+        return Dictionary(pairs)
+    }
+}
