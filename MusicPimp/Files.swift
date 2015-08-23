@@ -49,9 +49,17 @@ class File: Path {
 class FolderContents {
     let folders: [Directory]
     let files: [File]
+    lazy var paths: [Path] = self.allPaths()
+    
     init(folders: [Directory], files: [File]) {
         self.folders = folders
         self.files = files
+    }
+    
+    private func allPaths() -> [Path] {
+        let folderPaths: [Path] = folders
+        let filePaths: [Path] = files
+        return folderPaths + filePaths
     }
 }
 

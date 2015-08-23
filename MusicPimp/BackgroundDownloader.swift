@@ -190,14 +190,20 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let taskID = downloadTask.taskIdentifier
-        if let info = tasks[taskID], writtenDelta = StorageSize.fromBytes(bytesWritten), written = StorageSize.fromBytes(totalBytesWritten) {
+        let taskOpt = tasks[taskID]
+        if let info = taskOpt,
+            writtenDelta = StorageSize.fromBytes(bytesWritten),
+            written = StorageSize.fromBytes(totalBytesWritten) {
             let expectedSize = StorageSize.fromBytes(totalBytesExpectedToWrite)
             let update = DownloadProgressUpdate(info: info, writtenDelta: writtenDelta, written: written, totalExpected: expectedSize)
             events.raise(update)
         } else {
-            info("Unable to parse download progress update of task \(taskID)")
+            if taskOpt == nil {
+                info("Download task not found: \(taskID)")
+            } else {
+                info("Unable to parse bytes of download progress: \(bytesWritten), \(totalBytesWritten)")
+            }
         }
-        //info("Wrote: \(bytesWritten) of \(taskID), written: \(totalBytesWritten), expected total: \(totalBytesExpectedToWrite)")
     }
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {

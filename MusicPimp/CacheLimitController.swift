@@ -8,7 +8,7 @@
 
 import Foundation
 class CacheLimitController: BaseTableController {
-    let gigOptions: [UInt] = [1, 2, 5, 10, 20, 50, 100, 500]
+    let gigOptions: [Int] = [1, 2, 5, 10, 20, 50, 100, 500]
     var sizes: [StorageSize] { get { return gigOptions.map { (gB) -> StorageSize in return StorageSize(gigs: gB) } } }
     var current: StorageSize { return settings.cacheLimit }
     
