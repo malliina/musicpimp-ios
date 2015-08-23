@@ -11,58 +11,55 @@ import Foundation
 
 class Duration: Printable, Comparable {
     static let Zero = Duration(millis: 0)
-    let millis: UInt64
+    let millis: Int64
     var secondsFloat: Float { get { return Float(seconds) } }
-    var seconds: UInt64 { get { return self.millis / 1000 } }
-    var minutes: UInt64 { get { return self.millis / 60000 } }
-    var hours: UInt64 { get { return self.millis / 3600000 } }
+    var seconds: Int64 { get { return self.millis / 1000 } }
+    var minutes: Int64 { get { return self.millis / 60000 } }
+    var hours: Int64 { get { return self.millis / 3600000 } }
     
-    init(millis: UInt64) {
+    init(millis: Int64) {
         self.millis = millis
     }
     convenience init(ms: UInt) {
-        self.init(millis: UInt64(ms))
+        self.init(millis: Int64(ms))
     }
-    convenience init(seconds: UInt)  {
-        self.init(millis: UInt64(seconds * 1000))
+    convenience init(seconds: Int)  {
+        self.init(millis: Int64(seconds * 1000))
+    }
+    convenience init(secs: UInt)  {
+        self.init(millis: Int64(secs * 1000))
     }
     convenience init(minutes: UInt) {
-        self.init(seconds: minutes * 60)
+        self.init(secs: minutes * 60)
     }
     convenience init(hours: UInt) {
         self.init(minutes: hours * 60)
     }
-    static func fromMillis(millis: Int) -> Duration? {
-        if(millis >= 0) {
-            return Duration(millis: UInt64(millis))
-        } else {
-            return nil
-        }
-    }
-    static func fromSeconds(seconds: Int) -> Duration? {
-        return fromMillis(seconds * 1000)
+    static func now() -> Duration {
+        // can this fail?
+        return NSDate().timeIntervalSince1970.seconds!
     }
     
-    private func toReadable(secs: UInt64) -> String {
-        let hs = padded(countHours(secs))
-        let mins = padded(countMinutes(secs))
-        let secs = padded(countSeconds(secs))
+    private func toReadable(duration: Duration) -> String {
+        let hs = padded(countHours(duration))
+        let mins = padded(countMinutes(duration))
+        let secs = padded(countSeconds(duration))
         return "\(hs):\(mins):\(secs)"
     }
-    private func padded(time: UInt64) -> String {
+    private func padded(time: Int64) -> String {
         return time < 10 ? "0\(time)" : "\(time)"
     }
-    private func countSeconds(time: UInt64) -> UInt64 {
-        return time % 60
+    private func countSeconds(time: Duration) -> Int64 {
+        return time.seconds % 60
     }
-    private func countMinutes(time: UInt64) -> UInt64 {
-        return time / 60
+    private func countMinutes(time: Duration) -> Int64 {
+        return time.minutes % 60
     }
-    private func countHours(time: UInt64) -> UInt64 {
-        return time / 3600
+    private func countHours(time: Duration) -> Int64 {
+        return time.seconds / 3600
     }
     
-    var description: String { get { return toReadable(seconds) } }
+    var description: String { get { return toReadable(self) } }
 }
 func ==(lhs: Duration, rhs: Duration) -> Bool {
     return lhs.millis == rhs.millis
@@ -79,19 +76,24 @@ func >(lhs: Duration, rhs: Duration) -> Bool {
 func >=(lhs: Duration, rhs: Duration) -> Bool {
     return lhs.millis >= rhs.millis
 }
+func -(lhs: Duration, rhs: Duration) ->  Duration {
+    return Duration(millis: lhs.millis - rhs.millis)
+}
 extension Int {
-    var millis: Duration? { get { return Duration.fromMillis(self) } }
-    var seconds: Duration? { get { return Duration.fromSeconds(self) } }
+    var millis: Duration { get { return Duration(millis: Int64(self)) } }
+    var seconds: Duration { get { return Duration(seconds: self) } }
+    var minutes: Duration { get { return Duration(seconds: self * 60) } }
+    var hours: Duration { get { return Duration(seconds: self * 60 * 60) } }
 }
 extension UInt {
     var millis: Duration { get { return Duration(ms: self) } }
-    var seconds: Duration { get { return Duration(seconds: self) } }
+    var seconds: Duration { get { return Duration(ms: self * 1000) } }
 }
 extension Float64 {
-    var millis: Duration? { get { return Duration.fromMillis(Int(self)) } }
-    var seconds: Duration? { get { return Duration.fromMillis(Int(self * 1000)) } }
+    var millis: Duration? { get { return Duration(millis: Int64(self)) } }
+    var seconds: Duration? { get { return Duration(millis: Int64(self * 1000)) } }
 }
 extension Float {
-    var millis: Duration? { get { return Duration.fromMillis(Int(self)) } }
-    var seconds: Duration? { get { return Duration.fromMillis(Int(self * 1000)) } }
+    var millis: Duration? { get { return Duration(millis: Int64(self)) } }
+    var seconds: Duration? { get { return Duration(millis: Int64(self * 1000)) } }
 }

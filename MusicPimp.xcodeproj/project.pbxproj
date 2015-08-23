@@ -94,6 +94,8 @@
 		7DDE24721B6E896B007D810E /* PimpMusicItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */; };
 		7DDE24741B6E8ABC007D810E /* PimpMusicItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */; };
 		7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */; };
+		7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24781B7E5B78007D810E /* Throttler.swift */; };
+		7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE247A1B7E6139007D810E /* CacheManager.swift */; };
 		7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00B1AED50B300F25B9B /* Arrays.swift */; };
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
 /* End PBXBuildFile section */
@@ -212,6 +214,8 @@
 		7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PimpMusicItemCell.xib; sourceTree = "<group>"; };
 		7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpMusicItemCell.swift; sourceTree = "<group>"; };
 		7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundDownloader.swift; sourceTree = "<group>"; };
+		7DDE24781B7E5B78007D810E /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
+		7DDE247A1B7E6139007D810E /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		7DF5C00B1AED50B300F25B9B /* Arrays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrays.swift; sourceTree = "<group>"; };
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -326,6 +330,7 @@
 				7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */,
 				7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */,
 				7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */,
+				7DDE247A1B7E6139007D810E /* CacheManager.swift */,
 			);
 			name = Local;
 			sourceTree = "<group>";
@@ -438,6 +443,7 @@
 				7D6756BA1B01092E00BC0CA9 /* UserPrefs.swift */,
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
+				7DDE24781B7E5B78007D810E /* Throttler.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";
@@ -651,6 +657,7 @@
 				7DC359711B37122A003B01B6 /* SettingsNavController.swift in Sources */,
 				7DB1B3BA1B12013A0012B8AE /* BaseLibrary.swift in Sources */,
 				7D6756B51AFD4D8A00BC0CA9 /* FilePersistence.swift in Sources */,
+				7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */,
 				7DBCD7A21B261227006460D1 /* CloudLibrary.swift in Sources */,
 				7D6756C31B04D5F100BC0CA9 /* BaseTableController.swift in Sources */,
 				7DC359691B35F196003B01B6 /* PimpTabBarController.swift in Sources */,
@@ -664,6 +671,7 @@
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,
 				7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */,
 				7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */,
+				7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */,
 				7D6756D51B09200300BC0CA9 /* PlaylistType.swift in Sources */,
 				7D66863E1B498200003C92E4 /* CacheLimitController.swift in Sources */,
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,

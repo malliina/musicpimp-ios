@@ -13,20 +13,21 @@ import AVFoundation
 class LocalLibrary: BaseLibrary {
     static let sharedInstance = LocalLibrary()
     static let currentVersion = Version(version: "1.0.0")
-    
     static let documentsPath = Files.documentsPath
-    override var isLocal: Bool { get { return true } }
-    let supportedExtensions = ["mp3"]
-    
-    let musicRootPath = documentsPath.stringByAppendingString("/music")
-    
     static let ARTIST = "TPE1", ALBUM = "TALB", TRACK = "TIT2", TRACK_INDEX = "TRCK", YEAR = "TYER", GENRE = "TCON"
-    
     static let rootFolderName = "music"
+    
+    override var isLocal: Bool { get { return true } }
+    
+    let supportedExtensions = ["mp3"]
     
     let fileManager = NSFileManager.defaultManager()
     
-    var size: StorageSize { return Files.sharedInstance.folderSize(musicRootPath) }
+    let musicRootPath = documentsPath.stringByAppendingString("/music")
+    
+    var musicRootURL: NSURL { get { return Util.url(self.musicRootPath) } }
+    
+    var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     
     func url(track: Track) -> NSURL? {
         let path = track.path

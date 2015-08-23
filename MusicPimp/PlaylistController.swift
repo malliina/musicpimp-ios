@@ -68,35 +68,25 @@ class PlaylistController: PimpTableController {
         let index = indexPath.row
         let track = tracks[index]
         let isCurrent = index == current.index
-        
-        var cell: UITableViewCell? = nil
         let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-        if let pimpCell = arr[0] as? PimpMusicItemCell {
-            if let downloadProgress = downloadState[track] {
-                //info("Setting progress to \(downloadProgress.progress)")
-                pimpCell.progressView.progress = downloadProgress.progress
-                pimpCell.progressView.hidden = false
-            } else {
-                pimpCell.progressView.hidden = true
-            }
-            cell = pimpCell
+        let cell = arr[0] as! PimpMusicItemCell
+        if let downloadProgress = downloadState[track] {
+            //info("Setting progress to \(downloadProgress.progress)")
+            cell.progressView.progress = downloadProgress.progress
+            cell.progressView.hidden = false
         } else {
-            let prototypeID = isCurrent ? "CurrentPlaylistItem" : "PlaylistItem"
-            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as? UITableViewCell
+            cell.progressView.hidden = true
         }
-        if let cell = cell {
-            cell.textLabel?.text = track.title
-            if isCurrent {
-                cell.selectionStyle = UITableViewCellSelectionStyle.Blue
-                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-            } else {
-                cell.selectionStyle = UITableViewCellSelectionStyle.Default
-                cell.accessoryType = UITableViewCellAccessoryType.None
-            }
-
+        cell.textLabel?.text = track.title
+        if isCurrent {
+            cell.textLabel?.textColor = UIColor.blueColor()
+            cell.selectionStyle = UITableViewCellSelectionStyle.Blue
+        } else {
+            cell.selectionStyle = UITableViewCellSelectionStyle.Default
         }
-        return cell!
+        return cell
     }
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //let cell = tableView.cellForRowAtIndexPath(indexPath)
         let index = indexPath.row

@@ -31,13 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func test() {
         let i = Duration(hours: 5)
         //CoverService.sharedInstance.cover("iron maiden", album: "somewhere in time")
-        let rootDir = LocalLibrary.sharedInstance.musicRootPath
+        let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
         for dir in contents.folders {
-            Log.info("\(dir.name)")
+            Log.info("\(dir.name), last modified: \(dir.lastModified?.description), accessed: \(dir.lastAccessed)")
         }
         for file in contents.files {
-            Log.info("\(file.name), size: \(file.size)")
+            Log.info("\(file.name), size: \(file.size), last modified: \(file.lastModified?.description)")
         }
         let dirs = contents.folders.count
         let files = contents.files.count

@@ -32,9 +32,8 @@ class PimpSocket: PlayerSocket {
                 if let event = dict[JsonKeys.EVENT] as? String {
                     switch event {
                     case JsonKeys.TIME_UPDATED:
-                        if let position = dict[JsonKeys.POSITION] as? Int,
-                        posDuration = position.seconds {
-                            delegate.onTimeUpdated(posDuration)
+                        if let position = dict[JsonKeys.POSITION] as? Int {
+                            delegate.onTimeUpdated(position.seconds)
                         }
                         break
                     case JsonKeys.TRACK_CHANGED:

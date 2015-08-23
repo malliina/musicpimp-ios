@@ -147,8 +147,8 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     }
     
     func persistTasks() {
-        info("Saving \(tasks)")
-        PimpSettings.sharedInstance.saveTasks(self.sessionID, tasks: self.tasks)
+//        info("Saving \(tasks)")
+//        PimpSettings.sharedInstance.saveTasks(self.sessionID, tasks: self.tasks)
     }
     
     func prepareDestination(relativePath: RelativePath) -> String? {

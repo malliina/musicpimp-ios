@@ -16,12 +16,28 @@ class Path {
     var isDirectory: Bool { return url.isDirectory }
     var isFile: Bool { return url.isFile }
     var name: String { return url.name }
+    var lastModified: NSDate? { return Files.lastModified(url) }
+    var lastAccessed: NSDate? { return Files.lastAccessed(url) }
+}
+class Directory: Path {
+    var size: StorageSize { return calculateSize() }
+    
+    func calculateSize() -> StorageSize {
+        return Files.sharedInstance.folderSize(url)
+    }
+    
+    func contents() -> FolderContents {
+        return Files.sharedInstance.listContents(url)
+    }
 }
 class File: Path {
-    var size: StorageSize {
+    lazy var size: StorageSize = self.calculateSize()
+    
+    private func calculateSize() -> StorageSize {
         let bytes = Files.numberKey(url, key: NSURLFileSizeKey) ?? 0
         return bytes.unsignedLongLongValue.bytes
     }
+    
     static func fromPath(absolutePath: String) -> File? {
         if let url = NSURL(fileURLWithPath: absolutePath) {
             return File(url: url)
@@ -31,9 +47,9 @@ class File: Path {
     }
 }
 class FolderContents {
-    let folders: [Path]
+    let folders: [Directory]
     let files: [File]
-    init(folders: [Path], files: [File]) {
+    init(folders: [Directory], files: [File]) {
         self.folders = folders
         self.files = files
     }
@@ -58,17 +74,24 @@ class Files {
     static let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
     static func localize(url: NSURL) -> String {
-        var nameResult: AnyObject? = nil
-        url.getResourceValue(&nameResult, forKey: NSURLLocalizedNameKey, error: nil)
-        return nameResult as! String
+        return resourceValue(url, key: NSURLLocalizedNameKey)!
     }
-    static func numberKey(url: NSURL, key: String) -> NSNumber? {
-        var numberResult: AnyObject? = nil
-        url.getResourceValue(&numberResult, forKey: key, error: nil)
-        return numberResult as? NSNumber
+    static func lastAccessed(url: NSURL) -> NSDate? {
+        return resourceValue(url, key: NSURLContentAccessDateKey)
+    }
+    static func lastModified(url: NSURL) -> NSDate? {
+        return resourceValue(url, key: NSURLContentModificationDateKey)
     }
     static func booleanKey(url: NSURL, key: String) -> Bool {
         return numberKey(url, key: key)?.boolValue ?? false
+    }
+    static func numberKey(url: NSURL, key: String) -> NSNumber? {
+        return resourceValue(url, key: key)
+    }
+    static func resourceValue<T>(url: NSURL, key: String) -> T? {
+        var res: AnyObject? = nil
+        url.getResourceValue(&res, forKey: key, error: nil)
+        return res as? T
     }
     static func exists(path: String) -> Bool {
         return manager.fileExistsAtPath(path)
@@ -78,6 +101,12 @@ class Files {
         manager.fileExistsAtPath(path, isDirectory: &isDirectory)
         return isDirectory.boolValue
     }
+    func delete(file: File) -> Bool {
+        return delete(file.url)
+    }
+    func delete(url: NSURL) -> Bool {
+        return Files.manager.removeItemAtURL(url, error: nil)
+    }
     func fileSize(absolutePath: String) -> StorageSize? {
         let attrs: NSDictionary? = Files.manager.attributesOfItemAtPath(absolutePath, error: nil)
         if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
@@ -85,7 +114,7 @@ class Files {
         }
         return nil
     }
-    func folderSize(dir: String) -> StorageSize {
+    func folderSize(dir: NSURL) -> StorageSize {
         let files = enumerateFiles(dir, recursive: true)
         if let files = files {
             var acc = StorageSize.Zero
@@ -100,33 +129,32 @@ class Files {
             return StorageSize.Zero
         }
     }
-    func listContents(dir: String) -> FolderContents {
+    func listContents(dir: NSURL) -> FolderContents {
         let urls = listPathsAsURLs(dir)
         let (folders, files) = urls.partition({ $0.isDirectory })
-        let dirs = folders.map({ (url) -> Path in Path(url: url) })
+        let dirs = folders.map({ (url) -> Directory in Directory(url: url) })
         let fs = files.map({ (url) -> File in File(url: url) })
         return FolderContents(folders: dirs, files: fs)
     }
-    func listPathsAsURLs(dir: String) -> [NSURL] {
+    func listPathsAsURLs(dir: NSURL) -> [NSURL] {
         return enumeratePaths(dir, recursive: false)?.allObjects as? [NSURL] ?? []
     }
-    func enumerateFiles(dir: String, recursive: Bool = false) -> NSDirectoryEnumerator? {
+    func enumerateFiles(dir: NSURL, recursive: Bool = false) -> NSDirectoryEnumerator? {
         return enumeratePaths(dir, keys: [NSURLIsRegularFileKey], recursive: recursive)
     }
-    func enumerateDirectories(dir: String) -> NSDirectoryEnumerator? {
+    func enumerateDirectories(dir: NSURL) -> NSDirectoryEnumerator? {
         return enumeratePaths(dir, keys: [NSURLIsDirectoryKey], recursive: false)
     }
-    func enumeratePaths(dir: String, recursive: Bool = false) -> NSDirectoryEnumerator? {
+    func enumeratePaths(dir: NSURL, recursive: Bool = false) -> NSDirectoryEnumerator? {
         let keys = [NSURLIsDirectoryKey, NSURLIsRegularFileKey]
         return enumeratePaths(dir, keys: keys, recursive: recursive)
     }
-    func enumeratePaths(dir: String, keys: [String], recursive: Bool = false) -> NSDirectoryEnumerator? {
+    func enumeratePaths(dir: NSURL, keys: [String], recursive: Bool = false) -> NSDirectoryEnumerator? {
         let options = recursive ? NSDirectoryEnumerationOptions.allZeros : NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants
         return enumeratePathsBase(dir, keys: keys, options: options)
     }
-    func enumeratePathsBase(dir: String, keys: [String], options: NSDirectoryEnumerationOptions) -> NSDirectoryEnumerator? {
-        let url: NSURL = Util.url(dir)
-        return Files.manager.enumeratorAtURL(url, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
+    func enumeratePathsBase(dir: NSURL, keys: [String], options: NSDirectoryEnumerationOptions) -> NSDirectoryEnumerator? {
+        return Files.manager.enumeratorAtURL(dir, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
             return true
         }
     }

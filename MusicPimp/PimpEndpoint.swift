@@ -50,14 +50,13 @@ class PimpEndpoint: PimpUtils {
             album = obj[JsonKeys.ALBUM] as? String,
             sizeRaw = obj[JsonKeys.SIZE] as? Int,
             size = StorageSize.fromBytes(sizeRaw),
-            duration = obj[JsonKeys.DURATION] as? Int,
-            durDuration = duration.seconds {
+            duration = obj[JsonKeys.DURATION] as? Int {
                 return Track(
                     id: id,
                     title: title,
                     album: album,
                     artist: artist,
-                    duration: durDuration,
+                    duration: duration.seconds,
                     path: Util.urlDecode(id),
                     size: size,
                     url: urlMaker(id))
@@ -72,14 +71,14 @@ class PimpEndpoint: PimpUtils {
             stateName = dict[JsonKeys.STATE] as? String,
             state = PlaybackState.fromName(stateName),
             position = dict[JsonKeys.POSITION] as? Int,
-            posDuration = position.seconds,
+            //posDuration = position.seconds,
             mute = dict[JsonKeys.MUTE] as? Bool,
             volume = dict[JsonKeys.VOLUME] as? Int,
             playlist = dict[JsonKeys.PLAYLIST] as? [NSDictionary],
             playlistIndex = dict[JsonKeys.INDEX] as? Int {
             let trackOpt = parseTrack(trackDict)
             let tracks = playlist.flatMapOpt(parseTrack)
-            return PlayerState(track: trackOpt, state: state, position: posDuration, volume: volume, mute: mute, playlist: tracks, playlistIndex: playlistIndex)
+            return PlayerState(track: trackOpt, state: state, position: position.seconds, volume: volume, mute: mute, playlist: tracks, playlistIndex: playlistIndex)
         }
         return nil
     }

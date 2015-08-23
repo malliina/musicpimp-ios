@@ -9,6 +9,37 @@
 import Foundation
 
 extension Array {
+    //
+    // [1, 2, 3].foldRight(0)((e, acc) -> e + acc)
+    // 1 + [2, 3].foldRight(0)((e, acc) -> e + acc)
+    // 1 + (2 + [3].foldRight(0)((e, acc) -> e + acc))
+    // 1 + (2 + (3 + [].foldRight(0)((e, acc) -> e + acc)))
+    // 1 + (2 + (3 + (0)))
+    // 6
+    //
+    func foldRight<U>(initial: U, f: (T, U) -> U) -> U {
+        if let head = self.headOption() {
+            return f(head, self.tail().foldRight(initial, f: f))
+        } else {
+            return initial
+        }
+    }
+    
+    //
+    // [1, 2, 3].foldLeft(0)((acc, e) -> acc + e)
+    // [2, 3].foldLeft(1)((acc, e) -> acc + e)
+    // [3].foldLeft(3)((acc, e) -> acc + e)
+    // [].foldLeft(6)((acc, e) -> acc + e)
+    // 6
+    //
+    func foldLeft<U>(initial: U, f: (U, T) -> U) -> U {
+        if let head = self.headOption() {
+            let newAcc = f(initial, head)
+            return self.tail().foldLeft(newAcc, f: f)
+        } else {
+            return initial
+        }
+    }
     func headOption() -> T? {
         return self.first
     }
