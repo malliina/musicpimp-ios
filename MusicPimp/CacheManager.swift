@@ -17,29 +17,55 @@ class CacheManager {
     
     init(folder: Directory) {
         self.folder = folder
-        //self.maxSize = maxSize
         self.throttler = Throttler(interval: 1.hours)
     }
     
-    func maintainDiskSpace(maxSize: StorageSize) {
-        throttler.throttled { () -> Void in
+    func maintainDiskSpace(maxSize: StorageSize) -> StorageSize {
+        let amountDeleted = throttler.throttled { () -> StorageSize in
             self.defaultCleanup(maxSize)
         }
+        return amountDeleted ?? StorageSize.Zero
     }
-    func defaultCleanup(maxSize: StorageSize) {
-        cleanup(folder, maxSize: maxSize, shovelSize: shovelSize)
+    func defaultCleanup(maxSize: StorageSize) -> StorageSize {
+        return cleanup(folder, maxSize: maxSize, shovelSize: shovelSize)
     }
-    func cleanup(dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) {
+    
+    /// Ensures that dir is at most maxSize large; deleting files indiscriminately if necessary to free disk space.
+    ///
+    /// :param: dir the root dir
+    /// :param: maxSize the maximum allowed size of dir
+    /// :param: shovelSize the minumum amount to delete from dir if its size exceeds maxSize
+    ///
+    /// :return: the amount acutally deleted
+    func cleanup(dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) -> StorageSize {
         let currentSize = Files.sharedInstance.folderSize(dir.url)
         let sizeDiff = currentSize - maxSize
         let needsCleanup = sizeDiff.bytes > 0
         if needsCleanup {
-            free(dir, amount: shovelSize)
+            Log.info("Local cache size \(currentSize) exceeds the maximum limit of \(maxSize) by \(sizeDiff), deleting tracks...")
+            var shovel = shovelSize
+            if sizeDiff > shovel {
+                shovel = sizeDiff
+            }
+            let amountDeleted = free(dir, amount: shovel)
+            Log.info("Deleted \(amountDeleted) of cached tracks")
+            return amountDeleted
+        } else {
+            return StorageSize.Zero
         }
     }
+    
+    /// Frees up amount from dir by deleting files.
+    ///
+    ///
+    /// :param: dir the root directory to clean up
+    /// :param: amount the amount to delete, approximately
+    ///
+    /// :returns: the amount actually deleted
     func free(dir: Directory, amount: StorageSize) -> StorageSize {
         return dir.contents().paths.foldLeft(StorageSize.Zero) { (deleted, path) -> StorageSize in
-            if deleted >= amount {
+            let hasDeletedEnough = deleted >= amount
+            if hasDeletedEnough {
                 return deleted
             } else {
                 if let dir = path as? Directory {
