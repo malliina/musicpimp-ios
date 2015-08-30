@@ -36,5 +36,4 @@ class BaseLibrary: LibraryType {
             }
         }
     }
-
 }

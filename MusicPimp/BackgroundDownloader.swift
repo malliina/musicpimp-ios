@@ -83,7 +83,7 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     private func setupSession() -> NSURLSession {
         let conf = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(sessionID)
         conf.sessionSendsLaunchEvents = true
-        conf.discretionary = true
+        conf.discretionary = false
         let session = NSURLSession(configuration: conf, delegate: self, delegateQueue: nil)
         session.getTasksWithCompletionHandler { (datas, uploads, downloads) -> Void in
             // removes outdated tasks
