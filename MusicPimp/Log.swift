@@ -10,9 +10,9 @@ import Foundation
 
 public class Log {
     static func info<T>(msg: T) -> Void {
-        println(msg)
+        print(msg)
     }
     static func error<T>(msg: T) -> Void {
-        println(msg)
+        print(msg)
     }
 }

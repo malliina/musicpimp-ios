@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StorageSize: Printable, Comparable {
+class StorageSize: CustomStringConvertible, Comparable {
     static let Zero = StorageSize(bytes: 0)
     static let k: Int = 1024
     static let k64 = Int64(StorageSize.k)

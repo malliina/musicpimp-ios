@@ -9,7 +9,7 @@
 import Foundation
 
 
-class Duration: Printable, Comparable {
+class Duration: CustomStringConvertible, Comparable {
     static let Zero = Duration(millis: 0)
     let millis: Int64
     var secondsFloat: Float { get { return Float(seconds) } }

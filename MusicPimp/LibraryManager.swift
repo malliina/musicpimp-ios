@@ -16,7 +16,7 @@ class LibraryManager: EndpointManager {
     let libraryChanged = Event<LibraryType>()
     
     init() {
-        var settings = PimpSettings.sharedInstance
+        let settings = PimpSettings.sharedInstance
         activeLibrary = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
         super.init(key: PimpSettings.LIBRARY, settings: settings)
         changed.addHandler(self, handler: { (lm) -> Endpoint -> () in

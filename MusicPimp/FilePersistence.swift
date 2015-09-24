@@ -10,41 +10,44 @@ import Foundation
 
 class FilePersistence : Persistence {
     
-    let dir = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as? String
+    let dir = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0]
     
     let changes = Event<Setting>()
     
     // are you fucking kidding me?
     func load(path: String) -> String? {
-        if let file = dir?.stringByAppendingPathComponent(path) {
-            var loadError: NSError?
-            if let contents = NSString(contentsOfFile: file, encoding: NSUTF8StringEncoding, error: &loadError) {
-                if let error = loadError {
-                    return nil
-                } else {
-                    return contents as String
-                }
-            } else {
+        let file = dir.stringByAppendingPathComponent(path)
+        var loadError: NSError?
+        do {
+            let contents = try NSString(contentsOfFile: file, encoding: NSUTF8StringEncoding)
+            if let _ = loadError {
                 return nil
+            } else {
+                return contents as String
             }
-        } else {
+        } catch let error as NSError {
+            loadError = error
             return nil
         }
     }
     
     
     func save(contents: String, key: String) -> ErrorMessage? {
-        if let file = dir?.stringByAppendingPathComponent(key) {
-            var saveError: NSError?
-            let written = contents.writeToFile(file, atomically: true, encoding: NSUTF8StringEncoding, error: &saveError)
-            if(written) {
-                changes.raise(Setting(key: key, contents: contents))
-                return nil
-            } else {
-                return ErrorMessage(message: saveError?.localizedDescription ?? "Unknown error")
-            }
+        let file = dir.stringByAppendingPathComponent(key)
+        var saveError: NSError?
+        let written: Bool
+        do {
+            try contents.writeToFile(file, atomically: true, encoding: NSUTF8StringEncoding)
+            written = true
+        } catch let error as NSError {
+            saveError = error
+            written = false
+        }
+        if(written) {
+            changes.raise(Setting(key: key, contents: contents))
+            return nil
         } else {
-            return ErrorMessage(message: "Unable to resolve \(key)")
+            return ErrorMessage(message: saveError?.localizedDescription ?? "Unknown error")
         }
     }
 }

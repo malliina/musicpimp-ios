@@ -16,7 +16,7 @@ class PlayerManager: EndpointManager {
     
     init() {
         //Log.info("Init PlayerManager")
-        var settings = PimpSettings.sharedInstance
+        let settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
         changed.addHandler(self, handler: { (lm) -> Endpoint -> () in

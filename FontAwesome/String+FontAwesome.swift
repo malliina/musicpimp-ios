@@ -534,7 +534,7 @@ public extension String {
     }
 
     public static func fontAwesomeEnumForIconIdentifier(string: String) -> FAIcon {
-        var lookupString = string
+        let lookupString = string
         if let icon = enumDictionary[lookupString] {
             return icon
         }

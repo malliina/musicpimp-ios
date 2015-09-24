@@ -33,7 +33,7 @@ class ExternalCommandDelegate: NSObject {
     func onLocalTrackChanged(track: Track?) {
         let center = MPNowPlayingInfoCenter.defaultCenter()
         if let track = track {
-            var info: [NSObject: AnyObject] = [
+            var info: [String: AnyObject] = [
                 MPMediaItemPropertyTitle: track.title,
                 MPMediaItemPropertyArtist: track.artist,
                 MPMediaItemPropertyAlbumTitle: track.album,

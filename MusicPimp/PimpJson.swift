@@ -34,7 +34,7 @@ public class PimpJson {
     }
     
     public func toJson(tasks: [Int: DownloadInfo]) -> [String: AnyObject] {
-        let tasksArray = Swift.map(tasks, { (e) -> [String: AnyObject] in
+        let tasksArray = tasks.map({ (e) -> [String: AnyObject] in
             let (key, value) = e
             var obj = self.toJson(value)
             obj[PimpJson.TASK] = key

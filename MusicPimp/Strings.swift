@@ -26,11 +26,28 @@ extension String {
     }
     
     func tail() -> String {
-        return self.substringFromIndex(advance(self.startIndex, 1))
+        return self.substringFromIndex(self.startIndex.advancedBy(1))
     }
     
     func dropLast() -> String {
-        let endIndex = advance(self.endIndex, -1)
+        let endIndex = self.endIndex.advancedBy(-1)
         return self.substringToIndex(endIndex)
     }
+    
+    func lastPathComponent() -> String {
+        return (self as NSString).lastPathComponent
+    }
+    
+    func stringByDeletingLastPathComponent() -> String {
+        return (self as NSString).stringByDeletingLastPathComponent
+    }
+    
+    func stringByDeletingPathExtension() -> String {
+        return (self as NSString).stringByDeletingPathExtension
+    }
+    
+    func stringByAppendingPathComponent(path: String) -> String {
+        return (self as NSString).stringByAppendingPathComponent(path)
+    }
+    
 }

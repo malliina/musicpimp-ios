@@ -12,7 +12,7 @@ class Downloader {
     typealias RelativePath = String
     
     let fileManager = NSFileManager.defaultManager()
-    let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+    let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
     let basePath: String
     
     init(basePath: String) {
@@ -40,15 +40,21 @@ class Downloader {
         if replace || !Files.exists(destPath) {
             Log.info("Downloading \(url)")
             let request = NSURLRequest(URL: url)
-            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()) { (response, data, err) -> Void in
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()!) { (response, data, err) -> Void in
                 if(err != nil) {
                     onError(self.simpleError("Error \(err)"))
                 } else {
                     if let response = response as? NSHTTPURLResponse {
                         if response.isSuccess {
-                            if(data != nil) {
-                                let dir = destPath.stringByDeletingLastPathComponent
-                                let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
+                            if let data = data {
+                                let dir = destPath.stringByDeletingLastPathComponent()
+                                let dirSuccess: Bool
+                                do {
+                                    try self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil)
+                                    dirSuccess = true
+                                } catch _ {
+                                    dirSuccess = false
+                                }
                                 if(dirSuccess) {
                                     let fileSuccess = data.writeToFile(destPath, atomically: true)
                                     if(fileSuccess) {
@@ -61,6 +67,7 @@ class Downloader {
                                 } else {
                                     onError(self.simpleError("Unable to create directory: \(dir)"))
                                 }
+
                             }
                         } else {
                             onError(.ResponseFailure("\(url)", response.statusCode, nil))
@@ -76,8 +83,14 @@ class Downloader {
     
     func prepareDestination(relativePath: RelativePath) -> String? {
         let destPath = pathTo(relativePath)
-        let dir = destPath.stringByDeletingLastPathComponent
-        let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
+        let dir = destPath.stringByDeletingLastPathComponent()
+        let dirSuccess: Bool
+        do {
+            try self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil)
+            dirSuccess = true
+        } catch _ {
+            dirSuccess = false
+        }
         return dirSuccess ? destPath : nil
     }
     

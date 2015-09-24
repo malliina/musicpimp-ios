@@ -28,7 +28,7 @@ class PimpSocket: PlayerSocket {
     
     override func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
         if let message = message as? String {
-            if let dict = Json.asJson(message, error: nil) as? NSDictionary {
+            if let dict = (try? Json.asJson(message)) as? NSDictionary {
                 if let event = dict[JsonKeys.EVENT] as? String {
                     switch event {
                     case JsonKeys.TIME_UPDATED:

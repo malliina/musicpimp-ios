@@ -25,7 +25,7 @@ class CacheLimitController: BaseTableController {
         let cellGigs = gigOptions[row]
         let cellSize = sizes[row]
         let prototype = cellSize == current ? "CurrentCacheLimit" : "CacheLimit"
-        let cell = tableView.dequeueReusableCellWithIdentifier(prototype, forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(prototype, forIndexPath: indexPath) 
         cell.textLabel?.text = "\(cellGigs) GB"
         return cell
     }

@@ -38,12 +38,8 @@ class File: Path {
         return bytes.unsignedLongLongValue.bytes
     }
     
-    static func fromPath(absolutePath: String) -> File? {
-        if let url = NSURL(fileURLWithPath: absolutePath) {
-            return File(url: url)
-        } else {
-            return nil
-        }
+    static func fromPath(absolutePath: String) -> File {
+        return File(url: NSURL(fileURLWithPath: absolutePath))
     }
 }
 class FolderContents {
@@ -79,7 +75,7 @@ class Files {
     static let sharedInstance = Files()
     
     static let manager = NSFileManager.defaultManager()
-    static let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+    static let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
     
     static func localize(url: NSURL) -> String {
         return resourceValue(url, key: NSURLLocalizedNameKey)!
@@ -98,7 +94,10 @@ class Files {
     }
     static func resourceValue<T>(url: NSURL, key: String) -> T? {
         var res: AnyObject? = nil
-        url.getResourceValue(&res, forKey: key, error: nil)
+        do {
+            try url.getResourceValue(&res, forKey: key)
+        } catch _ {
+        }
         return res as? T
     }
     static func exists(path: String) -> Bool {
@@ -113,12 +112,18 @@ class Files {
         return delete(file.url)
     }
     func delete(url: NSURL) -> Bool {
-        return Files.manager.removeItemAtURL(url, error: nil)
+        do {
+            try Files.manager.removeItemAtURL(url)
+            return true
+        } catch _ {
+            return false
+        }
     }
     func fileSize(absolutePath: String) -> StorageSize? {
-        let attrs: NSDictionary? = Files.manager.attributesOfItemAtPath(absolutePath, error: nil)
+        let attrs: NSDictionary? = try? Files.manager.attributesOfItemAtPath(absolutePath)
         if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
             let size = sizeNum.unsignedLongLongValue.bytes
+            return size
         }
         return nil
     }
@@ -158,7 +163,7 @@ class Files {
         return enumeratePaths(dir, keys: keys, recursive: recursive)
     }
     func enumeratePaths(dir: NSURL, keys: [String], recursive: Bool = false) -> NSDirectoryEnumerator? {
-        let options = recursive ? NSDirectoryEnumerationOptions.allZeros : NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants
+        let options = recursive ? NSDirectoryEnumerationOptions() : NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants
         return enumeratePathsBase(dir, keys: keys, options: options)
     }
     func enumeratePathsBase(dir: NSURL, keys: [String], options: NSDirectoryEnumerationOptions) -> NSDirectoryEnumerator? {

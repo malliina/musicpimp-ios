@@ -50,7 +50,15 @@ class PimpHttpClient: HttpClient {
         pimpGet(resource, f: {
             data -> Void in
             var error: NSError?
-            let anyObj: AnyObject? = Json.asJson(data, error: &error)
+            let anyObj: AnyObject?
+            do {
+                anyObj = try Json.asJson(data)
+            } catch let error1 as NSError {
+                error = error1
+                anyObj = nil
+            } catch {
+                fatalError()
+            }
             if let obj: AnyObject = anyObj {
                 if let parsed: T = parse(obj) {
                     f(parsed)
@@ -95,7 +103,7 @@ class PimpHttpClient: HttpClient {
             f(data)
         } else {
             var errorMessage: String? = nil
-            if let json = Json.asJson(data, error: nil) as? NSDictionary {
+            if let json = (try? Json.asJson(data)) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
             onError(.ResponseFailure(resource, statusCode, errorMessage))
@@ -105,7 +113,7 @@ class PimpHttpClient: HttpClient {
         log("Error: \(data)")
     }
     func onMusicFolder(f: MusicFolder) -> Void {
-        log("Tracks: \(count(f.tracks))")
+        log("Tracks: \(f.tracks.count)")
     }
     func parseVersion(obj: AnyObject) -> Version? {
         if let dict = obj as? NSDictionary {

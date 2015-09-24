@@ -29,11 +29,15 @@ class LocalLibrary: BaseLibrary {
     
     var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     
+    func contains(track: Track) -> Bool {
+        return url(track) != nil
+    }
+    
     func url(track: Track) -> NSURL? {
         let path = track.path
         let absolutePath = pathTo(path)
         if Files.exists(absolutePath) {
-            let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
+            let attrs: NSDictionary? = try? fileManager.attributesOfItemAtPath(absolutePath)
             if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, localStorageSize = StorageSize.fromBytes(sizeNum.longLongValue) {
                 let trackSize = track.size
                 if trackSize == localStorageSize {
@@ -51,63 +55,71 @@ class LocalLibrary: BaseLibrary {
         return nil
     }
     
-    func contains(track: Track) -> Bool {
-        return url(track) != nil
-    }
-    
     func pathTo(relativePath: String) -> String {
         return self.musicRootPath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
     }
 
     func deleteContents() -> Bool {
-        let deleteSuccess = fileManager.removeItemAtPath(musicRootPath, error: nil)
-        let dirRecreateSuccess = self.fileManager.createDirectoryAtPath(musicRootPath, withIntermediateDirectories: true, attributes: nil, error: nil)
+        let deleteSuccess: Bool
+        do {
+            try fileManager.removeItemAtPath(musicRootPath)
+            deleteSuccess = true
+        } catch _ {
+            deleteSuccess = false
+        }
+        let dirRecreateSuccess: Bool
+        do {
+            try self.fileManager.createDirectoryAtPath(musicRootPath, withIntermediateDirectories: true, attributes: nil)
+            dirRecreateSuccess = true
+        } catch _ {
+            dirRecreateSuccess = false
+        }
         contentsUpdated.raise(nil)
         return deleteSuccess && dirRecreateSuccess
     }
     
     func parseTrack(absolutePath: String) -> Track? {
-        let attrs: NSDictionary? = fileManager.attributesOfItemAtPath(absolutePath, error: nil)
+        let attrs: NSDictionary? = try? fileManager.attributesOfItemAtPath(absolutePath)
         if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, size = StorageSize.fromBytes(sizeNum.longLongValue) {
             let url = NSURL(fileURLWithPath: absolutePath)
-            if let asset = AVAsset.assetWithURL(url) as? AVAsset {
-                var artist: String? = nil
-                var album: String? = nil
-                var track: String? = nil
-                if let metas = asset.metadata as? [AVMetadataItem] {
-                    // parses any tags
-                    for meta in metas {
-                        let value = meta.stringValue
-                        switch meta.key.description {
-                        case LocalLibrary.TRACK:
-                            track = value
-                            break
-                        case LocalLibrary.ALBUM:
-                            album = value
-                            break
-                        case LocalLibrary.ARTIST:
-                            artist = value
-                            break
-                        default:
-                            break
-                        }
+            let asset = AVAsset(URL: url)
+            var artist: String? = nil
+            var album: String? = nil
+            var track: String? = nil
+            let metas = asset.metadata
+            // parses any tags
+            for meta in metas {
+                let value = meta.stringValue
+                if let key = meta.key {
+                    switch key.description {
+                    case LocalLibrary.TRACK:
+                        track = value
+                        break
+                    case LocalLibrary.ALBUM:
+                        album = value
+                        break
+                    case LocalLibrary.ARTIST:
+                        artist = value
+                        break
+                    default:
+                        break
                     }
                 }
-                let relativePath = relativize(absolutePath)
-                // falls back to filepath-based parsing
-                let relativeDir = relativePath.stringByDeletingLastPathComponent
-                
-                let actualTrack = track ?? relativePath.lastPathComponent.stringByDeletingPathExtension
-                let actualAlbum = album ?? relativeDir.lastPathComponent
-                let actualArtist = artist ?? relativeDir.stringByDeletingLastPathComponent.lastPathComponent
-                
-                if let dur = duration(asset),
-                    url = url {
-                        return Track(id: Util.urlEncode(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
-                } else {
-                    Log.error("Unable to parse duration and URL of \(absolutePath)")
-                }
             }
+            let relativePath = relativize(absolutePath)
+            // falls back to filepath-based parsing
+            let relativeDir = relativePath.stringByDeletingLastPathComponent()
+                
+            let actualTrack = track ?? relativePath.lastPathComponent().stringByDeletingPathExtension()
+            let actualAlbum = album ?? relativeDir.lastPathComponent()
+            let actualArtist = artist ?? relativeDir.stringByDeletingLastPathComponent().lastPathComponent()
+                
+            if let dur = duration(asset) {
+                return Track(id: Util.urlEncode(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
+            } else {
+                Log.error("Unable to parse duration and URL of \(absolutePath)")
+            }
+            
         } else {
             Log.error("Unable to determine file size of \(absolutePath)")
         }
@@ -116,12 +128,12 @@ class LocalLibrary: BaseLibrary {
     func parseFolder(absolute: String) -> Folder {
         let path = relativize(absolute)
         //Log.info("Abs: \(absolute), relative: \(path)")
-        return Folder(id: Util.urlEncode(path), title: path.lastPathComponent, path: path)
+        return Folder(id: Util.urlEncode(path), title: path.lastPathComponent(), path: path)
     }
     func relativize(path: String) -> String {
-        let startIdx = count(musicRootPath) + 1
-        if(count(path) > startIdx) {
-            let from = advance(path.startIndex, startIdx)
+        let startIdx = musicRootPath.characters.count + 1
+        if(path.characters.count > startIdx) {
+            let from = path.startIndex.advancedBy(startIdx)
             return path.substringFromIndex(from)
         } else {
             return path
@@ -152,9 +164,8 @@ class LocalLibrary: BaseLibrary {
     }
     func folderAtPath(folder: Folder, f: MusicFolder -> Void) {
         let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath.stringByAppendingString("/" + folder.path)
-        let items: [String] = fileManager.contentsOfDirectoryAtPath(absolutePath, error: nil) as? [String] ?? []
+        let items: [String] = (try? fileManager.contentsOfDirectoryAtPath(absolutePath)) ?? []
         let paths = items.map({ absolutePath.stringByAppendingString("/" + $0) })
-        var isDirectory: ObjCBool = false
         let (directories, files) = paths.partition(Files.isDirectory)
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)

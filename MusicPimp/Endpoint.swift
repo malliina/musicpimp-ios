@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Endpoint: Printable {
+class Endpoint: CustomStringConvertible {
     static let Local = Endpoint(id: "local", serverType: ServerTypes.Local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")
     
     let id: String

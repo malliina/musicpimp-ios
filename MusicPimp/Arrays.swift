@@ -17,7 +17,7 @@ extension Array {
     // 1 + (2 + (3 + (0)))
     // 6
     //
-    func foldRight<U>(initial: U, f: (T, U) -> U) -> U {
+    func foldRight<U>(initial: U, f: (Element, U) -> U) -> U {
         if let head = self.headOption() {
             return f(head, self.tail().foldRight(initial, f: f))
         } else {
@@ -32,7 +32,7 @@ extension Array {
     // [].foldLeft(6)((acc, e) -> acc + e)
     // 6
     //
-    func foldLeft<U>(initial: U, f: (U, T) -> U) -> U {
+    func foldLeft<U>(initial: U, f: (U, Element) -> U) -> U {
         if let head = self.headOption() {
             let newAcc = f(initial, head)
             return self.tail().foldLeft(newAcc, f: f)
@@ -40,39 +40,39 @@ extension Array {
             return initial
         }
     }
-    func headOption() -> T? {
+    func headOption() -> Element? {
         return self.first
     }
-    func tail() -> [T] {
+    func tail() -> [Element] {
         return Array(self[1..<self.count])
     }
-    func take(n: Int) -> [T] {
+    func take(n: Int) -> [Element] {
         let to = min(n, self.count)
         return Array(self[0..<to])
     }
-    func drop(n: Int) -> [T] {
+    func drop(n: Int) -> [Element] {
         return Array(self[n..<self.count])
     }
-    func find(predicate: T -> Bool) -> T? {
+    func find(predicate: Element -> Bool) -> Element? {
         return self.filter(predicate).headOption()
     }
-    func exists(predicate: T -> Bool) -> Bool {
+    func exists(predicate: Element -> Bool) -> Bool {
         return self.find(predicate) != nil
     }
-    func indexOf(predicate: T -> Bool) -> Int? {
-        for (idx, element) in enumerate(self) {
+    func indexOf(predicate: Element -> Bool) -> Int? {
+        for (idx, element) in self.enumerate() {
             if predicate(element) {
                 return idx
             }
         }
         return nil
     }
-    func flatMapOpt<U>(f: T -> U?) -> [U] {
+    func flatMapOpt<U>(f: Element -> U?) -> [U] {
         return self.map({ f($0) }).filter({ $0 != nil}).map({ $0! })
     }
-    func partition(f: T -> Bool) -> ([T], [T]) {
-        var trues: [T] = []
-        var falses: [T] = []
+    func partition(f: Element -> Bool) -> ([Element], [Element]) {
+        var trues: [Element] = []
+        var falses: [Element] = []
         for item in self {
             if f(item) {
                 trues.append(item)
@@ -88,7 +88,7 @@ extension Array {
     func mkString(prefix: String, sep: String, suffix: String) -> String {
         let count = self.count
         var ret = count > 0 ? prefix : ""
-        for (idx, element) in enumerate(self) {
+        for (idx, element) in self.enumerate() {
             ret += "\(element)"
             let isLast = idx == count - 1
             if isLast {
@@ -117,12 +117,11 @@ extension Dictionary {
     }
     
     func map<OutKey: Hashable, OutValue>(transform: Element -> (OutKey, OutValue)) -> [OutKey: OutValue] {
-        let pairs = Swift.map(self) { (e) in (transform(e)) }
-        return Dictionary<OutKey, OutValue>(pairs)
+        return self.map { (e) in (transform(e)) }
     }
 
-    func filter(includeElement: Element -> Bool) -> [Key: Value] {
-        let pairs = Swift.filter(self, includeElement)
-        return Dictionary(pairs)
+    func filterKeys(includeElement: Element -> Bool) -> [Key: Value] {
+        let pairs = self.filter(includeElement)
+        return Dictionary<Key, Value>(pairs)
     }
 }

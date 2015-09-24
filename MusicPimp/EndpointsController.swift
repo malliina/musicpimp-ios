@@ -29,7 +29,7 @@ class EndpointsController: BaseTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = endpoints[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) 
         cell.textLabel?.text = item.name
         return cell
     }
@@ -45,8 +45,8 @@ class EndpointsController: BaseTableController {
         if let navController = segue.destinationViewController as? UINavigationController {
             let destController: AnyObject = navController.viewControllers[0]
             if let editController = destController as? EditEndpointController {
-                if let row = self.tableView.indexPathForSelectedRow() {
-                    var item = endpoints[row.item]
+                if let row = self.tableView.indexPathForSelectedRow {
+                    let item = endpoints[row.item]
                     editController.editedItem = item
                 }
             } else {

@@ -23,10 +23,10 @@ class MusicPimpTests: XCTestCase {
         super.tearDown()
     }
     
-    func testStringPathTest() {
-        let s = "".lastPathComponent.stringByDeletingPathExtension.stringByDeletingLastPathComponent.lastPathComponent
-        XCTAssert(s == "", "String methods should return the empty string if operating on one")
-    }
+//    func testStringPathTest() {
+//        let s = "".lastPathComponent().stringByDeletingPathExtension.stringByDeletingLastPathComponent.lastPathComponent
+//        XCTAssert(s == "", "String methods should return the empty string if operating on one")
+//    }
     
     func testExample() {
         // This is an example of a functional test case.
@@ -42,9 +42,9 @@ class MusicPimpTests: XCTestCase {
         let s = Json.stringifyObject(jsValue, prettyPrinted: true)
         let containsGoogle = s!.rangeOfString("google") != nil
         XCTAssert(containsGoogle, "Serialized value contains original content")
-        let json = Json.asJson(s!, error: nil)! as! NSDictionary
+        let json = (try! Json.asJson(s!)) as! NSDictionary
         let tasks = PimpJson.sharedInstance.asTasks(json)!
-        let deURL = tasks[1]?.destinationURL.absoluteString!
+        let deURL = tasks[1]?.destinationURL.absoluteString
         let isUrlCorrect = deURL == testURL
         XCTAssert(isUrlCorrect, "Deserializes back to original content")
     }

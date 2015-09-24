@@ -14,18 +14,18 @@ class Util {
     }
     
     private static var GlobalUserInteractiveQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INTERACTIVE.value), 0)
+        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INTERACTIVE.rawValue), 0)
     }
     
     private static var GlobalUserInitiatedQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.value), 0)
+        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)
     }
     
     private static var GlobalUtilityQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.value), 0)
+        return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.rawValue), 0)
     }
     private static var GlobalBackgroundQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_BACKGROUND.value), 0)
+        return dispatch_get_global_queue(Int(QOS_CLASS_BACKGROUND.rawValue), 0)
     }
     class func onUiThread(f: () -> Void) {
         dispatch_async(GlobalMainQueue, f)
@@ -35,10 +35,11 @@ class Util {
     }
     class func urlDecode(s: String) -> String {
         let unplussed = s.stringByReplacingOccurrencesOfString("+", withString: " ")
-        return unplussed.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? unplussed
+        return unplussed.stringByRemovingPercentEncoding ?? unplussed
     }
     class func urlEncode(s: String) -> String {
         let plussed = s.stringByReplacingOccurrencesOfString(" ", withString: "+")
+//        plussed.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters: NSCharacterSet.URLPathAllowedCharacterSet())
         return plussed.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? plussed
     }
     static func url(s: String) -> NSURL {

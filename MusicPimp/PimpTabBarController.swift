@@ -12,15 +12,11 @@ import UIKit
 class PimpTabBarController: UITabBarController {
     override func viewDidLoad() {
         let tabs = tabBar.items
-        if let tabs = tabs,
-            musicTab = tabs[0] as? UITabBarItem,
-            playerTab = tabs[1] as? UITabBarItem,
-            playlistTab = tabs[2] as? UITabBarItem,
-            settingsTab = tabs[3] as? UITabBarItem {
-            decorate(musicTab, title: "Music", fontAwesomeName: "music")
-            decorate(playerTab, title: "Player", fontAwesomeName: "play-circle")
-            decorate(playlistTab, title: "Playlist", fontAwesomeName: "list")
-            decorate(settingsTab, title: "Settings", fontAwesomeName: "wrench")
+        if let tabs = tabs {
+            decorate(tabs[0], title: "Music", fontAwesomeName: "music")
+            decorate(tabs[1], title: "Player", fontAwesomeName: "play-circle")
+            decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
+            decorate(tabs[3], title: "Settings", fontAwesomeName: "wrench")
         }
     }
     

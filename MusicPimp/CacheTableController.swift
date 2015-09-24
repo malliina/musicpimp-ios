@@ -18,7 +18,7 @@ class CacheTableController: CacheInfoController {
     @IBOutlet var currentCacheSizeLabel: UILabel!
     
     override func viewDidLoad() {
-        let onOff = UISwitch(frame: CGRect.zeroRect)
+        let onOff = UISwitch(frame: CGRect.zero)
         onOff.addTarget(self, action: Selector("didToggleCache:"), forControlEvents: UIControlEvents.ValueChanged)
         onOff.on = settings.cacheEnabled
         onOffSwitch = onOff

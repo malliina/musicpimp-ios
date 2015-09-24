@@ -56,7 +56,7 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     private let sessionID: SessionID
     private var tasks: [TaskID: DownloadInfo] = [:]
-    let lockQueue: dispatch_queue_attr_t!
+    let lockQueue: dispatch_queue_t
     
     lazy var session: NSURLSession = self.setupSession()
     
@@ -68,7 +68,8 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     }
     
     func setup() {
-        let s = session
+        let desc = session.sessionDescription ?? "session"
+        info("Initialized \(desc)")
     }
     
     private func stringify(state: NSURLSessionTaskState) -> String {
@@ -87,22 +88,20 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
         let session = NSURLSession(configuration: conf, delegate: self, delegateQueue: nil)
         session.getTasksWithCompletionHandler { (datas, uploads, downloads) -> Void in
             // removes outdated tasks
-            if let downloads = downloads as? [NSURLSessionDownloadTask] {
-                let taskIDs = downloads.map({ (t) -> String in
-                    let stateDescribed = self.stringify(t.state)
-                    return "\(t.taskIdentifier): \(stateDescribed)"
-                })
-                self.synchronized {
-                    let actualTasks = self.tasks.filter({ (taskID, value) -> Bool in
-                        downloads.exists({ (task) -> Bool in
-                            return task.taskIdentifier == taskID
-                        })
+            let taskIDs = downloads.map({ (t) -> String in
+                let stateDescribed = self.stringify(t.state)
+                return "\(t.taskIdentifier): \(stateDescribed)"
+            })
+            self.synchronized {
+                let actualTasks = self.tasks.filterKeys({ (taskID, value) -> Bool in
+                    downloads.exists({ (task) -> Bool in
+                        return task.taskIdentifier == taskID
                     })
-                    if !taskIDs.isEmpty {
-                        self.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
-                    }
-                    self.tasks = actualTasks
+                })
+                if !taskIDs.isEmpty {
+                    self.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
                 }
+                self.tasks = actualTasks
             }
         }
         return session
@@ -116,7 +115,8 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     func download(url: NSURL, relativePath: RelativePath) -> ErrorMessage? {
         info("Preparing download of \(relativePath)")
-        if let destPath = prepareDestination(relativePath), destURL = NSURL(fileURLWithPath: destPath) {
+        if let destPath = prepareDestination(relativePath) {
+            let destURL = NSURL(fileURLWithPath: destPath)
             let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
             return download(url, info: info)
         } else {
@@ -153,8 +153,14 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     
     func prepareDestination(relativePath: RelativePath) -> String? {
         let destPath = pathTo(relativePath)
-        let dir = destPath.stringByDeletingLastPathComponent
-        let dirSuccess = self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil, error: nil)
+        let dir = destPath.stringByDeletingLastPathComponent()
+        let dirSuccess: Bool
+        do {
+            try self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil)
+            dirSuccess = true
+        } catch _ {
+            dirSuccess = false
+        }
         return dirSuccess ? destPath : nil
     }
     
@@ -174,7 +180,13 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
         let taskID = downloadTask.taskIdentifier
         if let downloadInfo = tasks[taskID] {
             let destURL = downloadInfo.destinationURL
-            let copySuccess = fileManager.moveItemAtURL(location, toURL: destURL, error: nil)
+            let copySuccess: Bool
+            do {
+                try fileManager.moveItemAtURL(location, toURL: destURL)
+                copySuccess = true
+            } catch _ {
+                copySuccess = false
+            }
             let relPath = downloadInfo.relativePath
             if copySuccess {
                 info("Completed download of \(relPath)")
@@ -220,7 +232,7 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
         let sid = session.configuration.identifier
         info("All complete for session \(sid)")
-        if let app = UIApplication.sharedApplication().delegate as? AppDelegate,
+        if let sid = sid, app = UIApplication.sharedApplication().delegate as? AppDelegate,
             handler = app.downloadCompletionHandlers.removeValueForKey(sid) {
                 handler()
         }

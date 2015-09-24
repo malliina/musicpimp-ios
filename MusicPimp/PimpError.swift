@@ -38,7 +38,7 @@ class PimpErrorUtil {
                     return "Error code: \(code)"
                 }
             }
-        case .NetworkFailure(let failure):
+        case .NetworkFailure( _):
             return "Unable to connect"
         case .SimpleError(let message):
             return message.message

@@ -77,23 +77,24 @@ class LocalPlayer: NSObject, PlayerType {
     }
     func seek(position: Duration) {
         // fucking hell
-        var scale: Int32 = 1
-        var pos64 = Float64(position.seconds)
-        var posTime = CMTimeMakeWithSeconds(pos64, scale)
+        let scale: Int32 = 1
+        let pos64 = Float64(position.seconds)
+        let posTime = CMTimeMakeWithSeconds(pos64, scale)
         player?.seekToTime(posTime)
     }
     
     func duration() -> Duration? {
-        if let metas = player?.currentItem?.asset?.metadata as? [AVMetadataItem] {
-            for meta: AVMetadataItem in metas {
-                let key = meta.key
-                let value = meta.stringValue
-                let keyStr = key.description
-            }
-        } else {
-            info ("No meta")
-        }
-        if let duration = player?.currentItem?.asset?.duration {
+//        if let metas = player?.currentItem?.asset.metadata {
+//            for meta: AVMetadataItem in metas {
+//                if let key = meta.key {
+//                    let value = meta.stringValue
+//                    let keyStr = key.description
+//                }
+//            }
+//        } else {
+//            info ("No meta")
+//        }
+        if let duration = player?.currentItem?.asset.duration {
             let secs = CMTimeGetSeconds(duration)
             if(secs.isNormal) {
                 return secs.seconds
@@ -172,7 +173,7 @@ class LocalPlayer: NSObject, PlayerType {
         info("Failed to play to end.")
         next()
     }
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context == &itemStatusContext {
             if let item = object as? AVPlayerItem {
                 switch(item.status) {
@@ -180,7 +181,7 @@ class LocalPlayer: NSObject, PlayerType {
                     info("AVPlayerItemStatus.Failed")
                     closePlayer()
                 default:
-                    let temp = 0
+                    break
                 }
             } else {
                 Log.info("Non-item object")
@@ -191,8 +192,7 @@ class LocalPlayer: NSObject, PlayerType {
                 case AVPlayerStatus.Failed:
                     info("Player failed")
                 default:
-                    let temp = 0
-//                    info("Player other")
+                    break
                 }
             } else {
                 info("Non-player object")

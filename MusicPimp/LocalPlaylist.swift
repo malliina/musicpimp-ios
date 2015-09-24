@@ -52,7 +52,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         add([track])
     }
     func add(tracks: [Track]) {
-        ts.extend(tracks)
+        ts.appendContentsOf(tracks)
         playlistUpdated()
         onTracksAdded(tracks)
     }

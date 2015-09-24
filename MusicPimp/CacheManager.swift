@@ -32,9 +32,9 @@ class CacheManager {
     
     /// Ensures that dir is at most maxSize large; deleting files indiscriminately if necessary to free disk space.
     ///
-    /// :param: dir the root dir
-    /// :param: maxSize the maximum allowed size of dir
-    /// :param: shovelSize the minumum amount to delete from dir if its size exceeds maxSize
+    /// - parameter dir: the root dir
+    /// - parameter maxSize: the maximum allowed size of dir
+    /// - parameter shovelSize: the minumum amount to delete from dir if its size exceeds maxSize
     ///
     /// :return: the amount acutally deleted
     func cleanup(dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) -> StorageSize {
@@ -58,10 +58,10 @@ class CacheManager {
     /// Frees up amount from dir by deleting files.
     ///
     ///
-    /// :param: dir the root directory to clean up
-    /// :param: amount the amount to delete, approximately
+    /// - parameter dir: the root directory to clean up
+    /// - parameter amount: the amount to delete, approximately
     ///
-    /// :returns: the amount actually deleted
+    /// - returns: the amount actually deleted
     func free(dir: Directory, amount: StorageSize) -> StorageSize {
         return dir.contents().paths.foldLeft(StorageSize.Zero) { (deleted, path) -> StorageSize in
             let hasDeletedEnough = deleted >= amount

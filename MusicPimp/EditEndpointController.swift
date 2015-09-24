@@ -88,12 +88,12 @@ class EditEndpointController: UIViewController {
     
     func errorMessage(e: Endpoint, error: PimpError) -> String {
         switch error {
-            case PimpError.ResponseFailure(let resource, let code, let message):
+            case PimpError.ResponseFailure( _, let code, _):
                 switch code {
                     case 401: return "Unauthorized. Check your username/password."
                     default: return "HTTP error code \(code)."
                 }
-            case PimpError.NetworkFailure(let req):
+            case PimpError.NetworkFailure( _):
                 return "Unable to connect to \(e.httpBaseUrl)."
             case PimpError.ParseError:
                 return "The response was not understood."
@@ -130,23 +130,23 @@ class EditEndpointController: UIViewController {
     }
     
     func parseEndpoint() -> Endpoint? {
-        var id = editedItem?.id ?? NSUUID().UUIDString
+        let id = editedItem?.id ?? NSUUID().UUIDString
         if let serverType = readServerType(typeControl) {
             if serverType.name == ServerTypes.Cloud.name {
-                let existsEmpty = [cloudIDField, usernameField, passwordField].exists({ $0.text.isEmpty })
+                let existsEmpty = [cloudIDField, usernameField, passwordField].exists({ $0.text!.isEmpty })
                 if existsEmpty {
                     return nil
                 }
-                return Endpoint(id: id, cloudID: cloudIDField.text, username: usernameField.text, password: passwordField.text)
+                return Endpoint(id: id, cloudID: cloudIDField.text!, username: usernameField.text!, password: passwordField.text!)
             } else {
-                if let port = portField.text.toInt() {
+                if let portText = portField.text, port = Int(portText) {
                     let protoIndex = protocolControl.selectedSegmentIndex
                     let ssl = protoIndex == 1
-                    let existsEmpty = [nameField, addressField, portField, usernameField, passwordField].exists({ $0.text.isEmpty })
+                    let existsEmpty = [nameField, addressField, portField, usernameField, passwordField].exists({ $0.text!.isEmpty })
                     if existsEmpty {
                         return nil
                     }
-                    return Endpoint(id: id, serverType: serverType, name: nameField.text, ssl: ssl, address: addressField.text, port: port, username: usernameField.text, password: passwordField.text)
+                    return Endpoint(id: id, serverType: serverType, name: nameField.text!, ssl: ssl, address: addressField.text!, port: port, username: usernameField.text!, password: passwordField.text!)
                 }
             }
         }

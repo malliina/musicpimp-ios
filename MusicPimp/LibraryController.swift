@@ -137,15 +137,15 @@ class LibraryController: PimpTableController {
         let (prototypeID, accessoryType) = isFolder ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
         var cell: UITableViewCell? = nil
         if isFolder {
-            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath) as? UITableViewCell
+            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath)
         } else {
             let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
             if let pimpCell = arr[0] as? PimpMusicItemCell {
                 cell = pimpCell
                 if let track = item as? Track {
                     if let image = UIImage(named: "more_filled_grey-100.png") {
-                        let button = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-                        let width = Int(image.size.width)
+                        let button = UIButton(type: UIButtonType.Custom)
+                        //let width = Int(image.size.width)
                         button.frame = CGRect(x: 0, y: 0, width: customAccessorySize, height: customAccessorySize)
                         button.setBackgroundImage(image, forState: UIControlState.Normal)
                         button.backgroundColor = UIColor.clearColor()
@@ -167,7 +167,7 @@ class LibraryController: PimpTableController {
         return cell!
     }
     func accessoryClicked(sender: AnyObject, event: AnyObject) {
-        if let touch = event.allTouches()?.first as? UITouch {
+        if let touch = event.allTouches()?.first {
             let point = touch.locationInView(tableView)
             if let indexPath = tableView.indexPathForRowAtPoint(point) {
                 let item = musicItems[indexPath.row]
@@ -200,7 +200,9 @@ class LibraryController: PimpTableController {
         }
         sheet.addAction(playAction)
         sheet.addAction(addAction)
-        sheet.addAction(downloadAction)
+        if !LocalLibrary.sharedInstance.contains(track) {
+            sheet.addAction(downloadAction)
+        }
         sheet.addAction(cancelAction)
         self.presentViewController(sheet, animated: true, completion: nil)
     }
@@ -224,7 +226,9 @@ class LibraryController: PimpTableController {
         }
         sheet.addAction(playAction)
         sheet.addAction(addAction)
-        sheet.addAction(downloadAction)
+        if !self.library.isLocal {
+            sheet.addAction(downloadAction)
+        }
         sheet.addAction(cancelAction)
         self.presentViewController(sheet, animated: true, completion: nil)
     }
@@ -245,7 +249,7 @@ class LibraryController: PimpTableController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let playAction = musicItemAction(
             tableView,
             title: "Play",
@@ -263,7 +267,7 @@ class LibraryController: PimpTableController {
     
     func musicItemAction(tableView: UITableView, title: String, onTrack: Track -> Void, onFolder: Folder -> Void) -> UITableViewRowAction {
         return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
-            (action: UITableViewRowAction!, indexPath: NSIndexPath!) -> Void in
+            (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
             let tappedItem: MusicItem = self.musicItems[indexPath.row]
             if let track = tappedItem as? Track {
                 onTrack(track)
@@ -304,7 +308,6 @@ class LibraryController: PimpTableController {
             info("Adding \(tracks.count) tracks")
             player.playlist.add(tracks)
             downloadIfNeeded(tracks)
-
         }
     }
     
@@ -328,7 +331,7 @@ class LibraryController: PimpTableController {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
             let tracksToDownload = newTracks.take(maxNewDownloads)
-            for track in newTracks {
+            for track in tracksToDownload {
                 startDownload(track)
             }
         }
@@ -339,10 +342,10 @@ class LibraryController: PimpTableController {
     }
     
     // Performs segue if the user clicked a folder
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         if identifier == LibraryController.LIBRARY {
-            if let row = self.tableView.indexPathForSelectedRow() {
-                var index = row.item
+            if let row = self.tableView.indexPathForSelectedRow {
+                let index = row.item
                 return musicItems.count > index && musicItems[index] is Folder
             } else {
                 info("Cannot navigate to item at row \(index)")
@@ -357,7 +360,7 @@ class LibraryController: PimpTableController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         info("prepareForSegue")
         if let destination = segue.destinationViewController as? LibraryController {
-            if let row = self.tableView.indexPathForSelectedRow() {
+            if let row = self.tableView.indexPathForSelectedRow {
                 destination.selected = musicItems[row.item]
             }
         } else {

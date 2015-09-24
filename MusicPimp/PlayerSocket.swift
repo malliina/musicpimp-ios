@@ -35,11 +35,15 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
     }
     func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
         if let message = message as? String {
-            info("Got string")
+            info("Got message \(message)")
+        } else {
+            info("Got data \(message)")
         }
-        info("Got message: \(message)")
     }
     func webSocketDidOpen(webSocket: SRWebSocket!) {
+        if(webSocket != self.socket) {
+            return;
+        }
         isConnected = true
         info("Socket opened to \(baseURL)")
     }

@@ -26,10 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BackgroundDownloader.musicDownloader.setup()
         PlayerManager.sharedInstance.active.open()
         test()
+        Log.info("didFinishLaunchingWithOptions")
         return true
     }
     private func test() {
-        let i = Duration(hours: 5)
+        //let i = Duration(hours: 5)
         //CoverService.sharedInstance.cover("iron maiden", album: "somewhere in time")
         let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
@@ -45,14 +46,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
     func initAudio() {
-        let categorySuccess = audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
+        let categorySuccess: Bool
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            categorySuccess = true
+        } catch _ {
+            categorySuccess = false
+        }
         if categorySuccess {
             ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.sharedCommandCenter())
         } else {
             Log.info("Failed to initialize audio category")
             return
         }
-        let activationSuccess = audioSession.setActive(true, error: nil)
+        let activationSuccess: Bool
+        do {
+            try audioSession.setActive(true)
+            activationSuccess = true
+        } catch _ {
+            activationSuccess = false
+        }
         if !activationSuccess {
             Log.info("Failed to activate audio session")
         }

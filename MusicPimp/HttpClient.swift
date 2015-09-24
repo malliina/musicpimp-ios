@@ -20,20 +20,20 @@ class HttpClient {
     }
     
     static func encodeBase64(unencoded: String) -> String {
-        return unencoded.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+        return unencoded.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
     }
     
     func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
         get(NSURL(string: url)!, headers: headers) { (data, response, error) -> Void in
-            if let error = error {
+            if let _ = error, data = data {
                 onError(RequestFailure(data: data))
             }
-            if let httpResponse = response as? NSHTTPURLResponse {
+            if let httpResponse = response as? NSHTTPURLResponse, data = data {
                 onResponse(data, httpResponse)
             }
         }
     }
-    func get(url: NSURL, headers: [String: String] = [:], completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
+    func get(url: NSURL, headers: [String: String] = [:], completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
         executeRequest(
             url,
             f: {(req) -> (Void) in
@@ -47,16 +47,16 @@ class HttpClient {
     func postJSON(url: String, headers: [String: String] = [:], payload: AnyObject, onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
         
         postJSON(NSURL(string: url)!, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
-                if let error = error {
+                if let _ = error, data = data {
                     onError(RequestFailure(data: data))
                 }
-                if let httpResponse = response as? NSHTTPURLResponse {
+                if let httpResponse = response as? NSHTTPURLResponse, data = data {
                     onResponse(data, httpResponse)
                 }
         }
     }
 
-    func postJSON(url: NSURL, headers: [String: String] = [:], jsonObj: AnyObject, completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
+    func postJSON(url: NSURL, headers: [String: String] = [:], jsonObj: AnyObject, completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
         executeRequest(
             url,
             f: { (req) -> (Void) in
@@ -66,15 +66,24 @@ class HttpClient {
                 }
                 var err: NSError?
                 //let isValid = NSJSONSerialization.isValidJSONObject(jsonObj)
-                let body = NSJSONSerialization.dataWithJSONObject(jsonObj, options: nil, error: &err)
+                let body: NSData?
+                do {
+                    body = try NSJSONSerialization.dataWithJSONObject(jsonObj, options: [])
+                } catch let error as NSError {
+                    err = error
+                    body = nil
+                } catch {
+                    fatalError()
+                }
                 req.HTTPBody = body
             },
             completionHandler: completionHandler)
     }
+    
     func executeRequest(
         url: NSURL,
         f: NSMutableURLRequest -> Void,
-        completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)?) {
+        completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
         let req = NSMutableURLRequest(URL: url)
         f(req)
         let session = NSURLSession.sharedSession()

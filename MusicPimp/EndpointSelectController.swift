@@ -48,7 +48,7 @@ class EndpointSelectController: BaseTableController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
         let endpoint = index == 0 ? Endpoint.Local : endpoints[index-1]
-        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) 
         cell.textLabel?.text = endpoint.name
         let accessory = index == selectedIndex ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
         cell.accessoryType = accessory
@@ -78,16 +78,16 @@ class EndpointSelectController: BaseTableController {
     }
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let rowIndex = indexPath.row
         if rowIndex > 0 {
-            var edit = endpointRowAction(tableView, title: "Edit") {
+            let edit = endpointRowAction(tableView, title: "Edit") {
                 (index: Int) -> Void in
                 let isPlayer = self.manager as? PlayerManager != nil
                 let segueID = isPlayer ? "EditPlayer" : "EditSource"
                 self.performSegueWithIdentifier(segueID, sender: self.endpoints[index])
             }
-            var remove = endpointRowAction(tableView, title: "Remove") {
+            let remove = endpointRowAction(tableView, title: "Remove") {
                 (index: Int) -> Void in
                 // TODO make EndpointsService with operations on endpoints, then listen for endpointsChanged events and react instead
                 self.endpoints.removeAtIndex(index)
@@ -102,7 +102,7 @@ class EndpointSelectController: BaseTableController {
     }
     func endpointRowAction(tableView: UITableView, title: String, f: Int -> Void) -> UITableViewRowAction {
         return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
-            (action: UITableViewRowAction!, indexPath: NSIndexPath!) -> Void in
+            (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
             let endIndex = indexPath.row - 1
             if endIndex >= 0 && self.endpoints.count > endIndex {
                 f(endIndex)
