@@ -11,7 +11,6 @@ class PimpMusicItemCell : UITableViewCell {
     
     @IBOutlet var progressView: UIProgressView!
     
-    func hm() {
+    @IBOutlet var titleLabel: UILabel!
     
-    }
 }

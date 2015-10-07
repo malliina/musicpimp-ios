@@ -18,12 +18,21 @@ class CacheTableController: CacheInfoController {
     @IBOutlet var currentCacheSizeLabel: UILabel!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         let onOff = UISwitch(frame: CGRect.zero)
         onOff.addTarget(self, action: Selector("didToggleCache:"), forControlEvents: UIControlEvents.ValueChanged)
         onOff.on = settings.cacheEnabled
         onOffSwitch = onOff
         currentLimitLabel.text = currentLimitDescription
         updateCacheUsageLabel()
+    }
+    
+    override func onCacheLimitChanged(newSize: StorageSize) {
+        info("Got \(newSize)")
+        Util.onUiThread {
+            self.currentLimitLabel.text = self.currentLimitDescription
+        }
+        //renderTable()
     }
     
     private func updateCacheUsageLabel() {
@@ -35,10 +44,10 @@ class CacheTableController: CacheInfoController {
         if let reuse = cell.reuseIdentifier {
             switch reuse {
                 case CacheTableController.CacheEnabledCell:
-                    cell.accessoryView = onOffSwitch
+                cell.accessoryView = onOffSwitch
                 break
             case CacheTableController.CacheSizeCell:
-                
+                //currentLimitLabel.text = currentLimitDescription
                 break
             case CacheTableController.DeleteCacheCell:
                 

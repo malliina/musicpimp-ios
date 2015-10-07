@@ -35,7 +35,7 @@ class StorageSize: CustomStringConvertible, Comparable {
     var toTeras: Int64 { return toGigs / StorageSize.k64 }
     
     var description: String {
-            return shortDescription
+        return shortDescription
     }
     var longDescription: String {
         return describe("bytes", kilos: "kilobytes", megas: "megabytes", gigas: "gigabytes", teras: "terabytes")
@@ -44,10 +44,10 @@ class StorageSize: CustomStringConvertible, Comparable {
         return describe("B", kilos: "KB", megas: "MB", gigas: "GB", teras: "TB")
     }
     private func describe(bytes: String, kilos: String, megas: String, gigas: String, teras: String) -> String {
-        if toTeras > 10 { return "\(toTeras) \(teras)" }
-        else if toGigs > 10 { return "\(toGigs) \(gigas)" }
-        else if toMegs > 10 { return "\(toMegs) \(megas)" }
-        else if toKilos > 10 { return "\(toKilos) \(kilos)" }
+        if toTeras >= 10 { return "\(toTeras) \(teras)" }
+        else if toGigs >= 10 { return "\(toGigs) \(gigas)" }
+        else if toMegs >= 10 { return "\(toMegs) \(megas)" }
+        else if toKilos >= 10 { return "\(toKilos) \(kilos)" }
         else { return "\(toBytes) \(bytes)" }
     }
     static func fromBytes(bytes: Int64) -> StorageSize? {

@@ -25,7 +25,7 @@ class LibraryController: PimpTableController {
     static let LIBRARY = "library", PLAYER = "player"
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
-    let customAccessorySize = 30
+    let customAccessorySize = 44
     let maxNewDownloads = 2000
     
     var folder: MusicFolder = MusicFolder.empty
@@ -134,22 +134,26 @@ class LibraryController: PimpTableController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
-        let (prototypeID, accessoryType) = isFolder ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
+//        let (prototypeID, accessoryType) = isFolder ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
         var cell: UITableViewCell? = nil
         if isFolder {
-            cell = tableView.dequeueReusableCellWithIdentifier(prototypeID, forIndexPath: indexPath)
+            let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
+            folderCell.textLabel?.text = item.title
+            folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell = folderCell
         } else {
             let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
             if let pimpCell = arr[0] as? PimpMusicItemCell {
                 cell = pimpCell
+                pimpCell.titleLabel?.text = item.title
                 if let track = item as? Track {
                     if let image = UIImage(named: "more_filled_grey-100.png") {
                         let button = UIButton(type: UIButtonType.Custom)
-                        //let width = Int(image.size.width)
                         button.frame = CGRect(x: 0, y: 0, width: customAccessorySize, height: customAccessorySize)
                         button.setBackgroundImage(image, forState: UIControlState.Normal)
                         button.backgroundColor = UIColor.clearColor()
                         button.addTarget(self, action: "accessoryClicked:event:", forControlEvents: UIControlEvents.TouchUpInside)
+                        
                         pimpCell.accessoryView = button
                     }
                     if let downloadProgress = downloadState[track] {
@@ -162,8 +166,7 @@ class LibraryController: PimpTableController {
                 }
             }
         }
-        cell?.textLabel?.text = item.title
-        cell?.accessoryType = accessoryType
+//        cell?.accessoryType = accessoryType
         return cell!
     }
     func accessoryClicked(sender: AnyObject, event: AnyObject) {

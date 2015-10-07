@@ -64,7 +64,7 @@ class HttpClient {
                 for (key, value) in headers {
                     req.addValue(value, forHTTPHeaderField: key)
                 }
-                var err: NSError?
+                var err: NSError? = nil
                 //let isValid = NSJSONSerialization.isValidJSONObject(jsonObj)
                 let body: NSData?
                 do {

@@ -8,9 +8,21 @@
 
 import Foundation
 class CacheInfoController: BaseTableController {
+        
     var currentLimitDescription: String {
         get {
-            return settings.cacheLimit.shortDescription
+            let gigs = settings.cacheLimit.toGigs
+            return "\(gigs) GB"
         }
+    }
+    
+    override func viewDidLoad() {
+        settings.cacheLimitChanged.addHandler(self, handler: { (cic) -> StorageSize -> () in
+            cic.onCacheLimitChanged
+        })
+    }
+    
+    func onCacheLimitChanged(newSize: StorageSize) {
+        
     }
 }

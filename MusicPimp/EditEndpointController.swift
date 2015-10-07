@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class EditEndpointController: UIViewController {
+class EditEndpointController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var typeControl: UISegmentedControl!
@@ -31,9 +31,18 @@ class EditEndpointController: UIViewController {
     var editedItem: Endpoint? = nil
     
     override func viewDidLoad() {
+        let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
+        textFields.forEach { (elem) -> () in
+            elem.delegate = self
+        }
         if let editedItem = editedItem {
             fill(editedItem)
         }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

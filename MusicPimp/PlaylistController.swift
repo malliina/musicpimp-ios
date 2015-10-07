@@ -49,21 +49,32 @@ class PlaylistController: PimpTableController {
         renderTable()
     }
     func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
+        //info("Written \(dpu.written) of \(dpu.relativePath)")
         if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
-            index = tracks.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
-                let isDownloadComplete = track.size == dpu.written
-                if isDownloadComplete {
-                    downloadState.removeValueForKey(track)
-                } else {
-                    downloadState[track] = TrackProgress(track: track, dpu: dpu)
-                }
-                let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
-                
-                Util.onUiThread({
-                    self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
-                })
+            index = tracks.indexOf({ (item: Track) -> Bool in item.path == track.path }) {
+            let isDownloadComplete = track.size == dpu.written
+            if isDownloadComplete {
+                downloadState.removeValueForKey(track)
+//              let isVisible = (isViewLoaded() && view.window != nil)
+//              if !isVisible && downloadState.isEmpty {
+//                  disposeDownloadProgress()
+//              }
+            } else {
+                downloadState[track] = TrackProgress(track: track, dpu: dpu)
+            }
+            let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
+            
+            Util.onUiThread {
+                self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+            }
         }
     }
+    
+//    func disposeDownloadProgress() {
+//        downloadProgressDisposable?.dispose()
+//        downloadProgressDisposable = nil
+//    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
         let track = tracks[index]
@@ -77,9 +88,9 @@ class PlaylistController: PimpTableController {
         } else {
             cell.progressView.hidden = true
         }
-        cell.textLabel?.text = track.title
+        cell.titleLabel?.text = track.title
         if isCurrent {
-            cell.textLabel?.textColor = UIColor.blueColor()
+            cell.titleLabel?.textColor = UIColor.blueColor()
             cell.selectionStyle = UITableViewCellSelectionStyle.Blue
         } else {
             cell.selectionStyle = UITableViewCellSelectionStyle.Default

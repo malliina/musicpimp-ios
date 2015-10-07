@@ -114,10 +114,11 @@ class BackgroundDownloader: NSObject, NSURLSessionDownloadDelegate, NSURLSession
     }
     
     func download(url: NSURL, relativePath: RelativePath) -> ErrorMessage? {
-        info("Preparing download of \(relativePath)")
+        info("Preparing download of \(relativePath) from \(url)")
         if let destPath = prepareDestination(relativePath) {
             let destURL = NSURL(fileURLWithPath: destPath)
             let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
+            self.info("Download \(url) to dest path \(destPath) with url \(destURL)")
             return download(url, info: info)
         } else {
             return ErrorMessage(message: "Unable to prepare destination URL \(relativePath)")

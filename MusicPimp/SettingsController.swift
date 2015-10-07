@@ -22,7 +22,9 @@ class SettingsController: CacheInfoController {
     @IBOutlet var sourcePicker: UIPickerView!
     
     @IBOutlet var cacheDetail: UILabel!
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
         let libraryManager = LibraryManager.sharedInstance
         let playerManager = PlayerManager.sharedInstance
         libraryManager.changed.addHandler(self, handler: { (sc) -> Endpoint -> () in
@@ -34,22 +36,31 @@ class SettingsController: CacheInfoController {
         settings.cacheEnabledChanged.addHandler(self, handler: { (sc) -> Bool -> () in
             sc.onCacheEnabledChanged
         })
-        settings.cacheLimitChanged.addHandler(self, handler: { (sc) -> StorageSize -> () in
-            sc.onCacheLimitChanged
-        })
+//        settings.cacheLimitChanged.addHandler(self, handler: { (sc) -> StorageSize -> () in
+//            sc.onCacheLimitChanged
+//        })
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+    }
+    
     private func onLibraryChanged(newLibrary: Endpoint) {
         renderTable()
     }
+    
     private func onPlayerChanged(newPlayer: Endpoint) {
         renderTable()
     }
+    
     private func onCacheEnabledChanged(newEnabled: Bool) {
         renderTable()
     }
-    private func onCacheLimitChanged(newLimit: StorageSize) {
+    
+    override func onCacheLimitChanged(newLimit: StorageSize) {
         renderTable()
     }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         if let reuseIdentifier = cell.reuseIdentifier {
@@ -62,8 +73,9 @@ class SettingsController: CacheInfoController {
                     text = activePlayer.name
                 break
                 case "Cache":
-                    let detail = settings.cacheEnabled ? currentLimitDescription : "off"
-                    text = detail
+                    text = settings.cacheEnabled ? currentLimitDescription : "off"
+                break
+                case "Alarm":
                 break
                 default:
                 break

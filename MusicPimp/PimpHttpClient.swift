@@ -49,7 +49,7 @@ class PimpHttpClient: HttpClient {
     func pimpGetParsed<T>(resource: String, parse: AnyObject -> T?, f: T -> Void, onError: PimpError -> Void) {
         pimpGet(resource, f: {
             data -> Void in
-            var error: NSError?
+            var error: NSError? = nil
             let anyObj: AnyObject?
             do {
                 anyObj = try Json.asJson(data)
