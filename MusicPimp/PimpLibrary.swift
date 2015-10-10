@@ -20,15 +20,23 @@ class PimpLibrary: BaseLibrary {
     override func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         client.pingAuth(onError, f: f)
     }
+    
     override func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
         client.pimpGetParsed(Endpoints.FOLDERS, parse: parseMusicFolder, f: f, onError: onError)
     }
+    
     override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
         client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder, f: f, onError: onError)
     }
+    
     override func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
         tracksInner(id,  others: [], acc: [], f: f, onError: onError)
     }
+    
+    override func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {
+        client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(term)", parse: parseTracks, f: ts, onError: onError)
+    }
+    
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
         folder(id, onError: onError) { result in
             let subIDs = result.folders.map { $0.id }
@@ -42,6 +50,7 @@ class PimpLibrary: BaseLibrary {
             }
         }
     }
+    
     func parseFolder(obj: NSDictionary) -> Folder? {
         if let id = obj[JsonKeys.ID] as? String,
             title = obj[JsonKeys.TITLE] as? String,
@@ -73,6 +82,15 @@ class PimpLibrary: BaseLibrary {
                 }
         }
         Log.info("Unable to parse \(obj) as music folder")
+        return nil
+    }
+    
+    func parseTracks(obj: AnyObject) -> [Track]? {
+        if let arr = obj as? [NSDictionary] {
+            let tracks = arr.flatMapOpt(parseTrack)
+            return tracks
+        }
+        Log.info("Unable to parse tracks from \(obj)")
         return nil
     }
 }

@@ -15,7 +15,8 @@ class Endpoints {
     PING_AUTH = "/pingauth",
     FOLDERS = "/folders",
     PLAYBACK = "/playback",
-    WS_PLAYBACK = "/ws/playback"
+    WS_PLAYBACK = "/ws/playback",
+    SEARCH = "/search"
 }
 
 class PimpHttpClient: HttpClient {
@@ -43,9 +44,11 @@ class PimpHttpClient: HttpClient {
         postHeaders.updateValue(HttpClient.JSON, forKey: HttpClient.CONTENT_TYPE)
         self.postHeaders = postHeaders
     }
+    
     func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         pimpGetParsed(Endpoints.PING_AUTH, parse: parseVersion, f: f, onError: onError)
-    }    
+    }
+    
     func pimpGetParsed<T>(resource: String, parse: AnyObject -> T?, f: T -> Void, onError: PimpError -> Void) {
         pimpGet(resource, f: {
             data -> Void in
@@ -72,6 +75,7 @@ class PimpHttpClient: HttpClient {
             }
         }, onError: onError)
     }
+    
     func pimpGet(resource: String, f: NSData -> Void, onError: PimpError -> Void) {
         log(resource)
         self.get(
@@ -84,6 +88,7 @@ class PimpHttpClient: HttpClient {
                 onError(.NetworkFailure(err))
             })
     }
+    
     func pimpPost(resource: String, payload: [String: AnyObject], f: NSData -> Void, onError: PimpError -> Void) {
         self.postJSON(
             baseURL + resource,
@@ -96,6 +101,7 @@ class PimpHttpClient: HttpClient {
                 onError(.NetworkFailure(err))
             })
     }
+    
     func responseHandler(resource: String, data: NSData, response: NSHTTPURLResponse, f: NSData -> Void, onError: PimpError -> Void) {
         let statusCode = response.statusCode
         let isStatusOK = (statusCode >= 200) && (statusCode < 300)
@@ -109,12 +115,15 @@ class PimpHttpClient: HttpClient {
             onError(.ResponseFailure(resource, statusCode, errorMessage))
         }
     }
+    
     func onRequestError(data: NSData, error: NSError) -> Void {
         log("Error: \(data)")
     }
+    
     func onMusicFolder(f: MusicFolder) -> Void {
         log("Tracks: \(f.tracks.count)")
     }
+    
     func parseVersion(obj: AnyObject) -> Version? {
         if let dict = obj as? NSDictionary {
             if let version = dict[JsonKeys.VERSION] as? String {
@@ -124,6 +133,7 @@ class PimpHttpClient: HttpClient {
         log("Unable to get status")
         return nil
     }
+    
     func log(s: String) {
         Log.info(s)
     }

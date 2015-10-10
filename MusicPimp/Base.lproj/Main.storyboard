@@ -80,8 +80,19 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="BYT-M1-1hh" id="8DI-Dh-pnk"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CW3-YU-J68" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="BYT-M1-1hh">
+                    <connections>
+                        <outlet property="delegate" destination="bku-Sh-rNV" id="Bmy-LL-ylZ"/>
+                        <outlet property="searchContentsController" destination="bku-Sh-rNV" id="Fhd-be-5vT"/>
+                        <outlet property="searchResultsDataSource" destination="bku-Sh-rNV" id="r0L-aH-9XU"/>
+                        <outlet property="searchResultsDelegate" destination="bku-Sh-rNV" id="YFq-t9-k3K"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-11" y="1670"/>
         </scene>

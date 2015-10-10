@@ -15,4 +15,5 @@ protocol LibraryType {
     func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void)
     func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void)
     func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void)
+    func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void)
 }

@@ -27,6 +27,8 @@
 		7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779F1B9352A20066A7B5 /* more_filled_grey-100.png */; };
 		7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C1481BC81D4500189687 /* DBImageColorPicker.m */; settings = {ASSET_TAGS = (); }; };
 		7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14A1BC81D4500189687 /* UIImage+Color.m */; settings = {ASSET_TAGS = (); }; };
+		7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14D1BC9A63500189687 /* SearchResultsController.swift */; settings = {ASSET_TAGS = (); }; };
+		7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C1511BC9A76000189687 /* BaseMusicController.swift */; settings = {ASSET_TAGS = (); }; };
 		7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DC1B40412200C2D634 /* CoverService.swift */; };
 		7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */; };
 		7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */; };
@@ -150,6 +152,8 @@
 		7D31C1481BC81D4500189687 /* DBImageColorPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DBImageColorPicker.m; path = ColorScheme/DBImageColorPicker.m; sourceTree = "<group>"; };
 		7D31C1491BC81D4500189687 /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Color.h"; path = "ColorScheme/UIImage+Color.h"; sourceTree = "<group>"; };
 		7D31C14A1BC81D4500189687 /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Color.m"; path = "ColorScheme/UIImage+Color.m"; sourceTree = "<group>"; };
+		7D31C14D1BC9A63500189687 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
+		7D31C1511BC9A76000189687 /* BaseMusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMusicController.swift; sourceTree = "<group>"; };
 		7D4FF8DC1B40412200C2D634 /* CoverService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverService.swift; sourceTree = "<group>"; };
 		7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPExtensions.swift; sourceTree = "<group>"; };
 		7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageSize.swift; sourceTree = "<group>"; };
@@ -376,7 +380,11 @@
 		7DBCD7A31B28B547006460D1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				7D31C1511BC9A76000189687 /* BaseMusicController.swift */,
 				7D6756C21B04D5F100BC0CA9 /* BaseTableController.swift */,
+				7D66863F1B49AC34003C92E4 /* CacheInfoController.swift */,
+				7D66863D1B498200003C92E4 /* CacheLimitController.swift */,
+				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
 				7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */,
 				7D0CA9891AF68EE7008F72EC /* EndpointsController.swift */,
 				7D6756D01B08E5ED00BC0CA9 /* EndpointSelectController.swift */,
@@ -389,15 +397,13 @@
 				7D6756C81B07CDD500BC0CA9 /* PlayerSettingController.swift */,
 				7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */,
 				7DC3596E1B37121F003B01B6 /* PlaylistNavController.swift */,
+				7D31C14D1BC9A63500189687 /* SearchResultsController.swift */,
 				7D0CA98B1AF6940B008F72EC /* SettingsController.swift */,
 				7DC359701B37122A003B01B6 /* SettingsNavController.swift */,
 				7D6756C61B07CDCA00BC0CA9 /* SourceSettingController.swift */,
+				7DC359721B371426003B01B6 /* TabNavController.swift */,
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
-				7DC359721B371426003B01B6 /* TabNavController.swift */,
-				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
-				7D66863D1B498200003C92E4 /* CacheLimitController.swift */,
-				7D66863F1B49AC34003C92E4 /* CacheInfoController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -644,6 +650,7 @@
 				7DB1B3B21B1102270012B8AE /* PimpPlaylist.swift in Sources */,
 				7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */,
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
+				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
 				7DB1B3AE1B10D8440012B8AE /* Models.swift in Sources */,
@@ -691,6 +698,7 @@
 				7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */,
 				7D6756D71B0A64E100BC0CA9 /* LibraryType.swift in Sources */,
 				7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */,
+				7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */,
 				7D0CA9881AF68EC6008F72EC /* EditEndpointController.swift in Sources */,
 				7DC359671B35EE3E003B01B6 /* PlayerNavController.swift in Sources */,
 				7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */,

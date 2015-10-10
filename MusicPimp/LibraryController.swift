@@ -21,36 +21,57 @@ class TrackProgress {
     }
 }
 
-class LibraryController: PimpTableController {
+class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+    
+    /// State restoration values.
+    enum RestorationKeys : String {
+        case viewControllerTitle
+        case searchControllerIsActive
+        case searchBarText
+        case searchBarIsFirstResponder
+    }
+    
+    struct SearchControllerRestorableState {
+        var wasActive = false
+        var wasFirstResponder = false
+    }
+    
+    /// Restoration state for UISearchController
+    var restoredState = SearchControllerRestorableState()
+
     static let LIBRARY = "library", PLAYER = "player"
     // TODO articulate these magic numbers
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
-    let customAccessorySize = 44
-    let maxNewDownloads = 2000
+    
     
     var folder: MusicFolder = MusicFolder.empty
-    var musicItems: [MusicItem] { return folder.items }
+    override var musicItems: [MusicItem] { return folder.items }
     var selected: MusicItem? = nil
     
     var header: UIView? = nil
-    var feedback: UILabel? = nil
+    
     private var downloadUpdates: Disposable? = nil
     private var downloadState: [Track: TrackProgress] = [:]
     
+    var resultsController: SearchResultsController!
+    var searchController: UISearchController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        activityView.frame = CGRect(x: 0, y: 0, width: 320, height: LibraryController.TABLE_CELL_HEIGHT_PLAIN)
-        activityView.startAnimating()
-        self.tableView.tableHeaderView = activityView
+//        let activityView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+//        activityView.frame = CGRect(x: 0, y: 0, width: 320, height: LibraryController.TABLE_CELL_HEIGHT_PLAIN)
+//        activityView.startAnimating()
+//        self.tableView.tableHeaderView = activityView
         
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
-        let feedbackLabel = UILabel(frame: CGRect(x: 16, y: 0, width: 300, height: 44))
-        feedbackLabel.textColor = UIColor.blueColor()
-        headerView.addSubview(feedbackLabel)
-        self.feedback = feedbackLabel
-        self.header = headerView
+//        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+//        let feedbackLabel = UILabel(frame: CGRect(x: 16, y: 0, width: 300, height: 44))
+//        feedbackLabel.textColor = UIColor.blueColor()
+//        headerView.addSubview(feedbackLabel)
+//        self.feedback = feedbackLabel
+//        self.header = headerView
+        
+        initSearch()
         
         if let folder = selected {
             self.navigationItem.title = folder.title
@@ -58,6 +79,19 @@ class LibraryController: PimpTableController {
         } else {
             loadRoot()
         }
+    }
+    
+    private func initSearch() {
+        resultsController = SearchResultsController()
+        resultsController.tableView.delegate = self
+        searchController = UISearchController(searchResultsController: resultsController)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.delegate = self
+//        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        definesPresentationContext = true
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -68,13 +102,26 @@ class LibraryController: PimpTableController {
         })
     }
     
+    private func restoreSearch() {
+        // Restore the searchController's active state.
+        if restoredState.wasActive {
+            searchController.active = restoredState.wasActive
+            restoredState.wasActive = false
+            
+            if restoredState.wasFirstResponder {
+                searchController.searchBar.becomeFirstResponder()
+                restoredState.wasFirstResponder = false
+            }
+        }
+    }
+    
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         if downloadState.isEmpty {
             disposeDownloadProgress()
         }
     }
-    
+        
     func disposeDownloadProgress() {
         downloadUpdates?.dispose()
         downloadUpdates = nil
@@ -123,22 +170,9 @@ class LibraryController: PimpTableController {
     func onFolder(f: MusicFolder) {
         folder = f
         Util.onUiThread({ () in
-            self.tableView.tableHeaderView = nil
+//            self.tableView.tableHeaderView = nil
             self.tableView.reloadData()
         })
-    }
-    
-    func onError(error: PimpError) {
-        let message = PimpErrorUtil.stringify(error)
-        Util.onUiThread({
-            () in
-            self.feedback?.text = message
-            self.tableView.tableHeaderView = nil
-            if let header = self.header {
-                self.tableView.tableHeaderView = header
-            }
-        })
-        info(message)
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -184,74 +218,6 @@ class LibraryController: PimpTableController {
         return cell!
     }
     
-    func accessoryClicked(sender: AnyObject, event: AnyObject) {
-        if let touch = event.allTouches()?.first {
-            let point = touch.locationInView(tableView)
-            if let indexPath = tableView.indexPathForRowAtPoint(point) {
-                let item = musicItems[indexPath.row]
-                if let track = item as? Track {
-                    displayActionsForTrack(track)
-                }
-                if let folder = item as? Folder {
-                    displayActionsForFolder(folder)
-                }
-                
-                Log.info("Clicked \(item.title)")
-            }
-        }
-    }
-    
-    func displayActionsForTrack(track: Track) {
-        let title = track.title
-        let message = track.artist
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let playAction = UIAlertAction(title: "Play", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.playTrack(track)
-        }
-        let addAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.addTrack(track)
-        }
-        let downloadAction = UIAlertAction(title: "Download", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.downloadIfNeeded([track])
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (a) -> Void in
-            
-        }
-        sheet.addAction(playAction)
-        sheet.addAction(addAction)
-        if !LocalLibrary.sharedInstance.contains(track) {
-            sheet.addAction(downloadAction)
-        }
-        sheet.addAction(cancelAction)
-        self.presentViewController(sheet, animated: true, completion: nil)
-    }
-    
-    func displayActionsForFolder(folder: Folder) {
-        let title = folder.title
-        let id = folder.id
-        let message = ""
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let playAction = UIAlertAction(title: "Play", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.playFolder(id)
-        }
-        let addAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.addFolder(id)
-        }
-        let downloadAction = UIAlertAction(title: "Download", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.library.tracks(id, onError: self.onError, f: self.downloadIfNeeded)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (a) -> Void in
-            
-        }
-        sheet.addAction(playAction)
-        sheet.addAction(addAction)
-        if !self.library.isLocal {
-            sheet.addAction(downloadAction)
-        }
-        sheet.addAction(cancelAction)
-        self.presentViewController(sheet, animated: true, completion: nil)
-    }
-
     func sheetAction(title: String, item: MusicItem, onTrack: Track -> Void, onFolder: Folder -> Void) -> UIAlertAction {
         return UIAlertAction(title: title, style: UIAlertActionStyle.Default) { (a) -> Void in
             if let track = item as? Track {
@@ -298,42 +264,11 @@ class LibraryController: PimpTableController {
         }
     }
     
-    func playFolder(id: String) {
-        library.tracks(id, onError: onError, f: playTracks)
-    }
-    
-    func playTrack(track: Track) {
-        playTracks([track])
-    }
-    
-    func playTracks(tracks: [Track]) {
-        if let first = tracks.first {
-            playAndDownload(first)
-            addTracks(tracks.tail())
-        }
-    }
-    
-    func addFolder(id: String) {
-        info("Adding folder")
-        library.tracks(id, onError: onError, f: addTracks)
-    }
-    
-    func addTrack(track: Track) {
-        addTracks([track])
-    }
-    
-    func addTracks(tracks: [Track]) {
-        if !tracks.isEmpty {
-            info("Adding \(tracks.count) tracks")
-            player.playlist.add(tracks)
-            downloadIfNeeded(tracks)
-        }
-    }
     
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //let cell = tableView.cellForRowAtIndexPath(indexPath)
-        let tappedItem: MusicItem = musicItems[indexPath.row]
+        let items = tableView == self.tableView ? musicItems : resultsController.musicItems
+        let tappedItem: MusicItem = items[indexPath.row]
         if let track = tappedItem as? Track {
             playAndDownload(track)
         }
@@ -341,24 +276,6 @@ class LibraryController: PimpTableController {
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
     
-    private func playAndDownload(track: Track) {
-        player.resetAndPlay(track)
-        downloadIfNeeded([track])
-    }
-    
-    private func downloadIfNeeded(tracks: [Track]) {
-        if !library.isLocal && player.isLocal && settings.cacheEnabled {
-            let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
-            let tracksToDownload = newTracks.take(maxNewDownloads)
-            for track in tracksToDownload {
-                startDownload(track)
-            }
-        }
-    }
-    
-    private func startDownload(track: Track) {
-        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
-    }
     
     // Performs segue if the user clicked a folder
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
@@ -395,5 +312,79 @@ class LibraryController: PimpTableController {
         } else {
             loadRoot()
         }
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func presentSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func willPresentSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func didPresentSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func willDismissSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func didDismissSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        // Strip out all the leading and trailing spaces.
+        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        let strippedString = searchController.searchBar.text!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+        info(strippedString)
+    }
+    
+    override func encodeRestorableStateWithCoder(coder: NSCoder) {
+        super.encodeRestorableStateWithCoder(coder)
+        
+        // Encode the view state so it can be restored later.
+        
+        // Encode the title.
+        coder.encodeObject(navigationItem.title!, forKey:RestorationKeys.viewControllerTitle.rawValue)
+        
+        // Encode the search controller's active state.
+        coder.encodeBool(searchController.active, forKey:RestorationKeys.searchControllerIsActive.rawValue)
+        
+        // Encode the first responser status.
+        coder.encodeBool(searchController.searchBar.isFirstResponder(), forKey:RestorationKeys.searchBarIsFirstResponder.rawValue)
+        
+        // Encode the search bar text.
+        coder.encodeObject(searchController.searchBar.text, forKey:RestorationKeys.searchBarText.rawValue)
+    }
+    
+    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+        super.decodeRestorableStateWithCoder(coder)
+        
+        // Restore the title.
+        guard let decodedTitle = coder.decodeObjectForKey(RestorationKeys.viewControllerTitle.rawValue) as? String else {
+            fatalError("A title did not exist. In your app, handle this gracefully.")
+        }
+        title = decodedTitle
+        
+        // Restore the active state:
+        // We can't make the searchController active here since it's not part of the view
+        // hierarchy yet, instead we do it in viewWillAppear.
+        //
+        restoredState.wasActive = coder.decodeBoolForKey(RestorationKeys.searchControllerIsActive.rawValue)
+        
+        // Restore the first responder status:
+        // Like above, we can't make the searchController first responder here since it's not part of the view
+        // hierarchy yet, instead we do it in viewWillAppear.
+        //
+        restoredState.wasFirstResponder = coder.decodeBoolForKey(RestorationKeys.searchBarIsFirstResponder.rawValue)
+        
+        // Restore the text in the search field.
+        searchController.searchBar.text = coder.decodeObjectForKey(RestorationKeys.searchBarText.rawValue) as? String
     }
 }
