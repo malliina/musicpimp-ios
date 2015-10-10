@@ -25,6 +25,8 @@
 		7D2C779D1B933C5E0066A7B5 /* more_filled-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779C1B933C5E0066A7B5 /* more_filled-100.png */; };
 		7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779E1B9352A20066A7B5 /* more_filled_darker-100.png */; };
 		7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779F1B9352A20066A7B5 /* more_filled_grey-100.png */; };
+		7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C1481BC81D4500189687 /* DBImageColorPicker.m */; settings = {ASSET_TAGS = (); }; };
+		7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14A1BC81D4500189687 /* UIImage+Color.m */; settings = {ASSET_TAGS = (); }; };
 		7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DC1B40412200C2D634 /* CoverService.swift */; };
 		7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */; };
 		7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */; };
@@ -144,6 +146,10 @@
 		7D2C779C1B933C5E0066A7B5 /* more_filled-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled-100.png"; path = "MusicPimp/Assets/more_filled-100.png"; sourceTree = "<group>"; };
 		7D2C779E1B9352A20066A7B5 /* more_filled_darker-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled_darker-100.png"; path = "MusicPimp/Assets/more_filled_darker-100.png"; sourceTree = "<group>"; };
 		7D2C779F1B9352A20066A7B5 /* more_filled_grey-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled_grey-100.png"; path = "MusicPimp/Assets/more_filled_grey-100.png"; sourceTree = "<group>"; };
+		7D31C1471BC81D4500189687 /* DBImageColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBImageColorPicker.h; path = ColorScheme/DBImageColorPicker.h; sourceTree = "<group>"; };
+		7D31C1481BC81D4500189687 /* DBImageColorPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DBImageColorPicker.m; path = ColorScheme/DBImageColorPicker.m; sourceTree = "<group>"; };
+		7D31C1491BC81D4500189687 /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Color.h"; path = "ColorScheme/UIImage+Color.h"; sourceTree = "<group>"; };
+		7D31C14A1BC81D4500189687 /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Color.m"; path = "ColorScheme/UIImage+Color.m"; sourceTree = "<group>"; };
 		7D4FF8DC1B40412200C2D634 /* CoverService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverService.swift; sourceTree = "<group>"; };
 		7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPExtensions.swift; sourceTree = "<group>"; };
 		7D4FF8E11B41CFED00C2D634 /* StorageSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageSize.swift; sourceTree = "<group>"; };
@@ -283,13 +289,24 @@
 		7D0CA9931AF699C6008F72EC /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */,
-				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
-				7D4FF8DC1B40412200C2D634 /* CoverService.swift */,
-				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
 				7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */,
+				7D4FF8DC1B40412200C2D634 /* CoverService.swift */,
+				7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */,
+				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
+				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
 			);
 			name = Network;
+			sourceTree = "<group>";
+		};
+		7D31C1461BC81C7200189687 /* ColorScheme */ = {
+			isa = PBXGroup;
+			children = (
+				7D31C1471BC81D4500189687 /* DBImageColorPicker.h */,
+				7D31C1481BC81D4500189687 /* DBImageColorPicker.m */,
+				7D31C1491BC81D4500189687 /* UIImage+Color.h */,
+				7D31C14A1BC81D4500189687 /* UIImage+Color.m */,
+			);
+			name = ColorScheme;
 			sourceTree = "<group>";
 		};
 		7D4FF8E01B41AC8700C2D634 /* Files */ = {
@@ -418,6 +435,7 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
+				7D31C1461BC81C7200189687 /* ColorScheme */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
@@ -646,11 +664,13 @@
 				7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */,
 				7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */,
 				7DB1B3A41B0E44BE0012B8AE /* Downloader.swift in Sources */,
+				7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */,
 				7DC359731B371426003B01B6 /* TabNavController.swift in Sources */,
 				7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */,
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
+				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,
 				7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,

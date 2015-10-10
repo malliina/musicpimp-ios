@@ -74,7 +74,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Music" id="d75-sM-E5l">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="hZX-WC-EUv">
+                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="hZX-WC-EUv">
                             <connections>
                                 <action selector="refreshClicked:" destination="bku-Sh-rNV" id="EKJ-BZ-atL"/>
                             </connections>
@@ -1005,13 +1005,6 @@
                                     <action selector="testClicked:" destination="snm-uf-AuH" eventType="touchUpInside" id="bw3-jf-UBT"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9i-q9-aaA">
-                                <rect key="frame" x="16" y="517" width="568" height="63"/>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="open MusicPimp's web interface" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="POq-eK-ZzI">
                                 <rect key="frame" x="20" y="137" width="560" height="30"/>
                                 <animations/>
@@ -1025,6 +1018,13 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9i-q9-aaA">
+                                <rect key="frame" x="16" y="517" width="568" height="63"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

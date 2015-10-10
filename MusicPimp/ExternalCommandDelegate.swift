@@ -43,7 +43,7 @@ class ExternalCommandDelegate: NSObject {
             
             CoverService.sharedInstance.cover(track.artist, album: track.album) {
                 (result) -> Void in
-                if let image = result.image {
+                if let image = result.imageOrDefault {
                     info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
                 }
                 center.nowPlayingInfo = info

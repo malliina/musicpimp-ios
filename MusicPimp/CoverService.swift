@@ -12,7 +12,9 @@ class CoverResult {
     let album: String
     let coverPath: String?
     let image: UIImage?
-    init(artist: String, album: String, coverPath: String?){
+    var imageOrDefault: UIImage? { return image ?? CoverService.defaultCover }
+    
+    init(artist: String, album: String, coverPath: String?) {
         self.artist = artist
         self.album = album
         self.coverPath = coverPath
@@ -22,16 +24,20 @@ class CoverResult {
             image = nil
         }
     }
+    
     static func noCover(artist: String, album: String) -> CoverResult {
         return CoverResult(artist: artist, album: album, coverPath: nil)
     }
 }
+
 protocol CoverServiceType {
     func cover(artist: String, album: String)
 }
+
 class CoverService {
     static let sharedInstance = CoverService()
     static let coversDir = Files.documentsPath.stringByAppendingString("/covers")
+    static let defaultCover = UIImage(named: "guitar.png")
     let downloader = Downloader(basePath: coversDir)
     
     func cover(artist: String, album: String, f: CoverResult -> Void) {

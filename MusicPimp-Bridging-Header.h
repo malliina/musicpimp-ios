@@ -13,5 +13,7 @@
 #import "NSString+FontAwesome.h"
 #import "UIFont+FontAwesome.h"
 #import "UIImage+FontAwesome.h"
+#import "MusicPimp/ColorScheme/DBImageColorPicker.h"
+#import "MusicPimp/ColorScheme/UIImage+Color.h"
 
 #endif

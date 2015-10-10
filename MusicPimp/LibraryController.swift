@@ -23,6 +23,7 @@ class TrackProgress {
 
 class LibraryController: PimpTableController {
     static let LIBRARY = "library", PLAYER = "player"
+    // TODO articulate these magic numbers
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
     let customAccessorySize = 44
@@ -51,12 +52,14 @@ class LibraryController: PimpTableController {
         self.feedback = feedbackLabel
         self.header = headerView
         
-        if let folderID = selected?.id {
-            loadFolder(folderID)
+        if let folder = selected {
+            self.navigationItem.title = folder.title
+            loadFolder(folder.id)
         } else {
             loadRoot()
         }
     }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         downloadState = [:]
@@ -64,16 +67,19 @@ class LibraryController: PimpTableController {
             lc.onDownloadProgressUpdate
         })
     }
+    
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         if downloadState.isEmpty {
             disposeDownloadProgress()
         }
     }
+    
     func disposeDownloadProgress() {
         downloadUpdates?.dispose()
         downloadUpdates = nil
     }
+    
     func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
         let tracks = folder.tracks
         if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
@@ -95,20 +101,25 @@ class LibraryController: PimpTableController {
             }
         }
     }
+    
     @IBAction func refreshClicked(sender: UIBarButtonItem) {
         info("Refresh from \(self)")
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
+    
     private func resetLibrary() {
         loadRoot()
     }
+    
     func loadFolder(id: String) {
         library.folder(id, onError: onError, f: onFolder)
     }
+    
     func loadRoot() {
         info("Loading \(library)")
         library.rootFolder(onError, f: onFolder)
     }
+    
     func onFolder(f: MusicFolder) {
         folder = f
         Util.onUiThread({ () in
@@ -116,6 +127,7 @@ class LibraryController: PimpTableController {
             self.tableView.reloadData()
         })
     }
+    
     func onError(error: PimpError) {
         let message = PimpErrorUtil.stringify(error)
         Util.onUiThread({
@@ -128,9 +140,11 @@ class LibraryController: PimpTableController {
         })
         info(message)
     }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return musicItems.count
     }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
@@ -169,6 +183,7 @@ class LibraryController: PimpTableController {
 //        cell?.accessoryType = accessoryType
         return cell!
     }
+    
     func accessoryClicked(sender: AnyObject, event: AnyObject) {
         if let touch = event.allTouches()?.first {
             let point = touch.locationInView(tableView)
@@ -185,6 +200,7 @@ class LibraryController: PimpTableController {
             }
         }
     }
+    
     func displayActionsForTrack(track: Track) {
         let title = track.title
         let message = track.artist
