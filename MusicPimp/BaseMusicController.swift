@@ -15,10 +15,24 @@ class BaseMusicController : PimpTableController {
     var feedback: UILabel? = nil
     
     var musicItems: [MusicItem] { return [] }
+    // used for informational and error messages for the user
+    var feedbackMessage: String? = nil
+    
+    static let feedbackIdentifier = "FeedbackCell"
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: BaseMusicController.feedbackIdentifier)
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return max(musicItems.count, 1)
+    }
     
     func trackCell(item: Track) -> PimpMusicItemCell? {
         let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
         if let pimpCell = arr[0] as? PimpMusicItemCell {
+            pimpCell.titleLabel?.text = item.title
             if let image = UIImage(named: "more_filled_grey-100.png") {
                 let button = UIButton(type: UIButtonType.Custom)
                 button.frame = CGRect(x: 0, y: 0, width: customAccessorySize, height: customAccessorySize)
@@ -102,14 +116,6 @@ class BaseMusicController : PimpTableController {
     
     func onError(error: PimpError) {
         let message = PimpErrorUtil.stringify(error)
-        Util.onUiThread({
-            () in
-            self.feedback?.text = message
-            self.tableView.tableHeaderView = nil
-//            if let header = self.header {
-//                self.tableView.tableHeaderView = header
-//            }
-        })
         info(message)
     }
 

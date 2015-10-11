@@ -56,6 +56,7 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     
     var resultsController: SearchResultsController!
     var searchController: UISearchController!
+    private var latestSearchString: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +74,7 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
         
         initSearch()
         
+        feedbackMessage = "Loading..."
         if let folder = selected {
             self.navigationItem.title = folder.title
             loadFolder(folder.id)
@@ -87,9 +89,10 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.sizeToFit()
+        searchController.searchBar.placeholder = "Search track or artist"
         tableView.tableHeaderView = searchController.searchBar
         searchController.delegate = self
-//        searchController.dimsBackgroundDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
     }
@@ -159,51 +162,42 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     }
     
     func loadFolder(id: String) {
-        library.folder(id, onError: onError, f: onFolder)
+        library.folder(id, onError: onLoadError, f: onFolder)
     }
     
     func loadRoot() {
         info("Loading \(library)")
-        library.rootFolder(onError, f: onFolder)
+        library.rootFolder(onLoadError, f: onFolder)
     }
     
     func onFolder(f: MusicFolder) {
+        feedbackMessage = nil
         folder = f
-        Util.onUiThread({ () in
-//            self.tableView.tableHeaderView = nil
-            self.tableView.reloadData()
-        })
+        self.renderTable()
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return musicItems.count
+    func onLoadError(error: PimpError) {
+        feedbackMessage = "An error occurred"
+        onError(error)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let item = musicItems[indexPath.row]
-        let isFolder = item as? Folder != nil
-//        let (prototypeID, accessoryType) = isFolder ? ("FolderCell", UITableViewCellAccessoryType.DisclosureIndicator) : ("TrackCell", UITableViewCellAccessoryType.None)
-        var cell: UITableViewCell? = nil
-        if isFolder {
-            let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
-            folderCell.textLabel?.text = item.title
-            folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-            cell = folderCell
+        if musicItems.count == 0 {
+            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
+            let statusMessage = feedbackMessage ?? "No tracks"
+            cell.textLabel?.text = statusMessage
+            return cell
         } else {
-            let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-            if let pimpCell = arr[0] as? PimpMusicItemCell {
-                cell = pimpCell
-                pimpCell.titleLabel?.text = item.title
-                if let track = item as? Track {
-                    if let image = UIImage(named: "more_filled_grey-100.png") {
-                        let button = UIButton(type: UIButtonType.Custom)
-                        button.frame = CGRect(x: 0, y: 0, width: customAccessorySize, height: customAccessorySize)
-                        button.setBackgroundImage(image, forState: UIControlState.Normal)
-                        button.backgroundColor = UIColor.clearColor()
-                        button.addTarget(self, action: "accessoryClicked:event:", forControlEvents: UIControlEvents.TouchUpInside)
-                        
-                        pimpCell.accessoryView = button
-                    }
+            let item = musicItems[indexPath.row]
+            let isFolder = item as? Folder != nil
+            var cell: UITableViewCell? = nil
+            if isFolder {
+                let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
+                folderCell.textLabel?.text = item.title
+                folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                cell = folderCell
+            } else {
+                if let track = item as? Track, pimpCell = trackCell(track) {
                     if let downloadProgress = downloadState[track] {
                         //info("Setting progress to \(downloadProgress.progress)")
                         pimpCell.progressView.progress = downloadProgress.progress
@@ -211,11 +205,11 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
                     } else {
                         pimpCell.progressView.hidden = true
                     }
+                    cell = pimpCell
                 }
             }
+            return cell!
         }
-//        cell?.accessoryType = accessoryType
-        return cell!
     }
     
     func sheetAction(title: String, item: MusicItem, onTrack: Track -> Void, onFolder: Folder -> Void) -> UIAlertAction {
@@ -253,29 +247,36 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     func musicItemAction(tableView: UITableView, title: String, onTrack: Track -> Void, onFolder: Folder -> Void) -> UITableViewRowAction {
         return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
             (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
-            let tappedItem: MusicItem = self.musicItems[indexPath.row]
-            if let track = tappedItem as? Track {
-                onTrack(track)
-            }
-            if let folder = tappedItem as? Folder {
-                onFolder(folder)
+            if let tappedItem = self.itemAt(tableView, indexPath: indexPath) {
+                if let track = tappedItem as? Track {
+                    onTrack(track)
+                }
+                if let folder = tappedItem as? Folder {
+                    onFolder(folder)
+                }
             }
             tableView.setEditing(false, animated: true)
         }
     }
     
-    
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let items = tableView == self.tableView ? musicItems : resultsController.musicItems
-        let tappedItem: MusicItem = items[indexPath.row]
-        if let track = tappedItem as? Track {
+        if let item = itemAt(tableView, indexPath: indexPath), track = item as? Track {
             playAndDownload(track)
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
     
+    private func itemAt(tableView: UITableView, indexPath: NSIndexPath) -> MusicItem? {
+        let items = tableView == self.tableView ? musicItems : resultsController.musicItems
+        let row = indexPath.row
+        if items.count > row {
+            return items[row]
+        } else {
+            return nil
+        }
+    }
     
     // Performs segue if the user clicked a folder
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
@@ -339,10 +340,10 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        // Strip out all the leading and trailing spaces.
+        // Strips out all the leading and trailing spaces.
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         let strippedString = searchController.searchBar.text!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
-        info(strippedString)
+        self.resultsController.search(strippedString)
     }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
