@@ -86,7 +86,13 @@ class SettingsController: CacheInfoController {
         }
         return cell
     }
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
     }
 }

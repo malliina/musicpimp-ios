@@ -60,17 +60,6 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let activityView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-//        activityView.frame = CGRect(x: 0, y: 0, width: 320, height: LibraryController.TABLE_CELL_HEIGHT_PLAIN)
-//        activityView.startAnimating()
-//        self.tableView.tableHeaderView = activityView
-        
-//        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
-//        let feedbackLabel = UILabel(frame: CGRect(x: 16, y: 0, width: 300, height: 44))
-//        feedbackLabel.textColor = UIColor.blueColor()
-//        headerView.addSubview(feedbackLabel)
-//        self.feedback = feedbackLabel
-//        self.header = headerView
         
         initSearch()
         

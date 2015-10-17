@@ -10,6 +10,7 @@ import Foundation
 
 class BaseMusicController : PimpTableController {
     let customAccessorySize = 44
+    let accessoryRightPadding = 14
     let maxNewDownloads = 2000
     
     var feedback: UILabel? = nil
@@ -26,6 +27,7 @@ class BaseMusicController : PimpTableController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // Max one because we display feedback to the user if the table is empty
         return max(musicItems.count, 1)
     }
     
@@ -33,11 +35,15 @@ class BaseMusicController : PimpTableController {
         let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
         if let pimpCell = arr[0] as? PimpMusicItemCell {
             pimpCell.titleLabel?.text = item.title
+            // TODO move the below code to PimpMusicItemCell, then provide observable of accessoryClicked:event
             if let image = UIImage(named: "more_filled_grey-100.png") {
                 let button = UIButton(type: UIButtonType.Custom)
-                button.frame = CGRect(x: 0, y: 0, width: customAccessorySize, height: customAccessorySize)
-                button.setBackgroundImage(image, forState: UIControlState.Normal)
+                let frame = CGRect(x: 0, y: 0, width: customAccessorySize + accessoryRightPadding, height: customAccessorySize)
+                button.frame = frame
+                button.setImage(image, forState: UIControlState.Normal)
                 button.backgroundColor = UIColor.clearColor()
+                button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat(accessoryRightPadding))
+                button.contentMode = UIViewContentMode.ScaleAspectFit
                 button.addTarget(self, action: "accessoryClicked:event:", forControlEvents: UIControlEvents.TouchUpInside)
                 pimpCell.accessoryView = button
                 return pimpCell
