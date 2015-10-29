@@ -94,3 +94,15 @@ class Version {
         self.version = version
     }
 }
+
+class SavedPlaylist {
+    let id: String?
+    let name: String
+    let tracks: [Track]
+    
+    init(id: String?, name: String, tracks: [Track]) {
+        self.id = id
+        self.name = name
+        self.tracks = tracks
+    }
+}

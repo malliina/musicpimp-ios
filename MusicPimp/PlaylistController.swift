@@ -13,6 +13,8 @@ class PlaylistController: PimpTableController {
     var current: Playlist = Playlist.empty
     var tracks: [Track] { get { return current.tracks } }
     var selected: MusicItem? = nil
+    // non-nil if the playlist is server-loaded
+    var savedPlaylist: SavedPlaylist? = nil
     var listeners: [Disposable] = []
     private var downloadState: [Track: TrackProgress] = [:]
 
@@ -31,23 +33,26 @@ class PlaylistController: PimpTableController {
         let state = player.current()
         let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
         onNewPlaylist(currentPlaylist)
-        
     }
+    
     override func viewWillDisappear(animated: Bool) {
         for listener in listeners {
             listener.dispose()
         }
         listeners = []
     }
+    
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
 //        info("New playlist with \(tracks.count) tracks")
         renderTable()
     }
+    
     func onIndexChanged(index: Int?) {
         self.current = Playlist(tracks: current.tracks, index: index)
         renderTable()
     }
+    
     func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
         //info("Written \(dpu.written) of \(dpu.relativePath)")
         if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
@@ -108,11 +113,19 @@ class PlaylistController: PimpTableController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let index = indexPath.row
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-//        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         player.playlist.removeIndex(index)
-//        tracks = current.tracks
     }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tracks.count
+    }
+    
+    @IBAction func unwindToPlaylist(sender: UIStoryboardSegue) {
+        if let source = sender.sourceViewController as? SavePlaylistViewController, name = source.name {
+            let playlist = SavedPlaylist(id: savedPlaylist?.id, name: name, tracks: self.tracks)
+            library.savePlaylist(playlist, onError: onError) { () -> Void in
+                Log.info("Saved playlist with name \(playlist.name)")
+            }
+        }
     }
 }

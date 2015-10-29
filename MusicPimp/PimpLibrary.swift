@@ -11,6 +11,7 @@ class PimpLibrary: BaseLibrary {
     let endpoint: Endpoint
     let client: PimpHttpClient
     let helper: PimpUtils
+    
     init(endpoint: Endpoint, client: PimpHttpClient) {
         self.endpoint = endpoint
         self.client = client
@@ -31,6 +32,18 @@ class PimpLibrary: BaseLibrary {
     
     override func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
         tracksInner(id,  others: [], acc: [], f: f, onError: onError)
+    }
+    
+    override func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void) {
+        let result = [
+            SavedPlaylist(id: "id1", name: "list 1", tracks: []),
+            SavedPlaylist(id: "id2", name: "list 2", tracks: [])
+        ]
+        f(result)
+    }
+    
+    override func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
     }
     
     override func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {

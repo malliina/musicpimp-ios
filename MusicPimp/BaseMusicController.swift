@@ -11,19 +11,14 @@ import Foundation
 class BaseMusicController : PimpTableController {
     let customAccessorySize = 44
     let accessoryRightPadding = 14
-    let maxNewDownloads = 2000
     
     var feedback: UILabel? = nil
     
     var musicItems: [MusicItem] { return [] }
-    // used for informational and error messages for the user
-    var feedbackMessage: String? = nil
-    
-    static let feedbackIdentifier = "FeedbackCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: BaseMusicController.feedbackIdentifier)
+        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -119,11 +114,6 @@ class BaseMusicController : PimpTableController {
         sheet.addAction(cancelAction)
         self.presentViewController(sheet, animated: true, completion: nil)
     }
-    
-    func onError(error: PimpError) {
-        let message = PimpErrorUtil.stringify(error)
-        info(message)
-    }
 
     func playFolder(id: String) {
         library.tracks(id, onError: onError, f: playTracks)
@@ -133,13 +123,6 @@ class BaseMusicController : PimpTableController {
         playTracks([track])
     }
     
-    func playTracks(tracks: [Track]) {
-        if let first = tracks.first {
-            playAndDownload(first)
-            addTracks(tracks.tail())
-        }
-    }
-    
     func addFolder(id: String) {
         info("Adding folder")
         library.tracks(id, onError: onError, f: addTracks)
@@ -147,32 +130,5 @@ class BaseMusicController : PimpTableController {
     
     func addTrack(track: Track) {
         addTracks([track])
-    }
-    
-    func addTracks(tracks: [Track]) {
-        if !tracks.isEmpty {
-            info("Adding \(tracks.count) tracks")
-            player.playlist.add(tracks)
-            downloadIfNeeded(tracks)
-        }
-    }
-    
-    func playAndDownload(track: Track) {
-        player.resetAndPlay(track)
-        downloadIfNeeded([track])
-    }
-    
-    func downloadIfNeeded(tracks: [Track]) {
-        if !library.isLocal && player.isLocal && settings.cacheEnabled {
-            let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
-            let tracksToDownload = newTracks.take(maxNewDownloads)
-            for track in tracksToDownload {
-                startDownload(track)
-            }
-        }
-    }
-    
-    func startDownload(track: Track) {
-        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
     }
 }

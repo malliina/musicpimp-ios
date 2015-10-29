@@ -32,9 +32,6 @@ class PimpHttpClient: HttpClient {
         } else {
             self.baseURL = baseURL
         }
-        //self.username = username
-        //self.password = password
-        //let authValue = HttpClient.basicAuthValue(username, password: password)
         let headers = [
             HttpClient.AUTHORIZATION: authValue,
             HttpClient.ACCEPT: PimpHttpClient.PIMP_VERSION_18

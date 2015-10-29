@@ -16,13 +16,21 @@ class BaseTableController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
+    
     func renderTable() {
         Util.onUiThread({ () in self.tableView.reloadData() })
     }
+    
     func info(s: String) {
         Log.info(s)
     }
+    
     func error(e: String) {
         Log.info(e)
+    }
+    
+    func onError(pimpError: PimpError) {
+        let message = PimpErrorUtil.stringify(pimpError)
+        error(message)
     }
 }

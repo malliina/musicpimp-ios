@@ -165,11 +165,6 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
         self.renderTable()
     }
     
-    func onLoadError(error: PimpError) {
-        feedbackMessage = "An error occurred"
-        onError(error)
-    }
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if musicItems.count == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)

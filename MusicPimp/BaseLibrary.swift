@@ -27,6 +27,20 @@ class BaseLibrary: LibraryType {
         tracksInner(id,  others: [], acc: [], f: f, onError: onError)
     }
     
+    // the saved playlists
+    func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void) {
+        f([])
+    }
+    
+    func playlist(id: String, onError: PimpError -> Void, f: SavedPlaylist -> Void) {
+        let error = PimpError.SimpleError(ErrorMessage(message: "Not implemented yet"))
+        onError(error)
+    }
+    
+    func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
     func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {
         ts([])
     }
