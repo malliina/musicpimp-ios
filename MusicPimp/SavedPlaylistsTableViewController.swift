@@ -20,10 +20,15 @@ class SavedPlaylistsTableViewController: PimpTableController {
         super.viewDidLoad()
         self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
         feedbackMessage = "Loading playlists..."
+        loadPlaylists()
+    }
+    
+    func loadPlaylists() {
         library.playlists(onLoadError, f: onPlaylists)
     }
     
     func onPlaylists(sps: [SavedPlaylist]) {
+        feedbackMessage = nil
         playlists = sps
         renderTable()
     }
@@ -48,12 +53,25 @@ class SavedPlaylistsTableViewController: PimpTableController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if playlists.count > 0 {
-            let item = playlists[indexPath.row]
+        let row = indexPath.row
+        if playlists.count > 0 && playlists.count > row {
+            let item = playlists[row]
             playTracks(item.tracks)
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         goBack()
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        let index = indexPath.row
+        let playlist = playlists[index]
+        if let id = playlist.id {
+            library.deletePlaylist(id, onError: onError) {
+                Log.info("Deleted playlist with ID \(id)")
+                self.playlists.removeAtIndex(index)
+                self.renderTable()
+            }
+        }
     }
     
     func goBack() {

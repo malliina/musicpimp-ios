@@ -54,7 +54,7 @@ class PimpSettings {
     }
     func endpoints() -> [Endpoint] {
         if let str = impl.load(PimpSettings.ENDPOINTS) {
-            if let json: AnyObject = try? Json.asJson(str) {
+            if let json: AnyObject = Json.asJson(str) {
                 if let dict = json as? NSDictionary {
                     if let endArray = dict[PimpSettings.ENDPOINTS] as? [NSDictionary] {
                         // TODO Fix
@@ -100,7 +100,7 @@ class PimpSettings {
     func tasks(sid: String) -> [Int: DownloadInfo] {
         let key = taskKey(sid)
         if let str = impl.load(key),
-            json = (try? Json.asJson(str)) as? NSDictionary,
+            json = Json.asJson(str) as? NSDictionary,
             tasks = PimpJson.sharedInstance.asTasks(json) {
             return tasks
         }

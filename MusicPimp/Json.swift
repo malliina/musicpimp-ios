@@ -9,15 +9,14 @@
 import Foundation
 
 public class Json {
-    public static func asJson(input: String) throws -> AnyObject {
-        let error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
-        if let data = input.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            return try asJson(data)
+    public static func asJson(input: String) -> AnyObject? {
+        if let data = input.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false), json = asJson(data) {
+            return json
         }
-        throw error
+        return nil
     }
-    public static func asJson(data: NSData) throws -> AnyObject {
-        return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+    public static func asJson(data: NSData) -> AnyObject? {
+        return try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
     }
     public static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
         return stringify(value, prettyPrinted: prettyPrinted)

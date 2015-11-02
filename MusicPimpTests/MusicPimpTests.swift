@@ -42,11 +42,25 @@ class MusicPimpTests: XCTestCase {
         let s = Json.stringifyObject(jsValue, prettyPrinted: true)
         let containsGoogle = s!.rangeOfString("google") != nil
         XCTAssert(containsGoogle, "Serialized value contains original content")
-        let json = (try! Json.asJson(s!)) as! NSDictionary
+        let json = Json.asJson(s!) as! NSDictionary
         let tasks = PimpJson.sharedInstance.asTasks(json)!
         let deURL = tasks[1]?.destinationURL.absoluteString
         let isUrlCorrect = deURL == testURL
         XCTAssert(isUrlCorrect, "Deserializes back to original content")
+    }
+    
+    func testPlaylistSerialization() {
+        let track = Track(id: "id", title: "a", album: "b", artist: "c", duration: 5.seconds, path: "path", size: 5.bytes!, url: NSURL(fileURLWithPath: "hey"))
+        let pl = SavedPlaylist(id: nil, name: "test pl", tracks: [track])
+        let json = SavedPlaylist.toJson(pl)
+        if let data = try? NSJSONSerialization.dataWithJSONObject(json, options: []),
+            s = NSString(data: data, encoding: NSUTF8StringEncoding) as String? {
+            print(pl.description)
+            print(s)
+            XCTAssert(true)
+        } else {
+            XCTAssert(false)
+        }
     }
     
     func testPerformanceExample() {

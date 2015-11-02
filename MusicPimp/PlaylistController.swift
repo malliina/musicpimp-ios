@@ -18,6 +18,14 @@ class PlaylistController: PimpTableController {
     var listeners: [Disposable] = []
     private var downloadState: [Track: TrackProgress] = [:]
 
+    override func viewDidLoad() {
+        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "savePlaylistAction")
+        saveButton.style = UIBarButtonItemStyle.Done
+        // the first element in the array is right-most
+        self.navigationItem.rightBarButtonItems = [ saveButton ]
+        super.viewDidLoad()
+    }
+    
     override func viewWillAppear(animated: Bool) {
         downloadState = [:]
         let playlistDisposable = player.playlist.playlistEvent.addHandler(self, handler: { (plc: PlaylistController) -> Playlist -> () in
@@ -42,6 +50,99 @@ class PlaylistController: PimpTableController {
         listeners = []
     }
     
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if tracks.count == 0 {
+            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
+            let statusMessage = feedbackMessage ?? "The playlist is empty"
+            cell.textLabel?.text = statusMessage
+            return cell
+        } else {
+            let index = indexPath.row
+            let track = tracks[index]
+            let isCurrent = index == current.index
+            let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
+            let cell = arr[0] as! PimpMusicItemCell
+            if let downloadProgress = downloadState[track] {
+                //info("Setting progress to \(downloadProgress.progress)")
+                cell.progressView.progress = downloadProgress.progress
+                cell.progressView.hidden = false
+            } else {
+                cell.progressView.hidden = true
+            }
+            cell.titleLabel?.text = track.title
+            if isCurrent {
+                cell.titleLabel?.textColor = UIColor.blueColor()
+                cell.selectionStyle = UITableViewCellSelectionStyle.Blue
+            } else {
+                cell.selectionStyle = UITableViewCellSelectionStyle.Default
+            }
+            return cell
+
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        //let cell = tableView.cellForRowAtIndexPath(indexPath)
+        let index = indexPath.row
+        player.skip(index)
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        let index = indexPath.row
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        player.playlist.removeIndex(index)
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // Max one because we display feedback to the user if the table is empty
+        return max(self.tracks.count, 1)
+    }
+    
+    func savePlaylistAction() {
+        if let playlist = savedPlaylist {
+            // opens actions drop-up: does the user want to save the existing playlist or create a new one?
+            displayActionsForPlaylist(playlist)
+        } else {
+            // goes directly to the "new playlist" view controller
+            newPlaylistAction()
+        }
+    }
+    
+    func displayActionsForPlaylist(playlist: SavedPlaylist) {
+        let title = "Save Playlist"
+        let message = playlist.name
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let saveAction = UIAlertAction(title: "Save Current", style: UIAlertActionStyle.Default) { (a) -> Void in
+            self.savePlaylist(playlist)
+        }
+        let newAction = UIAlertAction(title: "Create New", style: UIAlertActionStyle.Default) { (a) -> Void in
+            self.newPlaylistAction()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (a) -> Void in
+            
+        }
+        sheet.addAction(saveAction)
+        sheet.addAction(newAction)
+        sheet.addAction(cancelAction)
+        self.presentViewController(sheet, animated: true, completion: nil)
+    }
+    
+    func newPlaylistAction() {
+        if let storyboard = self.storyboard {
+            let vc = storyboard.instantiateViewControllerWithIdentifier("SavePlaylist")
+            vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+            if let spvc = vc as? SavePlaylistViewController, playlist = savedPlaylist {
+                spvc.name = playlist.name
+            }
+//            self.navigationController?.pushViewController(vc, animated: true)
+            let navController = UINavigationController(rootViewController: vc)
+            self.presentViewController(navController, animated: true, completion: nil)
+        } else {
+            Log.error("No storyboard, cannot open save playlist ViewController")
+        }
+    }
+
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
 //        info("New playlist with \(tracks.count) tracks")
@@ -60,10 +161,6 @@ class PlaylistController: PimpTableController {
             let isDownloadComplete = track.size == dpu.written
             if isDownloadComplete {
                 downloadState.removeValueForKey(track)
-//              let isVisible = (isViewLoaded() && view.window != nil)
-//              if !isVisible && downloadState.isEmpty {
-//                  disposeDownloadProgress()
-//              }
             } else {
                 downloadState[track] = TrackProgress(track: track, dpu: dpu)
             }
@@ -75,57 +172,18 @@ class PlaylistController: PimpTableController {
         }
     }
     
-//    func disposeDownloadProgress() {
-//        downloadProgressDisposable?.dispose()
-//        downloadProgressDisposable = nil
-//    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let index = indexPath.row
-        let track = tracks[index]
-        let isCurrent = index == current.index
-        let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-        let cell = arr[0] as! PimpMusicItemCell
-        if let downloadProgress = downloadState[track] {
-            //info("Setting progress to \(downloadProgress.progress)")
-            cell.progressView.progress = downloadProgress.progress
-            cell.progressView.hidden = false
-        } else {
-            cell.progressView.hidden = true
-        }
-        cell.titleLabel?.text = track.title
-        if isCurrent {
-            cell.titleLabel?.textColor = UIColor.blueColor()
-            cell.selectionStyle = UITableViewCellSelectionStyle.Blue
-        } else {
-            cell.selectionStyle = UITableViewCellSelectionStyle.Default
-        }
-        return cell
-    }
-
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //let cell = tableView.cellForRowAtIndexPath(indexPath)
-        let index = indexPath.row
-        player.skip(index)
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-    }
-    
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let index = indexPath.row
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        player.playlist.removeIndex(index)
-    }
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.tracks.count
-    }
-    
     @IBAction func unwindToPlaylist(sender: UIStoryboardSegue) {
+        // returns from a "new playlist" screen
         if let source = sender.sourceViewController as? SavePlaylistViewController, name = source.name {
-            let playlist = SavedPlaylist(id: savedPlaylist?.id, name: name, tracks: self.tracks)
-            library.savePlaylist(playlist, onError: onError) { () -> Void in
-                Log.info("Saved playlist with name \(playlist.name)")
-            }
+            let playlist = SavedPlaylist(id: nil, name: name, tracks: self.tracks)
+            savePlaylist(playlist)
+        }
+    }
+    
+    private func savePlaylist(playlist: SavedPlaylist) {
+        library.savePlaylist(playlist, onError: onError) { (id: PlaylistID) -> Void in
+            self.savedPlaylist = SavedPlaylist(id: id, name: playlist.name, tracks: playlist.tracks)
+            Log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
         }
     }
 }

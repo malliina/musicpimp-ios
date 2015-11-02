@@ -92,7 +92,9 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     }
     
     func onTestFailure(e: Endpoint, error: PimpError) {
-        feedback(errorMessage(e, error: error))
+        let msg = errorMessage(e, error: error)
+        Log.info("Test failed: \(msg)")
+        feedback(msg)
     }
     
     func errorMessage(e: Endpoint, error: PimpError) -> String {

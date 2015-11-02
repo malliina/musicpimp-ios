@@ -16,7 +16,10 @@ class Endpoints {
     FOLDERS = "/folders",
     PLAYBACK = "/playback",
     WS_PLAYBACK = "/ws/playback",
-    SEARCH = "/search"
+    SEARCH = "/search",
+    PLAYLISTS = "/playlists",
+    PLAYLIST = "/playlist",
+    PLAYLIST_DELETE = "/playlists/delete"
 }
 
 class PimpHttpClient: HttpClient {
@@ -49,17 +52,7 @@ class PimpHttpClient: HttpClient {
     func pimpGetParsed<T>(resource: String, parse: AnyObject -> T?, f: T -> Void, onError: PimpError -> Void) {
         pimpGet(resource, f: {
             data -> Void in
-            var error: NSError? = nil
-            let anyObj: AnyObject?
-            do {
-                anyObj = try Json.asJson(data)
-            } catch let error1 as NSError {
-                error = error1
-                anyObj = nil
-            } catch {
-                fatalError()
-            }
-            if let obj: AnyObject = anyObj {
+            if let obj: AnyObject = Json.asJson(data) {
                 if let parsed: T = parse(obj) {
                     f(parsed)
                 } else {
@@ -74,9 +67,10 @@ class PimpHttpClient: HttpClient {
     }
     
     func pimpGet(resource: String, f: NSData -> Void, onError: PimpError -> Void) {
-        log(resource)
+        let url = baseURL + resource
+        log(url)
         self.get(
-            baseURL + resource,
+            url,
             headers: defaultHeaders,
             onResponse: { (data, response) -> Void in
                 self.responseHandler(resource, data: data, response: response, f: f, onError: onError)

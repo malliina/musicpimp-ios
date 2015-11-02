@@ -16,11 +16,6 @@ class BaseMusicController : PimpTableController {
     
     var musicItems: [MusicItem] { return [] }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
-    }
-    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Max one because we display feedback to the user if the table is empty
         return max(musicItems.count, 1)

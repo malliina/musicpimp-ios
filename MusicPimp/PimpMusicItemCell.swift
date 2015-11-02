@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class PimpMusicItemCell : UITableViewCell {
     
     @IBOutlet var progressView: UIProgressView!

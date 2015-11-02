@@ -7,7 +7,8 @@
 //
 
 import Foundation
-class PimpLibrary: BaseLibrary {
+
+public class PimpLibrary: BaseLibrary {
     let endpoint: Endpoint
     let client: PimpHttpClient
     let helper: PimpUtils
@@ -35,20 +36,42 @@ class PimpLibrary: BaseLibrary {
     }
     
     override func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void) {
-        let result = [
-            SavedPlaylist(id: "id1", name: "list 1", tracks: []),
-            SavedPlaylist(id: "id2", name: "list 2", tracks: [])
-        ]
-        f(result)
+        client.pimpGetParsed("\(Endpoints.PLAYLISTS)", parse: parsePlaylists, f: f, onError: onError)
     }
     
-    override func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: () -> Void) {
-        onSuccess(())
+    override func playlist(id: PlaylistID, onError: PimpError -> Void, f: SavedPlaylist -> Void) {
+        client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse, f: f, onError: onError)
+    }
+    
+    override func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {
+        let json = [
+            JsonKeys.PLAYLIST: SavedPlaylist.toJson(sp)
+        ]
+        Log.info("Posting \(json)")
+        client.pimpPost("\(Endpoints.PLAYLISTS)", payload: json, f: { (data) -> Void in
+            Log.info("Posted")
+            if let jsonObj = Json.asJson(data), id = self.parsePlaylistID(jsonObj) {
+                onSuccess(id)
+            } else {
+                onError(PimpError.SimpleError(ErrorMessage(message: "Response parsing failed")))
+            }
+            }, onError: onError)
+    }
+    
+    override func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void) {
+        client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: [:], f: { (data) -> Void in
+            Log.info("Deleted \(id)")
+            onSuccess(())
+            }, onError: onError)
     }
     
     override func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {
         client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(term)", parse: parseTracks, f: ts, onError: onError)
     }
+    
+//    private func fetch<T>(url: String, parse: AnyObject -> T?, onSuccess: T -> Void) {
+//        client.pimpGetParsed(url, parse: parse, f: onSuccess, )
+//    }
     
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
         folder(id, onError: onError) { result in
@@ -96,6 +119,44 @@ class PimpLibrary: BaseLibrary {
         }
         Log.info("Unable to parse \(obj) as music folder")
         return nil
+    }
+    
+    func parsePlaylists(obj: AnyObject) -> [SavedPlaylist] {
+//        Log.info("Playlist \(obj)")
+        if let obj = obj as? NSDictionary,
+            playlistsArr = obj[JsonKeys.PLAYLISTS] as? [NSDictionary] {
+            return playlistsArr.flatMapOpt(parsePlaylist)
+        } else {
+            return []
+        }
+    }
+    
+    func parseGetPlaylistResponse(obj: AnyObject) -> SavedPlaylist? {
+        if let obj = obj as? NSDictionary, playlistObj = obj[JsonKeys.PLAYLIST] as? NSDictionary {
+            return parsePlaylist(playlistObj)
+        } else {
+            return nil
+        }
+    }
+    
+    func parsePlaylist(obj: AnyObject) -> SavedPlaylist? {
+        if let obj = obj as? NSDictionary,
+            id = obj[JsonKeys.ID] as? Int,
+            name = obj[JsonKeys.NAME] as? String,
+            tracksArr = obj[JsonKeys.TRACKS] as? [NSDictionary] {
+            let tracks = tracksArr.flatMapOpt(parseTrack)
+                return SavedPlaylist(id: PlaylistID(id: id), name: name, tracks: tracks)
+        } else {
+            return nil
+        }
+    }
+    
+    func parsePlaylistID(obj: AnyObject) -> PlaylistID? {
+        if let obj = obj as? NSDictionary, id = obj[JsonKeys.CREATED] as? Int {
+            return PlaylistID(id: id)
+        } else {
+            return nil
+        }
     }
     
     func parseTracks(obj: AnyObject) -> [Track]? {

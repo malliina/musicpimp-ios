@@ -9,13 +9,25 @@
 import Foundation
 
 class SavePlaylistViewController: UIViewController {
+    
     @IBOutlet var nameText: UITextField!
+    
     @IBAction func cancel(sender: UIBarButtonItem) {
+        Log.info("Cancel")
+//        self.navigationController?.popViewControllerAnimated(true)
         dismissViewControllerAnimated(true, completion: nil)
     }
+    
     @IBOutlet var saveButton: UIBarButtonItem!
     
     var name: String?
+    
+    override func viewDidLoad() {
+        if let name = name {
+            nameText.text = name
+        }
+        super.viewDidLoad()
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if saveButton === sender {

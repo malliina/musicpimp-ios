@@ -20,6 +20,11 @@ class PimpTableController: BaseTableController {
     var library: LibraryType { return libraryManager.active }
     var player: PlayerType { return playerManager.active }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
+    }
+    
     func onLoadError(error: PimpError) {
         feedbackMessage = "An error occurred"
         onError(error)

@@ -7,9 +7,11 @@
 //
 
 import Foundation
-class BaseLibrary: LibraryType {
+public class BaseLibrary: LibraryType {
     var isLocal: Bool { get { return false } }
     let contentsUpdated = Event<MusicFolder?>()
+    
+    let notImplementedError = PimpError.SimpleError(ErrorMessage(message: "Not implemented yet"))
     
     func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         
@@ -32,12 +34,15 @@ class BaseLibrary: LibraryType {
         f([])
     }
     
-    func playlist(id: String, onError: PimpError -> Void, f: SavedPlaylist -> Void) {
-        let error = PimpError.SimpleError(ErrorMessage(message: "Not implemented yet"))
-        onError(error)
+    func playlist(id: PlaylistID, onError: PimpError -> Void, f: SavedPlaylist -> Void) {
+        onError(notImplementedError)
     }
     
-    func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {
+        onError(notImplementedError)
+    }
+    
+    func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void) {
         onSuccess(())
     }
     
