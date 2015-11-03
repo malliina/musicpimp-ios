@@ -24,12 +24,14 @@ class HttpClient {
     }
     
     func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
-        get(NSURL(string: url)!, headers: headers) { (data, response, error) -> Void in
-            if let _ = error, data = data {
-                onError(RequestFailure(data: data))
-            }
-            if let httpResponse = response as? NSHTTPURLResponse, data = data {
+        let nsURL = NSURL(string: url)!
+        get(nsURL, headers: headers) { (data, response, error) -> Void in
+            if let error = error {
+                onError(RequestFailure(url: nsURL, code: error.code, data: data))
+            } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
                 onResponse(data, httpResponse)
+            } else {
+                Log.error("Unable to interpret HTTP response to URL \(url)")
             }
         }
     }
@@ -45,14 +47,15 @@ class HttpClient {
             completionHandler: completionHandler)
     }
     func postJSON(url: String, headers: [String: String] = [:], payload: AnyObject, onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
-        
-        postJSON(NSURL(string: url)!, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
-                if let _ = error, data = data {
-                    onError(RequestFailure(data: data))
-                }
-                if let httpResponse = response as? NSHTTPURLResponse, data = data {
-                    onResponse(data, httpResponse)
-                }
+        let nsURL = NSURL(string: url)!
+        postJSON(nsURL, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
+            if let error = error {
+                onError(RequestFailure(url: nsURL, code: error.code, data: data))
+            } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
+                onResponse(data, httpResponse)
+            } else {
+                Log.error("Unable to interpret HTTP response to URL \(url)")
+            }
         }
     }
 
@@ -76,6 +79,7 @@ class HttpClient {
         f: NSMutableURLRequest -> Void,
         completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
         let req = NSMutableURLRequest(URL: url)
+        req.timeoutInterval = NSTimeInterval.abs(5)
         f(req)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(req, completionHandler: completionHandler)

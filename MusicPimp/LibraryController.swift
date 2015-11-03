@@ -168,8 +168,12 @@ class LibraryController: BaseMusicController, UISearchBarDelegate, UISearchContr
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if musicItems.count == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            let statusMessage = feedbackMessage ?? "No tracks"
-            cell.textLabel?.text = statusMessage
+            if let label = cell.textLabel {
+                label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+                label.numberOfLines = 0
+                let statusMessage = feedbackMessage ?? "No tracks"
+                label.text = statusMessage
+            }
             return cell
         } else {
             let item = musicItems[indexPath.row]

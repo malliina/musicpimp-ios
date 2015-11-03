@@ -100,7 +100,7 @@ class PimpHttpClient: HttpClient {
             f(data)
         } else {
             var errorMessage: String? = nil
-            if let json = (try? Json.asJson(data)) as? NSDictionary {
+            if let json = Json.asJson(data) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
             onError(.ResponseFailure(resource, statusCode, errorMessage))

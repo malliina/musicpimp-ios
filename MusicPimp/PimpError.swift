@@ -18,6 +18,7 @@ enum PimpError {
         return PimpErrorUtil.stringify(error)
     }
 }
+
 class PimpErrorUtil {
     static func stringify(error: PimpError) -> String {
         switch error {
@@ -38,8 +39,8 @@ class PimpErrorUtil {
                     return "Error code: \(code)"
                 }
             }
-        case .NetworkFailure( _):
-            return "Unable to connect"
+        case .NetworkFailure(let request):
+            return "Unable to connect to \(request.url.description)"
         case .SimpleError(let message):
             return message.message
         }
@@ -47,8 +48,12 @@ class PimpErrorUtil {
 }
 
 class RequestFailure {
-    let data: NSData
-    init(data: NSData) {
+    let url: NSURL
+    let code: Int
+    let data: NSData?
+    init(url: NSURL, code: Int, data: NSData?) {
+        self.url = url
+        self.code = code
         self.data = data
     }
 }

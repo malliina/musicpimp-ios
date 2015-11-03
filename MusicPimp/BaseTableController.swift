@@ -26,7 +26,7 @@ class BaseTableController: UITableViewController {
     }
     
     func error(e: String) {
-        Log.info(e)
+        Log.error(e)
     }
     
     func onError(pimpError: PimpError) {

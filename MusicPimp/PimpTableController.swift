@@ -26,7 +26,9 @@ class PimpTableController: BaseTableController {
     }
     
     func onLoadError(error: PimpError) {
-        feedbackMessage = "An error occurred"
+        let errorMessage = PimpError.stringify(error)
+        feedbackMessage = errorMessage
+        renderTable()
         onError(error)
     }
     
