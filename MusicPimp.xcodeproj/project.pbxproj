@@ -66,6 +66,10 @@
 		7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */; };
 		7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DC1B0BB95900BC0CA9 /* Players.swift */; };
 		7D748D1D1AC724B5009B0401 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D748D1C1AC724B5009B0401 /* Util.swift */; };
+		7D74F3581BF902DA0004506B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D74F3571BF902DA0004506B /* Media.xcassets */; };
+		7D74F35A1BFA6FFE0004506B /* AlarmsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3591BFA6FFE0004506B /* AlarmsController.swift */; };
+		7D74F35C1BFA70E00004506B /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35B1BFA70E00004506B /* Alarm.swift */; };
+		7D74F35E1BFBBE330004506B /* EditAlarmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35D1BFBBE330004506B /* EditAlarmController.swift */; };
 		7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2901AF3B73D001F0A65 /* Event.swift */; };
 		7D78C2951AF3CCA8001F0A65 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2941AF3CCA8001F0A65 /* Disposable.swift */; };
 		7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A61AD972A800D5CDDF /* Log.swift */; };
@@ -198,6 +202,10 @@
 		7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libraries.swift; sourceTree = "<group>"; };
 		7D6756DC1B0BB95900BC0CA9 /* Players.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		7D748D1C1AC724B5009B0401 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		7D74F3571BF902DA0004506B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		7D74F3591BFA6FFE0004506B /* AlarmsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsController.swift; sourceTree = "<group>"; };
+		7D74F35B1BFA70E00004506B /* Alarm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
+		7D74F35D1BFBBE330004506B /* EditAlarmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAlarmController.swift; sourceTree = "<group>"; };
 		7D78C2901AF3B73D001F0A65 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7D78C2941AF3CCA8001F0A65 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		7D9E48A61AD972A800D5CDDF /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
@@ -418,6 +426,8 @@
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */,
 				7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */,
+				7D74F3591BFA6FFE0004506B /* AlarmsController.swift */,
+				7D74F35D1BFBBE330004506B /* EditAlarmController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -425,6 +435,7 @@
 		7DC206981A1547370032C01D = {
 			isa = PBXGroup;
 			children = (
+				7D74F3571BF902DA0004506B /* Media.xcassets */,
 				1A6A61E06A765CCD8765B423 /* .gitignore */,
 				7DC359551B35BDD8003B01B6 /* Assets */,
 				7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */,
@@ -555,6 +566,7 @@
 				7DE944D41BE67C2900CD441B /* Track.swift */,
 				7D1608C01BE7BDB40007B943 /* Version.swift */,
 				7D1608C21BE7E3030007B943 /* PlaylistID.swift */,
+				7D74F35B1BFA70E00004506B /* Alarm.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -656,6 +668,7 @@
 				7DDE24721B6E896B007D810E /* PimpMusicItemCell.xib in Resources */,
 				7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */,
 				7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */,
+				7D74F3581BF902DA0004506B /* Media.xcassets in Resources */,
 				7D2C77971B933A810066A7B5 /* guitar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -753,12 +766,15 @@
 				7DC359691B35F196003B01B6 /* PimpTabBarController.swift in Sources */,
 				7DC3595E1B35C7B3003B01B6 /* String+FontAwesome.swift in Sources */,
 				7D6756BB1B01092E00BC0CA9 /* UserPrefs.swift in Sources */,
+				7D74F35C1BFA70E00004506B /* Alarm.swift in Sources */,
 				7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */,
 				7D6756C51B0744B100BC0CA9 /* PimpError.swift in Sources */,
 				7DB1B3B81B11D2B20012B8AE /* BasePlaylist.swift in Sources */,
 				7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */,
 				7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */,
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,
+				7D74F35A1BFA6FFE0004506B /* AlarmsController.swift in Sources */,
+				7D74F35E1BFBBE330004506B /* EditAlarmController.swift in Sources */,
 				7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */,
 				7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */,
 				7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */,

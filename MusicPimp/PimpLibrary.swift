@@ -53,7 +53,7 @@ public class PimpLibrary: BaseLibrary {
             if let jsonObj = Json.asJson(data), id = self.parsePlaylistID(jsonObj) {
                 onSuccess(id)
             } else {
-                onError(PimpError.SimpleError(ErrorMessage(message: "Response parsing failed")))
+                onError(PimpError.SimpleError(ErrorMessage(message: "Response parsing failed, got \(data)")))
             }
             }, onError: onError)
     }
@@ -69,9 +69,32 @@ public class PimpLibrary: BaseLibrary {
         client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(term)", parse: parseTracks, f: ts, onError: onError)
     }
     
-//    private func fetch<T>(url: String, parse: AnyObject -> T?, onSuccess: T -> Void) {
-//        client.pimpGetParsed(url, parse: parse, f: onSuccess, )
-//    }
+    override func alarms(onError: PimpError -> Void, f: [Alarm] -> Void) {
+        client.pimpGetParsed(Endpoints.ALARMS, parse: parseAlarms, f: f, onError: onError)
+    }
+    
+    override func saveAlarm(alarm: Alarm, onError: PimpError -> Void, onSuccess: () -> Void) {
+        let payload: [String: AnyObject] = [
+            JsonKeys.CMD: JsonKeys.Save,
+            JsonKeys.Ap: Alarm.toJson(alarm),
+            JsonKeys.Enabled: alarm.enabled
+        ]
+        client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
+            if alarm.id == nil {
+                Log.info("Created new alarm")
+            } else {
+                Log.info("Saved alarm \(alarm.id)")
+            }
+            onSuccess(())
+            }, onError: onError)
+    }
+    
+    override func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void) {
+        let payload = [ JsonKeys.CMD : JsonKeys.DELETE, JsonKeys.ID : id.id ]
+        client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
+            Log.info("Deleted alarm \(id)")
+            }, onError: onError)
+    }
     
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
         folder(id, onError: onError) { result in
@@ -152,7 +175,7 @@ public class PimpLibrary: BaseLibrary {
     }
     
     func parsePlaylistID(obj: AnyObject) -> PlaylistID? {
-        if let obj = obj as? NSDictionary, id = obj[JsonKeys.CREATED] as? Int {
+        if let obj = obj as? NSDictionary, id = obj[JsonKeys.ID] as? Int {
             return PlaylistID(id: id)
         } else {
             return nil
@@ -165,6 +188,34 @@ public class PimpLibrary: BaseLibrary {
             return tracks
         }
         Log.info("Unable to parse tracks from \(obj)")
+        return nil
+    }
+    
+    func parseAlarms(obj: AnyObject) -> [Alarm] {
+        if let arr = obj as? [NSDictionary] {
+            return arr.flatMapOpt(parseAlarm)
+        } else {
+            return []
+        }
+    }
+    
+    func parseAlarm(dict: NSDictionary) -> Alarm? {
+        if let id = dict[JsonKeys.ID] as? String,
+            job = dict[JsonKeys.JOB] as? NSDictionary,
+            trackDict = job[JsonKeys.TRACK] as? NSDictionary,
+            track = parseTrack(trackDict),
+            when = dict[JsonKeys.WHEN] as? NSDictionary,
+            hour = when[JsonKeys.Hour] as? Int,
+            minute = when[JsonKeys.Minute] as? Int,
+            dayNames = when[JsonKeys.Days] as? [String],
+            enabled = dict[JsonKeys.Enabled] as? Bool {
+            let days = dayNames.flatMapOpt(Day.fromName)
+                if days.count == dayNames.count {
+                    return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: days), enabled: enabled)
+                }
+                
+        }
+        Log.info("Unable to parse alarm. \(dict)")
         return nil
     }
 }

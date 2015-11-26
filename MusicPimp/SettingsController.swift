@@ -76,6 +76,7 @@ class SettingsController: CacheInfoController {
                     text = settings.cacheEnabled ? currentLimitDescription : "off"
                 break
                 case "Alarm":
+                    text = "off"
                 break
                 default:
                 break
@@ -88,7 +89,7 @@ class SettingsController: CacheInfoController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

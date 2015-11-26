@@ -19,7 +19,9 @@ class Endpoints {
     SEARCH = "/search",
     PLAYLISTS = "/playlists",
     PLAYLIST = "/playlist",
-    PLAYLIST_DELETE = "/playlists/delete"
+    PLAYLIST_DELETE = "/playlists/delete",
+    ALARMS = "/alarms",
+    ALARMS_ADD = "/alarms/editor/add"
 }
 
 class PimpHttpClient: HttpClient {

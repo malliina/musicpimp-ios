@@ -50,6 +50,18 @@ public class BaseLibrary: LibraryType {
         ts([])
     }
     
+    func alarms(onError: PimpError -> Void, f: [Alarm] -> Void) {
+        f([])
+    }
+    
+    func saveAlarm(alarm: Alarm, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
+    func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
         folder(id, onError: onError) { result in
             let subIDs = result.folders.map { $0.id }

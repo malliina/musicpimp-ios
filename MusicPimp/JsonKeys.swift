@@ -41,6 +41,7 @@ class JsonKeys {
     INDEX="index",
     ADD = "add",
     REMOVE = "remove",
+    DELETE = "delete",
     ERROR = "error",
     EVENT = "event",
     TIME_UPDATED = "time_updated",
@@ -54,5 +55,13 @@ class JsonKeys {
     PING = "ping",
     STATUS = "status",
     NAME = "name",
-    CREATED = "created"
+    CREATED = "created",
+    JOB = "job",
+    WHEN = "when",
+    Hour = "hour",
+    Minute = "minute",
+    Days = "days",
+    Enabled = "enabled",
+    Save = "save",
+    Ap = "ap" // for alarms
 }
