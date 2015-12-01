@@ -73,11 +73,14 @@ class EndpointSelectController: BaseTableController {
         }
         selectedIndex = index
     }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return endpoints.count + 1 // +1 for local endpoint
     }
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }
+    
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let rowIndex = indexPath.row
         if rowIndex > 0 {
@@ -100,6 +103,7 @@ class EndpointSelectController: BaseTableController {
         // "this device" is not editable
         return []
     }
+    
     func endpointRowAction(tableView: UITableView, title: String, f: Int -> Void) -> UITableViewRowAction {
         return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
             (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in

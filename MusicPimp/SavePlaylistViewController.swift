@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SavePlaylistViewController: UIViewController {
+class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var nameText: UITextField!
     
@@ -27,6 +27,9 @@ class SavePlaylistViewController: UIViewController {
             nameText.text = name
         }
         super.viewDidLoad()
+        nameText.delegate = self
+        checkValidName()
+        nameText.addTarget(self, action: Selector("textFieldDidChange:"), forControlEvents: UIControlEvents.EditingChanged)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -42,5 +45,19 @@ class SavePlaylistViewController: UIViewController {
         } else {
             return true
         }
+    }
+    
+    func textFieldDidChange(textField: UITextField) {
+        checkValidName()
+    }
+    
+    func checkValidName() {
+        let text = nameText.text ?? ""
+        saveButton.enabled = !text.isEmpty
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        nameText.resignFirstResponder()
+        return true
     }
 }

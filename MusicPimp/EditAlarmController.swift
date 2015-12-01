@@ -11,7 +11,24 @@ import Foundation
 class EditAlarmController: UIViewController {
     var editedAlarm: Alarm? = nil
     
-    override func viewDidLoad() {
+    @IBOutlet var saveButton: UIBarButtonItem!
+    
+    @IBAction func cancel(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func save(sender: UIBarButtonItem) {
         
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if saveButton === sender {
+            
+        }
     }
 }

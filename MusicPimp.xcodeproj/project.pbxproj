@@ -70,6 +70,8 @@
 		7D74F35A1BFA6FFE0004506B /* AlarmsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3591BFA6FFE0004506B /* AlarmsController.swift */; };
 		7D74F35C1BFA70E00004506B /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35B1BFA70E00004506B /* Alarm.swift */; };
 		7D74F35E1BFBBE330004506B /* EditAlarmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35D1BFBBE330004506B /* EditAlarmController.swift */; };
+		7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */; };
+		7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */; };
 		7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2901AF3B73D001F0A65 /* Event.swift */; };
 		7D78C2951AF3CCA8001F0A65 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2941AF3CCA8001F0A65 /* Disposable.swift */; };
 		7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A61AD972A800D5CDDF /* Log.swift */; };
@@ -206,6 +208,8 @@
 		7D74F3591BFA6FFE0004506B /* AlarmsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsController.swift; sourceTree = "<group>"; };
 		7D74F35B1BFA70E00004506B /* Alarm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		7D74F35D1BFBBE330004506B /* EditAlarmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAlarmController.swift; sourceTree = "<group>"; };
+		7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatDaysController.swift; sourceTree = "<group>"; };
+		7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAlarmTableViewController.swift; sourceTree = "<group>"; };
 		7D78C2901AF3B73D001F0A65 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7D78C2941AF3CCA8001F0A65 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		7D9E48A61AD972A800D5CDDF /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
@@ -428,6 +432,8 @@
 				7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */,
 				7D74F3591BFA6FFE0004506B /* AlarmsController.swift */,
 				7D74F35D1BFBBE330004506B /* EditAlarmController.swift */,
+				7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */,
+				7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -706,6 +712,7 @@
 				7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */,
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
 				7DDE24701B656DD5007D810E /* PimpUtils.swift in Sources */,
+				7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */,
 				7D6756D11B08E5ED00BC0CA9 /* EndpointSelectController.swift in Sources */,
 				7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */,
 				7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */,
@@ -721,6 +728,7 @@
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,
 				7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */,
+				7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,
 				7DB1B3B61B11D0590012B8AE /* PimpEndpoint.swift in Sources */,
 				7D0CA9841AF505E3008F72EC /* PlaybackState.swift in Sources */,
