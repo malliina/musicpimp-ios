@@ -25,8 +25,7 @@ class EndpointSelectController: BaseTableController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let navController = segue.destinationViewController as? UINavigationController {
-            let destController: AnyObject = navController.viewControllers[0]
-            if let editController = destController as? EditEndpointController,
+            if let editController = navController.viewControllers[0] as? EditEndpointController,
                 endpoint = sender as? Endpoint {
                     editController.editedItem = endpoint
             }
@@ -47,7 +46,7 @@ class EndpointSelectController: BaseTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
-        let endpoint = index == 0 ? Endpoint.Local : endpoints[index-1]
+        let endpoint = endpointForIndex(index)
         let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) 
         cell.textLabel?.text = endpoint.name
         let accessory = index == selectedIndex ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
@@ -61,7 +60,7 @@ class EndpointSelectController: BaseTableController {
         if index == selectedIndex {
             return
         }
-        let endpoint = index == 0 ? Endpoint.Local : endpoints[index-1]
+        let endpoint = endpointForIndex(index)
         manager.saveActive(endpoint)
         
         let cell = tableView.cellForRowAtIndexPath(indexPath)
@@ -72,6 +71,10 @@ class EndpointSelectController: BaseTableController {
             previousCell?.accessoryType = UITableViewCellAccessoryType.None
         }
         selectedIndex = index
+    }
+    
+    func endpointForIndex(index: Int) -> Endpoint {
+        return index == 0 ? Endpoint.Local : endpoints[index-1]
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

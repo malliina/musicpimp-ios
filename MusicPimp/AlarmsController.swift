@@ -9,6 +9,8 @@
 import Foundation
 
 class AlarmsController : PimpTableController {
+    let alarmIdentifier = "AlarmCell"
+    let noAlarmsMessage = "No saved alarms"
     
     var alarms: [Alarm] = []
     
@@ -37,12 +39,12 @@ class AlarmsController : PimpTableController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if alarms.count == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            let statusMessage = feedbackMessage ?? "No saved alarms"
+            let statusMessage = feedbackMessage ?? noAlarmsMessage
             cell.textLabel?.text = statusMessage
             return cell
         } else {
             let item = alarms[indexPath.row]
-            let cell = tableView.dequeueReusableCellWithIdentifier("AlarmCell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCellWithIdentifier(alarmIdentifier, forIndexPath: indexPath)
             cell.textLabel?.text = item.track.title
             return cell
         }
@@ -56,6 +58,23 @@ class AlarmsController : PimpTableController {
                 Log.info("Deleted alarm with ID \(id)")
                 self.alarms.removeAtIndex(index)
                 self.renderTable()
+            }
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let dest = segue.destinationViewController as? EditAlarmTableViewController,
+            row = self.tableView.indexPathForSelectedRow {
+            let alarm = alarms[row.item]
+            dest.initAlarm(alarm)
+        }
+    }
+    
+    @IBAction func unwindToAlarms(sender: UIStoryboardSegue) {
+        if let source = sender.sourceViewController as? EditAlarmTableViewController,
+            alarm = source.mutableAlarm?.toImmutable() {
+            library.saveAlarm(alarm, onError: onError) {
+                self.loadAlarms()
             }
         }
     }

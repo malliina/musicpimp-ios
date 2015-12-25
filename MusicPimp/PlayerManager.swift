@@ -15,7 +15,6 @@ class PlayerManager: EndpointManager {
     let playerChanged = Event<PlayerType>()
     
     init() {
-        //Log.info("Init PlayerManager")
         let settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
@@ -25,6 +24,7 @@ class PlayerManager: EndpointManager {
         // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)
         // activePlayer.open()
     }
+    
     private func onNewPlayerEndpoint(endpoint: Endpoint) {
         activePlayer.close()
         let p = Players.fromEndpoint(endpoint)

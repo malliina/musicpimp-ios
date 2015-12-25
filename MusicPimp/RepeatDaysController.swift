@@ -11,20 +11,41 @@ import Foundation
 class RepeatDaysController: BaseTableController {
     let cellIdentifier = "RepeatDayCell"
     
+    var alarm: MutableAlarm? = nil
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        let dayName = weekDayName(indexPath.row)
+        let row = indexPath.row
+        let dayName = weekDayName(row)
+        let accessory = isChecked(row) ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
         cell.textLabel?.text = "Every \(dayName)"
+        cell.accessoryType = accessory
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        Log.info("Did select")
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-            let isChecked = cell.accessoryType == UITableViewCellAccessoryType.Checkmark
-            let newAccessory = isChecked ? UITableViewCellAccessoryType.None : UITableViewCellAccessoryType.Checkmark
+            let wasChecked = cell.accessoryType == UITableViewCellAccessoryType.Checkmark
+            let newAccessory = wasChecked ? UITableViewCellAccessoryType.None : UITableViewCellAccessoryType.Checkmark
+            let willBeEnabled = !wasChecked
+            if let day = dayForIndex(indexPath.row), alarm = alarm {
+                if willBeEnabled {
+                    alarm.when.days.insert(day)
+                } else {
+                    alarm.when.days.remove(day)
+                }
+            }
             cell.accessoryType = newAccessory
+        }
+    }
+    
+    func isChecked(row: Int) -> Bool {
+        let day = dayForIndex(row)
+        if let day = day, days = alarm?.when.days {
+            return days.contains(day)
+        } else {
+            return false
         }
     }
     
@@ -38,6 +59,19 @@ class RepeatDaysController: BaseTableController {
         case 5: return "Saturday"
         case 6: return "Sunday"
         default: return "DOOMSDAY"
+        }
+    }
+    
+    func dayForIndex(day: Int) -> Day? {
+        switch day {
+        case 0: return Day.Mon
+        case 1: return Day.Tue
+        case 2: return Day.Wed
+        case 3: return Day.Thu
+        case 4: return Day.Fri
+        case 5: return Day.Sat
+        case 6: return Day.Sun
+        default: return nil
         }
     }
     

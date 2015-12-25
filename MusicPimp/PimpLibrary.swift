@@ -93,6 +93,7 @@ public class PimpLibrary: BaseLibrary {
         let payload = [ JsonKeys.CMD : JsonKeys.DELETE, JsonKeys.ID : id.id ]
         client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
             Log.info("Deleted alarm \(id)")
+            onSuccess(())
             }, onError: onError)
     }
     
@@ -211,7 +212,8 @@ public class PimpLibrary: BaseLibrary {
             enabled = dict[JsonKeys.Enabled] as? Bool {
             let days = dayNames.flatMapOpt(Day.fromName)
                 if days.count == dayNames.count {
-                    return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: days), enabled: enabled)
+                    let daysSet = Set(days)
+                    return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: daysSet), enabled: enabled)
                 }
                 
         }

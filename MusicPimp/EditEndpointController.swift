@@ -46,12 +46,10 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if(sender as? UIBarButtonItem != saveButton) {
-            return
-        }
-        if let endpoint = parseEndpoint() {
-            //info("Save \(endpoint)")
-            PimpSettings.sharedInstance.save(endpoint)
+        if saveButton === sender {
+            if let endpoint = parseEndpoint() {
+                PimpSettings.sharedInstance.save(endpoint)
+            }
         }
     }
     

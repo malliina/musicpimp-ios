@@ -24,7 +24,8 @@ class HttpClient {
     }
     
     func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
-        let nsURL = NSURL(string: url)!
+        let encodedString = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let nsURL = NSURL(string: encodedString)!
         get(nsURL, headers: headers) { (data, response, error) -> Void in
             if let error = error {
                 onError(RequestFailure(url: nsURL, code: error.code, data: data))
