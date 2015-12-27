@@ -27,6 +27,10 @@ class CacheTableController: CacheInfoController {
         updateCacheUsageLabel()
     }
     
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 3
+    }
+    
     override func onCacheLimitChanged(newSize: StorageSize) {
         info("Got \(newSize)")
         Util.onUiThread {
@@ -41,6 +45,9 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+//        switch indexPath.section {
+//            
+//        }
         if let reuse = cell.reuseIdentifier {
             switch reuse {
                 case CacheTableController.CacheEnabledCell:

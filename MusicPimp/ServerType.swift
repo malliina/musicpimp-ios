@@ -8,11 +8,12 @@
 
 import Foundation
 
-struct ServerType {
+public struct ServerType {
     let name: String
     let index: Int
     var isCloud: Bool { get { return name == ServerTypes.Cloud.name } }
 }
+
 class ServerTypes {
     static let MusicPimp = ServerType(name: "MusicPimp", index: 0)
     static let Cloud = ServerType(name: "Cloud", index: 1)
@@ -27,4 +28,11 @@ class ServerTypes {
     static func fromName(name: String) -> ServerType? {
         return All.find({ $0.name == name })
     }
+}
+
+
+extension ServerType: Equatable {}
+
+public func ==(lhs: ServerType, rhs: ServerType) -> Bool {
+    return lhs.name == rhs.name
 }

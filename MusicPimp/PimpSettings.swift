@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks"
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed"
     
     static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
@@ -18,13 +18,20 @@ class PimpSettings {
     let libraryChanged = Event<Endpoint>()
     let cacheLimitChanged = Event<StorageSize>()
     let cacheEnabledChanged = Event<Bool>()
+    let defaultAlarmEndpointChanged = Event<Endpoint>()
     
     let impl: Persistence
+    
     init(impl: Persistence) {
         self.impl = impl
     }
     
     var changes: Event<Setting> { get { return impl.changes } }
+    
+    var notificationsAllowed: Bool {
+        get { return impl.load(PimpSettings.NotificationsAllowed) == "true" }
+        set(allowed) { impl.save("\(allowed)", key: PimpSettings.NotificationsAllowed) }
+    }
     
     var cacheEnabled: Bool {
         get { return impl.load(PimpSettings.CACHE_ENABLED) != "false" }
@@ -36,6 +43,7 @@ class PimpSettings {
         }
     }
     let defaultLimit = StorageSize(gigs: 10)
+    
     var cacheLimit: StorageSize {
         get {
             if let bytesAsString = impl.load(PimpSettings.CACHE_LIMIT) {
@@ -52,6 +60,44 @@ class PimpSettings {
             }
         }
     }
+    
+    func defaultNotificationEndpoint() -> Endpoint? {
+        let alarmEndpoints = endpoints().filter { $0.supportsAlarms }
+        if let id = impl.load(PimpSettings.defaultAlarmEndpoint) {
+            let e = alarmEndpoints.find { $0.id == id }
+            return e ?? initDefaultNotificationEndpoint(alarmEndpoints)
+        } else {
+            return initDefaultNotificationEndpoint(alarmEndpoints)
+        }
+    }
+    
+    func initDefaultNotificationEndpoint(es: [Endpoint]) -> Endpoint? {
+        let result = es.headOption()
+        if let result = result {
+            saveDefaultNotificationsEndpoint(result)
+        }
+        return result
+    }
+    
+    func saveDefaultNotificationsEndpoint(e: Endpoint) {
+        let errors = impl.save(e.id, key: PimpSettings.defaultAlarmEndpoint)
+        if errors == nil {
+            defaultAlarmEndpointChanged.raise(e)
+        }
+    }
+    
+    func notificationsEnabled(e: Endpoint) -> Bool {
+        return impl.load(notificationsKey(e)) == "true"
+    }
+    
+    func saveNotificationsEnabled(e: Endpoint, enabled: Bool) {
+        impl.save("\(enabled)", key: notificationsKey(e))
+    }
+    
+    private func notificationsKey(e: Endpoint) -> String {
+        return PimpSettings.NotificationsPrefix + e.id
+    }
+    
     func endpoints() -> [Endpoint] {
         if let str = impl.load(PimpSettings.ENDPOINTS) {
             if let json: AnyObject = Json.asJson(str) {
@@ -65,12 +111,14 @@ class PimpSettings {
         }
         return []
     }
+    
     func activeEndpoint(key: String) -> Endpoint {
         if let id = impl.load(key) {
             return endpoints().find({ $0.id == id }) ?? Endpoint.Local
         }
         return Endpoint.Local
     }
+    
     func save(endpoint: Endpoint) {
         var es = endpoints()
         if let idx = es.indexOf({ $0.id == endpoint.id }) {
@@ -81,6 +129,7 @@ class PimpSettings {
         }
         saveAll(es)
     }
+    
     func saveAll(es: [Endpoint]) {
         if let stringified = serialize(es) {
             impl.save(stringified, key: PimpSettings.ENDPOINTS)
@@ -91,6 +140,7 @@ class PimpSettings {
             Log.error("Unable to save endpoints")
         }
     }
+    
     func serialize(es: [Endpoint]) -> String? {
         let jsonified = es.map(PimpJson.sharedInstance.toJson)
         let blob = [PimpSettings.ENDPOINTS: jsonified]

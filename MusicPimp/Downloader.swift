@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class Downloader {
 
     typealias RelativePath = String

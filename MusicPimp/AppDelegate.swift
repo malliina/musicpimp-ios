@@ -13,7 +13,7 @@ import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    let settings = PimpSettings.sharedInstance
     var window: UIWindow?
     
     let audioSession = AVAudioSession.sharedInstance()
@@ -25,10 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         PlayerManager.sharedInstance.active.open()
+        initNotifications(application)
         test()
         Log.info("didFinishLaunchingWithOptions")
         return true
     }
+    
     private func test() {
         //let i = Duration(hours: 5)
         //CoverService.sharedInstance.cover("iron maiden", album: "somewhere in time")
@@ -45,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let size = Files.sharedInstance.folderSize(rootDir)
         Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
+    
     func initAudio() {
         let categorySuccess: Bool
         do {
@@ -72,6 +75,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Audio session initialized")
     }
 
+    func initNotifications(application: UIApplication) {
+        // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW1
+        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+        application.registerUserNotificationSettings(notificationSettings)
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let hexToken = deviceToken.hexString()
+        Log.info("Got device token \(hexToken)")
+        settings.notificationsAllowed = true
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        Log.error("Remote notifications registration failure code \(error.code) \(error.description)")
+        settings.notificationsAllowed = false
+    }
     
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
         Log.info("Complete: \(identifier)")
@@ -134,4 +154,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-

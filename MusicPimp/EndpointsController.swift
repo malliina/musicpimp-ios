@@ -10,12 +10,9 @@ import Foundation
 import UIKit
 
 class EndpointsController: BaseTableController {
+    let endpointIdentifier = "EndpointCell"
         
     var endpoints: [Endpoint] = []
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,7 +26,7 @@ class EndpointsController: BaseTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = endpoints[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) 
+        let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
         cell.textLabel?.text = item.name
         return cell
     }
@@ -50,7 +47,7 @@ class EndpointsController: BaseTableController {
                     editController.editedItem = item
                 }
             } else {
-                Log.error("hmm")
+                Log.error("Segue preparation error")
             }
         } else {
             Log.info("Unknown navigation controller")

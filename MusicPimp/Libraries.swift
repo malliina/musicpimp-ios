@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class Libraries {
     static func fromEndpoint(e: Endpoint) -> LibraryType {
         if e.id == Endpoint.Local.id {

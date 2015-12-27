@@ -28,6 +28,7 @@ class UserPrefs: Persistence {
 class Setting {
     let key: String
     let contents: String
+    
     init(key: String, contents: String) {
         self.key = key
         self.contents = contents

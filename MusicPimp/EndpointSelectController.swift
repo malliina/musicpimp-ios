@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class EndpointSelectController: BaseTableController {
-
+    let endpointIdentifier = "EndpointCell"
     var endpoints: [Endpoint] = []
     
     var selectedIndex: Int? = nil
@@ -47,7 +47,7 @@ class EndpointSelectController: BaseTableController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
         let endpoint = endpointForIndex(index)
-        let cell = tableView.dequeueReusableCellWithIdentifier("EndpointCell", forIndexPath: indexPath) 
+        let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
         cell.textLabel?.text = endpoint.name
         let accessory = index == selectedIndex ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
         cell.accessoryType = accessory

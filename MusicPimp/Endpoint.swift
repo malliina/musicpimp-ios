@@ -69,4 +69,6 @@ class Endpoint: CustomStringConvertible {
     
     var httpBaseUrl: String { get { return "\(httpProto)://\(address):\(port)" } }
     var wsBaseUrl: String { get { return "\(wsProto)://\(address):\(port)" } }
+    
+    var supportsAlarms: Bool { get { return serverType == ServerTypes.MusicPimp || serverType == ServerTypes.Cloud } }
 }

@@ -171,7 +171,7 @@ class EditAlarmTableViewController: BaseTableController {
             if didDelete {
                 if let alarmsController = navigationController!.viewControllers.last as? AlarmsController {
                     // reloads so that the deleted alarm entry disappears from the table we now return to
-                    alarmsController.loadAlarms()
+                    alarmsController.reloadAlarms()
                 }
             }
         }
