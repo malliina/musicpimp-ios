@@ -31,12 +31,14 @@ class LocalPlayer: NSObject, PlayerType {
     let volumeEvent = Event<Int>()
     let muteEvent = Event<Bool>()
     
-    func open() {
-        
+    func open(onOpen: () -> Void, onError: NSError -> Void) {
+        onOpen(())
     }
+    
     func close() {
         
     }
+    
     func current() -> PlayerState {
         let list = localPlaylist.current()
         let pos = position() ?? Duration.Zero
@@ -49,6 +51,7 @@ class LocalPlayer: NSObject, PlayerType {
             playlist: list.tracks,
             playlistIndex: list.index)
     }
+    
     func playbackState() -> PlaybackState {
         if let p = playerInfo?.player {
             if (p.error != nil) {
@@ -59,6 +62,7 @@ class LocalPlayer: NSObject, PlayerType {
             return .NoMedia
         }
     }
+    
     func play() {
         if let playerInfo = playerInfo {
             // TODO see if we can sync this better by only raising the event after confirmation that the player is playing
@@ -69,12 +73,14 @@ class LocalPlayer: NSObject, PlayerType {
             Log.error("There is no player; will not play.")
         }
     }
+    
     func pause() {
         if let player = player {
             player.pause()
             stateEvent.raise(.Paused)
         }
     }
+    
     func seek(position: Duration) {
         // fucking hell
         let scale: Int32 = 1
@@ -102,21 +108,26 @@ class LocalPlayer: NSObject, PlayerType {
         }
         return playerInfo?.track.duration
     }
+    
     func position() -> Duration? {
         if let currentTime = player?.currentTime() {
             return Float(CMTimeGetSeconds(currentTime)).seconds
         }
         return nil
     }
+    
     func next() {
         playFromPlaylist({ $0.next() })
     }
+    
     func prev() {
-        playFromPlaylist({ $0.prev() })
+       playFromPlaylist({ $0.prev() })
     }
+    
     func skip(index: Int) {
         playFromPlaylist({ $0.skip(index) })
     }
+    
     private func playFromPlaylist(f: LocalPlaylist -> Track?) -> Track? {
         if let track = f(localPlaylist) {
             closePlayer()
@@ -126,11 +137,12 @@ class LocalPlayer: NSObject, PlayerType {
             Log.info("Unable to find track from playlist")
             return nil
         }
-        
     }
+    
     func resetAndPlay(track: Track) {
         resetAndPlay([track])
     }
+    
     func resetAndPlay(tracks: [Track]) {
         closePlayer()
         localPlaylist.reset(tracks)
@@ -138,6 +150,7 @@ class LocalPlayer: NSObject, PlayerType {
             initAndPlay(first)
         }
     }
+    
     private func initAndPlay(track: Track) {
         info("Playing \(track.title)")
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
@@ -165,14 +178,17 @@ class LocalPlayer: NSObject, PlayerType {
         }
         play()
     }
+    
     @objc func playedToEnd(notification: NSNotification) {
         info("Playback ended.")
         next()
     }
+    
     @objc func failedToPlayToEnd(notification: NSNotification) {
         info("Failed to play to end.")
         next()
     }
+    
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context == &itemStatusContext {
             if let item = object as? AVPlayerItem {

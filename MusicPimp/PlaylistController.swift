@@ -99,6 +99,17 @@ class PlaylistController: PimpTableController {
         return max(self.tracks.count, 1)
     }
     
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+//        let sourceRow = sourceIndexPath.row
+//        let passenger = tracks[sourceRow]
+//        tracks.removeAtIndex(sourceRow)
+//        tracks.insert(passenger, destinationIndexPath.row)
+    }
+    
     func savePlaylistAction() {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?

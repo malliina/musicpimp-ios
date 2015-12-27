@@ -15,7 +15,7 @@ protocol PlayerType {
     var trackEvent: Event<Track?> { get }
     var playlist: PlaylistType { get }
     
-    func open()
+    func open(onOpen: () -> Void, onError: NSError -> Void)
     func close()
     
     func current() -> PlayerState

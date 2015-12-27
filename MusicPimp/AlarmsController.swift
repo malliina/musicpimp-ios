@@ -164,9 +164,10 @@ class AlarmsController : PimpTableController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let dest = segue.destinationViewController as? EditAlarmTableViewController,
-            row = self.tableView.indexPathForSelectedRow {
+            row = self.tableView.indexPathForSelectedRow,
+            endpoint = endpoint {
             let alarm = alarms[row.item]
-            dest.initAlarm(alarm)
+            dest.initAlarm(alarm, endpoint: endpoint)
         }
     }
     

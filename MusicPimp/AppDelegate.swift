@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
-        PlayerManager.sharedInstance.active.open()
+        connectToPlayer()
         initNotifications(application)
         test()
         Log.info("didFinishLaunchingWithOptions")
@@ -113,8 +113,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         // However, this is not called when the app is first launched.
-        PlayerManager.sharedInstance.active.open()
+        connectToPlayer()
         Log.info("Entering foreground")
+    }
+    
+    func connectToPlayer() {
+        PlayerManager.sharedInstance.active.open(onConnectionOpened, onError: onConnectionFailure)
+    }
+    
+    func onConnectionOpened() {
+        Log.info("Connected.")
+    }
+    func onConnectionFailure(error: NSError) {
+        Log.error("Unable to connect")
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

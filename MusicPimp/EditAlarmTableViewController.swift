@@ -19,9 +19,11 @@ class EditAlarmTableViewController: BaseTableController {
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }
     
     var mutableAlarm: MutableAlarm? = nil
+    var endpoint: Endpoint? = nil
     
-    func initAlarm(alarm: Alarm) {
+    func initAlarm(alarm: Alarm, endpoint: Endpoint) {
         self.mutableAlarm = MutableAlarm(a: alarm)
+        self.endpoint = endpoint
     }
     
     @IBOutlet var saveButton: UIBarButtonItem!
@@ -106,7 +108,7 @@ class EditAlarmTableViewController: BaseTableController {
                 cell.detailTextLabel?.text = mutableAlarm?.track?.title ?? "No track"
                 break
             case playIdentifier:
-                cell.textLabel?.enabled = mutableAlarm?.track != nil && playerManager.loadActive().id == libraryManager.loadActive().id
+                cell.textLabel?.enabled = mutableAlarm?.track != nil
                 break
             case deleteAlarmIdentifier:
                 cell.textLabel?.enabled = mutableAlarm?.id != nil
@@ -141,9 +143,9 @@ class EditAlarmTableViewController: BaseTableController {
         if let identifier = tableView.cellForRowAtIndexPath(indexPath)?.reuseIdentifier {
             switch identifier {
             case deleteAlarmIdentifier:
-                if let alarmId = mutableAlarm?.id {
+                if let alarmId = mutableAlarm?.id, endpoint = endpoint {
                     tableView.deselectRowAtIndexPath(indexPath, animated: false)
-                    libraryManager.active.deleteAlarm(alarmId, onError: onError) {
+                    Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId, onError: onError) {
                         Util.onUiThread {
                             self.goBack(true)
                         }
@@ -152,8 +154,8 @@ class EditAlarmTableViewController: BaseTableController {
                 break
             case playIdentifier:
                 tableView.deselectRowAtIndexPath(indexPath, animated: false)
-                if let track = mutableAlarm?.track {
-                    playerManager.active.resetAndPlay(track)
+                if let track = mutableAlarm?.track, endpoint = endpoint {
+                    Players.fromEndpoint(endpoint).resetAndPlay(track)
                 }
                 break
             default:

@@ -30,7 +30,15 @@ class PlayerManager: EndpointManager {
         let p = Players.fromEndpoint(endpoint)
         activePlayer = p
         Log.info("Set player to \(endpoint.name) \(p.isLocal)")
-        activePlayer.open() // async
+        activePlayer.open(onOpened, onError: onError) // async
         playerChanged.raise(p)
+    }
+    
+    func onOpened() {
+        
+    }
+    
+    func onError(error: NSError) {
+        
     }
 }

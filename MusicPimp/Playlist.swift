@@ -13,6 +13,7 @@ class Playlist {
     
     let tracks: [Track]
     let index: Int?
+    
     init(tracks: [Track], index: Int?) {
         self.tracks = tracks
         self.index = index
