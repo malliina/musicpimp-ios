@@ -155,13 +155,21 @@ class EditAlarmTableViewController: BaseTableController {
             case playIdentifier:
                 tableView.deselectRowAtIndexPath(indexPath, animated: false)
                 if let track = mutableAlarm?.track, endpoint = endpoint {
-                    Players.fromEndpoint(endpoint).resetAndPlay(track)
+                    let player = Players.fromEndpoint(endpoint)
+                    Players.fromEndpoint(endpoint).open({ () -> Void in
+                        player.resetAndPlay(track)
+                        player.close()
+                        }, onError: onConnectError)
                 }
                 break
             default:
                 break
             }
         }
+    }
+    
+    func onConnectError(e: NSError) {
+        
     }
     
     func goBack(didDelete: Bool = false) {

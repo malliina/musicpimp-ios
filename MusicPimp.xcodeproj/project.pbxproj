@@ -29,6 +29,7 @@
 		7D28D4291C2D95F700B3F62F /* TrackProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D4281C2D95F700B3F62F /* TrackProgress.swift */; };
 		7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D42A1C2DD18400B3F62F /* ClockTime.swift */; };
 		7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D42C1C2F484100B3F62F /* AlarmEndpointController.swift */; };
+		7D28D4331C39A5CF00B3F62F /* PushToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D4321C39A5CE00B3F62F /* PushToken.swift */; };
 		7D2C77971B933A810066A7B5 /* guitar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C77941B933A810066A7B5 /* guitar.png */; };
 		7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C77951B933A810066A7B5 /* more_filled-50.png */; };
 		7D2C77991B933A810066A7B5 /* more-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C77961B933A810066A7B5 /* more-50.png */; };
@@ -169,6 +170,7 @@
 		7D28D4281C2D95F700B3F62F /* TrackProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackProgress.swift; sourceTree = "<group>"; };
 		7D28D42A1C2DD18400B3F62F /* ClockTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClockTime.swift; sourceTree = "<group>"; };
 		7D28D42C1C2F484100B3F62F /* AlarmEndpointController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmEndpointController.swift; sourceTree = "<group>"; };
+		7D28D4321C39A5CE00B3F62F /* PushToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushToken.swift; sourceTree = "<group>"; };
 		7D2C77941B933A810066A7B5 /* guitar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = guitar.png; path = MusicPimp/Assets/guitar.png; sourceTree = "<group>"; };
 		7D2C77951B933A810066A7B5 /* more_filled-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled-50.png"; path = "MusicPimp/Assets/more_filled-50.png"; sourceTree = "<group>"; };
 		7D2C77961B933A810066A7B5 /* more-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more-50.png"; path = "MusicPimp/Assets/more-50.png"; sourceTree = "<group>"; };
@@ -585,6 +587,7 @@
 				7D28D4281C2D95F700B3F62F /* TrackProgress.swift */,
 				7D1608C01BE7BDB40007B943 /* Version.swift */,
 				7D28D42A1C2DD18400B3F62F /* ClockTime.swift */,
+				7D28D4321C39A5CE00B3F62F /* PushToken.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -640,8 +643,12 @@
 				TargetAttributes = {
 					7DC206A01A1547370032C01D = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = D2T2QC36Z9;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -764,6 +771,7 @@
 				7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */,
 				7DE944D71BE67C4900CD441B /* MusicItem.swift in Sources */,
 				7DB1B3B41B1102C50012B8AE /* PlayerState.swift in Sources */,
+				7D28D4331C39A5CF00B3F62F /* PushToken.swift in Sources */,
 				7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */,
 				7D6756D71B0A64E100BC0CA9 /* LibraryType.swift in Sources */,
 				7D1608BD1BE7BD8C0007B943 /* Playlist.swift in Sources */,
@@ -936,10 +944,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 			};
 			name = Debug;
@@ -948,10 +959,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 			};
 			name = Release;

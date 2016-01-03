@@ -27,4 +27,7 @@ protocol LibraryType {
     func alarms(onError: PimpError -> Void, f: [Alarm] -> Void)
     func saveAlarm(alarm: Alarm, onError: PimpError -> Void, onSuccess: () -> Void)
     func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void)
+    func stopAlarm(onError: PimpError -> Void, onSuccess: () -> Void)
+    func registerNotifications(token: PushToken, tag: String, onError: PimpError -> Void, onSuccess: () -> Void)
+    func unregisterNotifications(tag: String, onError: PimpError -> Void, onSuccess: () -> Void)
 }

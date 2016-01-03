@@ -27,8 +27,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectToPlayer()
         initNotifications(application)
         test()
+        if let launchOptions = launchOptions {
+            handleNotification(launchOptions)
+        }
         Log.info("didFinishLaunchingWithOptions")
         return true
+    }
+    
+    private func handleNotification(data: [NSObject: AnyObject]) {
+        if let tag = data["tag"] as? String,
+            cmd = data["cmd"] as? String,
+            endpoint = settings.endpoints().find({ $0.id == tag }) {
+            if cmd == "stop" {
+                let library = Libraries.fromEndpoint(endpoint)
+                library.stopAlarm(onAlarmError) {
+                    Log.info("Stopped alarm playback")
+                }
+            }
+        }
+    }
+    
+    func onAlarmError(error: PimpError) {
+        Log.error("Alarm error")
     }
     
     private func test() {
@@ -84,13 +104,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let hexToken = deviceToken.hexString()
+        let token = PushToken(token: hexToken)
         Log.info("Got device token \(hexToken)")
+        settings.pushToken = token
         settings.notificationsAllowed = true
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         Log.error("Remote notifications registration failure code \(error.code) \(error.description)")
+        settings.pushToken = PushToken(token: PimpSettings.NoPushTokenValue)
         settings.notificationsAllowed = false
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        Log.info("Got remote notification")
+        if let tag = userInfo["tag"] as? String {
+            Log.info("Tag \(tag)")
+        } else {
+            Log.info("No tag")
+        }
     }
     
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {

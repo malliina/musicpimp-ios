@@ -25,6 +25,8 @@ class AlarmsController : PimpTableController {
     
     var pushSwitch: UISwitch? = nil
     
+    var isEndpointValid: Bool { return endpoint != nil }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
@@ -53,11 +55,15 @@ class AlarmsController : PimpTableController {
     }
     
     func registerNotifications(endpoint: Endpoint, onSuccess: () -> Void) {
-        
+        let alarmLibrary = Libraries.fromEndpoint(endpoint)
+        if let token = settings.pushToken {
+            alarmLibrary.registerNotifications(token, tag: endpoint.id, onError: onError, onSuccess: onSuccess)
+        }
     }
     
     func unregisterNotifications(endpoint: Endpoint, onSuccess: () -> Void) {
-        
+        let alarmLibrary = Libraries.fromEndpoint(endpoint)
+        alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
     }
     
     func reloadAlarms() {
@@ -110,7 +116,7 @@ class AlarmsController : PimpTableController {
         case endpointSection:
             let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
             cell.detailTextLabel?.text = endpoint?.name ?? "None"
-            cell.textLabel?.enabled = endpoint != nil
+            cell.textLabel?.enabled = isEndpointValid
             return cell
         case notificationSection:
             let cell = tableView.dequeueReusableCellWithIdentifier(pushEnabledIdentifier, forIndexPath: indexPath)
@@ -118,7 +124,7 @@ class AlarmsController : PimpTableController {
             if let endpoint = endpoint {
                 pushSwitch?.on = settings.notificationsEnabled(endpoint)
             }
-            let isNotificationsToggleEnabled = endpoint != nil && settings.notificationsAllowed
+            let isNotificationsToggleEnabled = isEndpointValid && settings.notificationsAllowed
             cell.textLabel?.enabled = isNotificationsToggleEnabled
             pushSwitch?.enabled = isNotificationsToggleEnabled
             return cell
@@ -149,6 +155,10 @@ class AlarmsController : PimpTableController {
         default:
             return ""
         }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        return isEndpointValid
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

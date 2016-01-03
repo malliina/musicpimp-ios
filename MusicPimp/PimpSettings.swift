@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed"
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none"
     
     static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
@@ -27,6 +27,25 @@ class PimpSettings {
     }
     
     var changes: Event<Setting> { get { return impl.changes } }
+    
+    var pushToken: PushToken? {
+        get {
+            let tokenString = impl.load(PimpSettings.PushTokenKey)
+            if let tokenString = tokenString {
+                if tokenString != PimpSettings.NoPushTokenValue {
+                    return PushToken(token: tokenString)
+                }
+            }
+            return nil
+        }
+        set(newToken) {
+            if let newToken = newToken {
+                impl.save(newToken.token, key: PimpSettings.PushTokenKey)
+            } else {
+                impl.save(PimpSettings.NoPushTokenValue, key: PimpSettings.PushTokenKey)
+            }
+        }
+    }
     
     var notificationsAllowed: Bool {
         get { return impl.load(PimpSettings.NotificationsAllowed) == "true" }

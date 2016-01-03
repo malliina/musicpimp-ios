@@ -63,5 +63,9 @@ class JsonKeys {
     Days = "days",
     Enabled = "enabled",
     Save = "save",
-    Ap = "ap" // for alarms
+    Ap = "ap",
+    ApnsAdd = "apns_add",
+    ApnsRemove = "apns_remove",
+    ApnsTag = "tag",
+    Id = "id"
 }

@@ -90,9 +90,39 @@ public class PimpLibrary: BaseLibrary {
     }
     
     override func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void) {
-        let payload = [ JsonKeys.CMD : JsonKeys.DELETE, JsonKeys.ID : id.id ]
+        let payload = [
+            JsonKeys.CMD : JsonKeys.DELETE,
+            JsonKeys.ID : id.id
+        ]
+        alarmsPost(payload, onError: onError, onSuccess: onSuccess)
+    }
+    
+    override func stopAlarm(onError: PimpError -> Void, onSuccess: () -> Void) {
+        let payload = [
+            JsonKeys.CMD: JsonKeys.STOP
+        ]
+        alarmsPost(payload, onError: onError, onSuccess: onSuccess)
+    }
+    
+    override func registerNotifications(token: PushToken, tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+        let payload = [
+            JsonKeys.CMD: JsonKeys.ApnsAdd,
+            JsonKeys.Id: token.token,
+            JsonKeys.ApnsTag: tag
+        ]
+        alarmsPost(payload, onError: onError, onSuccess: onSuccess)
+    }
+    
+    override func unregisterNotifications(tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+        let payload = [
+            JsonKeys.CMD: JsonKeys.ApnsRemove,
+            JsonKeys.Id: tag
+        ]
+        alarmsPost(payload, onError: onError, onSuccess: onSuccess)
+    }
+    
+    private func alarmsPost(payload: [String: AnyObject], onError: PimpError -> Void, onSuccess: () -> Void) {
         client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            Log.info("Deleted alarm \(id)")
             onSuccess(())
             }, onError: onError)
     }

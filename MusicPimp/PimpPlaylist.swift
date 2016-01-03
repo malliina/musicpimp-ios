@@ -12,6 +12,7 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
     //let client: PimpHttpClient
     //let helper: PimpEndpoint
     let socket: PimpSocket
+    
     init(socket: PimpSocket) {
         self.socket = socket
         //self.client = client

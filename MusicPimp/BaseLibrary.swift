@@ -62,6 +62,18 @@ public class BaseLibrary: LibraryType {
         onSuccess(())
     }
     
+    func stopAlarm(onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
+    func registerNotifications(token: PushToken, tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
+    func unregisterNotifications(tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+        onSuccess(())
+    }
+    
     private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
         folder(id, onError: onError) { result in
             let subIDs = result.folders.map { $0.id }
