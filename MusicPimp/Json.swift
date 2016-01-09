@@ -15,12 +15,15 @@ public class Json {
         }
         return nil
     }
+    
     public static func asJson(data: NSData) -> AnyObject? {
         return try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
     }
+    
     public static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
         return stringify(value, prettyPrinted: prettyPrinted)
     }
+    
     public static func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
 //        var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
         let options = NSJSONWritingOptions.PrettyPrinted

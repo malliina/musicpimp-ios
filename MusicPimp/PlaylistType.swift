@@ -14,4 +14,5 @@ protocol PlaylistType {
     func add(track: Track)
     func add(tracks: [Track])
     func removeIndex(index: Int)
+    func move(src: Int, dest: Int)
 }

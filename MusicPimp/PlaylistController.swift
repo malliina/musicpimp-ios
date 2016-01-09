@@ -18,6 +18,17 @@ class PlaylistController: PimpTableController {
     var listeners: [Disposable] = []
     private var downloadState: [Track: TrackProgress] = [:]
 
+    @IBOutlet var dragButton: UIBarButtonItem!
+    
+    @IBAction func dragClicked(sender: UIBarButtonItem) {
+        let isEditing = self.tableView.editing
+        self.tableView.setEditing(!isEditing, animated: true)
+        let title = isEditing ? "Edit" : "Done"
+        dragButton.style = isEditing ? UIBarButtonItemStyle.Plain : UIBarButtonItemStyle.Done
+        Log.info("Using \(title)")
+        dragButton.title = title
+    }
+    
     override func viewDidLoad() {
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "savePlaylistAction")
         saveButton.style = UIBarButtonItemStyle.Done
@@ -104,10 +115,19 @@ class PlaylistController: PimpTableController {
     }
     
     override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-//        let sourceRow = sourceIndexPath.row
-//        let passenger = tracks[sourceRow]
-//        tracks.removeAtIndex(sourceRow)
-//        tracks.insert(passenger, destinationIndexPath.row)
+        let sourceRow = sourceIndexPath.row
+        let destinationRow = destinationIndexPath.row
+        let newTracks = Arrays.move(sourceRow, destIndex: destinationRow, xs: current.tracks)
+        let newIndex = computeNewIndex(sourceRow, dest: destinationRow)
+        current = Playlist(tracks: newTracks, index: newIndex)
+        player.playlist.move(sourceRow, dest: destinationRow)
+    }
+    
+    func computeNewIndex(src: Int, dest: Int) -> Int? {
+        if let index = current.index {
+            return LocalPlaylist.newPlaylistIndex(index, src: src, dest: dest)
+        }
+        return nil
     }
     
     func savePlaylistAction() {
@@ -178,7 +198,11 @@ class PlaylistController: PimpTableController {
             let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
             
             Util.onUiThread {
-                self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+                // The app crashed if reloading a row while concurrently dragging and dropping rows.
+                // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
+                if !self.tableView.editing {
+                    self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+                }
             }
         }
     }

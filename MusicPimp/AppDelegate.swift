@@ -34,19 +34,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    private func handleNotification(data: [NSObject: AnyObject]) {
-        if let tag = data["tag"] as? String,
-            cmd = data["cmd"] as? String,
-            endpoint = settings.endpoints().find({ $0.id == tag }) {
-            if cmd == "stop" {
-                let library = Libraries.fromEndpoint(endpoint)
-                library.stopAlarm(onAlarmError) {
-                    Log.info("Stopped alarm playback")
-                }
-            }
-        }
-    }
-    
     func onAlarmError(error: PimpError) {
         Log.error("Alarm error")
     }
@@ -118,10 +105,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         Log.info("Got remote notification")
+        handleNotification(userInfo)
         if let tag = userInfo["tag"] as? String {
             Log.info("Tag \(tag)")
         } else {
             Log.info("No tag")
+        }
+    }
+    
+    private func handleNotification(data: [NSObject: AnyObject]) {
+        Log.info("Handling notification")
+        if let tag = data["tag"] as? String,
+            cmd = data["cmd"] as? String,
+            endpoint = settings.endpoints().find({ $0.id == tag }) {
+                if cmd == "stop" {
+                    let library = Libraries.fromEndpoint(endpoint)
+                    library.stopAlarm(onAlarmError) {
+                        Log.info("Stopped alarm playback")
+                    }
+                }
         }
     }
     
@@ -139,6 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         PlayerManager.sharedInstance.active.close()
+        settings.trackHistory = Limiter.sharedInstance.history
         Log.info("Entered background")
     }
 

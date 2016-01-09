@@ -17,6 +17,10 @@ enum PimpError {
     static func stringify(error: PimpError) -> String {
         return PimpErrorUtil.stringify(error)
     }
+    
+    static func simple(message: String) -> PimpError {
+        return PimpError.SimpleError(ErrorMessage(message: message))
+    }
 }
 
 class PimpErrorUtil {
@@ -51,6 +55,7 @@ class RequestFailure {
     let url: NSURL
     let code: Int
     let data: NSData?
+    
     init(url: NSURL, code: Int, data: NSData?) {
         self.url = url
         self.code = code
@@ -60,6 +65,7 @@ class RequestFailure {
 
 class ErrorMessage {
     let message: String
+    
     init(message: String) {
         self.message = message
     }

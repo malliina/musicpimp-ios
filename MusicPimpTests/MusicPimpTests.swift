@@ -63,6 +63,21 @@ class MusicPimpTests: XCTestCase {
         }
     }
     
+    func testLimitSerialization() {
+        let settings = PimpSettings.sharedInstance
+        let json = settings.serializeHistory([])!
+        let history = settings.readHistory(json)
+        XCTAssert(history.count == 0)
+        let firstDate = NSDate() // hehe
+        let firstSeconds = round(firstDate.timeIntervalSince1970)
+        let dates = [ NSDate(), NSDate() ]
+        let json2 = settings.serializeHistory(dates)!
+        let history2 = settings.readHistory(json2)
+        XCTAssert(history2.count == dates.count)
+        let firstInt = round(history2.first!.timeIntervalSince1970)
+        XCTAssert(firstInt == firstSeconds)
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock() {

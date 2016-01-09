@@ -90,6 +90,9 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     func onTrackChanged(track: Track?) {
         currentState.track = track
         trackEvent.raise(track)
+        if let _ = track {
+            Limiter.sharedInstance.increment()
+        }
     }
     
     func onMuteToggled(mute: Bool) {

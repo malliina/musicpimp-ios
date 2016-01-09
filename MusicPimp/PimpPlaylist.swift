@@ -38,4 +38,13 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
         let payload = PimpEndpoint.valuedCommand(JsonKeys.REMOVE, value: index)
         socket.send(payload)
     }
+    
+    func move(src: Int, dest: Int) {
+        let payload: [String: AnyObject] = [
+            JsonKeys.CMD: JsonKeys.Move,
+            JsonKeys.From: src,
+            JsonKeys.To: dest
+        ]
+        socket.send(payload)
+    }
 }

@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="FontAwesome.ttf">
@@ -83,13 +84,7 @@
                             <outlet property="delegate" destination="bku-Sh-rNV" id="aJK-pP-RVU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Music" id="d75-sM-E5l">
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="hZX-WC-EUv">
-                            <connections>
-                                <action selector="refreshClicked:" destination="bku-Sh-rNV" id="EKJ-BZ-atL"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Music" id="d75-sM-E5l"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="BYT-M1-1hh" id="8DI-Dh-pnk"/>
                     </connections>
@@ -176,23 +171,33 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Playlist" id="QSG-Wx-tPA">
-                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="qLH-Bm-ThF">
-                            <connections>
-                                <segue destination="LTP-pt-TwE" kind="presentation" id="ZA0-0J-rmI"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem systemItem="bookmarks" id="qLH-Bm-ThF">
+                                <connections>
+                                    <segue destination="LTP-pt-TwE" kind="presentation" id="ZA0-0J-rmI"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Edit" id="5OI-3i-dUU">
+                                <connections>
+                                    <action selector="dragClicked:" destination="jyl-VY-HFT" id="l4c-KJ-n2t"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="eJC-k8-ihF">
                             <connections>
                                 <segue destination="tKJ-rg-KFT" kind="presentation" id="AbC-SP-p69"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="dragButton" destination="5OI-3i-dUU" id="gLV-bH-9Rn"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wP8-dQ-WtL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1488" y="1670"/>
         </scene>
-        <!--Select Playlist-->
+        <!--Select to Play-->
         <scene sceneID="F5h-sp-AQv">
             <objects>
                 <tableViewController id="tpz-Tu-7ko" customClass="SavedPlaylistsTableViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
@@ -241,7 +246,7 @@
                             <outlet property="delegate" destination="tpz-Tu-7ko" id="GlS-HB-j2B"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Select Playlist" id="hUx-aa-vFQ">
+                    <navigationItem key="navigationItem" title="Select to Play" id="hUx-aa-vFQ">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="Epc-Wt-n5f">
                             <connections>
                                 <action selector="doneButton:" destination="tpz-Tu-7ko" id="fhP-jG-lI0"/>
@@ -610,7 +615,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Alarm Clock" id="dhb-lz-VgP">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Alarm" textLabel="0OK-F2-UkL" detailTextLabel="YTS-Kr-rYx" style="IBUITableViewCellStyleValue1" id="KR7-H1-MHk">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Alarm" textLabel="0OK-F2-UkL" detailTextLabel="YTS-Kr-rYx" style="IBUITableViewCellStyleValue1" id="KR7-H1-MHk">
                                         <rect key="frame" x="0.0" y="348" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KR7-H1-MHk" id="hxu-fx-PO8">

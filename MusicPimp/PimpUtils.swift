@@ -9,6 +9,7 @@
 import Foundation
 class PimpUtils {
     let endpoint: Endpoint
+    
     init(endpoint: Endpoint) {
         self.endpoint = endpoint
     }

@@ -47,9 +47,7 @@ public class PimpLibrary: BaseLibrary {
         let json = [
             JsonKeys.PLAYLIST: SavedPlaylist.toJson(sp)
         ]
-        Log.info("Posting \(json)")
         client.pimpPost("\(Endpoints.PLAYLISTS)", payload: json, f: { (data) -> Void in
-            Log.info("Posted")
             if let jsonObj = Json.asJson(data), id = self.parsePlaylistID(jsonObj) {
                 onSuccess(id)
             } else {
@@ -60,13 +58,16 @@ public class PimpLibrary: BaseLibrary {
     
     override func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void) {
         client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: [:], f: { (data) -> Void in
-            Log.info("Deleted \(id)")
             onSuccess(())
             }, onError: onError)
     }
     
     override func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {
-        client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(term)", parse: parseTracks, f: ts, onError: onError)
+        if let encodedTerm = term.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+            client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", parse: parseTracks, f: ts, onError: onError)
+        } else {
+            onError(PimpError.simple("Invalid search term: \(term)"))
+        }
     }
     
     override func alarms(onError: PimpError -> Void, f: [Alarm] -> Void) {
@@ -80,11 +81,6 @@ public class PimpLibrary: BaseLibrary {
             JsonKeys.Enabled: alarm.enabled
         ]
         client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            if alarm.id == nil {
-                Log.info("Created new alarm")
-            } else {
-                Log.info("Saved alarm \(alarm.id)")
-            }
             onSuccess(())
             }, onError: onError)
     }

@@ -30,6 +30,7 @@ class ExternalCommandDelegate: NSObject {
             ecd.onLocalTrackChanged
         })
     }
+    
     func onLocalTrackChanged(track: Track?) {
         let center = MPNowPlayingInfoCenter.defaultCenter()
         if let track = track {
@@ -57,10 +58,12 @@ class ExternalCommandDelegate: NSObject {
         player.play()
         info("onPlay")
     }
+    
     func onPause() {
         player.pause()
         info("onPause")
     }
+    
     func onTogglePlayPause() {
         if player.current().isPlaying {
             player.pause()
@@ -69,32 +72,40 @@ class ExternalCommandDelegate: NSObject {
         }
         info("onTogglePlayPause")
     }
+    
     func onStop() {
         player.pause()
         info("onStop")
     }
+    
     func next() {
         player.next()
         info("next")
     }
+    
     func prev() {
         player.prev()
         info("prev")
     }
+    
     func skipForward(skipEvent: MPSkipIntervalCommandEvent) {
         let interval = skipEvent.interval
         info("skipForward \(interval)")
     }
+    
     func skipBackward(skipEvent: MPSkipIntervalCommandEvent) {
         info("skipBackward")
     }
+    
     func seekForward(seekEvent: MPSeekCommandEvent) {
         let t = seekEvent.type
         info("seekForward \(t)")
     }
+    
     func seekBackward(seekEvent: MPSeekCommandEvent) {
         info("seekBackward")
     }
+    
     func info(s: String) {
         Log.info(s)
     }

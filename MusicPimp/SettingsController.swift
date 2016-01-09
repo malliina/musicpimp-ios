@@ -76,7 +76,7 @@ class SettingsController: CacheInfoController {
                     text = settings.cacheEnabled ? currentLimitDescription : "off"
                 break
                 case "Alarm":
-                    text = "off"
+                    text = ""
                 break
                 default:
                 break

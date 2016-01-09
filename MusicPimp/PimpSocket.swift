@@ -9,7 +9,10 @@
 import Foundation
 
 class PimpSocket: PlayerSocket {
+    let limiter = Limiter.sharedInstance
+    
     var delegate: PlayerEventDelegate = LoggingDelegate()
+    
     init(baseURL: String, authValue: String) {
         let headers = [
             HttpClient.AUTHORIZATION: authValue,
@@ -20,8 +23,12 @@ class PimpSocket: PlayerSocket {
     
     func send(dict: [String: AnyObject]) -> Bool {
         if let payload = Json.stringifyObject(dict, prettyPrinted: false), socket = socket {
-            socket.send(payload)
-            return true
+            if limiter.isWithinLimit() {
+                socket.send(payload)
+                return true
+            } else {
+                PurchaseHelper.sharedInstance.suggestPremium()
+            }
         }
         return false
     }

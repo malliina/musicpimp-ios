@@ -7,7 +7,7 @@
 //
 import Foundation
 
-class UserPrefs: Persistence {
+public class UserPrefs: Persistence {
     static let sharedInstance = UserPrefs()
     
     let prefs = NSUserDefaults.standardUserDefaults()

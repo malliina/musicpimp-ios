@@ -28,15 +28,21 @@ class HttpClient {
         //let encodedString = url
         //let encodedString = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
         //Log.info(encodedString)
-        let nsURL = NSURL(string: url)!
-        get(nsURL, headers: headers) { (data, response, error) -> Void in
-            if let error = error {
-                onError(RequestFailure(url: nsURL, code: error.code, data: data))
-            } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
-                onResponse(data, httpResponse)
-            } else {
-                Log.error("Unable to interpret HTTP response to URL \(url)")
+//        url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URL)
+//        let encodedString = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        let encodedString: String? = url
+        if let encodedString = encodedString, nsURL = NSURL(string: encodedString) {
+            get(nsURL, headers: headers) { (data, response, error) -> Void in
+                if let error = error {
+                    onError(RequestFailure(url: nsURL, code: error.code, data: data))
+                } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
+                    onResponse(data, httpResponse)
+                } else {
+                    Log.error("Unable to interpret HTTP response to URL \(encodedString)")
+                }
             }
+        } else {
+            Log.info("Invalid URL: \(url)")
         }
     }
     func get(url: NSURL, headers: [String: String] = [:], completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {

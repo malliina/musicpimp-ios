@@ -8,10 +8,10 @@
 
 import Foundation
 
-class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none"
+public class PimpSettings {
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory"
     
-    static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
+    public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsEvent = Event<[Endpoint]>()
     let playerChanged = Event<Endpoint>()
@@ -24,6 +24,34 @@ class PimpSettings {
     
     init(impl: Persistence) {
         self.impl = impl
+    }
+    
+    var trackHistory: [NSDate] {
+        get {
+            if let historyArray = impl.load(PimpSettings.TrackHistory) {
+                return readHistory(historyArray)
+            }
+            return []
+        }
+        
+        set(newHistory) {
+            if let json = serializeHistory(newHistory) ?? serializeHistory([]) {
+                impl.save(json, key: PimpSettings.TrackHistory)
+            }
+        }
+    }
+    
+    public func readHistory(raw: String) -> [NSDate] {
+        if let json = Json.asJson(raw) as? NSDictionary,
+            history = json[PimpSettings.TrackHistory] as? [Double] {
+                return history.map { NSDate(timeIntervalSince1970: $0) }
+        }
+        return []
+    }
+    
+    public func serializeHistory(history: [NSDate]) -> String? {
+        let blob = [ PimpSettings.TrackHistory: history.map { $0.timeIntervalSince1970 } ]
+        return Json.stringifyObject(blob)
     }
     
     var changes: Event<Setting> { get { return impl.changes } }

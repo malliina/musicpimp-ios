@@ -94,6 +94,8 @@
 		7DB1B3B81B11D2B20012B8AE /* BasePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3B71B11D2B20012B8AE /* BasePlaylist.swift */; };
 		7DB1B3BA1B12013A0012B8AE /* BaseLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3B91B12013A0012B8AE /* BaseLibrary.swift */; };
 		7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */; };
+		7DB430DD1C417DAC00CF22DC /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430DC1C417DAC00CF22DC /* Limiter.swift */; };
+		7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430DE1C4186C700CF22DC /* PurchaseHelper.swift */; };
 		7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206A61A1547370032C01D /* AppDelegate.swift */; };
 		7DC206AE1A1547370032C01D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AC1A1547370032C01D /* Main.storyboard */; };
 		7DC206B01A1547370032C01D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AF1A1547370032C01D /* Images.xcassets */; };
@@ -237,6 +239,8 @@
 		7DB1B3B71B11D2B20012B8AE /* BasePlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasePlaylist.swift; sourceTree = "<group>"; };
 		7DB1B3B91B12013A0012B8AE /* BaseLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseLibrary.swift; sourceTree = "<group>"; };
 		7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpTableController.swift; sourceTree = "<group>"; };
+		7DB430DC1C417DAC00CF22DC /* Limiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
+		7DB430DE1C4186C700CF22DC /* PurchaseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseHelper.swift; sourceTree = "<group>"; };
 		7DC206A11A1547370032C01D /* MusicPimp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPimp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DC206A51A1547370032C01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DC206A61A1547370032C01D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -404,6 +408,15 @@
 			name = Local;
 			sourceTree = "<group>";
 		};
+		7DB430DB1C417D7D00CF22DC /* Iap */ = {
+			isa = PBXGroup;
+			children = (
+				7DB430DC1C417DAC00CF22DC /* Limiter.swift */,
+				7DB430DE1C4186C700CF22DC /* PurchaseHelper.swift */,
+			);
+			name = Iap;
+			sourceTree = "<group>";
+		};
 		7DBCD79E1B26120C006460D1 /* Cloud */ = {
 			isa = PBXGroup;
 			children = (
@@ -484,6 +497,7 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
+				7DB430DB1C417D7D00CF22DC /* Iap */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
@@ -761,6 +775,7 @@
 				7DE944D51BE67C2900CD441B /* Track.swift in Sources */,
 				7D6756CB1B08B24A00BC0CA9 /* PlayerManager.swift in Sources */,
 				7D0CA98A1AF68EE7008F72EC /* EndpointsController.swift in Sources */,
+				7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */,
 				7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */,
 				7DB1B3A91B10C0990012B8AE /* PimpPlayer.swift in Sources */,
 				7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */,
@@ -778,6 +793,7 @@
 				7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */,
 				7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */,
 				7D0CA9881AF68EC6008F72EC /* EditEndpointController.swift in Sources */,
+				7DB430DD1C417DAC00CF22DC /* Limiter.swift in Sources */,
 				7DC359671B35EE3E003B01B6 /* PlayerNavController.swift in Sources */,
 				7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */,
 				7D28D4271C2D8D5200B3F62F /* SearchAlarmTrackController.swift in Sources */,

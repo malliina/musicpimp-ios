@@ -8,6 +8,13 @@
 
 import Foundation
 
+class Arrays {
+    static func move<T>(srcIndex: Int, destIndex: Int, var xs: [T]) -> [T] {
+        let passenger = xs.removeAtIndex(srcIndex)
+        xs.insert(passenger, atIndex: destIndex)
+        return xs
+    }
+}
 extension Array {
     //
     // [1, 2, 3].foldRight(0)((e, acc) -> e + acc)
@@ -40,25 +47,36 @@ extension Array {
             return initial
         }
     }
+    
     func headOption() -> Element? {
         return self.first
     }
+    
     func tail() -> [Element] {
         return Array(self[1..<self.count])
     }
+    
     func take(n: Int) -> [Element] {
         let to = min(n, self.count)
         return Array(self[0..<to])
     }
+    
     func drop(n: Int) -> [Element] {
         return Array(self[n..<self.count])
     }
+    
     func find(predicate: Element -> Bool) -> Element? {
         return self.filter(predicate).headOption()
     }
+    
     func exists(predicate: Element -> Bool) -> Bool {
         return self.find(predicate) != nil
     }
+    
+    func howMany(predicate: Element -> Bool) -> Int {
+        return self.filter(predicate).count
+    }
+    
     func indexOf(predicate: Element -> Bool) -> Int? {
         for (idx, element) in self.enumerate() {
             if predicate(element) {
@@ -67,9 +85,11 @@ extension Array {
         }
         return nil
     }
+    
     func flatMapOpt<U>(f: Element -> U?) -> [U] {
         return self.map({ f($0) }).filter({ $0 != nil}).map({ $0! })
     }
+    
     func partition(f: Element -> Bool) -> ([Element], [Element]) {
         var trues: [Element] = []
         var falses: [Element] = []
@@ -82,9 +102,11 @@ extension Array {
         }
         return (trues, falses)
     }
+    
     func mkString(sep: String) -> String {
         return mkString("", sep: sep, suffix: "")
     }
+    
     func mkString(prefix: String, sep: String, suffix: String) -> String {
         let count = self.count
         var ret = count > 0 ? prefix : ""
