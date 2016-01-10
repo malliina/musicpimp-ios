@@ -36,8 +36,7 @@ class LibraryController: SearchableMusicController {
     }
     
     @IBAction func refreshClicked(sender: UIBarButtonItem) {
-        info("Refresh from \(self)")
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        info("Item clicked")
     }
     
     private func resetLibrary() {

@@ -125,11 +125,13 @@ class LocalLibrary: BaseLibrary {
         }
         return nil
     }
+    
     func parseFolder(absolute: String) -> Folder {
         let path = relativize(absolute)
         //Log.info("Abs: \(absolute), relative: \(path)")
         return Folder(id: Util.urlEncode(path), title: path.lastPathComponent(), path: path)
     }
+    
     func relativize(path: String) -> String {
         let startIdx = musicRootPath.characters.count + 1
         if(path.characters.count > startIdx) {
@@ -139,6 +141,7 @@ class LocalLibrary: BaseLibrary {
             return path
         }
     }
+    
     func duration(asset: AVAsset) -> Duration? {
         let time = asset.duration
         let secs = CMTimeGetSeconds(time)
@@ -147,21 +150,26 @@ class LocalLibrary: BaseLibrary {
         }
         return nil
     }
+    
     override func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
         f(LocalLibrary.currentVersion)
     }
+    
     override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
         let path = Util.urlDecode(id)
         let folder = parseFolder(path)
         //Log.info("ID: \(id)")
         folderAtPath(folder, f: f)
     }
+    
     func isSupportedFile(path: String) -> Bool {
         return supportedExtensions.exists({ path.hasSuffix($0) })
     }
+    
     override func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
         folderAtPath(Folder.root, f: f)
     }
+    
     func folderAtPath(folder: Folder, f: MusicFolder -> Void) {
         let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath.stringByAppendingString("/" + folder.path)
         let items: [String] = (try? fileManager.contentsOfDirectoryAtPath(absolutePath)) ?? []

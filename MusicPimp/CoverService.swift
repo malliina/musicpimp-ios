@@ -56,8 +56,8 @@ class CoverService {
     }
     
     private func coverURL(artist: String, album: String) -> NSURL {
-        let artEnc = Util.urlEncode(artist)
-        let albEnc = Util.urlEncode(album)
+        let artEnc = artist.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) ?? artist
+        let albEnc = album.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) ?? album
         return Util.url("https://api.musicpimp.org/covers?artist=\(artEnc)&album=\(albEnc)")
     }
 }
