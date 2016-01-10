@@ -47,10 +47,15 @@ public class Duration: CustomStringConvertible, Comparable {
     }
     
     private func toReadable(duration: Duration) -> String {
-        let hs = padded(countHours(duration))
+        let hours = countHours(duration)
+        let hs = padded(hours)
         let mins = padded(countMinutes(duration))
         let secs = padded(countSeconds(duration))
-        return "\(hs):\(mins):\(secs)"
+        if hours > 0 {
+            return "\(hs):\(mins):\(secs)"
+        } else {
+            return "\(mins):\(secs)"
+        }
     }
     
     private func padded(time: Int64) -> String {

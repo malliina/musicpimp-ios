@@ -55,7 +55,7 @@ class PimpSocket: PlayerSocket {
                         break
                     case JsonKeys.VOLUME_CHANGED:
                         if let volume = dict[JsonKeys.VOLUME] as? Int {
-                            delegate.onVolumeChanged(volume)
+                            delegate.onVolumeChanged(VolumeValue(volume: volume))
                         }
                         break
                     case JsonKeys.PLAYSTATE_CHANGED:

@@ -15,6 +15,7 @@ class PlayerController: UIViewController {
     var playerManager: PlayerManager { get { return PlayerManager.sharedInstance } }
     var player: PlayerType { get { return playerManager.active } }
     
+    @IBOutlet var volumeBarButton: UIBarButtonItem!
     @IBOutlet var titleLabel: UILabel!
     
     @IBOutlet var albumLabel: UILabel!
@@ -38,6 +39,8 @@ class PlayerController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let volumeIconFontSize: Int32 = 24
+        volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clearColor(), iconColor: UIColor.blueColor(), fontSize: volumeIconFontSize)
         listenWhenLoaded(player)
         playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
             pc.onNewPlayer

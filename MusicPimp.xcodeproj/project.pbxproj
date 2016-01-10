@@ -96,6 +96,8 @@
 		7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */; };
 		7DB430DD1C417DAC00CF22DC /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430DC1C417DAC00CF22DC /* Limiter.swift */; };
 		7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430DE1C4186C700CF22DC /* PurchaseHelper.swift */; };
+		7DB430E11C42B77800CF22DC /* VolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430E01C42B77800CF22DC /* VolumeViewController.swift */; };
+		7DB430E31C42BEC400CF22DC /* VolumeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430E21C42BEC400CF22DC /* VolumeValue.swift */; };
 		7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206A61A1547370032C01D /* AppDelegate.swift */; };
 		7DC206AE1A1547370032C01D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AC1A1547370032C01D /* Main.storyboard */; };
 		7DC206B01A1547370032C01D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AF1A1547370032C01D /* Images.xcassets */; };
@@ -241,6 +243,8 @@
 		7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpTableController.swift; sourceTree = "<group>"; };
 		7DB430DC1C417DAC00CF22DC /* Limiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
 		7DB430DE1C4186C700CF22DC /* PurchaseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseHelper.swift; sourceTree = "<group>"; };
+		7DB430E01C42B77800CF22DC /* VolumeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeViewController.swift; sourceTree = "<group>"; };
+		7DB430E21C42BEC400CF22DC /* VolumeValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeValue.swift; sourceTree = "<group>"; };
 		7DC206A11A1547370032C01D /* MusicPimp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPimp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DC206A51A1547370032C01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DC206A61A1547370032C01D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -459,6 +463,7 @@
 				7DC359721B371426003B01B6 /* TabNavController.swift */,
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
+				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -602,6 +607,7 @@
 				7D1608C01BE7BDB40007B943 /* Version.swift */,
 				7D28D42A1C2DD18400B3F62F /* ClockTime.swift */,
 				7D28D4321C39A5CE00B3F62F /* PushToken.swift */,
+				7DB430E21C42BEC400CF22DC /* VolumeValue.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -775,6 +781,7 @@
 				7DE944D51BE67C2900CD441B /* Track.swift in Sources */,
 				7D6756CB1B08B24A00BC0CA9 /* PlayerManager.swift in Sources */,
 				7D0CA98A1AF68EE7008F72EC /* EndpointsController.swift in Sources */,
+				7DB430E31C42BEC400CF22DC /* VolumeValue.swift in Sources */,
 				7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */,
 				7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */,
 				7DB1B3A91B10C0990012B8AE /* PimpPlayer.swift in Sources */,
@@ -818,6 +825,7 @@
 				7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */,
 				7D6756C51B0744B100BC0CA9 /* PimpError.swift in Sources */,
 				7DB1B3B81B11D2B20012B8AE /* BasePlaylist.swift in Sources */,
+				7DB430E11C42B77800CF22DC /* VolumeViewController.swift in Sources */,
 				7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */,
 				7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */,
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,

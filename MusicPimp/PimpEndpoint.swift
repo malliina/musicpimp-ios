@@ -89,7 +89,7 @@ class PimpEndpoint: PimpUtils {
             playlistIndex = dict[JsonKeys.INDEX] as? Int {
             let trackOpt = parseTrack(trackDict)
             let tracks = playlist.flatMapOpt(parseTrack)
-            return PlayerState(track: trackOpt, state: state, position: position.seconds, volume: volume, mute: mute, playlist: tracks, playlistIndex: playlistIndex)
+                return PlayerState(track: trackOpt, state: state, position: position.seconds, volume: VolumeValue(volume: volume), mute: mute, playlist: tracks, playlistIndex: playlistIndex)
         }
         return nil
     }

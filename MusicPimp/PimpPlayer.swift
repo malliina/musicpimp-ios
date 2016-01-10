@@ -12,7 +12,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     let stateEvent = Event<PlaybackState>()
     let timeEvent = Event<Duration>()
     let trackEvent = Event<Track?>()
-    let volumeEvent = Event<Int>()
+    let volumeEvent = Event<VolumeValue>()
     let muteEvent = Event<Bool>()
 
     let playlist: PlaylistType
@@ -72,6 +72,10 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         sendValued(JsonKeys.SKIP, value: index)
     }
     
+    func volume(newVolume: VolumeValue) {
+        sendValued(JsonKeys.VOLUME, value: newVolume.volume)
+    }
+    
     func sendValued(cmd: String, value: AnyObject) {
         let payload = PimpEndpoint.valuedCommand(cmd, value: value)
         socket.send(payload)
@@ -100,7 +104,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         muteEvent.raise(mute)
     }
     
-    func onVolumeChanged(volume: Int) {
+    func onVolumeChanged(volume: VolumeValue) {
         currentState.volume = volume
         volumeEvent.raise(volume)
     }

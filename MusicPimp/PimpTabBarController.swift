@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class PimpTabBarController: UITabBarController {
+    let tabIconFontSize: Int32 = 24
+    
     override func viewDidLoad() {
         let tabs = tabBar.items
         if let tabs = tabs {
@@ -35,7 +37,7 @@ class PimpTabBarController: UITabBarController {
     
     func icon(name: String, selected: Bool) -> UIImage {
         let iconColor = selected ? UIColor.blueColor() : UIColor.grayColor()
-        let image = UIImage(icon: name, backgroundColor: UIColor.clearColor(), iconColor: iconColor, fontSize: 32)
+        let image = UIImage(icon: name, backgroundColor: UIColor.clearColor(), iconColor: iconColor, fontSize: tabIconFontSize)
         return image.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
     }
 

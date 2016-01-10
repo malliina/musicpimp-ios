@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -15,19 +15,16 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FZJ-mF-W6V">
-                        <rect key="frame" x="15" y="3" width="264" height="40"/>
-                        <animations/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FZJ-mF-W6V">
+                        <rect key="frame" x="15" y="3" width="290" height="40"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="agl-kU-02J">
-                        <rect key="frame" x="15" y="41" width="264" height="2"/>
-                        <animations/>
+                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="agl-kU-02J">
+                        <rect key="frame" x="15" y="41" width="290" height="2"/>
                     </progressView>
                 </subviews>
-                <animations/>
                 <constraints>
                     <constraint firstItem="FZJ-mF-W6V" firstAttribute="trailing" secondItem="TEv-BR-OuA" secondAttribute="trailingMargin" id="5Oi-ZW-Lag"/>
                     <constraint firstItem="agl-kU-02J" firstAttribute="leading" secondItem="TEv-BR-OuA" secondAttribute="leading" constant="15" id="5fs-X9-6Z0"/>
@@ -39,7 +36,6 @@
                     <constraint firstItem="agl-kU-02J" firstAttribute="centerX" secondItem="FZJ-mF-W6V" secondAttribute="centerX" id="x14-Zk-Jmx"/>
                 </constraints>
             </tableViewCellContentView>
-            <animations/>
             <connections>
                 <outlet property="progressView" destination="agl-kU-02J" id="CWW-B3-gYE"/>
                 <outlet property="titleLabel" destination="FZJ-mF-W6V" id="eFB-eg-UaM"/>

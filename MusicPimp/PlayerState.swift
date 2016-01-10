@@ -32,12 +32,13 @@ class PlayerStateClass {
         self.playlistIndex = playlistIndex
     }
 }
+
 struct PlayerState {
-    static let empty = PlayerState(track: nil, state: .NoMedia, position: UInt(0).seconds, volume: 40, mute: false, playlist: [], playlistIndex: nil)
+    static let empty = PlayerState(track: nil, state: .NoMedia, position: Duration.Zero, volume: VolumeValue.Default, mute: false, playlist: [], playlistIndex: nil)
     var track: Track?
     var state: PlaybackState
     var position: Duration
-    var volume: Int
+    var volume: VolumeValue
     var mute: Bool
     var playlist: [Track]
     var playlistIndex: Int?

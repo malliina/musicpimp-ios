@@ -31,7 +31,7 @@ class LocalPlayer: NSObject, PlayerType {
     let stateEvent = Event<PlaybackState>()
     let timeEvent = Event<Duration>()
     let trackEvent = Event<Track?>()
-    let volumeEvent = Event<Int>()
+    let volumeEvent = Event<VolumeValue>()
     let muteEvent = Event<Bool>()
     
     func open(onOpen: () -> Void, onError: NSError -> Void) {
@@ -45,12 +45,13 @@ class LocalPlayer: NSObject, PlayerType {
     func current() -> PlayerState {
         let list = localPlaylist.current()
         let pos = position() ?? Duration.Zero
-        
+        let volFloat = player?.volume ?? 0.4
+        let vol = VolumeValue(volumeFloat: volFloat)
         return PlayerState(
             track: playerInfo?.track,
             state: playbackState(),
             position: pos,
-            volume: 40,
+            volume: vol,
             mute: false,
             playlist: list.tracks,
             playlistIndex: list.index)
@@ -90,6 +91,10 @@ class LocalPlayer: NSObject, PlayerType {
         let pos64 = Float64(position.seconds)
         let posTime = CMTimeMakeWithSeconds(pos64, scale)
         player?.seekToTime(posTime)
+    }
+    
+    func volume(newVolume: VolumeValue) {
+        player?.volume = newVolume.toFloat()
     }
     
     func duration() -> Duration? {

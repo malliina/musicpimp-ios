@@ -84,13 +84,7 @@
                             <outlet property="delegate" destination="bku-Sh-rNV" id="aJK-pP-RVU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Music" id="d75-sM-E5l">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="lze-mP-Wya">
-                            <connections>
-                                <action selector="refreshClicked:" destination="bku-Sh-rNV" id="jlk-uX-vq1"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Music" id="d75-sM-E5l"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="BYT-M1-1hh" id="8DI-Dh-pnk"/>
                     </connections>
@@ -262,7 +256,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cEn-GK-fNP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1503" y="3154"/>
+            <point key="canvasLocation" x="2315" y="3154"/>
         </scene>
         <!--New Playlist-->
         <scene sceneID="Sxx-ha-x36">
@@ -318,7 +312,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xiu-Yk-bGd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="YYY-FA-KLz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6360" y="2433"/>
+            <point key="canvasLocation" x="7172" y="2433"/>
         </scene>
         <!--Player-->
         <scene sceneID="vKf-Io-5HN">
@@ -443,7 +437,13 @@
                             <constraint firstItem="Hdm-UC-hpW" firstAttribute="trailing" secondItem="afz-lM-Twv" secondAttribute="trailingMargin" id="u6h-Ap-wPx"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Player" id="eri-hT-qjU"/>
+                    <navigationItem key="navigationItem" title="Player" id="eri-hT-qjU">
+                        <barButtonItem key="rightBarButtonItem" title="V" id="3iK-V0-dOF">
+                            <connections>
+                                <segue destination="akq-Uo-iSX" kind="presentation" id="KdG-Zc-zCM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="albumLabel" destination="Yxa-2r-5U5" id="Lvx-Q0-Ush"/>
                         <outlet property="artistLabel" destination="PEd-W1-tLX" id="djG-4y-8pu"/>
@@ -455,11 +455,67 @@
                         <outlet property="prevButton" destination="PJx-uE-1K7" id="n8x-H1-vsl"/>
                         <outlet property="seek" destination="wlc-QP-kpP" id="8qV-QF-jAU"/>
                         <outlet property="titleLabel" destination="Hdm-UC-hpW" id="8Pu-cl-dHI"/>
+                        <outlet property="volumeBarButton" destination="3iK-V0-dOF" id="O7o-Wo-nhz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hzc-Kt-tNX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="732" y="1670"/>
+        </scene>
+        <!--Set Volume-->
+        <scene sceneID="v06-6F-Vig">
+            <objects>
+                <viewController id="2Cn-go-kYH" customClass="VolumeViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Kae-ja-foz"/>
+                        <viewControllerLayoutGuide type="bottom" id="nJ2-CL-eQo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YWb-A6-9yG">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="40" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="SFq-4c-BA7">
+                                <rect key="frame" x="56" y="285" width="486" height="31"/>
+                                <connections>
+                                    <action selector="userDidChangeVolume:" destination="2Cn-go-kYH" eventType="valueChanged" id="QAh-65-OE2"/>
+                                </connections>
+                            </slider>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jv1-zX-VSM">
+                                <rect key="frame" x="548" y="285" width="32" height="30"/>
+                                <state key="normal" title="High"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iE-eZ-6w7">
+                                <rect key="frame" x="20" y="285" width="30" height="30"/>
+                                <state key="normal" title="Low"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="SFq-4c-BA7" firstAttribute="centerY" secondItem="YWb-A6-9yG" secondAttribute="centerY" id="5dm-H4-o5B"/>
+                            <constraint firstItem="jv1-zX-VSM" firstAttribute="centerY" secondItem="YWb-A6-9yG" secondAttribute="centerY" id="6Jb-eq-FCZ"/>
+                            <constraint firstItem="9iE-eZ-6w7" firstAttribute="leading" secondItem="YWb-A6-9yG" secondAttribute="leadingMargin" id="8k6-cC-1zf"/>
+                            <constraint firstItem="jv1-zX-VSM" firstAttribute="leading" secondItem="SFq-4c-BA7" secondAttribute="trailing" constant="8" id="HJs-s7-3LS"/>
+                            <constraint firstItem="9iE-eZ-6w7" firstAttribute="centerY" secondItem="YWb-A6-9yG" secondAttribute="centerY" id="QrD-J3-IaY"/>
+                            <constraint firstItem="jv1-zX-VSM" firstAttribute="trailing" secondItem="YWb-A6-9yG" secondAttribute="trailingMargin" id="cM4-2T-idA"/>
+                            <constraint firstItem="SFq-4c-BA7" firstAttribute="leading" secondItem="9iE-eZ-6w7" secondAttribute="trailing" constant="8" id="nEf-rH-4Gw"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Set Volume" id="l6I-hq-rls">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="MeM-oE-PzY">
+                            <connections>
+                                <action selector="backClicked:" destination="2Cn-go-kYH" id="Laa-Sb-Ucy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="highVolumeButton" destination="jv1-zX-VSM" id="sDQ-kZ-1DS"/>
+                        <outlet property="lowVolumeButton" destination="9iE-eZ-6w7" id="IWH-x9-p4d"/>
+                        <outlet property="volumeSlider" destination="SFq-4c-BA7" id="hJ2-gd-aLl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ecD-nh-EJp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="732" y="3130"/>
         </scene>
         <!--Pimp Tab Bar Controller-->
         <scene sceneID="H4h-bb-AyH">
@@ -788,7 +844,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eqR-eW-lmJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7100" y="2497"/>
+            <point key="canvasLocation" x="7912" y="2497"/>
         </scene>
         <!--Cache Limit Controller-->
         <scene sceneID="Uup-qF-z4t">
@@ -1290,7 +1346,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4yA-Ty-mDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2429" y="2486"/>
+            <point key="canvasLocation" x="3241" y="2486"/>
         </scene>
         <!--Choose Endpoint-->
         <scene sceneID="tyZ-6F-NTg">
@@ -1328,7 +1384,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gKW-he-Yjh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3181" y="2485"/>
+            <point key="canvasLocation" x="3993" y="2485"/>
         </scene>
         <!--Edit Alarm-->
         <scene sceneID="mMD-TM-PeM">
@@ -1601,7 +1657,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTe-Of-PGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5574" y="2433"/>
+            <point key="canvasLocation" x="6386" y="2433"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cDa-4k-ecE">
@@ -1619,7 +1675,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P73-vH-C4u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1503" y="2450"/>
+            <point key="canvasLocation" x="2315" y="2450"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S5W-f2-2Iw">
@@ -1639,13 +1695,31 @@
             </objects>
             <point key="canvasLocation" x="2429" y="3262"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KFX-Rs-A6p">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="akq-Uo-iSX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8jW-t5-Qkl">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="2Cn-go-kYH" kind="relationship" relationship="rootViewController" id="daE-pq-mHz"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R7g-yq-7DM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="732" y="2400"/>
+        </scene>
     </scenes>
     <resources>
         <image name="first" width="30" height="30"/>
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ib7-fs-6P1"/>
+        <segue reference="OkE-Zm-kz4"/>
         <segue reference="cIr-ZU-Dh7"/>
         <segue reference="lqk-yF-TrJ"/>
     </inferredMetricsTieBreakers>
