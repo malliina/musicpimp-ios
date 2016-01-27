@@ -9,21 +9,14 @@
 import Foundation
 import UIKit
 
-class PimpTableController: BaseTableController {
-    static let feedbackIdentifier = "FeedbackCell"
+class PimpTableController: FeedbackTable {
+    
     let maxNewDownloads = 2000
-    // used both for informational and error messages to the user
-    var feedbackMessage: String? = nil
     
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }
     var library: LibraryType { return libraryManager.active }
     var player: PlayerType { return playerManager.active }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
-    }
     
     func onLoadError(error: PimpError) {
         let errorMessage = PimpError.stringify(error)

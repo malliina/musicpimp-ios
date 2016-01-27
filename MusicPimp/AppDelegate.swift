@@ -30,8 +30,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let launchOptions = launchOptions {
             handleNotification(launchOptions)
         }
+        testPurchasing()
         Log.info("didFinishLaunchingWithOptions")
         return true
+    }
+    
+    func testPurchasing() {
+        PurchaseHelper.sharedInstance.validateProductIdentifiers()
     }
     
     func onAlarmError(error: PimpError) {

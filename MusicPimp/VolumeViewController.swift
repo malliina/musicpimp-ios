@@ -54,7 +54,6 @@ class VolumeViewController: UIViewController {
     @IBAction func userDidChangeVolume(sender: UISlider) {
         let percent = sender.value / (sender.maximumValue - sender.minimumValue)
         let volume = VolumeValue(volume: Int(100.0 * percent))
-        Log.info("Setting volume to \(volume.volume), slider was at \(sender.value) with min \(sender.minimumValue) and max \(sender.maximumValue)")
         player.volume(volume)
     }
     

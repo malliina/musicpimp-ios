@@ -78,6 +78,8 @@ class SettingsController: CacheInfoController {
                 case "Alarm":
                     text = ""
                 break
+                case "About":
+                    text = ""
                 default:
                 break
             }
@@ -89,7 +91,7 @@ class SettingsController: CacheInfoController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

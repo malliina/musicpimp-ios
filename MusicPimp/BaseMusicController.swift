@@ -81,6 +81,10 @@ class BaseMusicController : PimpTableController {
             sheet.addAction(downloadAction)
         }
         sheet.addAction(cancelAction)
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = self.view
+//            popover.sourceRect = self.view.frame
+        }
         self.presentViewController(sheet, animated: true, completion: nil)
     }
     

@@ -24,6 +24,9 @@
 		7D1608BF1BE7BD9E0007B943 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1608BE1BE7BD9E0007B943 /* Folder.swift */; };
 		7D1608C11BE7BDB40007B943 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1608C01BE7BDB40007B943 /* Version.swift */; };
 		7D1608C31BE7E3030007B943 /* PlaylistID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1608C21BE7E3030007B943 /* PlaylistID.swift */; };
+		7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D288ECD1C4430B300A08109 /* StoreKit.framework */; };
+		7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D288ECF1C44346E00A08109 /* IAPViewController.swift */; };
+		7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D288ED11C4435FF00A08109 /* FeedbackTable.swift */; };
 		7D28D4251C2D8BDC00B3F62F /* SearchableMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D4241C2D8BDC00B3F62F /* SearchableMusicController.swift */; };
 		7D28D4271C2D8D5200B3F62F /* SearchAlarmTrackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D4261C2D8D5200B3F62F /* SearchAlarmTrackController.swift */; };
 		7D28D4291C2D95F700B3F62F /* TrackProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28D4281C2D95F700B3F62F /* TrackProgress.swift */; };
@@ -169,6 +172,9 @@
 		7D1608BE1BE7BD9E0007B943 /* Folder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		7D1608C01BE7BDB40007B943 /* Version.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		7D1608C21BE7E3030007B943 /* PlaylistID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistID.swift; sourceTree = "<group>"; };
+		7D288ECD1C4430B300A08109 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7D288ECF1C44346E00A08109 /* IAPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPViewController.swift; sourceTree = "<group>"; };
+		7D288ED11C4435FF00A08109 /* FeedbackTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackTable.swift; sourceTree = "<group>"; };
 		7D28D4241C2D8BDC00B3F62F /* SearchableMusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchableMusicController.swift; sourceTree = "<group>"; };
 		7D28D4261C2D8D5200B3F62F /* SearchAlarmTrackController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAlarmTrackController.swift; sourceTree = "<group>"; };
 		7D28D4281C2D95F700B3F62F /* TrackProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackProgress.swift; sourceTree = "<group>"; };
@@ -291,6 +297,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */,
 				7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,6 +315,7 @@
 		0CD472E30B85058D8F8A8666 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D288ECD1C4430B300A08109 /* StoreKit.framework */,
 				7D0730221B123C7D000D416D /* libicucore.dylib */,
 				7D0730201B123C6D000D416D /* CFNetwork.framework */,
 				7D07301E1B123C5E000D416D /* Security.framework */,
@@ -464,6 +472,8 @@
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
+				7D288ECF1C44346E00A08109 /* IAPViewController.swift */,
+				7D288ED11C4435FF00A08109 /* FeedbackTable.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -739,6 +749,7 @@
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
+				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
 				7D28D4291C2D95F700B3F62F /* TrackProgress.swift in Sources */,
 				7D6756B91AFD581000BC0CA9 /* PimpJson.swift in Sources */,
@@ -808,6 +819,7 @@
 				7D6756BF1B012B9600BC0CA9 /* Json.swift in Sources */,
 				7D6756CD1B08B25400BC0CA9 /* LibraryManager.swift in Sources */,
 				7DC3596D1B371212003B01B6 /* LibraryNavController.swift in Sources */,
+				7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */,
 				7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,

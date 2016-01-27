@@ -9,7 +9,7 @@
 import Foundation
 
 class Limiter: CustomStringConvertible {
-    static let sharedInstance = Limiter(welcomeLimit: 10, limit: 4, duration: 24.hours)
+    static let sharedInstance = Limiter(welcomeLimit: 1000000, limit: 4, duration: 24.hours)
     
     let welcomeLimit: Int
     let limit: Int
