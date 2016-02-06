@@ -60,14 +60,7 @@ class LibraryController: SearchableMusicController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if musicItems.count == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            if let label = cell.textLabel {
-                label.lineBreakMode = NSLineBreakMode.ByWordWrapping
-                label.numberOfLines = 0
-                let statusMessage = feedbackMessage ?? "No tracks"
-                label.text = statusMessage
-            }
-            return cell
+            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "No tracks")
         } else {
             let item = musicItems[indexPath.row]
             let isFolder = item as? Folder != nil

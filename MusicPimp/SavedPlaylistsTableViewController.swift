@@ -18,7 +18,6 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
         feedbackMessage = "Loading playlists..."
         loadPlaylists()
     }
@@ -40,10 +39,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if playlists.count == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            let statusMessage = feedbackMessage ?? "No saved playlists"
-            cell.textLabel?.text = statusMessage
-            return cell
+            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "No saved playlists")
         } else {
             let item = playlists[indexPath.row]
             let cell = tableView.dequeueReusableCellWithIdentifier("PlaylistCell", forIndexPath: indexPath)

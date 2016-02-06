@@ -18,14 +18,17 @@ public class StorageSize: CustomStringConvertible, Comparable {
     init(bytes: Int64) {
         self.bytes = bytes
     }
+    
     convenience init(kilos: Int) {
-        self.init(bytes: Int64(kilos * StorageSize.k))
+        self.init(bytes: Int64(kilos) * StorageSize.k64)
     }
+    
     convenience init(megs: Int) {
-        self.init(kilos: Int(megs * StorageSize.k))
+        self.init(bytes: Int64(megs) * StorageSize.k64 * StorageSize.k64)
     }
+    
     convenience init(gigs: Int) {
-        self.init(megs: Int(gigs * StorageSize.k))
+        self.init(bytes: Int64(gigs) * StorageSize.k64 * StorageSize.k64 * StorageSize.k64)
     }
     
     var toBytes: Int64 { return bytes }

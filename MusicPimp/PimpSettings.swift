@@ -9,7 +9,7 @@
 import Foundation
 
 public class PimpSettings {
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory"
+    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory", IsPremium = "isPremium"
     
     public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
@@ -89,6 +89,16 @@ public class PimpSettings {
             }
         }
     }
+    
+    var isUserPremium: Bool {
+        get {
+            return impl.load(PimpSettings.IsPremium) == "true"
+        }
+        set(value) {
+            impl.save("\(value)", key: PimpSettings.IsPremium)
+        }
+    }
+    
     let defaultLimit = StorageSize(gigs: 10)
     
     var cacheLimit: StorageSize {

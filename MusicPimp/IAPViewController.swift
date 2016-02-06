@@ -13,26 +13,65 @@ import QuartzCore
 class IAPViewController: UIViewController {
     
     var products: [SKProduct] = []
+    var premiumProduct: SKProduct? = nil
     var invalidIdentifiers: [String] = []
     var request: SKProductsRequest? = nil
     
     @IBOutlet var statusLabel: UILabel!
     @IBOutlet var purchaseButton: UIButton!
+    @IBOutlet var alreadyPurchasedLabel: UILabel!
+    @IBOutlet var restoreButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        purchaseButton.backgroundColor = UIColor.greenColor()
-        purchaseButton.layer.cornerRadius = 20
-        purchaseButton.layer.borderWidth = 2
-        purchaseButton.clipsToBounds = true
-        purchaseButton.layer.borderColor = UIColor.greenColor().CGColor
-        purchaseButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        purchaseButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        togglePurchaseViews(true)
+        TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> SKPaymentTransaction -> () in
+            iap.onTransactionUpdate
+        }
+    }
+    
+    func onTransactionUpdate(transaction: SKPaymentTransaction) {
+        switch(transaction.transactionState) {
+        case SKPaymentTransactionState.Purchasing:
+            setStatus("Purchasing...")
+            break
+        case SKPaymentTransactionState.Purchased:
+            setStatus("Purchased!")
+            showUserOwnsPremium()
+            break
+        case SKPaymentTransactionState.Deferred:
+            setStatus("Deferred...")
+            break
+        case SKPaymentTransactionState.Failed:
+            setStatus("Purchase failed.")
+            break
+        case SKPaymentTransactionState.Restored:
+            setStatus("Restored.")
+            showUserOwnsPremium()
+            break
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        loadProductIdentifiers()
+        if PimpSettings.sharedInstance.isUserPremium {
+            showUserOwnsPremium()
+        } else {
+            loadProductIdentifiers()
+        }
+    }
+    
+    func showUserOwnsPremium() {
+        setStatus("You own MusicPimp Premium! Congratulations.")
+        togglePurchaseViews(true)
+    }
+    
+    func togglePurchaseViews(hidden: Bool) {
+        Util.onUiThread {
+            for view in [self.purchaseButton, self.alreadyPurchasedLabel, self.restoreButton] {
+                view.hidden = hidden
+            }
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -43,7 +82,24 @@ class IAPViewController: UIViewController {
     
     // Profit!
     @IBAction func purchaseClicked(sender: UIButton) {
+        purchase()
+    }
+    
+    @IBAction func restoreClicked(sender: UIButton) {
+        restore()
+    }
+    
+    func purchase() {
         Log.info("Starting purchase procedure...")
+        if let premiumProduct = premiumProduct {
+            let paymentRequest = SKMutablePayment(product: premiumProduct)
+            SKPaymentQueue.defaultQueue().addPayment(paymentRequest)
+        }
+    }
+    
+    func restore() {
+//        statusLabel.text = "Restoring..."
+        SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
     
     func loadProductIdentifiers() {
@@ -78,10 +134,11 @@ extension IAPViewController: SKProductsRequestDelegate {
 //                Log.error(msg)
 //                setStatus(msg)
 //            }
-            let premium = products.find { $0.productIdentifier == premiumId }
-            if let premium = premium {
-                let price = formatPrice(premium) ?? "a price"
-                setStatus("MusicPimp Premium is available for \(price).")
+            premiumProduct = products.find { $0.productIdentifier == premiumId }
+            if let premiumProduct = premiumProduct {
+                let price = formatPrice(premiumProduct) ?? "a price"
+                setStatus("MusicPimp Premium unlocks unlimited playback and is available for \(price).")
+                togglePurchaseViews(false)
             } else {
                 let msg = "MusicPimp Premium is not available. Try again later."
                 Log.error(msg)

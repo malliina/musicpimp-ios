@@ -39,7 +39,7 @@ class Limiter: CustomStringConvertible {
         let runsWithinDuration = runs.howMany { date in
             self.diff(now, since: date) < self.duration
         }
-        return runs.count < welcomeLimit || runsWithinDuration < limit
+        return PimpSettings.sharedInstance.isUserPremium || runs.count < welcomeLimit || runsWithinDuration < limit
     }
     
     func diff(date: NSDate, since: NSDate) -> Duration {

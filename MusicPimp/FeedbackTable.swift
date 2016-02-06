@@ -17,4 +17,15 @@ class FeedbackTable: BaseTableController {
         super.viewDidLoad()
         self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
     }
+    
+    func feedbackCellWithText(tableView: UITableView, indexPath: NSIndexPath, text: String) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(FeedbackTable.feedbackIdentifier, forIndexPath: indexPath)
+        if let label = cell.textLabel {
+            label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            label.numberOfLines = 0
+            label.text = text
+        }
+        return cell
+    }
+
 }

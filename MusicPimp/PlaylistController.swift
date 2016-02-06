@@ -63,10 +63,7 @@ class PlaylistController: PimpTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if tracks.count == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            let statusMessage = feedbackMessage ?? "The playlist is empty"
-            cell.textLabel?.text = statusMessage
-            return cell
+            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "The playlist is empty")
         } else {
             let index = indexPath.row
             let track = tracks[index]

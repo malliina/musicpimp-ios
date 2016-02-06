@@ -29,7 +29,6 @@ class AlarmsController : PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: PimpTableController.feedbackIdentifier)
         reloadAlarms()
         // TODO create custom UISwitch with toggle handler
         let onOff = UISwitch(frame: CGRect.zero)
@@ -130,10 +129,7 @@ class AlarmsController : PimpTableController {
             return cell
         case alarmsSection:
             if alarms.count == 0 {
-                let feedbackCell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-                let statusMessage = feedbackMessage ?? noAlarmsMessage
-                feedbackCell.textLabel?.text = statusMessage
-                return feedbackCell
+                return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? noAlarmsMessage)
             } else {
                 let item = alarms[indexPath.row]
                 let alarmCell = tableView.dequeueReusableCellWithIdentifier(alarmIdentifier, forIndexPath: indexPath)

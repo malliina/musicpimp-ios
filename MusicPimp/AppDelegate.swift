@@ -10,6 +10,7 @@ import UIKit
 import AudioToolbox
 import AVFoundation
 import MediaPlayer
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,17 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BackgroundDownloader.musicDownloader.setup()
         connectToPlayer()
         initNotifications(application)
-        test()
+//        test()
         if let launchOptions = launchOptions {
             handleNotification(launchOptions)
         }
-        testPurchasing()
+        SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
         Log.info("didFinishLaunchingWithOptions")
         return true
-    }
-    
-    func testPurchasing() {
-        PurchaseHelper.sharedInstance.validateProductIdentifiers()
     }
     
     func onAlarmError(error: PimpError) {

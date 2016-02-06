@@ -48,6 +48,8 @@ class PlayerController: UIViewController {
         setFontAwesomeTitle(pause, fontAwesomeName: "fa-play")
         setFontAwesomeTitle(prevButton, fontAwesomeName: "fa-step-backward")
         setFontAwesomeTitle(nextButton, fontAwesomeName: "fa-step-forward")
+        positionLabel.font.monospacedDigitFont
+        durationLabel.font.monospacedDigitFont
     }
     
     func updatePlayPause(isPlaying: Bool) {
@@ -243,4 +245,25 @@ extension UIColor
             return true
         }
     }
+}
+
+extension UIFont {
+    
+    var monospacedDigitFont: UIFont {
+        let oldFontDescriptor = fontDescriptor()
+        let newFontDescriptor = oldFontDescriptor.monospacedDigitFontDescriptor
+        return UIFont(descriptor: newFontDescriptor, size: 0)
+    }
+    
+}
+
+private extension UIFontDescriptor {
+    
+    var monospacedDigitFontDescriptor: UIFontDescriptor {
+        let fontDescriptorFeatureSettings = [[UIFontFeatureTypeIdentifierKey: kNumberSpacingType, UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]]
+        let fontDescriptorAttributes = [UIFontDescriptorFeatureSettingsAttribute: fontDescriptorFeatureSettings]
+        let fontDescriptor = self.fontDescriptorByAddingAttributes(fontDescriptorAttributes)
+        return fontDescriptor
+    }
+    
 }
