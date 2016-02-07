@@ -22,6 +22,7 @@ class AlarmsController : PimpTableController {
     var endpoint: Endpoint? = nil
     var pushEnabled: Bool = false
     var alarms: [Alarm] = []
+    var feedbackMessage: String? = nil
     
     var pushSwitch: UISwitch? = nil
     
@@ -95,6 +96,12 @@ class AlarmsController : PimpTableController {
     func onAlarms(alarms: [Alarm]) {
         feedbackMessage = nil
         self.alarms = alarms
+        renderTable()
+    }
+    
+    func onAlarmError(error: PimpError) {
+        let message = PimpError.stringify(error)
+        feedbackMessage = message
         renderTable()
     }
     

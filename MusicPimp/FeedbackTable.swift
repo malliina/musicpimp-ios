@@ -11,7 +11,7 @@ import Foundation
 class FeedbackTable: BaseTableController {
     static let feedbackIdentifier = "FeedbackCell"
     // used both for informational and error messages to the user
-    var feedbackMessage: String? = nil
+//    var feedbackMessage: String? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()

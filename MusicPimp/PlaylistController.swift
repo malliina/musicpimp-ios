@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class PlaylistController: PimpTableController {
+    let emptyMessage = "The playlist is empty."
     var current: Playlist = Playlist.empty
     var tracks: [Track] { get { return current.tracks } }
     var selected: MusicItem? = nil
@@ -25,7 +26,6 @@ class PlaylistController: PimpTableController {
         self.tableView.setEditing(!isEditing, animated: true)
         let title = isEditing ? "Edit" : "Done"
         dragButton.style = isEditing ? UIBarButtonItemStyle.Plain : UIBarButtonItemStyle.Done
-        Log.info("Using \(title)")
         dragButton.title = title
     }
     
@@ -62,9 +62,10 @@ class PlaylistController: PimpTableController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if tracks.count == 0 {
-            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "The playlist is empty")
-        } else {
+//        if tracks.count == 0 {
+//            tableView.backgroundView = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+//            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "The playlist is empty")
+//        } else {
             let index = indexPath.row
             let track = tracks[index]
             let isCurrent = index == current.index
@@ -86,7 +87,7 @@ class PlaylistController: PimpTableController {
             }
             return cell
 
-        }
+//        }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -104,7 +105,8 @@ class PlaylistController: PimpTableController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Max one because we display feedback to the user if the table is empty
-        return max(self.tracks.count, 1)
+//        return max(self.tracks.count, 1)
+        return self.tracks.count
     }
     
     override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -173,8 +175,7 @@ class PlaylistController: PimpTableController {
 
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
-//        info("New playlist with \(tracks.count) tracks")
-        renderTable()
+        renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
     }
     
     func onIndexChanged(index: Int?) {

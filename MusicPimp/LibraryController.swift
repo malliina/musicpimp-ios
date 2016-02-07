@@ -14,6 +14,8 @@ class LibraryController: SearchableMusicController {
     // TODO articulate these magic numbers
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
+    let loadingMessage = "Loading..."
+    let noTracksMessage = "No tracks."
     
     var folder: MusicFolder = MusicFolder.empty
     override var musicItems: [MusicItem] { return folder.items }
@@ -26,7 +28,7 @@ class LibraryController: SearchableMusicController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        feedbackMessage = "Loading..."
+        setFeedback(loadingMessage)
         if let folder = selected {
             self.navigationItem.title = folder.title
             loadFolder(folder.id)
@@ -53,37 +55,49 @@ class LibraryController: SearchableMusicController {
     }
     
     func onFolder(f: MusicFolder) {
-        feedbackMessage = nil
         folder = f
-        self.renderTable()
+        self.renderTable(computeMessage(folder))
+    }
+        
+    func computeMessage(folder: MusicFolder) -> String? {
+        let isEmpty = folder.items.isEmpty
+        if let selected = selected {
+            return isEmpty ? "No tracks in folder \(selected.title)." : nil
+        } else {
+            if isEmpty {
+                if library.isLocal {
+                    return "The music library is empty. To get started, download and install MusicPimp server from www.musicpimp.org, then add it as an endpoint under Settings."
+                } else {
+                    return "The music library is empty."
+                }
+            } else {
+                return nil
+            }
+        }
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if musicItems.count == 0 {
-            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "No tracks")
+        let item = musicItems[indexPath.row]
+        let isFolder = item as? Folder != nil
+        var cell: UITableViewCell? = nil
+        if isFolder {
+            let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
+            folderCell.textLabel?.text = item.title
+            folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell = folderCell
         } else {
-            let item = musicItems[indexPath.row]
-            let isFolder = item as? Folder != nil
-            var cell: UITableViewCell? = nil
-            if isFolder {
-                let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
-                folderCell.textLabel?.text = item.title
-                folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-                cell = folderCell
-            } else {
-                if let track = item as? Track, pimpCell = trackCell(track) {
-                    if let downloadProgress = downloadState[track] {
-                        //info("Setting progress to \(downloadProgress.progress)")
-                        pimpCell.progressView.progress = downloadProgress.progress
-                        pimpCell.progressView.hidden = false
-                    } else {
-                        pimpCell.progressView.hidden = true
-                    }
-                    cell = pimpCell
+            if let track = item as? Track, pimpCell = trackCell(track) {
+                if let downloadProgress = downloadState[track] {
+                    //info("Setting progress to \(downloadProgress.progress)")
+                    pimpCell.progressView.progress = downloadProgress.progress
+                    pimpCell.progressView.hidden = false
+                } else {
+                    pimpCell.progressView.hidden = true
                 }
+                cell = pimpCell
             }
-            return cell!
         }
+        return cell!
     }
     
     func sheetAction(title: String, item: MusicItem, onTrack: Track -> Void, onFolder: Folder -> Void) -> UIAlertAction {

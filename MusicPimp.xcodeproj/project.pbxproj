@@ -39,6 +39,7 @@
 		7D2C779D1B933C5E0066A7B5 /* more_filled-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779C1B933C5E0066A7B5 /* more_filled-100.png */; };
 		7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779E1B9352A20066A7B5 /* more_filled_darker-100.png */; };
 		7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D2C779F1B9352A20066A7B5 /* more_filled_grey-100.png */; };
+		7D31A3311C679B9A0035E9D0 /* FeedbackLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */; };
 		7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C1481BC81D4500189687 /* DBImageColorPicker.m */; };
 		7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14A1BC81D4500189687 /* UIImage+Color.m */; };
 		7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14D1BC9A63500189687 /* SearchResultsController.swift */; };
@@ -188,6 +189,7 @@
 		7D2C779C1B933C5E0066A7B5 /* more_filled-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled-100.png"; path = "MusicPimp/Assets/more_filled-100.png"; sourceTree = "<group>"; };
 		7D2C779E1B9352A20066A7B5 /* more_filled_darker-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled_darker-100.png"; path = "MusicPimp/Assets/more_filled_darker-100.png"; sourceTree = "<group>"; };
 		7D2C779F1B9352A20066A7B5 /* more_filled_grey-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "more_filled_grey-100.png"; path = "MusicPimp/Assets/more_filled_grey-100.png"; sourceTree = "<group>"; };
+		7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackLabel.swift; sourceTree = "<group>"; };
 		7D31C1471BC81D4500189687 /* DBImageColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBImageColorPicker.h; path = ColorScheme/DBImageColorPicker.h; sourceTree = "<group>"; };
 		7D31C1481BC81D4500189687 /* DBImageColorPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DBImageColorPicker.m; path = ColorScheme/DBImageColorPicker.m; sourceTree = "<group>"; };
 		7D31C1491BC81D4500189687 /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Color.h"; path = "ColorScheme/UIImage+Color.h"; sourceTree = "<group>"; };
@@ -356,6 +358,14 @@
 			name = Network;
 			sourceTree = "<group>";
 		};
+		7D31A32F1C679B750035E9D0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		7D31C1461BC81C7200189687 /* ColorScheme */ = {
 			isa = PBXGroup;
 			children = (
@@ -515,6 +525,7 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
+				7D31A32F1C679B750035E9D0 /* Views */,
 				7DB430DB1C417D7D00CF22DC /* Iap */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
@@ -771,6 +782,7 @@
 				7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */,
 				7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */,
 				7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */,
+				7D31A3311C679B9A0035E9D0 /* FeedbackLabel.swift in Sources */,
 				7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */,
 				7DB1B3A41B0E44BE0012B8AE /* Downloader.swift in Sources */,
 				7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */,

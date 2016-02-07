@@ -9,6 +9,9 @@
 import Foundation
 
 class SavedPlaylistsTableViewController: PimpTableController {
+    let emptyMessage = "No saved playlists."
+    let loadingMessage = "Loading playlists..."
+    let playlistCell = "PlaylistCell"
     
     var playlists: [SavedPlaylist] = []
     
@@ -18,34 +21,29 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        feedbackMessage = "Loading playlists..."
         loadPlaylists()
     }
     
     func loadPlaylists() {
+        setFeedback(loadingMessage)
         library.playlists(onLoadError, f: onPlaylists)
     }
     
     func onPlaylists(sps: [SavedPlaylist]) {
-        feedbackMessage = nil
         playlists = sps
-        renderTable()
+        let feedback: String? = sps.isEmpty ? "No saved playlists" : nil
+        renderTable(feedback)
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Max one because we display feedback to the user if the table is empty
-        return max(playlists.count, 1)
+        return playlists.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if playlists.count == 0 {
-            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "No saved playlists")
-        } else {
-            let item = playlists[indexPath.row]
-            let cell = tableView.dequeueReusableCellWithIdentifier("PlaylistCell", forIndexPath: indexPath)
-            cell.textLabel?.text = item.name
-            return cell
-        }
+        let item = playlists[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier(playlistCell, forIndexPath: indexPath)
+        cell.textLabel?.text = item.name
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -12,13 +12,10 @@ class BaseMusicController : PimpTableController {
     let customAccessorySize = 44
     let accessoryRightPadding = 14
     
-    var feedback: UILabel? = nil
-    
     var musicItems: [MusicItem] { return [] }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Max one because we display feedback to the user if the table is empty
-        return max(musicItems.count, 1)
+        return musicItems.count
     }
     
     func trackCell(item: Track) -> PimpMusicItemCell? {

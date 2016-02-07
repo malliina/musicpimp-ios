@@ -16,57 +16,40 @@ class SearchResultsController: BaseMusicController {
     private var latestSearchTerm: String? = nil
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if musicItems.count == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-            var noResultsMessage = "No results"
-            if let term = latestSearchTerm {
-                noResultsMessage = "No results for \(term)"
-            }
-            let statusMessage = feedbackMessage ?? noResultsMessage
-            cell.textLabel?.text = statusMessage
-            return cell
-        } else {
-            let track = results[indexPath.row]	
-            let cell = trackCell(track)
-            cell?.progressView.hidden = true
-            return cell!
-        }
+        let track = results[indexPath.row]
+        let cell = trackCell(track)
+        cell?.progressView.hidden = true
+        return cell!
     }
     
     func search(term: String) {
+        results = []
         let characters = term.characters.count
         if characters >= 2 {
             latestSearchTerm = term
             let message = "Searching for \(term)..."
             info(message)
-            self.feedbackMessage = message
-            self.renderTable()
+            self.renderTable(message)
             library.search(term, onError: { self.onSearchFailure(term, error: $0) }) { (results) -> Void in
                 Log.info("Got \(results.count) results for \(term)")
                 // only updates the UI if the response represents the latest search
                 if self.latestSearchTerm == term {
-                    self.feedbackMessage = nil
+                    let message: String? = results.isEmpty ? "No results for \(term)" : nil
                     self.results = results
-                    self.renderTable()
+                    self.renderTable(message)
                 }
             }
         } else {
-            results = []
-            if characters == 1 {
-                feedbackMessage = "Input one more character..."
-            } else {
-                feedbackMessage = "Input two or more characters"
-            }
-            self.renderTable()
+            let message = characters == 1 ? "Input one more character..." : "Input two or more characters"
+            self.renderTable(message)
         }
     }
     
     func onSearchFailure(term: String, error: PimpError) {
         let message = PimpErrorUtil.stringify(error)
-        info("Search of \(term) failed. \(message)")
+        info("Search for \(term) failed. \(message)")
         if term == latestSearchTerm {
-            self.feedbackMessage = "Search of \(term) failed"
-            self.renderTable()
+            self.renderTable("Search of \(term) failed")
         }
     }
 }

@@ -20,8 +20,7 @@ class PimpTableController: FeedbackTable {
     
     func onLoadError(error: PimpError) {
         let errorMessage = PimpError.stringify(error)
-        feedbackMessage = errorMessage
-        renderTable()
+        renderTable(errorMessage)
         onError(error)
     }
     

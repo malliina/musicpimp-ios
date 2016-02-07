@@ -25,6 +25,6 @@ class MusicFolder {
         // folders + tracks doesn't work
         let foldersAsItems: [MusicItem] = folders
         let tracksAsItems: [MusicItem] = tracks
-        items = foldersAsItems + tracksAsItems
+        self.items = foldersAsItems + tracksAsItems
     }
 }
