@@ -39,7 +39,7 @@ class Limiter: CustomStringConvertible {
         let runsWithinDuration = runs.howMany { date in
             self.diff(now, since: date) < self.duration
         }
-        Log.info("\(runsWithinDuration) runs within \(self.duration)")
+//        Log.info("\(runsWithinDuration) runs within \(self.duration)")
         return PimpSettings.sharedInstance.isUserPremium || runs.count < welcomeLimit || runsWithinDuration < limit
 //        return runs.count < welcomeLimit || runsWithinDuration < limit
     }

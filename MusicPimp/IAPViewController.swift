@@ -44,6 +44,8 @@ class IAPViewController: UIViewController {
             setStatus("Deferred...")
             break
         case SKPaymentTransactionState.Failed:
+            let domain = transaction.error?.domain ?? "unknown domain"
+            Log.info("Purchase failed. Domain: \(domain)")
             setStatus("Purchase failed.")
             break
         case SKPaymentTransactionState.Restored:
