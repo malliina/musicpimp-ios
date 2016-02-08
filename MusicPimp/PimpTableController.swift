@@ -25,13 +25,25 @@ class PimpTableController: FeedbackTable {
     }
     
     func playTracks(tracks: [Track]) {
+        limitChecked {
+            self.playTracks2(tracks)
+        }
+    }
+    
+    private func playTracks2(tracks: [Track]) {
         if let first = tracks.first {
-            playAndDownload(first)
-            addTracks(tracks.tail())
+            playAndDownload2(first)
+            addTracks2(tracks.tail())
         }
     }
     
     func addTracks(tracks: [Track]) {
+        limitChecked {
+            self.addTracks2(tracks)
+        }
+    }
+    
+    private func addTracks2(tracks: [Track]) {
         if !tracks.isEmpty {
             info("Adding \(tracks.count) tracks")
             player.playlist.add(tracks)
@@ -40,6 +52,12 @@ class PimpTableController: FeedbackTable {
     }
     
     func playAndDownload(track: Track) {
+        limitChecked {
+            self.playAndDownload2(track)
+        }
+    }
+    
+    private func playAndDownload2(track: Track) {
         player.resetAndPlay(track)
         downloadIfNeeded([track])
     }

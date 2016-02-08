@@ -159,7 +159,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onConnectionOpened() {
-        Log.info("Connected.")
+        Log.info("Connected")
     }
     func onConnectionFailure(error: NSError) {
         Log.error("Unable to connect")
@@ -172,6 +172,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        settings.trackHistory = Limiter.sharedInstance.history
+        Log.info("Terminating")
     }
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {
     //        switch event.subtype {

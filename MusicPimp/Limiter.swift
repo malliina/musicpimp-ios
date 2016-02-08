@@ -9,7 +9,7 @@
 import Foundation
 
 class Limiter: CustomStringConvertible {
-    static let sharedInstance = Limiter(welcomeLimit: 1000000, limit: 4, duration: 24.hours)
+    static let sharedInstance = Limiter(welcomeLimit: 10, limit: 4, duration: 24.hours)
     
     let welcomeLimit: Int
     let limit: Int
@@ -39,7 +39,9 @@ class Limiter: CustomStringConvertible {
         let runsWithinDuration = runs.howMany { date in
             self.diff(now, since: date) < self.duration
         }
+        Log.info("\(runsWithinDuration) runs within \(self.duration)")
         return PimpSettings.sharedInstance.isUserPremium || runs.count < welcomeLimit || runsWithinDuration < limit
+//        return runs.count < welcomeLimit || runsWithinDuration < limit
     }
     
     func diff(date: NSDate, since: NSDate) -> Duration {

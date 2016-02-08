@@ -189,15 +189,17 @@ class PlayerController: UIViewController {
         updatePlayPause(state == .Playing)
     }
     
-    @IBAction func playClicked(sender: AnyObject) {
-        player.play()
+    @IBAction func pauseClicked(sender: AnyObject) {
+        self.playOrPause()
     }
     
-    @IBAction func pauseClicked(sender: AnyObject) {
+    private func playOrPause() {
         if player.current().isPlaying {
-            player.pause()
+            self.player.pause()
         } else {
-            player.play()
+            limitChecked {
+                self.player.play()
+            }
         }
     }
     
@@ -206,18 +208,24 @@ class PlayerController: UIViewController {
         // TODO throttle
         if let pos = seekValue.seconds {
             info("Seek to \(seekValue)")
-            player.seek(pos)
+            limitChecked {
+                self.player.seek(pos)
+            }
         } else {
             Log.info("Unable to convert value to Duration: \(seekValue)")
         }
     }
     
     @IBAction func nextClicked(sender: AnyObject) {
-        player.next()
+        limitChecked {
+            self.player.next()
+        }
     }
     
     @IBAction func previousClicked(sender: AnyObject) {
-        player.prev()
+        limitChecked {
+            self.player.prev()
+        }
     }
     
     func info(s: String) {

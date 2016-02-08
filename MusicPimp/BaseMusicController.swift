@@ -90,16 +90,16 @@ class BaseMusicController : PimpTableController {
         let id = folder.id
         let message = ""
         let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let playAction = UIAlertAction(title: "Play", style: UIAlertActionStyle.Default) { (a) -> Void in
+        let playAction = UIAlertAction(title: "Play", style: UIAlertActionStyle.Default) { a -> Void in
             self.playFolder(id)
         }
-        let addAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.Default) { (a) -> Void in
+        let addAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.Default) { a -> Void in
             self.addFolder(id)
         }
-        let downloadAction = UIAlertAction(title: "Download", style: UIAlertActionStyle.Default) { (a) -> Void in
+        let downloadAction = UIAlertAction(title: "Download", style: UIAlertActionStyle.Default) { a -> Void in
             self.library.tracks(id, onError: self.onError, f: self.downloadIfNeeded)
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (a) -> Void in
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { a -> Void in
             
         }
         sheet.addAction(playAction)

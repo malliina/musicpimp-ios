@@ -150,36 +150,32 @@ class LocalPlayer: NSObject, PlayerType {
     }
     
     private func initAndPlay(track: Track) {
-        if limiter.isWithinLimit() {
-            limiter.increment()
-            info("Playing \(track.title)")
-            let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
-            let playerItem = AVPlayerItem(URL: preferredUrl)
-            playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
-            let p = AVPlayer(playerItem: playerItem)
-            notificationCenter.addObserver(self,
-                selector: "playedToEnd:",
-                name: AVPlayerItemDidPlayToEndTimeNotification,
-                object: p.currentItem)
-            notificationCenter.addObserver(self,
-                selector: "failedToPlayToEnd:",
-                name: AVPlayerItemFailedToPlayToEndTimeNotification,
-                object: p.currentItem)
-            p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &playerStatusContext)
-            playerInfo = PlayerInfo(player: p, track: track)
-            trackEvent.raise(track)
-            timeObserver = player?.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(1, 1), queue: dispatch_get_main_queue()) { (time) -> Void in
-                let secs = CMTimeGetSeconds(time)
-                if let duration = secs.seconds {
-                    self.timeEvent.raise(duration)
-                } else {
-                    Log.error("Unable to convert time to Duration: \(secs)")
-                }
+        limiter.increment()
+        info("Playing \(track.title)")
+        let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
+        let playerItem = AVPlayerItem(URL: preferredUrl)
+        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
+        let p = AVPlayer(playerItem: playerItem)
+        notificationCenter.addObserver(self,
+            selector: "playedToEnd:",
+            name: AVPlayerItemDidPlayToEndTimeNotification,
+            object: p.currentItem)
+        notificationCenter.addObserver(self,
+            selector: "failedToPlayToEnd:",
+            name: AVPlayerItemFailedToPlayToEndTimeNotification,
+            object: p.currentItem)
+        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &playerStatusContext)
+        playerInfo = PlayerInfo(player: p, track: track)
+        trackEvent.raise(track)
+        timeObserver = player?.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(1, 1), queue: dispatch_get_main_queue()) { (time) -> Void in
+            let secs = CMTimeGetSeconds(time)
+            if let duration = secs.seconds {
+                self.timeEvent.raise(duration)
+            } else {
+                Log.error("Unable to convert time to Duration: \(secs)")
             }
-            play()
-        } else {
-            PurchaseHelper.sharedInstance.suggestPremium()
         }
+        play()
     }
     
     @objc func playedToEnd(notification: NSNotification) {

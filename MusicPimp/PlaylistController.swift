@@ -62,50 +62,46 @@ class PlaylistController: PimpTableController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        if tracks.count == 0 {
-//            tableView.backgroundView = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
-//            return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? "The playlist is empty")
-//        } else {
-            let index = indexPath.row
-            let track = tracks[index]
-            let isCurrent = index == current.index
-            let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-            let cell = arr[0] as! PimpMusicItemCell
-            if let downloadProgress = downloadState[track] {
-                //info("Setting progress to \(downloadProgress.progress)")
-                cell.progressView.progress = downloadProgress.progress
-                cell.progressView.hidden = false
-            } else {
-                cell.progressView.hidden = true
-            }
-            cell.titleLabel?.text = track.title
-            if isCurrent {
-                cell.titleLabel?.textColor = UIColor.blueColor()
-                cell.selectionStyle = UITableViewCellSelectionStyle.Blue
-            } else {
-                cell.selectionStyle = UITableViewCellSelectionStyle.Default
-            }
-            return cell
-
-//        }
+        let index = indexPath.row
+        let track = tracks[index]
+        let isCurrent = index == current.index
+        let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
+        let cell = arr[0] as! PimpMusicItemCell
+        if let downloadProgress = downloadState[track] {
+            //info("Setting progress to \(downloadProgress.progress)")
+            cell.progressView.progress = downloadProgress.progress
+            cell.progressView.hidden = false
+        } else {
+            cell.progressView.hidden = true
+        }
+        cell.titleLabel?.text = track.title
+        if isCurrent {
+            cell.titleLabel?.textColor = UIColor.blueColor()
+            cell.selectionStyle = UITableViewCellSelectionStyle.Blue
+        } else {
+            cell.selectionStyle = UITableViewCellSelectionStyle.Default
+        }
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //let cell = tableView.cellForRowAtIndexPath(indexPath)
         let index = indexPath.row
-        player.skip(index)
+        limitChecked {
+            self.player.skip(index)
+        }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let index = indexPath.row
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        player.playlist.removeIndex(index)
+        limitChecked {
+            self.player.playlist.removeIndex(index)
+        }
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Max one because we display feedback to the user if the table is empty
-//        return max(self.tracks.count, 1)
         return self.tracks.count
     }
     

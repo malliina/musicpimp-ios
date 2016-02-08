@@ -11,6 +11,7 @@ import StoreKit
 import QuartzCore
 
 class IAPViewController: UIViewController {
+    static let StoryboardId = "IAPViewController"
     
     var products: [SKProduct] = []
     var premiumProduct: SKProduct? = nil

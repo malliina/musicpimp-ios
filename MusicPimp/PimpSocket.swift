@@ -23,18 +23,15 @@ class PimpSocket: PlayerSocket {
     
     func send(dict: [String: AnyObject]) -> Bool {
         if let payload = Json.stringifyObject(dict, prettyPrinted: false), socket = socket {
-            if limiter.isWithinLimit() {
-                socket.send(payload)
-                return true
-            } else {
-                PurchaseHelper.sharedInstance.suggestPremium()
-            }
+            socket.send(payload)
+            return true
         }
         return false
     }
     
     override func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
         if let message = message as? String {
+//            Log.info("Got message \(message)")
             if let dict = Json.asJson(message) as? NSDictionary {
                 if let event = dict[JsonKeys.EVENT] as? String {
                     switch event {

@@ -256,7 +256,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cEn-GK-fNP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2315" y="3154"/>
+            <point key="canvasLocation" x="3127" y="3154"/>
         </scene>
         <!--New Playlist-->
         <scene sceneID="Sxx-ha-x36">
@@ -312,7 +312,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xiu-Yk-bGd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="YYY-FA-KLz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="7984" y="2433"/>
+            <point key="canvasLocation" x="7576" y="2433"/>
         </scene>
         <!--Player-->
         <scene sceneID="vKf-Io-5HN">
@@ -754,7 +754,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="gg5-Ho-NnV" kind="show" id="Xcg-Bw-akv"/>
+                                            <segue destination="gg5-Ho-NnV" kind="show" id="ONp-jQ-sx5"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -896,7 +896,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eqR-eW-lmJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8724" y="2497"/>
+            <point key="canvasLocation" x="9536" y="2497"/>
         </scene>
         <!--Cache Limit Controller-->
         <scene sceneID="Uup-qF-z4t">
@@ -1062,7 +1062,6 @@
                                         <segments>
                                             <segment title="MusicPimp"/>
                                             <segment title="Cloud"/>
-                                            <segment title="Subsonic"/>
                                         </segments>
                                         <connections>
                                             <action selector="serverTypeChanged:" destination="snm-uf-AuH" eventType="valueChanged" id="xJu-sd-9cn"/>
@@ -1409,7 +1408,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4yA-Ty-mDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4053" y="2486"/>
+            <point key="canvasLocation" x="4865" y="2486"/>
         </scene>
         <!--Choose Endpoint-->
         <scene sceneID="tyZ-6F-NTg">
@@ -1447,7 +1446,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gKW-he-Yjh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4805" y="2485"/>
+            <point key="canvasLocation" x="5617" y="2485"/>
         </scene>
         <!--Edit Alarm-->
         <scene sceneID="mMD-TM-PeM">
@@ -1610,7 +1609,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CbF-2G-qg2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="hcv-Or-HI9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3166" y="3262"/>
+            <point key="canvasLocation" x="2429" y="4048"/>
         </scene>
         <!--Search Alarm Track Controller-->
         <scene sceneID="lIB-0x-Ump">
@@ -1664,7 +1663,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ogz-I3-SpU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3166" y="4009"/>
+            <point key="canvasLocation" x="3580" y="4117"/>
         </scene>
         <!--Repeat Days Controller-->
         <scene sceneID="pOZ-Fa-rsT">
@@ -1720,12 +1719,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTe-Of-PGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7198" y="2433"/>
+            <point key="canvasLocation" x="6806" y="2433"/>
         </scene>
         <!--MusicPimp Premium-->
         <scene sceneID="lcO-k5-nuo">
             <objects>
-                <viewController id="gg5-Ho-NnV" customClass="IAPViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="IAPViewController" id="gg5-Ho-NnV" customClass="IAPViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0Xv-FM-vBv"/>
                         <viewControllerLayoutGuide type="bottom" id="vjt-wf-GnS"/>
@@ -1802,7 +1801,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wr2-zx-LyH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2182" y="2441"/>
+            <point key="canvasLocation" x="2298" y="2503"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cDa-4k-ecE">
@@ -1820,7 +1819,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P73-vH-C4u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3127" y="2450"/>
+            <point key="canvasLocation" x="3939" y="2450"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S5W-f2-2Iw">

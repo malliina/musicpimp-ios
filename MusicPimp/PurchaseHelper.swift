@@ -12,13 +12,8 @@ import StoreKit
 class PurchaseHelper: NSObject {
     static let sharedInstance = PurchaseHelper()
     static let PremiumId = "org.musicpimp.premium"
-    
-    let limiter = Limiter.sharedInstance
+
     var request: SKProductsRequest? = nil
-    
-    func suggestPremium() {
-        Log.error("Playback limit of \(limiter.description) reached")
-    }
     
     func validateProductIdentifiers() {
         let request = SKProductsRequest(productIdentifiers: [ PurchaseHelper.PremiumId ])
