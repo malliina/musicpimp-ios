@@ -37,15 +37,30 @@ class Util {
         dispatch_async(GlobalBackgroundQueue, f)
     }
     
-    class func urlDecode(s: String) -> String {
+    class func urlDecodeWithPlus(s: String) -> String {
         let unplussed = s.stringByReplacingOccurrencesOfString("+", withString: " ")
         return unplussed.stringByRemovingPercentEncoding ?? unplussed
     }
     
-    class func urlEncode(s: String) -> String {
+    class func urlEncodePathWithPlus(s: String) -> String {
         let plussed = s.stringByReplacingOccurrencesOfString(" ", withString: "+")
-//        plussed.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters: NSCharacterSet.URLPathAllowedCharacterSet())
-        return plussed.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding) ?? plussed
+        return urlEncodePath(plussed)
+    }
+    
+    class func urlEncodeHost(s: String) -> String {
+        return encodeWith(s, cs: .URLHostAllowedCharacterSet())
+    }
+    
+    class func urlEncodePath(s: String) -> String {
+        return encodeWith(s, cs: .URLPathAllowedCharacterSet())
+    }
+    
+    class func urlEncodeQueryString(s: String) -> String {
+        return encodeWith(s, cs: .URLQueryAllowedCharacterSet())
+    }
+    
+    private class func encodeWith(s: String, cs: NSCharacterSet) -> String {
+        return s.stringByAddingPercentEncodingWithAllowedCharacters(cs) ?? s
     }
     
     static func url(s: String) -> NSURL {
@@ -56,11 +71,11 @@ class Util {
 extension NSData {
     // thanks Martin, http://codereview.stackexchange.com/a/86613
     func hexString() -> String {
-        // "Array" of all bytes:
-        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count:self.length)
-        // Array of hex strings, one for each byte:
+        // "Array" of all bytes
+        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count: self.length)
+        // Array of hex strings, one for each byte
         let hexBytes = bytes.map { String(format: "%02hhx", $0) }
-        // Concatenate all hex strings:
+        // Concatenates all hex strings
         return hexBytes.joinWithSeparator("")
     }
 }

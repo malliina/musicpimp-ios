@@ -15,6 +15,8 @@ import StoreKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     let settings = PimpSettings.sharedInstance
+    let notifications = PimpNotifications.sharedInstance
+    
     var window: UIWindow?
     
     let audioSession = AVAudioSession.sharedInstance()
@@ -26,23 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         connectToPlayer()
-        initNotifications(application)
-//        test()
+        notifications.initNotifications(application)
         if let launchOptions = launchOptions {
-            handleNotification(launchOptions)
+            notifications.handleNotification(launchOptions)
         }
         SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
         Log.info("didFinishLaunchingWithOptions")
         return true
     }
     
-    func onAlarmError(error: PimpError) {
-        Log.error("Alarm error")
-    }
-    
     private func test() {
-        //let i = Duration(hours: 5)
-        //CoverService.sharedInstance.cover("iron maiden", album: "somewhere in time")
         let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
         for dir in contents.folders {
@@ -83,50 +78,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         Log.info("Audio session initialized")
     }
-
-    func initNotifications(application: UIApplication) {
-        // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW1
-        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        application.registerUserNotificationSettings(notificationSettings)
-        application.registerForRemoteNotifications()
-    }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        let hexToken = deviceToken.hexString()
-        let token = PushToken(token: hexToken)
-        Log.info("Got device token \(hexToken)")
-        settings.pushToken = token
-        settings.notificationsAllowed = true
+        notifications.didRegister(deviceToken)
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        Log.error("Remote notifications registration failure code \(error.code) \(error.description)")
-        settings.pushToken = PushToken(token: PimpSettings.NoPushTokenValue)
-        settings.notificationsAllowed = false
+        notifications.didFailToRegister(error)
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        Log.info("Got remote notification")
-        handleNotification(userInfo)
-        if let tag = userInfo["tag"] as? String {
-            Log.info("Tag \(tag)")
-        } else {
-            Log.info("No tag")
-        }
-    }
-    
-    private func handleNotification(data: [NSObject: AnyObject]) {
-        Log.info("Handling notification")
-        if let tag = data["tag"] as? String,
-            cmd = data["cmd"] as? String,
-            endpoint = settings.endpoints().find({ $0.id == tag }) {
-                if cmd == "stop" {
-                    let library = Libraries.fromEndpoint(endpoint)
-                    library.stopAlarm(onAlarmError) {
-                        Log.info("Stopped alarm playback")
-                    }
-                }
-        }
+        notifications.handleNotification(userInfo)
     }
     
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {

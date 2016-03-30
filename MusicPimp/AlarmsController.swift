@@ -33,7 +33,7 @@ class AlarmsController : PimpTableController {
         reloadAlarms()
         // TODO create custom UISwitch with toggle handler
         let onOff = UISwitch(frame: CGRect.zero)
-        onOff.addTarget(self, action: Selector("didToggleNotifications:"), forControlEvents: UIControlEvents.ValueChanged)
+        onOff.addTarget(self, action: #selector(AlarmsController.didToggleNotifications(_:)), forControlEvents: UIControlEvents.ValueChanged)
         pushSwitch = onOff
         settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> Endpoint -> () in
             ac.didChangeDefaultAlarmEndpoint

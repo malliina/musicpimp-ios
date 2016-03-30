@@ -81,8 +81,8 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     
     func move(src: Int, dest: Int) {
         if src != dest {
-            let newTracks = Arrays.move(src, destIndex: dest, xs: ts)
-            ts = newTracks
+            //let newTracks = Arrays.move(src, destIndex: dest, xs: ts)
+            ts = Arrays.move(src, destIndex: dest, xs: ts)
             if let p = p {
                 self.p = LocalPlaylist.newPlaylistIndex(p, src: src, dest: dest)
             }

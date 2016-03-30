@@ -9,12 +9,14 @@
 import Foundation
 
 class Arrays {
-    static func move<T>(srcIndex: Int, destIndex: Int, var xs: [T]) -> [T] {
-        let passenger = xs.removeAtIndex(srcIndex)
-        xs.insert(passenger, atIndex: destIndex)
-        return xs
+    static func move<T>(srcIndex: Int, destIndex: Int, xs: [T]) -> [T] {
+        var newXs = xs
+        let passenger = newXs.removeAtIndex(srcIndex)
+        newXs.insert(passenger, atIndex: destIndex)
+        return newXs
     }
 }
+
 extension Array {
     //
     // [1, 2, 3].foldRight(0)((e, acc) -> e + acc)

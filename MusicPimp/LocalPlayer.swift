@@ -157,11 +157,11 @@ class LocalPlayer: NSObject, PlayerType {
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,
-            selector: "playedToEnd:",
+            selector: #selector(LocalPlayer.playedToEnd(_:)),
             name: AVPlayerItemDidPlayToEndTimeNotification,
             object: p.currentItem)
         notificationCenter.addObserver(self,
-            selector: "failedToPlayToEnd:",
+            selector: #selector(LocalPlayer.failedToPlayToEnd(_:)),
             name: AVPlayerItemFailedToPlayToEndTimeNotification,
             object: p.currentItem)
         p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &playerStatusContext)

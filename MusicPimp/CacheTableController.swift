@@ -20,7 +20,7 @@ class CacheTableController: CacheInfoController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let onOff = UISwitch(frame: CGRect.zero)
-        onOff.addTarget(self, action: Selector("didToggleCache:"), forControlEvents: UIControlEvents.ValueChanged)
+        onOff.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), forControlEvents: UIControlEvents.ValueChanged)
         onOff.on = settings.cacheEnabled
         onOffSwitch = onOff
         currentLimitLabel.text = currentLimitDescription

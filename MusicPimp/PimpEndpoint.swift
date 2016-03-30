@@ -66,7 +66,7 @@ class PimpEndpoint: PimpUtils {
                     album: album,
                     artist: artist,
                     duration: duration.seconds,
-                    path: Util.urlDecode(id),
+                    path: Util.urlDecodeWithPlus(id),
                     size: size,
                     url: urlMaker(id))
         }

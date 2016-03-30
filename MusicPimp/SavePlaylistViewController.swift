@@ -29,7 +29,7 @@ class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         nameText.delegate = self
         checkValidName()
-        nameText.addTarget(self, action: Selector("textFieldDidChange:"), forControlEvents: UIControlEvents.EditingChanged)
+        nameText.addTarget(self, action: #selector(SavePlaylistViewController.textFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

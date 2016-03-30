@@ -15,17 +15,17 @@ class ExternalCommandDelegate: NSObject {
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     
     func initialize(commandCenter: MPRemoteCommandCenter) {
-        commandCenter.playCommand.addTarget(self, action: "onPlay")
-        commandCenter.pauseCommand.addTarget(self, action: "onPause")
-        commandCenter.togglePlayPauseCommand.addTarget(self, action: "onTogglePlayPause")
-        commandCenter.stopCommand.addTarget(self, action: "onStop")
-        commandCenter.nextTrackCommand.addTarget(self, action: "next")
-        commandCenter.previousTrackCommand.addTarget(self, action: "prev")
+        commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
+        commandCenter.pauseCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPause))
+        commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onTogglePlayPause))
+        commandCenter.stopCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onStop))
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(ExternalCommandDelegate.next))
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(ExternalCommandDelegate.prev))
         // these two will visually replace the "prev" and "next" buttons, which I don't want, so we exclude them
 //        commandCenter.skipForwardCommand.addTarget(self, action: "skipForward:")
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
-        commandCenter.seekForwardCommand.addTarget(self, action: "seekForward:")
-        commandCenter.seekBackwardCommand.addTarget(self, action: "seekBackward:")
+        commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
+        commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
         LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> Track? -> () in
             ecd.onLocalTrackChanged
         })

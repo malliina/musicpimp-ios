@@ -25,7 +25,7 @@ class LibraryController: SearchableMusicController {
     
     private var downloadUpdates: Disposable? = nil
     private var downloadState: [Track: TrackProgress] = [:]
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setFeedback(loadingMessage)
@@ -58,15 +58,17 @@ class LibraryController: SearchableMusicController {
         folder = f
         self.renderTable(computeMessage(folder))
     }
-        
+    
+    //
     func computeMessage(folder: MusicFolder) -> String? {
         let isEmpty = folder.items.isEmpty
         if let selected = selected {
             return isEmpty ? "No tracks in folder \(selected.title)." : nil
         } else {
+            // selected == nil means we are in the root library folder
             if isEmpty {
                 if library.isLocal {
-                    return "The music library is empty. To get started, download and install MusicPimp server from www.musicpimp.org, then add it as an endpoint under Settings."
+                    return "The music library is empty. To get started, download and install the MusicPimp server from www.musicpimp.org, then add it as a music source under Settings."
                 } else {
                     return "The music library is empty."
                 }

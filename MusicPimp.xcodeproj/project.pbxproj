@@ -84,6 +84,7 @@
 		7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2901AF3B73D001F0A65 /* Event.swift */; };
 		7D78C2951AF3CCA8001F0A65 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78C2941AF3CCA8001F0A65 /* Disposable.swift */; };
 		7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */; };
+		7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */; };
 		7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A61AD972A800D5CDDF /* Log.swift */; };
 		7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */; };
 		7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */; };
@@ -236,6 +237,7 @@
 		7D78C2901AF3B73D001F0A65 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7D78C2941AF3CCA8001F0A65 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionObserver.swift; sourceTree = "<group>"; };
+		7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpNotifications.swift; sourceTree = "<group>"; };
 		7D9E48A61AD972A800D5CDDF /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPlayer.swift; sourceTree = "<group>"; };
 		7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
@@ -525,8 +527,6 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
-				7D31A32F1C679B750035E9D0 /* Views */,
-				7DB430DB1C417D7D00CF22DC /* Iap */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
@@ -539,6 +539,7 @@
 				7D6756B41AFD4D8A00BC0CA9 /* FilePersistence.swift */,
 				7D4FF8E01B41AC8700C2D634 /* Files */,
 				7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */,
+				7DB430DB1C417D7D00CF22DC /* Iap */,
 				7DC206AF1A1547370032C01D /* Images.xcassets */,
 				7D6756BE1B012B9600BC0CA9 /* Json.swift */,
 				7DC206B11A1547370032C01D /* LaunchScreen.xib */,
@@ -566,6 +567,8 @@
 				7D6756BA1B01092E00BC0CA9 /* UserPrefs.swift */,
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
+				7D31A32F1C679B750035E9D0 /* Views */,
+				7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
 				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
+				7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
 				7D28D4291C2D95F700B3F62F /* TrackProgress.swift in Sources */,
 				7D6756B91AFD581000BC0CA9 /* PimpJson.swift in Sources */,
@@ -1026,10 +1030,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1046,10 +1046,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";

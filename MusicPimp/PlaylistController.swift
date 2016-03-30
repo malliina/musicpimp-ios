@@ -30,7 +30,7 @@ class PlaylistController: PimpTableController {
     }
     
     override func viewDidLoad() {
-        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "savePlaylistAction")
+        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(PlaylistController.savePlaylistAction))
         saveButton.style = UIBarButtonItemStyle.Done
         // the first element in the array is right-most
         self.navigationItem.rightBarButtonItems = [ saveButton ]

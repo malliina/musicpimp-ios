@@ -31,7 +31,7 @@ class BaseMusicController : PimpTableController {
                 button.backgroundColor = UIColor.clearColor()
                 button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat(accessoryRightPadding))
                 button.contentMode = UIViewContentMode.ScaleAspectFit
-                button.addTarget(self, action: "accessoryClicked:event:", forControlEvents: UIControlEvents.TouchUpInside)
+                button.addTarget(self, action: #selector(BaseMusicController.accessoryClicked(_:event:)), forControlEvents: UIControlEvents.TouchUpInside)
                 pimpCell.accessoryView = button
                 return pimpCell
             }

@@ -115,7 +115,7 @@ class LocalLibrary: BaseLibrary {
             let actualArtist = artist ?? relativeDir.stringByDeletingLastPathComponent().lastPathComponent()
                 
             if let dur = duration(asset) {
-                return Track(id: Util.urlEncode(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
+                return Track(id: Util.urlEncodePathWithPlus(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
             } else {
                 Log.error("Unable to parse duration and URL of \(absolutePath)")
             }
@@ -129,7 +129,7 @@ class LocalLibrary: BaseLibrary {
     func parseFolder(absolute: String) -> Folder {
         let path = relativize(absolute)
         //Log.info("Abs: \(absolute), relative: \(path)")
-        return Folder(id: Util.urlEncode(path), title: path.lastPathComponent(), path: path)
+        return Folder(id: Util.urlEncodePathWithPlus(path), title: path.lastPathComponent(), path: path)
     }
     
     func relativize(path: String) -> String {
@@ -156,7 +156,7 @@ class LocalLibrary: BaseLibrary {
     }
     
     override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
-        let path = Util.urlDecode(id)
+        let path = Util.urlDecodeWithPlus(id)
         let folder = parseFolder(path)
         //Log.info("ID: \(id)")
         folderAtPath(folder, f: f)
