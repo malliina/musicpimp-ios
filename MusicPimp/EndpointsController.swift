@@ -14,6 +14,8 @@ class EndpointsController: BaseTableController {
         
     var endpoints: [Endpoint] = []
     
+    var subscription: Disposable? = nil
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         endpoints = settings.endpoints()

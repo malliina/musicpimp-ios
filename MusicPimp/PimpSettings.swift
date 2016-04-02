@@ -14,8 +14,8 @@ public class PimpSettings {
     public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsEvent = Event<[Endpoint]>()
-    let playerChanged = Event<Endpoint>()
-    let libraryChanged = Event<Endpoint>()
+//    let playerChanged = Event<Endpoint>()
+//    let libraryChanged = Event<Endpoint>()
     let cacheLimitChanged = Event<StorageSize>()
     let cacheEnabledChanged = Event<Bool>()
     let defaultAlarmEndpointChanged = Event<Endpoint>()

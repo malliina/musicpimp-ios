@@ -23,6 +23,7 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     @IBOutlet var addressLabel: UILabel!
     @IBOutlet var cloudIDField: UITextField!
     @IBOutlet var cloudIDLabel: UILabel!
+    @IBOutlet var activateSwitch: UISwitch!
     @IBOutlet var feedbackText: UITextView!
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -47,8 +48,16 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if saveButton === sender {
-            if let endpoint = parseEndpoint() {
-                PimpSettings.sharedInstance.save(endpoint)
+            saveChanges()
+        }
+    }
+    
+    func saveChanges() {
+        if let endpoint = parseEndpoint() {
+            PimpSettings.sharedInstance.save(endpoint)
+            if activateSwitch.on {
+                Log.info("Activating \(endpoint.name)")
+                LibraryManager.sharedInstance.saveActive(endpoint)
             }
         }
     }

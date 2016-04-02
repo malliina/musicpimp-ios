@@ -12,4 +12,18 @@ import UIKit
 class SourceSettingController: EndpointSelectController {
     override var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
     override var segueID: String { get { return "MusicSource" } }
+    
+    var subscription: Disposable? = nil
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> Endpoint -> () in
+            ssc.libraryChanged
+        }
+    }
+    
+    func libraryChanged(e: Endpoint) {
+        updateSelected(e)
+        renderTable()
+    }
 }

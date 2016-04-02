@@ -34,7 +34,11 @@ class EndpointSelectController: BaseTableController {
     
     override func viewDidLoad() {
         endpoints = settings.endpoints()
-        let id = manager.loadActive().id
+        updateSelected(manager.loadActive())
+    }
+    
+    func updateSelected(selected: Endpoint) {
+        let id = selected.id
         if id == Endpoint.Local.id {
             selectedIndex = 0
         } else {
@@ -42,6 +46,11 @@ class EndpointSelectController: BaseTableController {
                 selectedIndex = idx + 1
             }
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        renderTable()
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
