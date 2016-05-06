@@ -123,6 +123,7 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     func feedback(f: String) {
         Util.onUiThread {
             self.feedbackText.text = f
+            self.feedbackText.font = UIFont.systemFontOfSize(16)
         }
     }
     
