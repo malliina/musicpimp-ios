@@ -156,8 +156,9 @@ class EditAlarmTableViewController: BaseTableController {
                 tableView.deselectRowAtIndexPath(indexPath, animated: false)
                 if let track = mutableAlarm?.track, endpoint = endpoint {
                     let player = Players.fromEndpoint(endpoint)
-                    Players.fromEndpoint(endpoint).open({ () -> Void in
-                        player.resetAndPlay(track)
+                    player.open({ () -> Void in
+                        let success = player.resetAndPlay(track)
+                        Log.info("Playing \(track.title): \(success)")
                         player.close()
                         }, onError: onConnectError)
                 }

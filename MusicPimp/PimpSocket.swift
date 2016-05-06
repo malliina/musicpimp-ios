@@ -24,9 +24,12 @@ class PimpSocket: PlayerSocket {
     func send(dict: [String: AnyObject]) -> Bool {
         if let payload = Json.stringifyObject(dict, prettyPrinted: false), socket = socket {
             socket.send(payload)
+            //Log.info("Sent \(payload) to \(baseURL))")
             return true
+        } else {
+            Log.error("Unable to send payload over socket")
+            return false
         }
-        return false
     }
     
     override func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {

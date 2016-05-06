@@ -137,16 +137,17 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     
-    func resetAndPlay(track: Track) {
-        resetAndPlay([track])
+    func resetAndPlay(track: Track) -> Bool {
+        return resetAndPlay([track])
     }
     
-    func resetAndPlay(tracks: [Track]) {
+    func resetAndPlay(tracks: [Track]) -> Bool {
         closePlayer()
         localPlaylist.reset(tracks)
         if let first = tracks.first {
             initAndPlay(first)
         }
+        return true
     }
     
     private func initAndPlay(track: Track) {

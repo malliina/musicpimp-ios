@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 protocol PlayerType {
     var isLocal: Bool { get }
     var stateEvent: Event<PlaybackState> { get }
@@ -21,7 +22,7 @@ protocol PlayerType {
     
     func current() -> PlayerState
     
-    func resetAndPlay(track: Track)
+    func resetAndPlay(track: Track) -> Bool
     
     func play()
     

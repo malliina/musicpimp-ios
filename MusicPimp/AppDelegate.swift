@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectToPlayer()
         notifications.initNotifications(application)
         if let launchOptions = launchOptions {
-            notifications.handleNotification(launchOptions)
+            notifications.handleNotification(application, data: launchOptions)
         }
         SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
         Log.info("didFinishLaunchingWithOptions")
@@ -88,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        notifications.handleNotification(userInfo)
+        notifications.handleNotification(application, data: userInfo)
     }
     
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {

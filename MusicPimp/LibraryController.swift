@@ -78,6 +78,11 @@ class LibraryController: SearchableMusicController {
         }
     }
     
+    override func clearItems() {
+        // TODO keep folder path, but don't show items
+        //folder = MusicFolder.empty
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil

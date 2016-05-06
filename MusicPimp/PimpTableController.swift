@@ -19,9 +19,14 @@ class PimpTableController: FeedbackTable {
     var player: PlayerType { return playerManager.active }
     
     func onLoadError(error: PimpError) {
+        clearItems()
         let errorMessage = PimpError.stringify(error)
         renderTable(errorMessage)
         onError(error)
+    }
+    
+    func clearItems() {
+        
     }
     
     func playTracks(tracks: [Track]) {

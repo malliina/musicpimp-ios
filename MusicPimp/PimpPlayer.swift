@@ -41,9 +41,9 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         return currentState
     }
     
-    func resetAndPlay(track: Track) {
+    func resetAndPlay(track: Track) -> Bool {
 //        Limiter.sharedInstance.increment()
-        socket.send([
+        return socket.send([
             JsonKeys.CMD: JsonKeys.PLAY,
             JsonKeys.TRACK: track.id
         ])

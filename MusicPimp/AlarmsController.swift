@@ -81,7 +81,7 @@ class AlarmsController : PimpTableController {
     }
     
     func loadAlarms(library: LibraryType) {
-        library.alarms(onLoadError, f: onAlarms)
+        library.alarms(onAlarmError, f: onAlarms)
     }
     
     func saveAndReload(alarm: Alarm) {

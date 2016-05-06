@@ -36,7 +36,7 @@ public class PimpNotifications {
         settings.notificationsAllowed = false
     }
     
-    func handleNotification(data: [NSObject: AnyObject]) {
+    func handleNotification(app: UIApplication, data: [NSObject: AnyObject]) {
         Log.info("Handling notification")
         if let tag = data["tag"] as? String,
             cmd = data["cmd"] as? String,
@@ -46,6 +46,7 @@ public class PimpNotifications {
                 library.stopAlarm(onAlarmError) {
                     Log.info("Stopped alarm playback")
                 }
+                app.applicationIconBadgeNumber = 0
             }
         }
     }
