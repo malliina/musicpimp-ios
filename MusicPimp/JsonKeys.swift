@@ -70,5 +70,8 @@ class JsonKeys {
     ApnsAdd = "apns_add",
     ApnsRemove = "apns_remove",
     ApnsTag = "tag",
-    Id = "id"
+    Id = "id",
+    Populars = "populars",
+    Recents = "recents",
+    PlaybackCount = "playbackCount"
 }

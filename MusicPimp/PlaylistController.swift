@@ -9,15 +9,32 @@
 import Foundation
 import UIKit
 
+enum ListMode: Int {
+    case Playlist = 0, Popular, Recent
+}
+
 class PlaylistController: PimpTableController {
     let emptyMessage = "The playlist is empty."
+    var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
-    var tracks: [Track] { get { return current.tracks } }
+    var recent: [Track] = []
+    var popular: [Track] = []
+    var tracks: [Track] {
+        get {
+            switch mode {
+            case .Playlist: return current.tracks
+            case .Popular: return popular
+            case .Recent: return recent
+            }
+        }
+    }
     var selected: MusicItem? = nil
     // non-nil if the playlist is server-loaded
     var savedPlaylist: SavedPlaylist? = nil
     var listeners: [Disposable] = []
     private var downloadState: [Track: TrackProgress] = [:]
+    
+    var searchController: UISearchController!
 
     @IBOutlet var dragButton: UIBarButtonItem!
     
@@ -34,7 +51,30 @@ class PlaylistController: PimpTableController {
         saveButton.style = UIBarButtonItemStyle.Done
         // the first element in the array is right-most
         self.navigationItem.rightBarButtonItems = [ saveButton ]
+        tableView.tableHeaderView = initScope()
         super.viewDidLoad()
+    }
+    
+    private func initScope() -> UISegmentedControl {
+        let ctrl = UISegmentedControl(items: [ "Custom", "Popular", "Recent" ])
+        ctrl.selectedSegmentIndex = 0
+        ctrl.addTarget(self, action: #selector(PlaylistController.segmentChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return ctrl
+    }
+    
+    func segmentChanged(ctrl: UISegmentedControl) {
+        let idx = ctrl.selectedSegmentIndex
+        info("Segment index: \(idx)")
+        mode = ListMode(rawValue: idx) ?? .Playlist
+        maybeRefresh(mode)
+    }
+    
+    func maybeRefresh(mode: ListMode) {
+        switch mode {
+        case .Playlist: break
+        case .Popular: library.popular(100, onError: onError, f: onPopularsLoaded)
+        case .Recent: library.recent(100, onError: onError, f: onRecentsLoaded)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -171,6 +211,24 @@ class PlaylistController: PimpTableController {
 
     func onNewPlaylist(playlist: Playlist) {
         self.current = playlist
+        reRenderTable()
+    }
+    
+    func onRecentsLoaded(recents: [RecentEntry]) {
+        recent = recents.map { $0.track }
+        if mode == .Recent {
+            reRenderTable()
+        }
+    }
+    
+    func onPopularsLoaded(populars: [PopularEntry]) {
+        popular = populars.map { $0.track }
+        if mode == .Popular {
+            reRenderTable()
+        }
+    }
+        
+    func reRenderTable() {
         renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
     }
     

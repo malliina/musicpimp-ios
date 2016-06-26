@@ -38,6 +38,14 @@ public class BaseLibrary: LibraryType {
         onError(notImplementedError)
     }
     
+    func popular(count: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void) {
+        onError(notImplementedError)
+    }
+    
+    func recent(count: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void) {
+        onError(notImplementedError)
+    }
+    
     func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {
         onError(notImplementedError)
     }

@@ -43,6 +43,14 @@ public class PimpLibrary: BaseLibrary {
         client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse, f: f, onError: onError)
     }
     
+    override func popular(count: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void) {
+        client.pimpGetParsed("\(Endpoints.Popular)", parse: parsePopulars, f: f, onError: onError)
+    }
+    
+    override func recent(count: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void) {
+        client.pimpGetParsed("\(Endpoints.Recent)", parse: parseRecents, f: f, onError: onError)
+    }
+    
     override func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {
         let json = [
             JsonKeys.PLAYLIST: SavedPlaylist.toJson(sp)
@@ -184,6 +192,43 @@ public class PimpLibrary: BaseLibrary {
     func parseGetPlaylistResponse(obj: AnyObject) -> SavedPlaylist? {
         if let obj = obj as? NSDictionary, playlistObj = obj[JsonKeys.PLAYLIST] as? NSDictionary {
             return parsePlaylist(playlistObj)
+        } else {
+            return nil
+        }
+    }
+    
+    func parsePopulars(obj: AnyObject) -> [PopularEntry]? {
+        return parseArray(obj, key: JsonKeys.Populars, single: parsePopular)
+    }
+    
+    func parsePopular(dict: NSDictionary) -> PopularEntry? {
+        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
+            count = dict[JsonKeys.PlaybackCount] as? Int,
+            track = parseTrack(trackDict) {
+            return PopularEntry(track: track, playbackCount: count)
+        } else {
+            return nil
+        }
+    }
+    
+    func parseRecents(obj: AnyObject) -> [RecentEntry]? {
+        return parseArray(obj, key: JsonKeys.Recents, single: parseRecent)
+    }
+    
+    func parseRecent(dict: NSDictionary) -> RecentEntry? {
+        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
+            when = dict[JsonKeys.WHEN] as? Int64,
+            track = parseTrack(trackDict) {
+            let whenSeconds: Double = Double(when / 1000)
+            return RecentEntry(track: track, when: NSDate(timeIntervalSince1970: whenSeconds))
+        } else {
+            return nil
+        }
+    }
+    
+    func parseArray<T>(obj: AnyObject, key: String, single: NSDictionary -> T?) -> [T]? {
+        if let obj = obj as? NSDictionary, entriesArr = obj[key] as? [NSDictionary] {
+            return entriesArr.flatMapOpt(single)
         } else {
             return nil
         }
