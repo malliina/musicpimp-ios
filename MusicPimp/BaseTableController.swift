@@ -19,7 +19,7 @@ class BaseTableController: UITableViewController {
     }
     
     func renderTable(feedback: String? = nil) {
-        Util.onUiThread {
+        onUiThread {
             if let feedback = feedback {
                 self.setFeedback(feedback)
             } else {
@@ -27,6 +27,10 @@ class BaseTableController: UITableViewController {
             }
             self.tableView.reloadData()
         }
+    }
+    
+    func onUiThread(code: () -> Void) {
+        Util.onUiThread(code)
     }
     
     func setFeedback(feedback: String) {

@@ -10,12 +10,20 @@ import Foundation
 
 class FeedbackTable: BaseTableController {
     static let feedbackIdentifier = "FeedbackCell"
-    // used both for informational and error messages to the user
-//    var feedbackMessage: String? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
+    }
+    
+    func loadCell<T>(name: String) -> T {
+        let maybeView: T = findView(name)!
+        return maybeView
+    }
+    
+    func findView<T>(name: String) -> T? {
+        let arr = NSBundle.mainBundle().loadNibNamed(name, owner: self, options: nil)
+        return arr[0] as? T
     }
     
     func feedbackCellWithText(tableView: UITableView, indexPath: NSIndexPath, text: String) -> UITableViewCell {

@@ -180,7 +180,6 @@ public class PimpLibrary: BaseLibrary {
     }
     
     func parsePlaylists(obj: AnyObject) -> [SavedPlaylist] {
-//        Log.info("Playlist \(obj)")
         if let obj = obj as? NSDictionary,
             playlistsArr = obj[JsonKeys.PLAYLISTS] as? [NSDictionary] {
             return playlistsArr.flatMapOpt(parsePlaylist)
@@ -217,11 +216,12 @@ public class PimpLibrary: BaseLibrary {
     
     func parseRecent(dict: NSDictionary) -> RecentEntry? {
         if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
-            when = dict[JsonKeys.WHEN] as? Int64,
+            when = dict[JsonKeys.WHEN] as? UInt,
             track = parseTrack(trackDict) {
             let whenSeconds: Double = Double(when / 1000)
             return RecentEntry(track: track, when: NSDate(timeIntervalSince1970: whenSeconds))
         } else {
+            Log.error("Unable to parse track from dictionary \(dict)")
             return nil
         }
     }

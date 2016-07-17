@@ -19,22 +19,35 @@ class BaseMusicController : PimpTableController {
     }
     
     func trackCell(item: Track) -> PimpMusicItemCell? {
-        let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-        if let pimpCell = arr[0] as? PimpMusicItemCell {
+        let maybeCell: PimpMusicItemCell? = findView("PimpMusicItemCell")
+        if let pimpCell = maybeCell {
             pimpCell.titleLabel?.text = item.title
-            // TODO move the below code to PimpMusicItemCell, then provide observable of accessoryClicked:event
-            if let image = UIImage(named: "more_filled_grey-100.png") {
-                let button = UIButton(type: UIButtonType.Custom)
-                let frame = CGRect(x: 0, y: 0, width: customAccessorySize + accessoryRightPadding, height: customAccessorySize)
-                button.frame = frame
-                button.setImage(image, forState: UIControlState.Normal)
-                button.backgroundColor = UIColor.clearColor()
-                button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat(accessoryRightPadding))
-                button.contentMode = UIViewContentMode.ScaleAspectFit
-                button.addTarget(self, action: #selector(BaseMusicController.accessoryClicked(_:event:)), forControlEvents: UIControlEvents.TouchUpInside)
-                pimpCell.accessoryView = button
-                return pimpCell
-            }
+            installTrackAccessoryView(pimpCell)
+            return pimpCell
+        } else {
+            Log.error("Unable to find track cell for track \(item.title)")
+            return nil
+        }
+    }
+    
+    func installTrackAccessoryView(cell: UITableViewCell) {
+        // TODO move the below code to PimpMusicItemCell, then provide observable of accessoryClicked:event
+        if let accessory = createTrackAccessory() {
+            cell.accessoryView = accessory
+        }
+    }
+    
+    func createTrackAccessory() -> UIButton? {
+        if let image = UIImage(named: "more_filled_grey-100.png") {
+            let button = UIButton(type: UIButtonType.Custom)
+            let frame = CGRect(x: 0, y: 0, width: customAccessorySize + accessoryRightPadding, height: customAccessorySize)
+            button.frame = frame
+            button.setImage(image, forState: UIControlState.Normal)
+            button.backgroundColor = UIColor.clearColor()
+            button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat(accessoryRightPadding))
+            button.contentMode = UIViewContentMode.ScaleAspectFit
+            button.addTarget(self, action: #selector(BaseMusicController.accessoryClicked(_:event:)), forControlEvents: UIControlEvents.TouchUpInside)
+            return button
         }
         return nil
     }
@@ -50,7 +63,6 @@ class BaseMusicController : PimpTableController {
                 if let folder = item as? Folder {
                     displayActionsForFolder(folder)
                 }
-                
                 Log.info("Clicked \(item.title)")
             }
         }

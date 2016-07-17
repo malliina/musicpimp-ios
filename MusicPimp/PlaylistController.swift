@@ -13,21 +13,22 @@ enum ListMode: Int {
     case Playlist = 0, Popular, Recent
 }
 
-class PlaylistController: PimpTableController {
+class PlaylistController: BaseMusicController {
     let emptyMessage = "The playlist is empty."
     var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
-    var recent: [Track] = []
-    var popular: [Track] = []
+    var recent: [RecentEntry] = []
+    var popular: [PopularEntry] = []
     var tracks: [Track] {
         get {
             switch mode {
             case .Playlist: return current.tracks
-            case .Popular: return popular
-            case .Recent: return recent
+            case .Popular: return popular.map { $0.track }
+            case .Recent: return recent.map { $0.track }
             }
         }
     }
+    override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
     // non-nil if the playlist is server-loaded
     var savedPlaylist: SavedPlaylist? = nil
@@ -56,7 +57,7 @@ class PlaylistController: PimpTableController {
     }
     
     private func initScope() -> UISegmentedControl {
-        let ctrl = UISegmentedControl(items: [ "Custom", "Popular", "Recent" ])
+        let ctrl = UISegmentedControl(items: [ "Current", "Popular", "Recent" ])
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: #selector(PlaylistController.segmentChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         return ctrl
@@ -64,16 +65,23 @@ class PlaylistController: PimpTableController {
     
     func segmentChanged(ctrl: UISegmentedControl) {
         let idx = ctrl.selectedSegmentIndex
-        info("Segment index: \(idx)")
         mode = ListMode(rawValue: idx) ?? .Playlist
         maybeRefresh(mode)
     }
     
-    func maybeRefresh(mode: ListMode) {
-        switch mode {
-        case .Playlist: break
-        case .Popular: library.popular(100, onError: onError, f: onPopularsLoaded)
-        case .Recent: library.recent(100, onError: onError, f: onRecentsLoaded)
+    func maybeRefresh(targetMode: ListMode) {
+        dragButton.enabled = targetMode == .Playlist
+        switch targetMode {
+        case .Playlist:
+            reRenderTable()
+        case .Popular:
+            popular = []
+            renderTable("Loading popular tracks...")
+            library.popular(100, onError: onError, f: onPopularsLoaded)
+        case .Recent:
+            recent = []
+            renderTable("Loading recent tracks...")
+            library.recent(100, onError: onError, f: onRecentsLoaded)
         }
     }
     
@@ -95,6 +103,10 @@ class PlaylistController: PimpTableController {
     }
     
     override func viewWillDisappear(animated: Bool) {
+        stopListening()
+    }
+    
+    func stopListening() {
         for listener in listeners {
             listener.dispose()
         }
@@ -103,10 +115,45 @@ class PlaylistController: PimpTableController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let index = indexPath.row
-        let track = tracks[index]
-        let isCurrent = index == current.index
-        let arr = NSBundle.mainBundle().loadNibNamed("PimpMusicItemCell", owner: self, options: nil)
-        let cell = arr[0] as! PimpMusicItemCell
+        switch mode {
+        case .Playlist:
+            let isCurrent = index == current.index
+            let isHighlight = isCurrent
+            let cell: PimpMusicItemCell = loadCell("PimpMusicItemCell")
+            decorateCell(cell, track: tracks[index], isHighlight: isHighlight)
+            return cell
+        case .Popular:
+            let cell: MainAndSubtitleCell = loadCell("MainAndSubtitleCell")
+            decoratePopularCell(cell, track: popular[index])
+            return cell
+        case .Recent:
+            let cell: MainAndSubtitleCell = loadCell("MainAndSubtitleCell")
+            decorateRecentCell(cell, track: recent[index])
+            return cell
+        }
+    }
+    
+    func decorateRecentCell(cell: MainAndSubtitleCell, track: RecentEntry) {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .ShortStyle
+        formatter.timeStyle = .ShortStyle
+        formatter.doesRelativeDateFormatting = true
+        let formattedDate = formatter.stringFromDate(track.when)
+        decorateTwoLines(cell, first: track.track.title, second: formattedDate)
+        installTrackAccessoryView(cell)
+    }
+    
+    func decoratePopularCell(cell: MainAndSubtitleCell, track: PopularEntry) {
+        decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
+        installTrackAccessoryView(cell)
+    }
+    
+    func decorateTwoLines(cell: MainAndSubtitleCell, first: String, second: String) {
+        cell.mainTitle?.text = first
+        cell.subtitle?.text = second
+    }
+    
+    func decorateCell(cell: PimpMusicItemCell, track: Track, isHighlight: Bool) {
         if let downloadProgress = downloadState[track] {
             //info("Setting progress to \(downloadProgress.progress)")
             cell.progressView.progress = downloadProgress.progress
@@ -115,29 +162,42 @@ class PlaylistController: PimpTableController {
             cell.progressView.hidden = true
         }
         cell.titleLabel?.text = track.title
-        if isCurrent {
+        if isHighlight {
             cell.titleLabel?.textColor = UIColor.blueColor()
             cell.selectionStyle = UITableViewCellSelectionStyle.Blue
         } else {
             cell.selectionStyle = UITableViewCellSelectionStyle.Default
         }
-        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //let cell = tableView.cellForRowAtIndexPath(indexPath)
         let index = indexPath.row
         limitChecked {
-            self.player.skip(index)
+            switch self.mode {
+            case .Playlist:
+                //let cell = tableView.cellForRowAtIndexPath(indexPath)
+                self.player.skip(index)
+            default:
+                // starts playback of the selected track, and appends the rest to the playlist
+                self.playTracks(self.tracks.drop(index))
+            }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return mode == .Playlist
+    }
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let index = indexPath.row
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        limitChecked {
-            self.player.playlist.removeIndex(index)
+        if mode == .Playlist {
+            let index = indexPath.row
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            limitChecked {
+                self.player.playlist.removeIndex(index)
+            }
+        } else {
+            super.tableView(tableView, commitEditingStyle: editingStyle, forRowAtIndexPath: indexPath)
         }
     }
     
@@ -215,17 +275,13 @@ class PlaylistController: PimpTableController {
     }
     
     func onRecentsLoaded(recents: [RecentEntry]) {
-        recent = recents.map { $0.track }
-        if mode == .Recent {
-            reRenderTable()
-        }
+        recent = recents
+        reRenderTable()
     }
     
     func onPopularsLoaded(populars: [PopularEntry]) {
-        popular = populars.map { $0.track }
-        if mode == .Popular {
-            reRenderTable()
-        }
+        popular = populars
+        reRenderTable()
     }
         
     func reRenderTable() {
@@ -249,7 +305,7 @@ class PlaylistController: PimpTableController {
             }
             let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
             
-            Util.onUiThread {
+            onUiThread {
                 // The app crashed if reloading a row while concurrently dragging and dropping rows.
                 // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
                 if !self.tableView.editing {
