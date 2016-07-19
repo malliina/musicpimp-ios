@@ -14,20 +14,17 @@ class SearchAlarmTrackController: SearchableMusicController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchController.active = true
         renderTable("Search for a track")
     }
     
-//    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
-//        if let label = cell.textLabel {
-//            label.lineBreakMode = NSLineBreakMode.ByWordWrapping
-//            label.numberOfLines = 0
-//            let statusMessage = feedbackMessage ?? "Search for a track"
-//            label.text = statusMessage
-//        }
-//        return cell
-//    }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        searchController.active = true
+    }
+    
+    override func didPresentSearchController(searchController: UISearchController) {
+        searchController.searchBar.becomeFirstResponder()
+    }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let item = itemAt(tableView, indexPath: indexPath), track = item as? Track {

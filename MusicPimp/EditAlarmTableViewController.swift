@@ -27,7 +27,6 @@ class EditAlarmTableViewController: BaseTableController {
     }
     
     func initNewAlarm(endpoint: Endpoint) {
-        Log.info("Creating new alarm...")
         self.endpoint = endpoint
     }
     
