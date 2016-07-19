@@ -140,12 +140,27 @@ class AlarmsController : PimpTableController {
             } else {
                 let item = alarms[indexPath.row]
                 let alarmCell = tableView.dequeueReusableCellWithIdentifier(alarmIdentifier, forIndexPath: indexPath)
-                alarmCell.textLabel?.text = item.track.title
+                alarmCell.textLabel?.text = item.track.title + " at " + item.when.time.formatted()
+                let uiSwitch = PimpSwitch(onClick: { (uiSwitch) -> () in
+                    self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
+                })
+                uiSwitch.on = item.enabled
+                alarmCell.accessoryView = uiSwitch
                 return alarmCell
             }
         default:
             // We never get here
             return tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
+        }
+    }
+    
+    func onAlarmOnOffToggled(alarm: Alarm, uiSwitch: UISwitch) {
+        let isEnabled = uiSwitch.on
+        info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
+        let mutable = MutableAlarm(a: alarm)
+        mutable.enabled = isEnabled
+        if let updated = mutable.toImmutable() {
+            saveAndReload(updated)
         }
     }
     
@@ -176,11 +191,28 @@ class AlarmsController : PimpTableController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let dest = segue.destinationViewController as? EditAlarmTableViewController,
-            row = self.tableView.indexPathForSelectedRow,
-            endpoint = endpoint {
-            let alarm = alarms[row.item]
-            dest.initAlarm(alarm, endpoint: endpoint)
+        let segueDestination = segue.destinationViewController
+        if let endpoint = endpoint {
+            if let dest = segueDestination as? EditAlarmTableViewController {
+                if let row = self.tableView.indexPathForSelectedRow {
+                    let index = row.item
+                    if let alarm = alarms.get(index) {
+                        dest.initEditAlarm(alarm, endpoint: endpoint)
+                    } else {
+                        Log.error("Tried to edit non-existing alarm at index \(index)")
+                    }
+                } else {
+                    dest.initNewAlarm(endpoint)
+                }
+            } else if let dest = segueDestination as? UINavigationController {
+                if let actualDestination = dest.topViewController as? EditAlarmTableViewController {
+                    actualDestination.initNewAlarm(endpoint)
+                } else {
+                    Log.error("Unexpected destination \(segue.destinationViewController)")
+                }
+            }
+        } else {
+            Log.error("Cannot configure alarms without a valid playback device")
         }
     }
     

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class CacheInfoController: BaseTableController {
         
     var currentLimitDescription: String {

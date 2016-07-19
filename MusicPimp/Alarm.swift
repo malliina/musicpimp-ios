@@ -66,11 +66,13 @@ class MutableAlarm {
 class AlarmTime {
     let hour: Int
     let minute: Int
+    let time: ClockTime
     let days: Set<Day>
     
     init(hour: Int, minute: Int, days: Set<Day>) {
         self.hour = hour
         self.minute = minute
+        self.time = ClockTime(hour: hour, minute: minute)
         self.days = days
     }
 }

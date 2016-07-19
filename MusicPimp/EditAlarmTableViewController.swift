@@ -21,8 +21,13 @@ class EditAlarmTableViewController: BaseTableController {
     var mutableAlarm: MutableAlarm? = nil
     var endpoint: Endpoint? = nil
     
-    func initAlarm(alarm: Alarm, endpoint: Endpoint) {
+    func initEditAlarm(alarm: Alarm, endpoint: Endpoint) {
         self.mutableAlarm = MutableAlarm(a: alarm)
+        self.endpoint = endpoint
+    }
+    
+    func initNewAlarm(endpoint: Endpoint) {
+        Log.info("Creating new alarm...")
         self.endpoint = endpoint
     }
     
@@ -47,11 +52,7 @@ class EditAlarmTableViewController: BaseTableController {
     
     // adapted from http://stackoverflow.com/a/12741639
     func changeDate(datePicker: UIDatePicker, time: ClockTime) {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: datePicker.date)
-        components.calendar = calendar // wtf
-        components.hour = time.hour
-        components.minute = time.minute
+        let components = time.dateComponents(datePicker.date)
         if let date = components.date {
             datePicker.date = date
         }
@@ -161,6 +162,8 @@ class EditAlarmTableViewController: BaseTableController {
                         Log.info("Playing \(track.title): \(success)")
                         player.close()
                         }, onError: onConnectError)
+                } else {
+                    Log.error("Cannot play track, \(mutableAlarm?.track?.title)")
                 }
                 break
             default:

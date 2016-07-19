@@ -22,4 +22,24 @@ class ClockTime {
         let comp = calendar.components([.Hour, .Minute], fromDate: date)
         self.init(hour: comp.hour, minute: comp.minute)
     }
+    
+    func dateComponents(from: NSDate = NSDate()) -> NSDateComponents {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: from)
+        components.calendar = calendar // wtf
+        components.hour = hour
+        components.minute = minute
+        return components
+    }
+    
+    func formatted() -> String {
+        if let date = dateComponents().date {
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = .NoStyle
+            formatter.timeStyle = .ShortStyle
+            return formatter.stringFromDate(date)
+        } else {
+            return "an unknown time"
+        }
+    }
 }

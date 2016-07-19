@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class CacheTableController: CacheInfoController {
     
     static let CacheEnabledCell = "CacheEnabledCell", CacheSizeCell = "CacheSizeCell", DeleteCacheCell = "DeleteCacheCell"
@@ -45,9 +46,6 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-//        switch indexPath.section {
-//            
-//        }
         if let reuse = cell.reuseIdentifier {
             switch reuse {
                 case CacheTableController.CacheEnabledCell:

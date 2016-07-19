@@ -137,6 +137,7 @@
 		7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */; };
 		7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24781B7E5B78007D810E /* Throttler.swift */; };
 		7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE247A1B7E6139007D810E /* CacheManager.swift */; };
+		7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */; };
 		7DE944D31BE67B6A00CD441B /* SavedPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE944D21BE67B6A00CD441B /* SavedPlaylist.swift */; };
 		7DE944D51BE67C2900CD441B /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE944D41BE67C2900CD441B /* Track.swift */; };
 		7DE944D71BE67C4900CD441B /* MusicItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE944D61BE67C4900CD441B /* MusicItem.swift */; };
@@ -303,6 +304,7 @@
 		7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundDownloader.swift; sourceTree = "<group>"; };
 		7DDE24781B7E5B78007D810E /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		7DDE247A1B7E6139007D810E /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSwitch.swift; sourceTree = "<group>"; };
 		7DE944D21BE67B6A00CD441B /* SavedPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylist.swift; sourceTree = "<group>"; };
 		7DE944D41BE67C2900CD441B /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		7DE944D61BE67C4900CD441B /* MusicItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicItem.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 				7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
+				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -639,20 +642,20 @@
 			isa = PBXGroup;
 			children = (
 				7D74F35B1BFA70E00004506B /* Alarm.swift */,
+				7D28D42A1C2DD18400B3F62F /* ClockTime.swift */,
 				7D1608BE1BE7BD9E0007B943 /* Folder.swift */,
 				7D1608BA1BE7BD730007B943 /* MusicFolder.swift */,
 				7DE944D61BE67C4900CD441B /* MusicItem.swift */,
 				7D1608BC1BE7BD8C0007B943 /* Playlist.swift */,
 				7D1608C21BE7E3030007B943 /* PlaylistID.swift */,
+				7D46557C1D1EC96100F6141D /* PopularEntry.swift */,
+				7D28D4321C39A5CE00B3F62F /* PushToken.swift */,
+				7D46557A1D1EC95300F6141D /* RecentEntry.swift */,
 				7DE944D21BE67B6A00CD441B /* SavedPlaylist.swift */,
 				7DE944D41BE67C2900CD441B /* Track.swift */,
 				7D28D4281C2D95F700B3F62F /* TrackProgress.swift */,
 				7D1608C01BE7BDB40007B943 /* Version.swift */,
-				7D28D42A1C2DD18400B3F62F /* ClockTime.swift */,
-				7D28D4321C39A5CE00B3F62F /* PushToken.swift */,
 				7DB430E21C42BEC400CF22DC /* VolumeValue.swift */,
-				7D46557A1D1EC95300F6141D /* RecentEntry.swift */,
-				7D46557C1D1EC96100F6141D /* PopularEntry.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -813,6 +816,7 @@
 				7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */,
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
+				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,

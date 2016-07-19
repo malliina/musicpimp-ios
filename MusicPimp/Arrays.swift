@@ -58,6 +58,14 @@ extension Array {
         return Array(self[1..<self.count])
     }
     
+    func get(index: Int) -> Element? {
+        if count > index {
+            return self[index]
+        } else {
+            return nil
+        }
+    }
+    
     func take(n: Int) -> [Element] {
         let to = min(n, self.count)
         return Array(self[0..<to])

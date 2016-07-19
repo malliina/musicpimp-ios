@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class PlayerManager: EndpointManager {
     static let sharedInstance = PlayerManager()
     

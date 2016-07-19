@@ -1,0 +1,29 @@
+//
+//  PimpSwitch.swift
+//  MusicPimp
+//
+//  Created by Michael Skogberg on 19/07/16.
+//  Copyright © 2016 Skogberg Labs. All rights reserved.
+//
+
+import Foundation
+
+// UISwitch that hides the crazy addTarget API
+class PimpSwitch: UISwitch {
+    let onClick: UISwitch -> Void
+    
+    init(onClick: UISwitch -> Void) {
+        self.onClick = onClick
+        super.init(frame: CGRect.zero)
+        addTarget(nil, action: #selector(runOnClick(_:)), forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.onClick = { (s) -> () in () }
+        super.init(coder: aDecoder)
+    }
+    
+    func runOnClick(uiSwitch: UISwitch) {
+        onClick(uiSwitch)
+    }
+}
