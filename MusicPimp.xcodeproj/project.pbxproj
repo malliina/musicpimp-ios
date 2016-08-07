@@ -44,6 +44,7 @@
 		7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14A1BC81D4500189687 /* UIImage+Color.m */; };
 		7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C14D1BC9A63500189687 /* SearchResultsController.swift */; };
 		7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D31C1511BC9A76000189687 /* BaseMusicController.swift */; };
+		7D32B8021D4E5F7800869703 /* PimpSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */; };
 		7D406B081BD2789600EE6609 /* SavePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */; };
 		7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */; };
 		7D4655791D1EA79B00F6141D /* ScopeSearchableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655781D1EA79B00F6141D /* ScopeSearchableController.swift */; };
@@ -115,6 +116,10 @@
 		7DC206B01A1547370032C01D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AF1A1547370032C01D /* Images.xcassets */; };
 		7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206B11A1547370032C01D /* LaunchScreen.xib */; };
 		7DC206BF1A1547380032C01D /* MusicPimpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206BE1A1547380032C01D /* MusicPimpTests.swift */; };
+		7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */; };
+		7DC2FB701D527C9900A6FADD /* MyTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB6F1D527C9900A6FADD /* MyTable.swift */; };
+		7DC2FB721D56104A00A6FADD /* ListeningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB711D56104A00A6FADD /* ListeningController.swift */; };
+		7DC2FB741D57693600A6FADD /* ConstraintToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */; };
 		7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */; };
 		7DC3595E1B35C7B3003B01B6 /* String+FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */; };
 		7DC359641B35E853003B01B6 /* UIFont+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */; };
@@ -204,6 +209,7 @@
 		7D31C14A1BC81D4500189687 /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Color.m"; path = "ColorScheme/UIImage+Color.m"; sourceTree = "<group>"; };
 		7D31C14D1BC9A63500189687 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		7D31C1511BC9A76000189687 /* BaseMusicController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMusicController.swift; sourceTree = "<group>"; };
+		7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSegmentedControl.swift; sourceTree = "<group>"; };
 		7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavePlaylistViewController.swift; sourceTree = "<group>"; };
 		7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		7D4655781D1EA79B00F6141D /* ScopeSearchableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScopeSearchableController.swift; sourceTree = "<group>"; };
@@ -279,6 +285,10 @@
 		7DC206B81A1547380032C01D /* MusicPimpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicPimpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DC206BD1A1547380032C01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DC206BE1A1547380032C01D /* MusicPimpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPimpTests.swift; sourceTree = "<group>"; };
+		7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistParent.swift; sourceTree = "<group>"; };
+		7DC2FB6F1D527C9900A6FADD /* MyTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTable.swift; sourceTree = "<group>"; };
+		7DC2FB711D56104A00A6FADD /* ListeningController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListeningController.swift; sourceTree = "<group>"; };
+		7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintToggle.swift; sourceTree = "<group>"; };
 		7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+FontAwesome.swift"; path = "FontAwesome/String+FontAwesome.swift"; sourceTree = "<group>"; };
 		7DC3595F1B35C8AD003B01B6 /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FontAwesome.h"; path = "FontAwesome/NSString+FontAwesome.h"; sourceTree = "<group>"; };
@@ -384,6 +394,8 @@
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
+				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
+				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -489,6 +501,8 @@
 				7D288ECF1C44346E00A08109 /* IAPViewController.swift */,
 				7D61A7001AA4E14F00F21622 /* LibraryController.swift */,
 				7DC3596C1B371212003B01B6 /* LibraryNavController.swift */,
+				7DC2FB711D56104A00A6FADD /* ListeningController.swift */,
+				7DC2FB6F1D527C9900A6FADD /* MyTable.swift */,
 				7DC359681B35F196003B01B6 /* PimpTabBarController.swift */,
 				7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */,
 				7D9E48AF1ADAE8CB00D5CDDF /* PlayerController.swift */,
@@ -496,6 +510,7 @@
 				7D6756C81B07CDD500BC0CA9 /* PlayerSettingController.swift */,
 				7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */,
 				7DC3596E1B37121F003B01B6 /* PlaylistNavController.swift */,
+				7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */,
 				7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */,
 				7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */,
 				7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */,
@@ -787,7 +802,9 @@
 				7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */,
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
+				7D32B8021D4E5F7800869703 /* PimpSegmentedControl.swift in Sources */,
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
+				7DC2FB701D527C9900A6FADD /* MyTable.swift in Sources */,
 				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
 				7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
@@ -817,6 +834,7 @@
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
+				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,
@@ -848,6 +866,7 @@
 				7D1608C11BE7BDB40007B943 /* Version.swift in Sources */,
 				7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */,
 				7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */,
+				7DC2FB741D57693600A6FADD /* ConstraintToggle.swift in Sources */,
 				7DE944D71BE67C4900CD441B /* MusicItem.swift in Sources */,
 				7DB1B3B41B1102C50012B8AE /* PlayerState.swift in Sources */,
 				7D28D4331C39A5CF00B3F62F /* PushToken.swift in Sources */,
@@ -895,6 +914,7 @@
 				7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */,
 				7D6756D51B09200300BC0CA9 /* PlaylistType.swift in Sources */,
 				7D66863E1B498200003C92E4 /* CacheLimitController.swift in Sources */,
+				7DC2FB721D56104A00A6FADD /* ListeningController.swift in Sources */,
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,
 				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,

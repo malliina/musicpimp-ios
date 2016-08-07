@@ -14,6 +14,10 @@ enum ListMode: Int {
 }
 
 class PlaylistController: BaseMusicController {
+    let defaultCellKey = "PimpMusicItemCell"
+    let popularRecentCellKey = "MainAndSubtitleCell"
+    let maxPopularRecentCount = 100
+    let popularAndRecentCellHeight: CGFloat = 65
     let emptyMessage = "The playlist is empty."
     var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
@@ -30,58 +34,44 @@ class PlaylistController: BaseMusicController {
     }
     override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
-    // non-nil if the playlist is server-loaded
-    var savedPlaylist: SavedPlaylist? = nil
     var listeners: [Disposable] = []
     private var downloadState: [Track: TrackProgress] = [:]
     
     var searchController: UISearchController!
 
-    @IBOutlet var dragButton: UIBarButtonItem!
+    //@IBOutlet var dragButton: UIBarButtonItem!
     
-    @IBAction func dragClicked(sender: UIBarButtonItem) {
+    func dragClicked(dragButton: UIBarButtonItem) {
         let isEditing = self.tableView.editing
         self.tableView.setEditing(!isEditing, animated: true)
         let title = isEditing ? "Edit" : "Done"
         dragButton.style = isEditing ? UIBarButtonItemStyle.Plain : UIBarButtonItemStyle.Done
+        Log.info("Set title to \(title)")
         dragButton.title = title
     }
     
     override func viewDidLoad() {
-        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(PlaylistController.savePlaylistAction))
-        saveButton.style = UIBarButtonItemStyle.Done
-        // the first element in the array is right-most
-        self.navigationItem.rightBarButtonItems = [ saveButton ]
-        tableView.tableHeaderView = initScope()
+        // hack
+        self.tableView.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
         super.viewDidLoad()
+        registerNib(popularRecentCellKey)
     }
     
-    private func initScope() -> UISegmentedControl {
-        let ctrl = UISegmentedControl(items: [ "Current", "Popular", "Recent" ])
-        ctrl.selectedSegmentIndex = 0
-        ctrl.addTarget(self, action: #selector(PlaylistController.segmentChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return ctrl
-    }
-    
-    func segmentChanged(ctrl: UISegmentedControl) {
-        let idx = ctrl.selectedSegmentIndex
-        mode = ListMode(rawValue: idx) ?? .Playlist
-        maybeRefresh(mode)
-    }
-    
+    // parent calls this one
     func maybeRefresh(targetMode: ListMode) {
-        dragButton.enabled = targetMode == .Playlist
+        mode = targetMode
+        //dragButton.enabled = targetMode == .Playlist
         switch targetMode {
         case .Playlist:
             reRenderTable()
         case .Popular:
             popular = []
             renderTable("Loading popular tracks...")
-            library.popular(100, onError: onError, f: onPopularsLoaded)
+            library.popular(maxPopularRecentCount, onError: onPopularError, f: onPopularsLoaded)
         case .Recent:
             recent = []
             renderTable("Loading recent tracks...")
-            library.recent(100, onError: onError, f: onRecentsLoaded)
+            library.recent(maxPopularRecentCount, onError: onRecentError, f: onRecentsLoaded)
         }
     }
     
@@ -119,17 +109,28 @@ class PlaylistController: BaseMusicController {
         case .Playlist:
             let isCurrent = index == current.index
             let isHighlight = isCurrent
-            let cell: PimpMusicItemCell = loadCell("PimpMusicItemCell")
+            let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
             decorateCell(cell, track: tracks[index], isHighlight: isHighlight)
             return cell
         case .Popular:
-            let cell: MainAndSubtitleCell = loadCell("MainAndSubtitleCell")
+            let cell: MainAndSubtitleCell = loadCell(popularRecentCellKey, index: indexPath)
             decoratePopularCell(cell, track: popular[index])
             return cell
         case .Recent:
-            let cell: MainAndSubtitleCell = loadCell("MainAndSubtitleCell")
+            let cell: MainAndSubtitleCell = loadCell(popularRecentCellKey, index: indexPath)
             decorateRecentCell(cell, track: recent[index])
             return cell
+        }
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return cellHeight()
+    }
+    
+    override func cellHeight() -> CGFloat {
+        switch mode {
+        case .Playlist: return defaultCellHeight
+        default: return popularAndRecentCellHeight
         }
     }
     
@@ -162,12 +163,9 @@ class PlaylistController: BaseMusicController {
             cell.progressView.hidden = true
         }
         cell.titleLabel?.text = track.title
-        if isHighlight {
-            cell.titleLabel?.textColor = UIColor.blueColor()
-            cell.selectionStyle = UITableViewCellSelectionStyle.Blue
-        } else {
-            cell.selectionStyle = UITableViewCellSelectionStyle.Default
-        }
+        let (titleColor, selectionStyle) = isHighlight ? (UIColor.blueColor(), UITableViewCellSelectionStyle.Blue) : (UIColor.blackColor(), UITableViewCellSelectionStyle.Default)
+        cell.titleLabel?.textColor = titleColor
+        cell.selectionStyle = selectionStyle
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -175,11 +173,10 @@ class PlaylistController: BaseMusicController {
         limitChecked {
             switch self.mode {
             case .Playlist:
-                //let cell = tableView.cellForRowAtIndexPath(indexPath)
                 self.player.skip(index)
             default:
-                // starts playback of the selected track, and appends the rest to the playlist
-                self.playTracks(self.tracks.drop(index))
+                let track = self.tracks[index]
+                self.playTrack(track)
             }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
@@ -225,47 +222,15 @@ class PlaylistController: BaseMusicController {
         return nil
     }
     
-    func savePlaylistAction() {
-        if let playlist = savedPlaylist {
-            // opens actions drop-up: does the user want to save the existing playlist or create a new one?
-            displayActionsForPlaylist(playlist)
-        } else {
-            // goes directly to the "new playlist" view controller
-            newPlaylistAction()
-        }
-    }
-    
-    func displayActionsForPlaylist(playlist: SavedPlaylist) {
-        let title = "Save Playlist"
-        let message = playlist.name
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let saveAction = UIAlertAction(title: "Save Current", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.savePlaylist(playlist)
-        }
-        let newAction = UIAlertAction(title: "Create New", style: UIAlertActionStyle.Default) { (a) -> Void in
-            self.newPlaylistAction()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (a) -> Void in
-            
-        }
-        sheet.addAction(saveAction)
-        sheet.addAction(newAction)
-        sheet.addAction(cancelAction)
-        self.presentViewController(sheet, animated: true, completion: nil)
-    }
-    
-    func newPlaylistAction() {
-        if let storyboard = self.storyboard {
-            let vc = storyboard.instantiateViewControllerWithIdentifier("SavePlaylist")
-            vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-            if let spvc = vc as? SavePlaylistViewController, playlist = savedPlaylist {
-                spvc.name = playlist.name
-            }
-//            self.navigationController?.pushViewController(vc, animated: true)
-            let navController = UINavigationController(rootViewController: vc)
-            self.presentViewController(navController, animated: true, completion: nil)
-        } else {
-            Log.error("No storyboard, cannot open save playlist ViewController")
+    override func playTrackAccessoryAction(track: Track, row: Int) -> UIAlertAction {
+        switch mode {
+        case .Playlist:
+            return super.playTrackAccessoryAction(track, row: row)
+        default:
+            // starts playback of the selected track, and appends the rest to the playlist
+            return accessoryAction("Start Playback Here", action: { _ in
+                self.playTracks(self.tracks.drop(row))
+            })
         }
     }
 
@@ -283,7 +248,22 @@ class PlaylistController: BaseMusicController {
         popular = populars
         reRenderTable()
     }
-        
+    
+    func onPopularError(e: PimpError) {
+        popular = []
+        onLoadError(e, message: "Failed to load popular tracks.")
+    }
+    
+    func onRecentError(e: PimpError) {
+        recent = []
+        onLoadError(e, message: "Failed to load recent tracks.")
+    }
+    
+    func onLoadError(e: PimpError, message: String) {
+        onError(e)
+        renderTable(message)
+    }
+
     func reRenderTable() {
         renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
     }
@@ -315,18 +295,12 @@ class PlaylistController: BaseMusicController {
         }
     }
     
-    @IBAction func unwindToPlaylist(sender: UIStoryboardSegue) {
-        // returns from a "new playlist" screen
-        if let source = sender.sourceViewController as? SavePlaylistViewController, name = source.name {
-            let playlist = SavedPlaylist(id: nil, name: name, tracks: self.tracks)
-            savePlaylist(playlist)
-        }
-    }
-    
-    private func savePlaylist(playlist: SavedPlaylist) {
-        library.savePlaylist(playlist, onError: onError) { (id: PlaylistID) -> Void in
-            self.savedPlaylist = SavedPlaylist(id: id, name: playlist.name, tracks: playlist.tracks)
-            Log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
-        }
-    }
+//    @IBAction func unwindToPlaylist(sender: UIStoryboardSegue) {
+//        // returns from a "new playlist" screen
+//        if let source = sender.sourceViewController as? SavePlaylistViewController, name = source.name {
+//            let playlist = SavedPlaylist(id: nil, name: name, tracks: self.tracks)
+//            info("Saving")
+//            //savePlaylist(playlist)
+//        }
+//    }
 }

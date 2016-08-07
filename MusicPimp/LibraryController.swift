@@ -93,7 +93,7 @@ class LibraryController: SearchableMusicController {
             folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
             cell = folderCell
         } else {
-            if let track = item as? Track, pimpCell = trackCell(track) {
+            if let track = item as? Track, pimpCell = trackCell(track, index: indexPath) {
                 if let downloadProgress = downloadState[track] {
                     //info("Setting progress to \(downloadProgress.progress)")
                     pimpCell.progressView.progress = downloadProgress.progress
@@ -173,6 +173,9 @@ class LibraryController: SearchableMusicController {
                 return false
             }
         }
+        if identifier == "Test" {
+            return true
+        }
         info("Unknown identifier: \(identifier)")
         return false
     }
@@ -185,7 +188,7 @@ class LibraryController: SearchableMusicController {
                 destination.selected = musicItems[row.item]
             }
         } else {
-            error("Unknown destination controller")
+            error("Unknown destination controller \(segue.destinationViewController)")
         }
     }
     

@@ -14,6 +14,10 @@ class BaseTableController: UITableViewController {
     
     let limiter = Limiter.sharedInstance
     
+    func registerNib(nameAndIdentifier: String) {
+        self.tableView.registerNib(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
+    }
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -62,8 +66,7 @@ class BaseTableController: UITableViewController {
     }
     
     func onError(pimpError: PimpError) {
-        let message = PimpErrorUtil.stringify(pimpError)
-        error(message)
+        Util.onError(pimpError)
     }
     
 }

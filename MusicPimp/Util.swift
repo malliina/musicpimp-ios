@@ -66,6 +66,11 @@ class Util {
     static func url(s: String) -> NSURL {
         return NSURL(string: s)!
     }
+    
+    static func onError(pimpError: PimpError) {
+        let message = PimpErrorUtil.stringify(pimpError)
+        Log.error(message)
+    }
 }
 
 extension NSData {

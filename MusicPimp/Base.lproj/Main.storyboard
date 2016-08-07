@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HCf-3v-Iff">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HCf-3v-Iff">
     <dependencies>
         <deployment version="2064" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -8,6 +8,9 @@
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="FontAwesome.ttf">
+            <string>FontAwesome</string>
+            <string>FontAwesome</string>
+            <string>FontAwesome</string>
             <string>FontAwesome</string>
             <string>FontAwesome</string>
             <string>FontAwesome</string>
@@ -124,14 +127,14 @@
         <!--Playlist-->
         <scene sceneID="cMd-v2-1I9">
             <objects>
-                <tableViewController id="jyl-VY-HFT" customClass="PlaylistController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController automaticallyAdjustsScrollViewInsets="NO" id="jyl-VY-HFT" customClass="PlaylistController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="CSm-xH-Gql">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="397"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PlaylistItem" textLabel="YQG-Rv-2PV" style="IBUITableViewCellStyleDefault" id="qVW-Ob-qdZ">
-                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qVW-Ob-qdZ" id="Irp-DE-vm7">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -148,7 +151,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="CurrentPlaylistItem" textLabel="3a4-o7-7QW" style="IBUITableViewCellStyleDefault" id="rpf-cV-sQs">
-                                <rect key="frame" x="0.0" y="130" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="66" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rpf-cV-sQs" id="kh8-Lh-TzK">
                                     <rect key="frame" x="0.0" y="0.0" width="561" height="43"/>
@@ -170,6 +173,7 @@
                             <outlet property="delegate" destination="jyl-VY-HFT" id="LkC-48-tAy"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Playlist" id="QSG-Wx-tPA">
                         <leftBarButtonItems>
                             <barButtonItem systemItem="bookmarks" id="qLH-Bm-ThF">
@@ -189,13 +193,110 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="dragButton" destination="5OI-3i-dUU" id="gLV-bH-9Rn"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wP8-dQ-WtL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1488" y="1670"/>
+            <point key="canvasLocation" x="1453" y="2297"/>
+        </scene>
+        <!--Playlist-->
+        <scene sceneID="AnA-un-n81">
+            <objects>
+                <viewController id="SvO-Wf-Fev" customClass="PlaylistParent" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Dpc-LH-Dad"/>
+                        <viewControllerLayoutGuide type="bottom" id="pV5-Qn-znu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4c8-rP-eZe">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LLg-TD-bmi">
+                                <rect key="frame" x="0.0" y="108" width="600" height="397"/>
+                                <connections>
+                                    <segue destination="jyl-VY-HFT" kind="embed" id="NWv-Le-Tyj"/>
+                                </connections>
+                            </containerView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="57d-h8-M9g">
+                                <rect key="frame" x="20" y="72" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Current"/>
+                                    <segment title="Popular"/>
+                                    <segment title="Recent"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RcR-F8-tEd">
+                                <rect key="frame" x="20" y="513" width="181" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Mvq-Io-d6W"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="15"/>
+                                <state key="normal" title="&lt;"/>
+                                <connections>
+                                    <action selector="prevClicked:" destination="SvO-Wf-Fev" eventType="touchUpInside" id="MlD-Pk-BEy"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Qm-cu-7Xh">
+                                <rect key="frame" x="209" y="513" width="182" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="gMb-n1-EPD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="15"/>
+                                <state key="normal" title="P"/>
+                                <connections>
+                                    <action selector="playPauseClicked:" destination="SvO-Wf-Fev" eventType="touchUpInside" id="SdV-92-Kw6"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Jw-a9-Sh7">
+                                <rect key="frame" x="399" y="513" width="181" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="WUa-72-OoI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="15"/>
+                                <state key="normal" title="&gt;"/>
+                                <connections>
+                                    <action selector="nextClicked:" destination="SvO-Wf-Fev" eventType="touchUpInside" id="9jP-7R-c0k"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="57d-h8-M9g" firstAttribute="trailing" secondItem="4c8-rP-eZe" secondAttribute="trailingMargin" id="03o-rN-j7v"/>
+                            <constraint firstItem="pV5-Qn-znu" firstAttribute="top" secondItem="9Qm-cu-7Xh" secondAttribute="bottom" constant="8" id="3zw-dY-bjj"/>
+                            <constraint firstItem="LLg-TD-bmi" firstAttribute="top" secondItem="57d-h8-M9g" secondAttribute="bottom" constant="8" id="4Pm-jL-shX"/>
+                            <constraint firstItem="3Jw-a9-Sh7" firstAttribute="trailing" secondItem="4c8-rP-eZe" secondAttribute="trailingMargin" id="6bi-f4-IcU"/>
+                            <constraint firstItem="3Jw-a9-Sh7" firstAttribute="width" secondItem="RcR-F8-tEd" secondAttribute="width" id="9ES-w5-mMp"/>
+                            <constraint firstItem="RcR-F8-tEd" firstAttribute="leading" secondItem="4c8-rP-eZe" secondAttribute="leadingMargin" id="F3v-9E-2fY"/>
+                            <constraint firstItem="9Qm-cu-7Xh" firstAttribute="centerX" secondItem="4c8-rP-eZe" secondAttribute="centerX" id="IDM-ZX-SH3"/>
+                            <constraint firstItem="57d-h8-M9g" firstAttribute="top" secondItem="Dpc-LH-Dad" secondAttribute="bottom" constant="8" id="INw-uE-rCv"/>
+                            <constraint firstItem="9Qm-cu-7Xh" firstAttribute="width" secondItem="RcR-F8-tEd" secondAttribute="width" id="RQc-ej-umC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="LLg-TD-bmi" secondAttribute="trailing" constant="-20" id="Sc0-Pm-AiL"/>
+                            <constraint firstItem="3Jw-a9-Sh7" firstAttribute="leading" secondItem="9Qm-cu-7Xh" secondAttribute="trailing" constant="8" id="a5Y-ev-vhk"/>
+                            <constraint firstItem="pV5-Qn-znu" firstAttribute="top" secondItem="3Jw-a9-Sh7" secondAttribute="bottom" constant="8" id="eU7-Qj-iYk"/>
+                            <constraint firstItem="57d-h8-M9g" firstAttribute="leading" secondItem="4c8-rP-eZe" secondAttribute="leadingMargin" id="gVC-Pz-nBm"/>
+                            <constraint firstItem="pV5-Qn-znu" firstAttribute="top" secondItem="RcR-F8-tEd" secondAttribute="bottom" constant="8" id="ioq-f9-FL5"/>
+                            <constraint firstItem="3Jw-a9-Sh7" firstAttribute="top" secondItem="LLg-TD-bmi" secondAttribute="bottom" constant="8" id="pBO-wQ-qQM"/>
+                            <constraint firstItem="9Qm-cu-7Xh" firstAttribute="leading" secondItem="RcR-F8-tEd" secondAttribute="trailing" constant="8" id="rR0-pt-2I7"/>
+                            <constraint firstItem="LLg-TD-bmi" firstAttribute="leading" secondItem="4c8-rP-eZe" secondAttribute="leadingMargin" constant="-20" id="uoX-Qe-v5F"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Playlist" id="a9P-eF-k7x"/>
+                    <connections>
+                        <outlet property="nextBottom" destination="eU7-Qj-iYk" id="jsi-xX-TiJ"/>
+                        <outlet property="nextButton" destination="3Jw-a9-Sh7" id="VgS-u6-tv7"/>
+                        <outlet property="nextHeight" destination="WUa-72-OoI" id="KUL-F7-ljo"/>
+                        <outlet property="nextTop" destination="pBO-wQ-qQM" id="39Z-8f-q6Q"/>
+                        <outlet property="playBottom" destination="3zw-dY-bjj" id="7kQ-mo-xOr"/>
+                        <outlet property="playButton" destination="9Qm-cu-7Xh" id="rFI-dX-77S"/>
+                        <outlet property="playHeight" destination="gMb-n1-EPD" id="mxP-cC-ewz"/>
+                        <outlet property="prevBottom" destination="ioq-f9-FL5" id="NiQ-AW-Mrh"/>
+                        <outlet property="prevButton" destination="RcR-F8-tEd" id="9RN-Qs-q52"/>
+                        <outlet property="prevHeight" destination="Mvq-Io-d6W" id="cp7-wJ-B54"/>
+                        <outlet property="scopeSegment" destination="57d-h8-M9g" id="wf5-Lc-10r"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RbG-OJ-YU2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1453" y="1670"/>
         </scene>
         <!--Select to Play-->
         <scene sceneID="F5h-sp-AQv">
@@ -207,7 +308,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCell" textLabel="u3v-MY-ek2" style="IBUITableViewCellStyleDefault" id="kl7-VD-g01">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kl7-VD-g01" id="dyJ-MG-Q1D">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -224,7 +325,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PlaylistCell" textLabel="ljC-Yg-hB8" style="IBUITableViewCellStyleDefault" id="nCQ-41-h6j">
-                                <rect key="frame" x="0.0" y="136" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="116" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nCQ-41-h6j" id="iw3-dn-TjI">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -256,7 +357,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cEn-GK-fNP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3127" y="3154"/>
+            <point key="canvasLocation" x="1453" y="3664"/>
         </scene>
         <!--New Playlist-->
         <scene sceneID="Sxx-ha-x36">
@@ -312,7 +413,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xiu-Yk-bGd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="YYY-FA-KLz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="7576" y="2433"/>
+            <point key="canvasLocation" x="4655" y="3098"/>
         </scene>
         <!--Player-->
         <scene sceneID="vKf-Io-5HN">
@@ -404,6 +505,7 @@
                                     <constraint firstAttribute="trailing" secondItem="PEd-W1-tLX" secondAttribute="trailing" constant="8" id="5jf-7Y-q4p"/>
                                     <constraint firstItem="Hdm-UC-hpW" firstAttribute="top" secondItem="Fb6-Fa-cUz" secondAttribute="top" constant="8" id="BZC-FJ-goT"/>
                                     <constraint firstAttribute="trailing" secondItem="Hdm-UC-hpW" secondAttribute="trailing" constant="8" id="IjZ-uh-eAG"/>
+                                    <constraint firstItem="Hdm-UC-hpW" firstAttribute="centerX" secondItem="Fb6-Fa-cUz" secondAttribute="centerX" id="QpO-x5-zVl"/>
                                     <constraint firstItem="PEd-W1-tLX" firstAttribute="leading" secondItem="Fb6-Fa-cUz" secondAttribute="leading" constant="8" id="XJf-KX-wLe"/>
                                     <constraint firstAttribute="bottom" secondItem="PEd-W1-tLX" secondAttribute="bottom" id="ao9-3C-Wj8"/>
                                     <constraint firstAttribute="trailing" secondItem="Yxa-2r-5U5" secondAttribute="trailing" constant="8" id="ce7-Yh-hiR"/>
@@ -411,7 +513,6 @@
                                     <constraint firstItem="PEd-W1-tLX" firstAttribute="top" secondItem="Yxa-2r-5U5" secondAttribute="bottom" constant="8" id="r5R-Lh-DbV"/>
                                     <constraint firstItem="Yxa-2r-5U5" firstAttribute="leading" secondItem="Fb6-Fa-cUz" secondAttribute="leading" constant="8" id="ubD-9S-6xu"/>
                                     <constraint firstItem="Yxa-2r-5U5" firstAttribute="centerX" secondItem="Fb6-Fa-cUz" secondAttribute="centerX" id="uqR-Ty-unp"/>
-                                    <constraint firstItem="Hdm-UC-hpW" firstAttribute="centerX" secondItem="Fb6-Fa-cUz" secondAttribute="centerX" id="ysB-gZ-7eA"/>
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-8w-MU5" userLabel="coverContainer">
@@ -551,7 +652,7 @@
                     <connections>
                         <segue destination="80e-00-faj" kind="relationship" relationship="viewControllers" id="ccN-2d-7K6"/>
                         <segue destination="a6c-8J-00a" kind="relationship" relationship="viewControllers" id="zuM-8E-DB5"/>
-                        <segue destination="p6E-vF-3NV" kind="relationship" relationship="viewControllers" id="Shc-LZ-Y84"/>
+                        <segue destination="who-yM-yBw" kind="relationship" relationship="viewControllers" id="fi9-su-7e8"/>
                         <segue destination="Qb8-2z-Giv" kind="relationship" relationship="viewControllers" id="pde-Ke-LBJ"/>
                     </connections>
                 </tabBarController>
@@ -578,26 +679,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aEN-d1-ZKE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="732" y="918"/>
-        </scene>
-        <!--Playlist-->
-        <scene sceneID="S7q-DF-fKj">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="p6E-vF-3NV" customClass="PlaylistNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Playlist" image="first" id="ruK-k3-Stc"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="oJq-4Q-TWp">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <outlet property="playlistTabBarItem" destination="ruK-k3-Stc" id="Q0y-LP-sRM"/>
-                        <segue destination="jyl-VY-HFT" kind="relationship" relationship="rootViewController" id="OFq-9D-4fZ"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AJo-Yh-nxa" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1488" y="918"/>
         </scene>
         <!--Settings-->
         <scene sceneID="zKj-i2-7mT">
@@ -896,7 +977,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eqR-eW-lmJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9536" y="2497"/>
+            <point key="canvasLocation" x="5472" y="2320"/>
         </scene>
         <!--Cache Limit Controller-->
         <scene sceneID="Uup-qF-z4t">
@@ -952,7 +1033,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N3f-uN-FEP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7100" y="3320"/>
+            <point key="canvasLocation" x="5472" y="3098"/>
         </scene>
         <!--Music source-->
         <scene sceneID="8OQ-Hw-Ndq">
@@ -996,7 +1077,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4mm-SZ-Lgu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2967" y="1369"/>
+            <point key="canvasLocation" x="3387" y="1135"/>
         </scene>
         <!--Playback device-->
         <scene sceneID="J4Z-K9-INK">
@@ -1040,7 +1121,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06K-Eo-JaY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4707" y="1616"/>
+            <point key="canvasLocation" x="3387" y="1872"/>
         </scene>
         <!--Edit Endpoint-->
         <scene sceneID="oac-0e-WCt">
@@ -1293,7 +1374,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WGH-0c-LW4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="fgO-2X-UYo" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6235" y="1695"/>
+            <point key="canvasLocation" x="5199" y="1543"/>
         </scene>
         <!--Settings-->
         <scene sceneID="9cf-Lu-eGo">
@@ -1331,7 +1412,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IkS-R0-ftP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5567" y="1695"/>
+            <point key="canvasLocation" x="4481" y="1543"/>
         </scene>
         <!--Alarms-->
         <scene sceneID="g9m-Kk-jlz">
@@ -1424,7 +1505,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4yA-Ty-mDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4865" y="2486"/>
+            <point key="canvasLocation" x="2897" y="2810"/>
         </scene>
         <!--Choose Endpoint-->
         <scene sceneID="tyZ-6F-NTg">
@@ -1462,7 +1543,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gKW-he-Yjh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5617" y="2485"/>
+            <point key="canvasLocation" x="3654" y="2810"/>
         </scene>
         <!--Edit Alarm-->
         <scene sceneID="mMD-TM-PeM">
@@ -1625,7 +1706,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CbF-2G-qg2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="hcv-Or-HI9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2429" y="4048"/>
+            <point key="canvasLocation" x="2897" y="3548"/>
         </scene>
         <!--Search Alarm Track Controller-->
         <scene sceneID="lIB-0x-Ump">
@@ -1679,7 +1760,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ogz-I3-SpU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3580" y="4117"/>
+            <point key="canvasLocation" x="2897" y="4305"/>
         </scene>
         <!--Repeat Days Controller-->
         <scene sceneID="pOZ-Fa-rsT">
@@ -1717,7 +1798,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DtI-41-9GE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3964" y="3262"/>
+            <point key="canvasLocation" x="3654" y="3548"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Lcf-mG-Umr">
@@ -1735,7 +1816,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTe-Of-PGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6806" y="2433"/>
+            <point key="canvasLocation" x="4655" y="2320"/>
         </scene>
         <!--MusicPimp Premium-->
         <scene sceneID="lcO-k5-nuo">
@@ -1817,7 +1898,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wr2-zx-LyH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2298" y="2503"/>
+            <point key="canvasLocation" x="2182" y="2400"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cDa-4k-ecE">
@@ -1835,7 +1916,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P73-vH-C4u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3939" y="2450"/>
+            <point key="canvasLocation" x="1453" y="2916"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S5W-f2-2Iw">
@@ -1853,7 +1934,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kud-EB-KaD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2429" y="3262"/>
+            <point key="canvasLocation" x="2159" y="3548"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KFX-Rs-A6p">
@@ -1873,6 +1954,25 @@
             </objects>
             <point key="canvasLocation" x="732" y="2400"/>
         </scene>
+        <!--Item-->
+        <scene sceneID="XqU-qv-EVP">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="who-yM-yBw" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="ty3-Ji-Ywt"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xj0-zi-m88">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="SvO-Wf-Fev" kind="relationship" relationship="rootViewController" id="CP6-Ns-AFY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="02x-Bn-4Sq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1453" y="918"/>
+        </scene>
     </scenes>
     <resources>
         <image name="first" width="30" height="30"/>
@@ -1880,8 +1980,8 @@
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="OkE-Zm-kz4"/>
-        <segue reference="lqk-yF-TrJ"/>
         <segue reference="cIr-ZU-Dh7"/>
+        <segue reference="lqk-yF-TrJ"/>
+        <segue reference="ib7-fs-6P1"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -9,23 +9,15 @@
 import Foundation
 import UIKit
 
-class PlayerController: UIViewController {
+class PlayerController: ListeningController {
     let defaultPosition = Duration.Zero
-    let defaultDuration = Duration(seconds: 60)
-    var playerManager: PlayerManager { get { return PlayerManager.sharedInstance } }
-    var player: PlayerType { get { return playerManager.active } }
+    let defaultDuration = 60.seconds
     
     @IBOutlet var volumeBarButton: UIBarButtonItem!
     @IBOutlet var titleLabel: UILabel!
-    
     @IBOutlet var albumLabel: UILabel!
-    
     @IBOutlet var artistLabel: UILabel!
-    
-    @IBOutlet var playPause: UIButton!
-    
     @IBOutlet var pause: UIButton!
-    
     @IBOutlet var prevButton: UIButton!
     @IBOutlet var nextButton: UIButton!
     @IBOutlet var seek: UISlider!
@@ -33,9 +25,6 @@ class PlayerController: UIViewController {
     @IBOutlet var durationLabel: UILabel!
     
     @IBOutlet var coverImage: UIImageView!
-    
-    private var loadedListeners: [Disposable] = []
-    private var appearedListeners: [Disposable] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,25 +34,18 @@ class PlayerController: UIViewController {
         playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
             pc.onNewPlayer
         })
-        setFontAwesomeTitle(pause, fontAwesomeName: "fa-play")
-        setFontAwesomeTitle(prevButton, fontAwesomeName: "fa-step-backward")
-        setFontAwesomeTitle(nextButton, fontAwesomeName: "fa-step-forward")
-        positionLabel.font.monospacedDigitFont
-        durationLabel.font.monospacedDigitFont
+        pause.setFontAwesomeTitle("fa-play")
+        prevButton.setFontAwesomeTitle("fa-step-backward")
+        nextButton.setFontAwesomeTitle("fa-step-forward")
     }
     
     func updatePlayPause(isPlaying: Bool) {
         let faIcon = isPlaying ? "fa-pause" : "fa-play"
-        setFontAwesomeTitle(pause, fontAwesomeName: faIcon)
-    }
-    
-    func setFontAwesomeTitle(button: UIButton, fontAwesomeName: String) {
-        let buttonText = String.fontAwesomeIconStringForIconIdentifier(fontAwesomeName)
-        button.setTitle(buttonText, forState: UIControlState.Normal)
+        pause.setFontAwesomeTitle(faIcon)
     }
     
     override func viewWillAppear(animated: Bool) {
-        listenWhenAppeared(player)
+        super.viewWillAppear(animated)
         let current = player.current()
         updatePlayPause(current.isPlaying)
         if let track = current.track {
@@ -74,62 +56,7 @@ class PlayerController: UIViewController {
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        unlistenWhenAppeared()
-    }
-    
-    func onNewPlayer(newPlayer: PlayerType) {
-        reinstallListeners(newPlayer)
-    }
-    
-    private func listenWhenLoaded(targetPlayer: PlayerType) {
-        let trackListener = targetPlayer.trackEvent.addHandler(self, handler: { (pc) -> Track? -> () in
-            pc.updateTrack
-        })
-        loadedListeners = [trackListener]
-    }
-    
-    private func unlistenWhenLoaded() {
-        for listener in loadedListeners {
-            listener.dispose()
-        }
-        loadedListeners = []
-    }
-    
-    private func listenWhenAppeared(targetPlayer: PlayerType) {
-        unlistenWhenAppeared()
-        let listener = targetPlayer.timeEvent.addHandler(self, handler: { (pc) -> Duration -> () in
-            pc.onTimeUpdated
-        })
-        let stateListener = targetPlayer.stateEvent.addHandler(self, handler: { (pc) -> PlaybackState -> () in
-            pc.onStateChanged
-        })
-        appearedListeners = [listener, stateListener]
-    }
-    
-    private func unlistenWhenAppeared() {
-        for listener in appearedListeners {
-            listener.dispose()
-        }
-        appearedListeners = []
-    }
-    
-    private func reinstallListeners(targetPlayer: PlayerType) {
-        unlistenWhenAppeared()
-        unlistenWhenLoaded()
-        listenWhenLoaded(targetPlayer)
-        listenWhenAppeared(targetPlayer)
-    }
-    
-    private func updateTrack(track: Track?) {
-        if let track = track {
-            updateMedia(track)
-        } else {
-            updateNoMedia()
-        }
-    }
-    
-    private func updateNoMedia() {
+    override func updateNoMedia() {
         Util.onUiThread {
             self.updatePlayPause(false)
             self.updateDuration(self.defaultDuration)
@@ -140,7 +67,7 @@ class PlayerController: UIViewController {
         }
     }
     
-    private func updateMedia(track: Track) {
+    override func updateMedia(track: Track) {
         Util.onUiThread {
             self.updateDuration(track.duration)
             self.titleLabel.text = track.title
@@ -181,11 +108,11 @@ class PlayerController: UIViewController {
         positionLabel.text = position.description
     }
     
-    private func onTimeUpdated(position: Duration) {
+    override func onTimeUpdated(position: Duration) {
         updatePosition(position)
     }
     
-    private func onStateChanged(state: PlaybackState) {
+    override func onStateChanged(state: PlaybackState) {
         updatePlayPause(state == .Playing)
     }
     
@@ -230,6 +157,13 @@ class PlayerController: UIViewController {
     
     func info(s: String) {
         Log.info(s)
+    }
+}
+
+extension UIButton {
+    func setFontAwesomeTitle(fontAwesomeName: String) {
+        let buttonText = String.fontAwesomeIconStringForIconIdentifier(fontAwesomeName)
+        self.setTitle(buttonText, forState: UIControlState.Normal)
     }
 }
 

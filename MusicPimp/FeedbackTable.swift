@@ -16,14 +16,12 @@ class FeedbackTable: BaseTableController {
         self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
     }
     
-    func loadCell<T>(name: String) -> T {
-        let maybeView: T = findView(name)!
-        return maybeView
+    func loadCell<T>(name: String, index: NSIndexPath) -> T {
+        return findCell(name, index: index)!
     }
     
-    func findView<T>(name: String) -> T? {
-        let arr = NSBundle.mainBundle().loadNibNamed(name, owner: self, options: nil)
-        return arr[0] as? T
+    func findCell<T>(name: String, index: NSIndexPath) -> T? {
+        return self.tableView.dequeueReusableCellWithIdentifier(name, forIndexPath: index) as? T
     }
     
     func feedbackCellWithText(tableView: UITableView, indexPath: NSIndexPath, text: String) -> UITableViewCell {
