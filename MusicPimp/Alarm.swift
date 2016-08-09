@@ -75,6 +75,8 @@ class AlarmTime {
         self.time = ClockTime(hour: hour, minute: minute)
         self.days = days
     }
+    
+//    var daysSorted: [Day] { return days.sort({ Day.index($0) < Day.index($1) }) }
 }
 
 class MutableAlarmTime {
@@ -130,6 +132,25 @@ enum Day: String {
         case .Sat: return 5
         case .Sun: return 6        }
     }
+    
+    static func describeDays(days: Set<Day>) -> String {
+        if days.isEmpty {
+            return "Never"
+        }
+        if days.count == 7 {
+            return "Every day"
+        }
+        if days == [Day.Sat, Day.Sun] {
+            return "Weekends"
+        }
+        if days == [Day.Mon, Day.Tue, Day.Wed, Day.Thu, Day.Fri] {
+            return "Weekdays"
+        }
+        return days.sort { (f, s) -> Bool in
+            return Day.index(f) < Day.index(s)
+            }.mkString(" ")
+    }
+
 }
 
 class AlarmID {

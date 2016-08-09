@@ -1467,7 +1467,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlarmCell" textLabel="qle-vg-Yo4" style="IBUITableViewCellStyleDefault" id="HUC-QL-eIR">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlarmCell" textLabel="qle-vg-Yo4" style="IBUITableViewCellStyleDefault" id="HUC-QL-eIR" customClass="MainAndSubtitleCell" customModule="MusicPimp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="202" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HUC-QL-eIR" id="Gd8-S0-Ge5">
@@ -1548,7 +1548,7 @@
         <!--Edit Alarm-->
         <scene sceneID="mMD-TM-PeM">
             <objects>
-                <tableViewController id="Ryz-Qk-0at" customClass="EditAlarmTableViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="EditAlarm" id="Ryz-Qk-0at" customClass="EditAlarmTableViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="B1F-zD-DKu">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1981,7 +1981,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="cIr-ZU-Dh7"/>
+        <segue reference="OkE-Zm-kz4"/>
         <segue reference="lqk-yF-TrJ"/>
-        <segue reference="ib7-fs-6P1"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -133,6 +133,8 @@
 		7DC359731B371426003B01B6 /* TabNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359721B371426003B01B6 /* TabNavController.swift */; };
 		7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359751B3EEB52003B01B6 /* Duration.swift */; };
 		7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359771B3F0A51003B01B6 /* Volume.swift */; };
+		7DC891431D5A737A00331A4D /* MainSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891421D5A737A00331A4D /* MainSubCell.xib */; };
+		7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891441D5A73C100331A4D /* MainSubCell.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
@@ -305,6 +307,8 @@
 		7DC359721B371426003B01B6 /* TabNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabNavController.swift; sourceTree = "<group>"; };
 		7DC359751B3EEB52003B01B6 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
 		7DC359771B3F0A51003B01B6 /* Volume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Volume.swift; sourceTree = "<group>"; };
+		7DC891421D5A737A00331A4D /* MainSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainSubCell.xib; sourceTree = "<group>"; };
+		7DC891441D5A73C100331A4D /* MainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSubCell.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
@@ -387,15 +391,17 @@
 		7D31A32F1C679B750035E9D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */,
-				7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */,
+				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
+				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
+				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D4655821D3BF72F00F6141D /* MainAndSubtitleCell.swift */,
 				7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */,
-				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
-				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
-				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
+				7DC891441D5A73C100331A4D /* MainSubCell.swift */,
+				7DC891421D5A737A00331A4D /* MainSubCell.xib */,
+				7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */,
+				7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */,
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
-				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
+				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -777,6 +783,7 @@
 				7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */,
 				7D4655851D3BF72F00F6141D /* MainAndSubtitleCell.xib in Resources */,
 				7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */,
+				7DC891431D5A737A00331A4D /* MainSubCell.xib in Resources */,
 				7D74F3581BF902DA0004506B /* Media.xcassets in Resources */,
 				7D2C77971B933A810066A7B5 /* guitar.png in Resources */,
 			);
@@ -919,6 +926,7 @@
 				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
 				7DDE24741B6E8ABC007D810E /* PimpMusicItemCell.swift in Sources */,
+				7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,
 			);

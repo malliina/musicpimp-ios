@@ -182,7 +182,6 @@ class LibraryController: SearchableMusicController {
     
     // Used when the user taps a folder, initiating a navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        info("prepareForSegue")
         if let destination = segue.destinationViewController as? LibraryController {
             if let row = self.tableView.indexPathForSelectedRow {
                 destination.selected = musicItems[row.item]
@@ -193,7 +192,6 @@ class LibraryController: SearchableMusicController {
     }
     
     @IBAction func unwindToItems(segue: UIStoryboardSegue) {
-        info("unwindToItems")
         let src = segue.sourceViewController as? LibraryController
         if let id = src?.selected?.id {
             loadFolder(id)

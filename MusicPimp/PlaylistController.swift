@@ -15,9 +15,8 @@ enum ListMode: Int {
 
 class PlaylistController: BaseMusicController {
     let defaultCellKey = "PimpMusicItemCell"
-    let popularRecentCellKey = "MainAndSubtitleCell"
     let maxPopularRecentCount = 100
-    let popularAndRecentCellHeight: CGFloat = 65
+    let embeddedTableContentInset: CGFloat = -64
     let emptyMessage = "The playlist is empty."
     var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
@@ -38,23 +37,79 @@ class PlaylistController: BaseMusicController {
     private var downloadState: [Track: TrackProgress] = [:]
     
     var searchController: UISearchController!
-
-    //@IBOutlet var dragButton: UIBarButtonItem!
+    
+    override func viewDidLoad() {
+        // hack
+        self.tableView.contentInset = UIEdgeInsets(top: embeddedTableContentInset, left: 0, bottom: 0, right: 0)
+        super.viewDidLoad()
+        registerNib(PlaylistController.mainAndSubtitleCellKey)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        downloadState = [:]
+        let playlistDisposable = player.playlist.playlistEvent.addHandler(self) { (plc: PlaylistController) -> Playlist -> () in
+            plc.onNewPlaylist
+        }
+        let indexDisposable = player.playlist.indexEvent.addHandler(self) { (plc: PlaylistController) -> Int? -> () in
+            plc.onIndexChanged
+        }
+        let downloadProgressDisposable = BackgroundDownloader.musicDownloader.events.addHandler(self) { (plc) -> DownloadProgressUpdate -> () in
+            plc.onDownloadProgressUpdate
+        }
+        listeners = [playlistDisposable, indexDisposable, downloadProgressDisposable]
+        let state = player.current()
+        let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
+        onNewPlaylist(currentPlaylist)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        stopListening()
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let index = indexPath.row
+        switch mode {
+        case .Playlist:
+            let isCurrent = index == current.index
+            let isHighlight = isCurrent
+            let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
+            decorateCell(cell, track: tracks[index], isHighlight: isHighlight)
+            return cell
+        case .Popular:
+            let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
+            decoratePopularCell(cell, track: popular[index])
+            return cell
+        case .Recent:
+            let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
+            decorateRecentCell(cell, track: recent[index])
+            return cell
+        }
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return cellHeight()
+    }
+    
+    override func cellHeight() -> CGFloat {
+        switch mode {
+        case .Playlist: return defaultCellHeight
+        default: return PlaylistController.mainAndSubtitleCellHeight
+        }
+    }
+    
+    func stopListening() {
+        for listener in listeners {
+            listener.dispose()
+        }
+        listeners = []
+    }
     
     func dragClicked(dragButton: UIBarButtonItem) {
         let isEditing = self.tableView.editing
         self.tableView.setEditing(!isEditing, animated: true)
         let title = isEditing ? "Edit" : "Done"
         dragButton.style = isEditing ? UIBarButtonItemStyle.Plain : UIBarButtonItemStyle.Done
-        Log.info("Set title to \(title)")
         dragButton.title = title
-    }
-    
-    override func viewDidLoad() {
-        // hack
-        self.tableView.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
-        super.viewDidLoad()
-        registerNib(popularRecentCellKey)
     }
     
     // parent calls this one
@@ -72,65 +127,6 @@ class PlaylistController: BaseMusicController {
             recent = []
             renderTable("Loading recent tracks...")
             library.recent(maxPopularRecentCount, onError: onRecentError, f: onRecentsLoaded)
-        }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        downloadState = [:]
-        let playlistDisposable = player.playlist.playlistEvent.addHandler(self, handler: { (plc: PlaylistController) -> Playlist -> () in
-            plc.onNewPlaylist
-        })
-        let indexDisposable = player.playlist.indexEvent.addHandler(self, handler: { (plc: PlaylistController) -> Int? -> () in
-            plc.onIndexChanged
-        })
-        let downloadProgressDisposable = BackgroundDownloader.musicDownloader.events.addHandler(self, handler: { (plc) -> DownloadProgressUpdate -> () in
-            plc.onDownloadProgressUpdate
-        })
-        listeners = [playlistDisposable, indexDisposable, downloadProgressDisposable]
-        let state = player.current()
-        let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
-        onNewPlaylist(currentPlaylist)
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        stopListening()
-    }
-    
-    func stopListening() {
-        for listener in listeners {
-            listener.dispose()
-        }
-        listeners = []
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let index = indexPath.row
-        switch mode {
-        case .Playlist:
-            let isCurrent = index == current.index
-            let isHighlight = isCurrent
-            let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
-            decorateCell(cell, track: tracks[index], isHighlight: isHighlight)
-            return cell
-        case .Popular:
-            let cell: MainAndSubtitleCell = loadCell(popularRecentCellKey, index: indexPath)
-            decoratePopularCell(cell, track: popular[index])
-            return cell
-        case .Recent:
-            let cell: MainAndSubtitleCell = loadCell(popularRecentCellKey, index: indexPath)
-            decorateRecentCell(cell, track: recent[index])
-            return cell
-        }
-    }
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return cellHeight()
-    }
-    
-    override func cellHeight() -> CGFloat {
-        switch mode {
-        case .Playlist: return defaultCellHeight
-        default: return popularAndRecentCellHeight
         }
     }
     
@@ -228,9 +224,9 @@ class PlaylistController: BaseMusicController {
             return super.playTrackAccessoryAction(track, row: row)
         default:
             // starts playback of the selected track, and appends the rest to the playlist
-            return accessoryAction("Start Playback Here", action: { _ in
+            return accessoryAction("Start Playback Here") { _ in
                 self.playTracks(self.tracks.drop(row))
-            })
+            }
         }
     }
 
@@ -294,13 +290,4 @@ class PlaylistController: BaseMusicController {
             }
         }
     }
-    
-//    @IBAction func unwindToPlaylist(sender: UIStoryboardSegue) {
-//        // returns from a "new playlist" screen
-//        if let source = sender.sourceViewController as? SavePlaylistViewController, name = source.name {
-//            let playlist = SavedPlaylist(id: nil, name: name, tracks: self.tracks)
-//            info("Saving")
-//            //savePlaylist(playlist)
-//        }
-//    }
 }

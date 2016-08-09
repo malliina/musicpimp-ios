@@ -16,6 +16,7 @@ class AlarmsController : PimpTableController {
     let endpointIdentifier = "EndpointCell"
     let pushEnabledIdentifier = "PushEnabledCell"
     let alarmIdentifier = "AlarmCell"
+    let alarmCellKey = "MainSubCell"
     
     let noAlarmsMessage = "No saved alarms"
     
@@ -30,10 +31,12 @@ class AlarmsController : PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerNib(alarmCellKey)
         reloadAlarms()
         // TODO create custom UISwitch with toggle handler
-        let onOff = UISwitch(frame: CGRect.zero)
-        onOff.addTarget(self, action: #selector(AlarmsController.didToggleNotifications(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        let onOff = PimpSwitch { (uiSwitch) in
+            self.didToggleNotifications(uiSwitch)
+        }
         pushSwitch = onOff
         settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> Endpoint -> () in
             ac.didChangeDefaultAlarmEndpoint
@@ -139,11 +142,13 @@ class AlarmsController : PimpTableController {
                 return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? noAlarmsMessage)
             } else {
                 let item = alarms[indexPath.row]
-                let alarmCell = tableView.dequeueReusableCellWithIdentifier(alarmIdentifier, forIndexPath: indexPath)
-                alarmCell.textLabel?.text = item.track.title + " at " + item.when.time.formatted()
-                let uiSwitch = PimpSwitch(onClick: { (uiSwitch) -> () in
+                let alarmCell: MainSubCell = loadCell(alarmCellKey, index: indexPath)
+                let when = item.when
+                alarmCell.mainTitle.text = item.track.title + " at " + when.time.formatted()
+                alarmCell.subtitle.text = Day.describeDays(when.days)
+                let uiSwitch = PimpSwitch { (uiSwitch) in
                     self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
-                })
+                }
                 uiSwitch.on = item.enabled
                 alarmCell.accessoryView = uiSwitch
                 return alarmCell
@@ -154,13 +159,11 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    func onAlarmOnOffToggled(alarm: Alarm, uiSwitch: UISwitch) {
-        let isEnabled = uiSwitch.on
-        info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
-        let mutable = MutableAlarm(a: alarm)
-        mutable.enabled = isEnabled
-        if let updated = mutable.toImmutable() {
-            saveAndReload(updated)
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.section == alarmsSection {
+            return FeedbackTable.mainAndSubtitleCellHeight
+        } else {
+            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
         }
     }
     
@@ -172,6 +175,21 @@ class AlarmsController : PimpTableController {
             return "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
         default:
             return ""
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let row = indexPath.row
+        if indexPath.section == alarmsSection {
+            if let alarm = alarms.get(row),
+                endpoint = endpoint,
+                storyboard = storyboard,
+                dest = storyboard.instantiateViewControllerWithIdentifier("EditAlarm") as? EditAlarmTableViewController {
+                dest.initEditAlarm(alarm, endpoint: endpoint)
+                self.navigationController?.pushViewController(dest, animated: true)
+            } else {
+                Log.error("No alarm, endpoint, storyboard or destination")
+            }
         }
     }
     
@@ -220,6 +238,16 @@ class AlarmsController : PimpTableController {
         if let source = sender.sourceViewController as? EditAlarmTableViewController,
             alarm = source.mutableAlarm?.toImmutable() {
             saveAndReload(alarm)
+        }
+    }
+    
+    func onAlarmOnOffToggled(alarm: Alarm, uiSwitch: UISwitch) {
+        let isEnabled = uiSwitch.on
+        info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
+        let mutable = MutableAlarm(a: alarm)
+        mutable.enabled = isEnabled
+        if let updated = mutable.toImmutable() {
+            saveAndReload(updated)
         }
     }
     

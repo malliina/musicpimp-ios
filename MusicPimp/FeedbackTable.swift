@@ -9,6 +9,8 @@
 import Foundation
 
 class FeedbackTable: BaseTableController {
+    static let mainAndSubtitleCellKey = "MainAndSubtitleCell"
+    static let mainAndSubtitleCellHeight: CGFloat = 65
     static let feedbackIdentifier = "FeedbackCell"
 
     override func viewDidLoad() {

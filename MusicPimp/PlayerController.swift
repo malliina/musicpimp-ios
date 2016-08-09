@@ -86,12 +86,7 @@ class PlayerController: ListeningController {
                 image = imageResult
             }
             if let image = image {
-//                let picker = DBImageColorPicker(fromImage: image, withBackgroundType: DBImageColorPickerBackgroundType.Default)
-//                let newBackground = picker.backgroundColor
-//                let isLight = newBackground.isLight()
-//                self.info("isLight \(isLight) \(newBackground.description)")
                 Util.onUiThread {
-//                    self.view.backgroundColor = newBackground
                     self.coverImage.image = image
                 }
             }

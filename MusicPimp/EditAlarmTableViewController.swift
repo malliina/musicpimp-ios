@@ -21,6 +21,27 @@ class EditAlarmTableViewController: BaseTableController {
     var mutableAlarm: MutableAlarm? = nil
     var endpoint: Endpoint? = nil
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if self.mutableAlarm == nil {
+            self.mutableAlarm = MutableAlarm()
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        renderTable()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        updateDate()
+        super.viewWillDisappear(animated)
+    }
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 4
+    }
+
     func initEditAlarm(alarm: Alarm, endpoint: Endpoint) {
         self.mutableAlarm = MutableAlarm(a: alarm)
         self.endpoint = endpoint
@@ -61,31 +82,16 @@ class EditAlarmTableViewController: BaseTableController {
         goBack()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if self.mutableAlarm == nil {
-            self.mutableAlarm = MutableAlarm()
-        }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        renderTable()
-    }
-    
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         if saveButton === sender {
             updateDate()
         }
-        if let destination = segue.destinationViewController as? RepeatDaysController {
+        let dest = segue.destinationViewController
+        if let destination = dest as? RepeatDaysController {
             destination.alarm = self.mutableAlarm
         }
-        if let trackDestination = segue.destinationViewController as? SearchAlarmTrackController {
+        if let trackDestination = dest as? SearchAlarmTrackController {
             trackDestination.alarm = self.mutableAlarm
         }
     }
@@ -102,7 +108,7 @@ class EditAlarmTableViewController: BaseTableController {
             case repeatIdentifier:
                 let emptyDays = Set<Day>()
                 let activeDays = mutableAlarm?.when.days ?? emptyDays
-                cell.detailTextLabel?.text = describeDays(activeDays)
+                cell.detailTextLabel?.text = Day.describeDays(activeDays)
                 break
             case trackIdentifier:
                 cell.detailTextLabel?.text = mutableAlarm?.track?.title ?? "No track"
@@ -119,24 +125,6 @@ class EditAlarmTableViewController: BaseTableController {
             }
         }
         return cell
-    }
-    
-    func describeDays(days: Set<Day>) -> String {
-        if days.isEmpty {
-            return "Never"
-        }
-        if days.count == 7 {
-            return "Every day"
-        }
-        if days == [Day.Sat, Day.Sun] {
-            return "Weekends"
-        }
-        if days == [Day.Mon, Day.Tue, Day.Wed, Day.Thu, Day.Fri] {
-            return "Weekdays"
-        }
-        return days.sort { (f, s) -> Bool in
-            return Day.index(f) < Day.index(s)
-        }.mkString(" ")
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
