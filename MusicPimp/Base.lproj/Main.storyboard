@@ -516,10 +516,10 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-8w-MU5" userLabel="coverContainer">
-                                <rect key="frame" x="28" y="64" width="544" height="274"/>
+                                <rect key="frame" x="28" y="72" width="544" height="266"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="guitar.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZwI-4B-Qxg">
-                                        <rect key="frame" x="16" y="-119" width="512" height="512"/>
+                                        <rect key="frame" x="16" y="-123" width="512" height="512"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -553,7 +553,7 @@
                             <constraint firstItem="mfo-hW-UGT" firstAttribute="centerX" secondItem="afz-lM-Twv" secondAttribute="centerX" id="mV6-Wj-QqC"/>
                             <constraint firstItem="Fb6-Fa-cUz" firstAttribute="top" secondItem="5Vj-8w-MU5" secondAttribute="bottom" constant="4" id="mg0-Df-Ntn"/>
                             <constraint firstItem="wlc-QP-kpP" firstAttribute="centerY" secondItem="HNY-mM-L8n" secondAttribute="centerY" id="nOf-zt-4Tx"/>
-                            <constraint firstItem="5Vj-8w-MU5" firstAttribute="top" secondItem="UkG-Qi-IrF" secondAttribute="bottom" id="oiS-N6-LJf"/>
+                            <constraint firstItem="5Vj-8w-MU5" firstAttribute="top" secondItem="UkG-Qi-IrF" secondAttribute="bottom" constant="8" id="oiS-N6-LJf"/>
                             <constraint firstItem="Fb6-Fa-cUz" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" id="otr-s3-sEG"/>
                             <constraint firstItem="okO-f9-gIo" firstAttribute="leading" secondItem="wlc-QP-kpP" secondAttribute="trailing" constant="8" id="v0c-Wc-iOD"/>
                             <constraint firstItem="mfo-hW-UGT" firstAttribute="leading" secondItem="PJx-uE-1K7" secondAttribute="trailing" constant="8" id="zHV-OA-oYb"/>
