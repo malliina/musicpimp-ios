@@ -8,30 +8,13 @@
 
 import Foundation
 
-class PlaylistParent: ListeningController {
+class PlaylistParent: ContainerParent {
     @IBOutlet var scopeSegment: UISegmentedControl!
     
     var dragButton: UIBarButtonItem?
     
     // non-nil if the playlist is server-loaded
     var savedPlaylist: SavedPlaylist? = nil
-    var show = false
-    var initFrame: CGRect? = nil
-    let hiddenFrame = CGRect(x: 0, y: 0, width: 0, height: 0)
-    
-    @IBOutlet var prevButton: UIButton!
-    @IBOutlet var playButton: UIButton!
-    @IBOutlet var nextButton: UIButton!
-    
-    @IBOutlet var playBottom: NSLayoutConstraint!
-    @IBOutlet var nextBottom: NSLayoutConstraint!
-    @IBOutlet var prevBottom: NSLayoutConstraint!
-    @IBOutlet var nextTop: NSLayoutConstraint!
-    @IBOutlet var prevHeight: NSLayoutConstraint!
-    @IBOutlet var playHeight: NSLayoutConstraint!
-    @IBOutlet var nextHeight: NSLayoutConstraint!
-    
-    var constraintToggle: ConstraintToggle? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,34 +27,6 @@ class PlaylistParent: ListeningController {
         // the first element in the array is right-most
         self.navigationItem.rightBarButtonItems = [ saveButton ]
         initScope(scopeSegment)
-        constraintToggle = ConstraintToggle(constraints: [prevBottom, playBottom, nextBottom, nextTop, prevHeight, playHeight, nextHeight])
-        prevButton.setFontAwesomeTitle("fa-step-backward")
-        playButton.setFontAwesomeTitle("fa-pause")
-        nextButton.setFontAwesomeTitle("fa-step-forward")
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        initFooter()
-    }
-    
-    private func initFooter() {
-        onStateChanged(player.current().state)
-    }
-    
-    override func onStateChanged(state: PlaybackState) {
-        let isVisible = state == .Playing
-        let toggle = self.constraintToggle
-        Util.onUiThread {
-            self.playButton.hidden = !isVisible
-            self.prevButton.hidden = !isVisible
-            self.nextButton.hidden = !isVisible
-            if isVisible {
-                toggle?.show()
-            } else {
-                toggle?.hide()
-            }
-        }
     }
     
     private func initScope(ctrl: UISegmentedControl) {
@@ -106,34 +61,8 @@ class PlaylistParent: ListeningController {
         //self.navigationController?.pushViewController(dest, animated: true)
     }
     
-    @IBAction func prevClicked(sender: UIButton) {
-        player.prev()
-    }
-   
-    @IBAction func playPauseClicked(sender: UIButton) {
-        self.playOrPause()
-    }
-    
-    private func playOrPause() {
-        if player.current().isPlaying {
-            self.player.pause()
-        } else {
-            limitChecked {
-                self.player.play()
-            }
-        }
-    }
-    
-    @IBAction func nextClicked(sender: UIButton) {
-        player.next()
-    }
-    
-    
     func findPlaylist() -> PlaylistController? {
-        let pcs = childViewControllers.flatMapOpt { (vc) -> PlaylistController? in
-            return vc as? PlaylistController
-        }
-        return pcs.headOption()
+        return findChild()
     }
     
     func savePlaylistAction() {

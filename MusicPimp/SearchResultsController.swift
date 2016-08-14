@@ -15,6 +15,11 @@ class SearchResultsController: BaseMusicController {
     
     private var latestSearchTerm: String? = nil
     
+    override func viewDidLoad() {
+//        self.tableView.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
+        super.viewDidLoad()
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let track = results[indexPath.row]
         let cell = trackCell(track, index: indexPath)

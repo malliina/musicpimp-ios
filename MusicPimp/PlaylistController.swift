@@ -16,7 +16,7 @@ enum ListMode: Int {
 class PlaylistController: BaseMusicController {
     let defaultCellKey = "PimpMusicItemCell"
     let maxPopularRecentCount = 100
-    let embeddedTableContentInset: CGFloat = -64
+    static let embeddedTableContentInset: CGFloat = -64
     let emptyMessage = "The playlist is empty."
     var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
@@ -40,7 +40,7 @@ class PlaylistController: BaseMusicController {
     
     override func viewDidLoad() {
         // hack
-        self.tableView.contentInset = UIEdgeInsets(top: embeddedTableContentInset, left: 0, bottom: 0, right: 0)
+        self.tableView.contentInset = UIEdgeInsets(top: PlaylistController.embeddedTableContentInset, left: 0, bottom: 0, right: 0)
         super.viewDidLoad()
         registerNib(PlaylistController.mainAndSubtitleCellKey)
     }

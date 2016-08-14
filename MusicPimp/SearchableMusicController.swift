@@ -77,29 +77,24 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
     }
     
     func presentSearchController(searchController: UISearchController) {
-        
     }
     
     func willPresentSearchController(searchController: UISearchController) {
-        
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        
     }
     
     func willDismissSearchController(searchController: UISearchController) {
-        
     }
     
     func didDismissSearchController(searchController: UISearchController) {
-        
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         // Strips out all the leading and trailing spaces.
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
-        let strippedString = searchController.searchBar.text!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+        let strippedString = searchController.searchBar.text?.stringByTrimmingCharactersInSet(whitespaceCharacterSet) ?? ""
         self.resultsController.search(strippedString)
     }
     

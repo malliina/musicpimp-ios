@@ -86,6 +86,7 @@ class ListeningController: UIViewController {
             pc.onStateChanged
         })
         appearedListeners = [listener, stateListener]
+//        Log.info("Installed state listener")
     }
     
     func unlistenWhenAppeared() {
@@ -93,6 +94,7 @@ class ListeningController: UIViewController {
             listener.dispose()
         }
         appearedListeners = []
+//        Log.info("Uninstalled state listeners")
     }
     
     private func reinstallListeners(targetPlayer: PlayerType) {
