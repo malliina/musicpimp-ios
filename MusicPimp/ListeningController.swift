@@ -20,9 +20,9 @@ class ListeningController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
+        playerManager.playerChanged.addHandler(self) { (pc) -> PlayerType -> () in
             pc.onNewPlayer
-        })
+        }
     }
     
     override func viewWillAppear(animated: Bool) {

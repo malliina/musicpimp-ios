@@ -137,6 +137,7 @@
 		7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891441D5A73C100331A4D /* MainSubCell.swift */; };
 		7DC891471D5F4C0100331A4D /* ContainerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891461D5F4C0000331A4D /* ContainerParent.swift */; };
 		7DC891491D5F775800331A4D /* LibraryParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891481D5F775800331A4D /* LibraryParent.swift */; };
+		7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
@@ -313,6 +314,7 @@
 		7DC891441D5A73C100331A4D /* MainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSubCell.swift; sourceTree = "<group>"; };
 		7DC891461D5F4C0000331A4D /* ContainerParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerParent.swift; sourceTree = "<group>"; };
 		7DC891481D5F775800331A4D /* LibraryParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryParent.swift; sourceTree = "<group>"; };
+		7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpBarButton.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 				7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */,
 				7DC891441D5A73C100331A4D /* MainSubCell.swift */,
 				7DC891421D5A737A00331A4D /* MainSubCell.xib */,
+				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
 				7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */,
 				7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */,
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
@@ -853,6 +856,7 @@
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
 				7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */,
 				7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */,
+				7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */,
 				7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */,
 				7DC891491D5F775800331A4D /* LibraryParent.swift in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,

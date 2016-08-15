@@ -65,6 +65,7 @@ class PlaylistParent: ContainerParent {
         return findChild()
     }
     
+
     func savePlaylistAction() {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?

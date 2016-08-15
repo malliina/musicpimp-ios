@@ -56,7 +56,7 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         searchController.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        definesPresentationContext = true
+        definesPresentationContext = false
     }
     
     private func restoreSearch() {

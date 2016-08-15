@@ -68,7 +68,7 @@ class Util {
     }
     
     static func onError(pimpError: PimpError) {
-        let message = PimpErrorUtil.stringify(pimpError)
+        let message = PimpErrorUtil.stringifyDetailed(pimpError)
         Log.error(message)
     }
 }

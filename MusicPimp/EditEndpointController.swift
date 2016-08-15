@@ -106,7 +106,8 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     
     func errorMessage(e: Endpoint, error: PimpError) -> String {
         switch error {
-            case PimpError.ResponseFailure( _, let code, _):
+            case PimpError.ResponseFailure(let details):
+                let code = details.code
                 switch code {
                     case 401: return "Unauthorized. Check your username/password."
                     default: return "HTTP error code \(code)."

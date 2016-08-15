@@ -10,10 +10,7 @@ import Foundation
 import UIKit
 
 class LibraryController: SearchableMusicController {
-    static let tableContentInset: CGFloat = -64
-    let topInsetWhenSearching: CGFloat = 43
     static let LIBRARY = "library", PLAYER = "player"
-    // TODO articulate these magic numbers
     static let TABLE_CELL_HEIGHT_PLAIN = 44
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
     let loadingMessage = "Loading..."
@@ -29,8 +26,6 @@ class LibraryController: SearchableMusicController {
     private var downloadState: [Track: TrackProgress] = [:]
     
     override func viewDidLoad() {
-        // hack
-        tableView.contentInset = UIEdgeInsets(top: LibraryController.tableContentInset, left: 0, bottom: 0, right: 0)
         super.viewDidLoad()
         setFeedback(loadingMessage)
         if let folder = selected {
@@ -39,18 +34,7 @@ class LibraryController: SearchableMusicController {
         } else {
             loadRoot()
         }
-    }
-    
-    override func presentSearchController(searchController: UISearchController) {
-        tableView.contentInset = UIEdgeInsets(top: topInsetWhenSearching, left: 0, bottom: 0, right: 0)
-    }
-    
-    override func willDismissSearchController(searchController: UISearchController) {
-        tableView.contentInset = UIEdgeInsets(top: topInsetWhenSearching, left: 0, bottom: 0, right: 0)
-    }
-        
-    @IBAction func refreshClicked(sender: UIBarButtonItem) {
-        info("Item clicked")
+        Log.info("Top layout: \(topLayoutGuide.length)")
     }
     
     private func resetLibrary() {
@@ -70,7 +54,6 @@ class LibraryController: SearchableMusicController {
         self.renderTable(computeMessage(folder))
     }
     
-    //
     func computeMessage(folder: MusicFolder) -> String? {
         let isEmpty = folder.items.isEmpty
         if let selected = selected {
@@ -198,20 +181,11 @@ class LibraryController: SearchableMusicController {
             if let row = self.tableView.indexPathForSelectedRow {
                 let folder = musicItems[row.item]
                 destination.folder = folder
-                Log.info("Prepared for \(folder.title)")
             } else {
-                Log.error("No index")
-            }
-        } else if let destination = dest as? LibraryController {
-            if let row = self.tableView.indexPathForSelectedRow {
-                let folder = musicItems[row.item]
-                destination.selected = folder
-                Log.info("Prepared for \(folder.title)")
-            } else {
-                Log.error("No index")
+                Log.error("No index, destination \(dest)")
             }
         } else {
-            error("Unknown destination controller \(segue.destinationViewController)")
+            error("Unknown destination controller \(dest)")
         }
     }
     
@@ -229,9 +203,9 @@ extension LibraryController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         downloadState = [:]
-        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self, handler: { (lc) -> DownloadProgressUpdate -> () in
+        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self) { (lc) -> DownloadProgressUpdate -> () in
             lc.onDownloadProgressUpdate
-        })
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {

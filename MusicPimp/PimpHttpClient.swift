@@ -107,7 +107,7 @@ class PimpHttpClient: HttpClient {
             if let json = Json.asJson(data) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
-            onError(.ResponseFailure(resource, statusCode, errorMessage))
+            onError(.ResponseFailure(ResponseDetails(resource: resource, code: statusCode, message: errorMessage)))
         }
     }
     

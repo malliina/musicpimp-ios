@@ -10,7 +10,7 @@ import Foundation
 
 enum PimpError {
     case ParseError
-    case ResponseFailure(String, Int, String?)
+    case ResponseFailure(ResponseDetails)
     case NetworkFailure(RequestFailure)
     case SimpleError(ErrorMessage)
     
@@ -27,27 +27,49 @@ class PimpErrorUtil {
     static func stringify(error: PimpError) -> String {
         switch error {
         case .ParseError:
-            return "Parse error"
-        case .ResponseFailure(let resource, let code, let message):
+            return "Parse error."
+        case .ResponseFailure(let details):
+            let code = details.code
             switch code {
             case 400: // Bad Request
-                return "A network request was rejected"
+                return "A network request was rejected."
             case 401:
-                return "Check your username/password"
+                return "Check your username/password."
             case 404:
-                return "Resource not found: \(resource)"
+                return "Resource not found: \(details.resource)."
             default:
-                if let message = message {
+                if let message = details.message {
                     return "Error code: \(code), message: \(message)"
                 } else {
-                    return "Error code: \(code)"
+                    return "Error code: \(code)."
                 }
             }
-        case .NetworkFailure(let request):
-            return "Unable to connect to \(request.url.description)"
+        case .NetworkFailure( _):
+            return "A network error occurred."
         case .SimpleError(let message):
             return message.message
         }
+    }
+    
+    static func stringifyDetailed(error: PimpError) -> String {
+        switch error {
+        case .NetworkFailure(let request):
+            return "Unable to connect to \(request.url.description), status code \(request.code)."
+        default:
+            return stringify(error)
+        }
+    }
+}
+
+class ResponseDetails {
+    let resource: String
+    let code: Int
+    let message: String?
+    
+    init(resource: String, code: Int, message: String?) {
+        self.resource = resource
+        self.code = code
+        self.message = message
     }
 }
 

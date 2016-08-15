@@ -29,6 +29,7 @@ class ContainerParent: ListeningController {
         prevButton.setFontAwesomeTitle("fa-step-backward")
         playButton.setFontAwesomeTitle("fa-pause")
         nextButton.setFontAwesomeTitle("fa-step-forward")
+        self.automaticallyAdjustsScrollViewInsets = false
     }
     
     override func viewWillAppear(animated: Bool) {

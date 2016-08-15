@@ -71,7 +71,7 @@ class Downloader {
 
                             }
                         } else {
-                            onError(.ResponseFailure("\(url)", response.statusCode, nil))
+                            onError(.ResponseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))
                         }
                     }
                 }
