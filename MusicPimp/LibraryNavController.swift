@@ -22,35 +22,40 @@ class LibraryNavController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        libraryListener = libraryManager.libraryChanged.addHandler(self, handler: { (ivc) -> LibraryType -> () in
+        libraryListener = libraryManager.libraryChanged.addHandler(self) { (ivc) -> LibraryType -> () in
             ivc.onLibraryChanged
-        })
+        }
         resetContentListener()
     }
+    
     func resetContentListener() {
         contentListener?.dispose()
         contentListener = library.contentsUpdated.addHandler(self, handler: { (lm) -> MusicFolder? -> () in
             lm.onContentsUpdated
         })
     }
+    
     func onLibraryChanged(newLibrary: LibraryType) {
         Log.info("Library changed")
-        Util.onUiThread({ () in
+        Util.onUiThread {
             self.pop()
-        })
+        }
         resetContentListener()
     }
+    
     func onContentsUpdated(m: MusicFolder?) {
         Log.info("Contents updated")
-        Util.onUiThread({ () in
+        Util.onUiThread {
             self.pop()
-        })
+        }
     }
+    
     func pop(animated: Bool = false) {
         self.popToRootViewControllerAnimated(animated)
         let children = childViewControllers
+//        Log.info("Children: \(children.count)")
         if children.count == 1 {
-            if let libraryController = children.headOption() as? LibraryController {
+            if let libraryController = children.headOption() as? LibraryParent {
                 libraryController.loadRoot()
             }
         }

@@ -25,6 +25,15 @@ class LibraryParent: ContainerParent {
         }
     }
     
+    func loadRoot() {
+        let table: LibraryController? = findChild()
+        if let table = table {
+            table.loadRoot()
+        } else {
+            Log.error("Unable to find library table")
+        }
+    }
+    
     func refreshClicked(sender: UIBarButtonItem) {
         Log.info("Item clicked")
     }
