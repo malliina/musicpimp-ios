@@ -75,12 +75,8 @@ class SettingsController: CacheInfoController {
                 case "Cache":
                     text = settings.cacheEnabled ? currentLimitDescription : "off"
                 break
-                case "Alarm":
-                    text = ""
-                break
-                case "About":
-                    text = ""
                 default:
+                    text = ""
                 break
             }
             if let text = text {

@@ -16,7 +16,7 @@ class LibraryParent: ContainerParent {
         if let folder = folder {
             navigationItem.title = folder.title
         }
-        navigationItem.rightBarButtonItem = PimpBarButton(title: "Test", style: .Plain, onClick: refreshClicked)
+//        navigationItem.rightBarButtonItem = PimpBarButton(title: "Test", style: .Plain, onClick: refreshClicked)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

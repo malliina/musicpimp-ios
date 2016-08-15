@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             notifications.handleNotification(application, data: launchOptions)
         }
         SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
-        Log.info("didFinishLaunchingWithOptions")
+//        Log.info("didFinishLaunchingWithOptions")
         return true
     }
     

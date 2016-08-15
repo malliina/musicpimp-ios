@@ -37,7 +37,7 @@ protocol CoverServiceType {
 class CoverService {
     static let sharedInstance = CoverService()
     static let coversDir = Files.documentsPath.stringByAppendingString("/covers")
-    static let defaultCover = UIImage(named: "guitar.png")
+    static let defaultCover = UIImage(named: "pimp-512.png")
     let downloader = Downloader(basePath: coversDir)
     
     func cover(artist: String, album: String, f: CoverResult -> Void) {

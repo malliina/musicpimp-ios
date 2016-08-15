@@ -72,7 +72,6 @@ class BaseMusicController : PimpTableController {
             if let folder = item as? Folder {
                 displayActionsForFolder(folder, row: row)
             }
-            Log.info("Clicked \(item.title)")
         } else {
             Log.error("Unable to determine touched row")
         }

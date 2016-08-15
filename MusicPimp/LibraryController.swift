@@ -34,7 +34,6 @@ class LibraryController: SearchableMusicController {
         } else {
             loadRoot()
         }
-        Log.info("Top layout: \(topLayoutGuide.length)")
     }
     
     private func resetLibrary() {
