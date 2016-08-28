@@ -77,14 +77,20 @@ class LibraryController: SearchableMusicController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = libraryCell(tableView, indexPath: indexPath)
+//        tableView.backgroundColor = PimpColors.background
+        fixAppearance(cell)
+        return cell
+    }
+    
+    private func libraryCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
-        var cell: UITableViewCell? = nil
         if isFolder {
-            let folderCell = tableView.dequeueReusableCellWithIdentifier("FolderCell", forIndexPath: indexPath)
+            let folderCell = identifiedCell("FolderCell", index: indexPath)
             folderCell.textLabel?.text = item.title
             folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-            cell = folderCell
+            return folderCell
         } else {
             if let track = item as? Track, pimpCell = trackCell(track, index: indexPath) {
                 if let downloadProgress = downloadState[track] {
@@ -94,10 +100,12 @@ class LibraryController: SearchableMusicController {
                 } else {
                     pimpCell.progressView.hidden = true
                 }
-                cell = pimpCell
+                return pimpCell
+            } else {
+                // we should never get here
+                return super.tableView(tableView, cellForRowAtIndexPath: indexPath)
             }
         }
-        return cell!
     }
     
     func sheetAction(title: String, item: MusicItem, onTrack: Track -> Void, onFolder: Folder -> Void) -> UIAlertAction {

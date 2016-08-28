@@ -837,6 +837,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="1" green="0.083773086669999997" blue="0.049486413950000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <segue destination="gg5-Ho-NnV" kind="show" id="ONp-jQ-sx5"/>
                                         </connections>

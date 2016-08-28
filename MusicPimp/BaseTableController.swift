@@ -14,6 +14,12 @@ class BaseTableController: UITableViewController {
     
     let limiter = Limiter.sharedInstance
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // the background color when there are no more rows
+        self.view.backgroundColor = PimpColors.background
+    }
+    
     func registerNib(nameAndIdentifier: String) {
         self.tableView.registerNib(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
     }
@@ -51,6 +57,7 @@ class BaseTableController: UITableViewController {
         // makes no difference afaik, used in a backgroundView so its size is the same as that of the table
         let frame = CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
         let label = FeedbackLabel(frame: frame)
+        label.textColor = PimpColors.titles
         label.text = text
         label.numberOfLines = 0
         label.textAlignment = .Center

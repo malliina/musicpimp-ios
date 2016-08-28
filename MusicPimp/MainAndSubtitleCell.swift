@@ -16,6 +16,9 @@ class MainAndSubtitleCell: CustomAccessoryCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        backgroundColor = PimpColors.background
+        mainTitle.textColor = PimpColors.titles
+        subtitle.textColor = PimpColors.titles
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

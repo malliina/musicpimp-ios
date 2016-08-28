@@ -140,6 +140,8 @@
 		7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */; };
 		7DC891511D623E8100331A4D /* pimp-4096.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891501D623E8100331A4D /* pimp-4096.png */; };
 		7DC891531D623FB600331A4D /* pimp-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891521D623FB600331A4D /* pimp-512.png */; };
+		7DC891551D71B75800331A4D /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891541D71B75800331A4D /* Colors.swift */; };
+		7DC891571D71B8C400331A4D /* PimpColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891561D71B8C400331A4D /* PimpColors.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
@@ -319,6 +321,8 @@
 		7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpBarButton.swift; sourceTree = "<group>"; };
 		7DC891501D623E8100331A4D /* pimp-4096.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-4096.png"; path = "MusicPimp/Assets/pimp-4096.png"; sourceTree = "<group>"; };
 		7DC891521D623FB600331A4D /* pimp-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-512.png"; path = "MusicPimp/Assets/pimp-512.png"; sourceTree = "<group>"; };
+		7DC891541D71B75800331A4D /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		7DC891561D71B8C400331A4D /* PimpColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpColors.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
@@ -622,6 +626,8 @@
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
 				7D31A32F1C679B750035E9D0 /* Views */,
+				7DC891541D71B75800331A4D /* Colors.swift */,
+				7DC891561D71B8C400331A4D /* PimpColors.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";
@@ -841,6 +847,7 @@
 				7DC359641B35E853003B01B6 /* UIFont+FontAwesome.m in Sources */,
 				7D78C2951AF3CCA8001F0A65 /* Disposable.swift in Sources */,
 				7D6756C91B07CDD500BC0CA9 /* PlayerSettingController.swift in Sources */,
+				7DC891551D71B75800331A4D /* Colors.swift in Sources */,
 				7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */,
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
 				7DDE24701B656DD5007D810E /* PimpUtils.swift in Sources */,
@@ -874,6 +881,7 @@
 				7D1608BB1BE7BD730007B943 /* MusicFolder.swift in Sources */,
 				7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */,
 				7DE944D31BE67B6A00CD441B /* SavedPlaylist.swift in Sources */,
+				7DC891571D71B8C400331A4D /* PimpColors.swift in Sources */,
 				7D0CA9921AF6999E008F72EC /* Protocol.swift in Sources */,
 				7D4655791D1EA79B00F6141D /* ScopeSearchableController.swift in Sources */,
 				7D1608C31BE7E3030007B943 /* PlaylistID.swift in Sources */,

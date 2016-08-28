@@ -23,7 +23,7 @@ class PimpSwitch: UISwitch {
         super.init(coder: aDecoder)
     }
     
-    func runOnClick(uiSwitch: UISwitch) {
+    @objc private func runOnClick(uiSwitch: UISwitch) {
         onClick(uiSwitch)
     }
 }
