@@ -26,6 +26,8 @@ class EditAlarmTableViewController: BaseTableController {
         if self.mutableAlarm == nil {
             self.mutableAlarm = MutableAlarm()
         }
+        // hack
+        datePicker.setValue(PimpColors.titles, forKey: "textColor")
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -118,7 +120,8 @@ class EditAlarmTableViewController: BaseTableController {
                 break
             case deleteAlarmIdentifier:
                 cell.textLabel?.enabled = mutableAlarm?.id != nil
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.textLabel?.textColor = PimpColors.deletion
+                cell.selectionStyle = UITableViewCellSelectionStyle.Default
                 break
             default:
                 break

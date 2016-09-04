@@ -10,8 +10,16 @@ import Foundation
 
 class PimpColors {
     static let background = Colors.rgb(2, green: 23, blue: 42)
+    static let lighterBackground = Colors.rgb(3, green: 32, blue: 52)
     static let titles = Colors.rgb(244, green: 244, blue: 244)
-    static let borders = Colors.rgb(255, green: 255, blue: 255, alpha: 0.2)
+    static let separator = Colors.rgb(255, green: 255, blue: 255, alpha: 0.2)
     static let notSelected = Colors.rgb(161, green: 161, blue: 161)
+    static let subtitles = PimpColors.notSelected
     static let selected = Colors.rgb(36, green: 131, blue: 233)
+    static let selectedBackground = PimpColors.selected
+//    static let tintColor = UIColor.greenColor()
+    static let tintColor = PimpColors.selected
+    static let barStyle = UIBarStyle.Black
+    static let deletion = UIColor.redColor()
+    static let placeholder = PimpColors.separator
 }

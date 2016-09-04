@@ -15,7 +15,6 @@ class SettingsController: CacheInfoController {
     
     var activeLibrary: Endpoint { return libraryManager.loadActive() }
     var activePlayer: Endpoint  { return playerManager.loadActive() }
-    //var listener: Disposable? = nil
     
     @IBOutlet var libraryDetail: UILabel!
     @IBOutlet var playerDetail: UILabel!
@@ -27,22 +26,15 @@ class SettingsController: CacheInfoController {
         super.viewDidLoad()
         let libraryManager = LibraryManager.sharedInstance
         let playerManager = PlayerManager.sharedInstance
-        libraryManager.changed.addHandler(self, handler: { (sc) -> Endpoint -> () in
+        libraryManager.changed.addHandler(self) { (sc) -> Endpoint -> () in
             sc.onLibraryChanged
-        })
-        playerManager.changed.addHandler(self, handler: { (sc) -> Endpoint -> () in
+        }
+        playerManager.changed.addHandler(self) { (sc) -> Endpoint -> () in
             sc.onPlayerChanged
-        })
-        settings.cacheEnabledChanged.addHandler(self, handler: { (sc) -> Bool -> () in
+        }
+        settings.cacheEnabledChanged.addHandler(self) { (sc) -> Bool -> () in
             sc.onCacheEnabledChanged
-        })
-//        settings.cacheLimitChanged.addHandler(self, handler: { (sc) -> StorageSize -> () in
-//            sc.onCacheLimitChanged
-//        })
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        
+        }
     }
     
     private func onLibraryChanged(newLibrary: Endpoint) {
@@ -64,26 +56,18 @@ class SettingsController: CacheInfoController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         if let reuseIdentifier = cell.reuseIdentifier {
-            var text: String? = nil
-            switch reuseIdentifier {
-                case "MusicSource":
-                    text = activeLibrary.name
-                break
-                case "PlaybackDevice":
-                    text = activePlayer.name
-                break
-                case "Cache":
-                    text = settings.cacheEnabled ? currentLimitDescription : "off"
-                break
-                default:
-                    text = ""
-                break
-            }
-            if let text = text {
-                cell.detailTextLabel?.text = text
-            }
+            cell.detailTextLabel?.text = textForIdentifier(reuseIdentifier)
         }
         return cell
+    }
+    
+    private func textForIdentifier(reuseIdentifier: String) -> String {
+        switch reuseIdentifier {
+            case "MusicSource": return activeLibrary.name
+            case "PlaybackDevice": return activePlayer.name
+            case "Cache": return settings.cacheEnabled ? currentLimitDescription : "off"
+            default: return ""
+        }
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

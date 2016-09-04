@@ -18,6 +18,7 @@ class BaseTableController: UITableViewController {
         super.viewDidLoad()
         // the background color when there are no more rows
         self.view.backgroundColor = PimpColors.background
+//        self.tableView.backgroundColor = PimpColors.background
     }
     
     func registerNib(nameAndIdentifier: String) {

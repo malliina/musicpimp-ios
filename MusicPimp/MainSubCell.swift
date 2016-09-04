@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MainSubCell: UITableViewCell {
+class MainSubCell: PimpCell {
     @IBOutlet var mainTitle: UILabel!
     @IBOutlet var subtitle: UILabel!
 }

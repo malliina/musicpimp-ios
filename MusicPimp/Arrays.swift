@@ -156,4 +156,15 @@ extension Dictionary {
         let pairs = self.filter(includeElement)
         return Dictionary<Key, Value>(pairs)
     }
+    
+    func addAll(other: [Key: Value]) -> [Key: Value] {
+        var combined = Dictionary<Key, Value>()
+        for(k, v) in self {
+            combined.updateValue(v, forKey: k)
+        }
+        for(key, value) in other {
+            combined.updateValue(value, forKey: key)
+        }
+        return combined
+    }
 }

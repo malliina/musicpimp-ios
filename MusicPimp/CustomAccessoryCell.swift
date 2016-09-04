@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CustomAccessoryCell: UITableViewCell {
+class CustomAccessoryCell: PimpCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         // Removes right-side accessory view margin

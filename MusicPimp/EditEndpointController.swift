@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class EditEndpointController: UIViewController, UITextFieldDelegate {
+class EditEndpointController: PimpViewController, UITextFieldDelegate {
     
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var typeControl: UISegmentedControl!
@@ -32,6 +32,7 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
     var editedItem: Endpoint? = nil
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
         textFields.forEach { (elem) -> () in
             elem.delegate = self
@@ -125,6 +126,7 @@ class EditEndpointController: UIViewController, UITextFieldDelegate {
         Util.onUiThread {
             self.feedbackText.text = f
             self.feedbackText.font = UIFont.systemFontOfSize(16)
+            self.feedbackText.textColor = PimpColors.titles
         }
     }
     

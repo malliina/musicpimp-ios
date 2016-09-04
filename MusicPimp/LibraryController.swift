@@ -32,6 +32,7 @@ class LibraryController: SearchableMusicController {
             self.navigationItem.title = folder.title
             loadFolder(folder.id)
         } else {
+//            self.navigationItem.title = "MUSIC"
             loadRoot()
         }
     }
@@ -77,10 +78,7 @@ class LibraryController: SearchableMusicController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = libraryCell(tableView, indexPath: indexPath)
-//        tableView.backgroundColor = PimpColors.background
-        fixAppearance(cell)
-        return cell
+        return libraryCell(tableView, indexPath: indexPath)
     }
     
     private func libraryCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -89,6 +87,7 @@ class LibraryController: SearchableMusicController {
         if isFolder {
             let folderCell = identifiedCell("FolderCell", index: indexPath)
             folderCell.textLabel?.text = item.title
+//            folderCell.textLabel?.textColor = PimpColors.titles
             folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
             return folderCell
         } else {

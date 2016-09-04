@@ -8,7 +8,7 @@
 
 import Foundation
 
-class VolumeViewController: UIViewController {
+class VolumeViewController: PimpViewController {
     
     @IBOutlet var lowVolumeButton: UIButton!
     @IBOutlet var highVolumeButton: UIButton!

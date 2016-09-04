@@ -20,6 +20,8 @@ class PimpTabBarController: UITabBarController {
             decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
             decorate(tabs[3], title: "Settings", fontAwesomeName: "wrench")
         }
+//        self.tabBar.backgroundColor = PimpColors.background
+//        tabBar.barTintColor = PimpColors.background
     }
     
     func decorate(tabItem: UITabBarItem, title: String, fontAwesomeName: String) {
@@ -36,7 +38,7 @@ class PimpTabBarController: UITabBarController {
     }
     
     func icon(name: String, selected: Bool) -> UIImage {
-        let iconColor = selected ? UIColor.blueColor() : UIColor.grayColor()
+        let iconColor = selected ? PimpColors.tintColor : UIColor.grayColor()
         let image = UIImage(icon: name, backgroundColor: UIColor.clearColor(), iconColor: iconColor, fontSize: tabIconFontSize)
         return image.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
     }

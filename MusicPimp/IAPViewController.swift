@@ -10,7 +10,7 @@ import Foundation
 import StoreKit
 import QuartzCore
 
-class IAPViewController: UIViewController {
+class IAPViewController: PimpViewController {
     static let StoryboardId = "IAPViewController"
     
     var products: [SKProduct] = []

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class LibraryNavController: UINavigationController {
+class LibraryNavController: PimpNavController {
     
     @IBOutlet var libraryTabBarItem: UITabBarItem!
     

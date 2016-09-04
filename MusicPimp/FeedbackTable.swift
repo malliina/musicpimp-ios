@@ -29,11 +29,6 @@ class FeedbackTable: BaseTableController {
     func identifiedCell(name: String, index: NSIndexPath) -> UITableViewCell {
         return self.tableView.dequeueReusableCellWithIdentifier(name, forIndexPath: index)
     }
-    
-    func fixAppearance(cell: UITableViewCell) {
-        cell.backgroundColor = PimpColors.background
-        cell.textLabel?.textColor = PimpColors.titles
-    }
 
     func feedbackCellWithText(tableView: UITableView, indexPath: NSIndexPath, text: String) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(FeedbackTable.feedbackIdentifier, forIndexPath: indexPath)
@@ -42,7 +37,6 @@ class FeedbackTable: BaseTableController {
             label.numberOfLines = 0
             label.text = text
         }
-        fixAppearance(cell)
         return cell
     }
 

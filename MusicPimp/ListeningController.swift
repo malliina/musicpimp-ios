@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ListeningController: UIViewController {
+class ListeningController: PimpViewController {
     var loadedListeners: [Disposable] = []
     var appearedListeners: [Disposable] = []
     
@@ -64,9 +64,9 @@ class ListeningController: UIViewController {
     }
     
     func listenWhenLoaded(targetPlayer: PlayerType) {
-        let trackListener = targetPlayer.trackEvent.addHandler(self, handler: { (pc) -> Track? -> () in
+        let trackListener = targetPlayer.trackEvent.addHandler(self) { (pc) -> Track? -> () in
             pc.updateTrack
-        })
+        }
         loadedListeners = [trackListener]
     }
     
@@ -79,12 +79,12 @@ class ListeningController: UIViewController {
     
     func listenWhenAppeared(targetPlayer: PlayerType) {
         unlistenWhenAppeared()
-        let listener = targetPlayer.timeEvent.addHandler(self, handler: { (pc) -> Duration -> () in
+        let listener = targetPlayer.timeEvent.addHandler(self) { (pc) -> Duration -> () in
             pc.onTimeUpdated
-        })
-        let stateListener = targetPlayer.stateEvent.addHandler(self, handler: { (pc) -> PlaybackState -> () in
+        }
+        let stateListener = targetPlayer.stateEvent.addHandler(self) { (pc) -> PlaybackState -> () in
             pc.onStateChanged
-        })
+        }
         appearedListeners = [listener, stateListener]
 //        Log.info("Installed state listener")
     }

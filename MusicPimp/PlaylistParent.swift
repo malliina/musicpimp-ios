@@ -20,7 +20,8 @@ class PlaylistParent: ContainerParent {
         super.viewDidLoad()
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(self.savePlaylistAction))
         saveButton.style = UIBarButtonItemStyle.Done
-        let dragButton = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.dragButtonClicked(_:)))
+        let dragButton = PimpBarButton(title: "Edit", style: .Plain, onClick: self.dragButtonClicked)
+        // UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.dragButtonClicked(_:)))
         let loadPlaylistButton = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: #selector(self.loadPlaylistClicked(_:)))
         self.navigationItem.leftBarButtonItems = [ loadPlaylistButton, dragButton ]
         self.dragButton = dragButton

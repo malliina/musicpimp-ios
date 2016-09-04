@@ -33,7 +33,6 @@ class CacheTableController: CacheInfoController {
     }
     
     override func onCacheLimitChanged(newSize: StorageSize) {
-        info("Got \(newSize)")
         Util.onUiThread {
             self.currentLimitLabel.text = self.currentLimitDescription
         }
@@ -55,7 +54,7 @@ class CacheTableController: CacheInfoController {
                 //currentLimitLabel.text = currentLimitDescription
                 break
             case CacheTableController.DeleteCacheCell:
-                
+                cell.textLabel?.textColor = PimpColors.deletion
                 break
             default:
                 break

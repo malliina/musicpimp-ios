@@ -16,7 +16,8 @@ class PimpMusicItemCell : CustomAccessoryCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = PimpColors.background
         titleLabel.textColor = PimpColors.titles
+//        backgroundColor = PimpColors.background
+//        titleLabel.textColor = PimpColors.titles
     }
 }

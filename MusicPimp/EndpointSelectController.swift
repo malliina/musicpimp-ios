@@ -33,6 +33,7 @@ class EndpointSelectController: BaseTableController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         endpoints = settings.endpoints()
         updateSelected(manager.loadActive())
     }

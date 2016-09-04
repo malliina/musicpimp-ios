@@ -156,7 +156,7 @@ class PlaylistController: BaseMusicController {
             cell.progressView.hidden = true
         }
         cell.titleLabel?.text = track.title
-        let (titleColor, selectionStyle) = isHighlight ? (UIColor.blueColor(), UITableViewCellSelectionStyle.Blue) : (UIColor.blackColor(), UITableViewCellSelectionStyle.Default)
+        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.Blue) : (PimpColors.titles, UITableViewCellSelectionStyle.Default)
         cell.titleLabel?.textColor = titleColor
         cell.selectionStyle = selectionStyle
     }

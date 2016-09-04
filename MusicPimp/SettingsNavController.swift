@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SettingsNavController: UINavigationController {
+class SettingsNavController: PimpNavController {
     
     @IBOutlet var settingsTabBarItem: UITabBarItem!
 }

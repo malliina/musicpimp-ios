@@ -7,6 +7,6 @@
 //
 
 import Foundation
-class TabNavController: UINavigationController {
+class TabNavController: PimpNavController {
     
 }

@@ -8,12 +8,11 @@
 
 import Foundation
 
-class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
+class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
     
     @IBOutlet var nameText: UITextField!
     
     @IBAction func cancel(sender: UIBarButtonItem) {
-        Log.info("Cancel")
 //        self.navigationController?.popViewControllerAnimated(true)
         dismissViewControllerAnimated(true, completion: nil)
     }

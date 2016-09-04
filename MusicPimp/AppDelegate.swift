@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
 //        Log.info("didFinishLaunchingWithOptions")
+        initTheme(application)
         return true
     }
     
@@ -50,6 +51,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let files = contents.files.count
         let size = Files.sharedInstance.folderSize(rootDir)
         Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
+    }
+    
+    func initTheme(app: UIApplication) {
+        app.delegate?.window??.tintColor = PimpColors.tintColor
+        UINavigationBar.appearance().barStyle = PimpColors.barStyle
+        UINavigationBar.appearance().tintColor = PimpColors.tintColor
+        UITabBar.appearance().barStyle = PimpColors.barStyle
+        UIView.appearance().tintColor = PimpColors.tintColor
+        UITableView.appearance().backgroundColor = PimpColors.background
+        UITableView.appearance().separatorColor = PimpColors.separator
+        UITableViewCell.appearance().backgroundColor = PimpColors.background
+        let backgroundView = PimpView()
+        backgroundView.backgroundColor = PimpColors.selectedBackground
+        UITableViewCell.appearance().selectedBackgroundView = backgroundView
+        UISegmentedControl.appearance().backgroundColor = PimpColors.background
+        // titles for cell texts
+        UILabel.appearance().textColor = PimpColors.titles
+        UISearchBar.appearance().barStyle = PimpColors.barStyle
+        UITextView.appearance().backgroundColor = PimpColors.background
+        UITextView.appearance().textColor = PimpColors.titles
+        PimpView.appearance().backgroundColor = PimpColors.background
     }
     
     func initAudio() {

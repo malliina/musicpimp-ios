@@ -13,6 +13,7 @@ class PlayerController: ListeningController {
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
+    @IBOutlet var labelContianer: UIView!
     @IBOutlet var volumeBarButton: UIBarButtonItem!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var albumLabel: UILabel!
@@ -31,12 +32,11 @@ class PlayerController: ListeningController {
         let volumeIconFontSize: Int32 = 24
         volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clearColor(), iconColor: UIColor.blueColor(), fontSize: volumeIconFontSize)
         listenWhenLoaded(player)
-        playerManager.playerChanged.addHandler(self, handler: { (pc) -> PlayerType -> () in
-            pc.onNewPlayer
-        })
+//        labelContianer.backgroundColor = PimpColors.background
         pause.setFontAwesomeTitle("fa-play")
         prevButton.setFontAwesomeTitle("fa-step-backward")
         nextButton.setFontAwesomeTitle("fa-step-forward")
+        self.labelContianer.backgroundColor = PimpColors.background
     }
     
     func updatePlayPause(isPlaying: Bool) {
