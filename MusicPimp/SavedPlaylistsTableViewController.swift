@@ -34,7 +34,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     func onPlaylists(sps: [SavedPlaylist]) {
         playlists = sps
-        let feedback: String? = sps.isEmpty ? "No saved playlists" : nil
+        let feedback: String? = sps.isEmpty ? emptyMessage : nil
         renderTable(feedback)
     }
     

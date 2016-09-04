@@ -16,9 +16,10 @@ class BaseTableController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // the background color when there are no more rows
+        // The background color when there are no more rows
         self.view.backgroundColor = PimpColors.background
-//        self.tableView.backgroundColor = PimpColors.background
+        // Removes separators when there are no more rows
+        self.tableView.tableFooterView = UIView()
     }
     
     func registerNib(nameAndIdentifier: String) {

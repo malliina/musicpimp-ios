@@ -13,7 +13,7 @@ class PlayerController: ListeningController {
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
-    @IBOutlet var labelContianer: UIView!
+    @IBOutlet var labelContainer: UIView!
     @IBOutlet var volumeBarButton: UIBarButtonItem!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var albumLabel: UILabel!
@@ -27,20 +27,37 @@ class PlayerController: ListeningController {
     
     @IBOutlet var coverImage: UIImageView!
     
+    let playIconName = "fa-play"
+    
+    let minHeightForNav: CGFloat = 450
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let volumeIconFontSize: Int32 = 24
         volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clearColor(), iconColor: UIColor.blueColor(), fontSize: volumeIconFontSize)
         listenWhenLoaded(player)
 //        labelContianer.backgroundColor = PimpColors.background
-        pause.setFontAwesomeTitle("fa-play")
+        pause.setFontAwesomeTitle(playIconName)
         prevButton.setFontAwesomeTitle("fa-step-backward")
         nextButton.setFontAwesomeTitle("fa-step-forward")
-        self.labelContianer.backgroundColor = PimpColors.background
+        self.labelContainer.backgroundColor = PimpColors.background
+        albumLabel.textColor = PimpColors.subtitles
+        positionLabel.textColor = PimpColors.subtitles
+        durationLabel.textColor = PimpColors.subtitles
+        updateNavigationBarVisibility(self.view.frame.size.height)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        updateNavigationBarVisibility(size.height)
+    }
+    
+    func updateNavigationBarVisibility(height: CGFloat) {
+        let isHidden = height < minHeightForNav
+        self.navigationController?.setNavigationBarHidden(isHidden, animated: true)
     }
     
     func updatePlayPause(isPlaying: Bool) {
-        let faIcon = isPlaying ? "fa-pause" : "fa-play"
+        let faIcon = isPlaying ? "fa-pause" : playIconName
         pause.setFontAwesomeTitle(faIcon)
     }
     
@@ -50,7 +67,7 @@ class PlayerController: ListeningController {
         updatePlayPause(current.isPlaying)
         if let track = current.track {
             updateTrack(track)
-            seek.value = current.position.secondsFloat
+            updatePosition(current.position)
         } else {
             updateNoMedia()
         }

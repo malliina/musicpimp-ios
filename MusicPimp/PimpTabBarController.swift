@@ -18,7 +18,7 @@ class PimpTabBarController: UITabBarController {
             decorate(tabs[0], title: "Music", fontAwesomeName: "music")
             decorate(tabs[1], title: "Player", fontAwesomeName: "play-circle")
             decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
-            decorate(tabs[3], title: "Settings", fontAwesomeName: "wrench")
+            decorate(tabs[3], title: "Settings", fontAwesomeName: "cog")
         }
 //        self.tabBar.backgroundColor = PimpColors.background
 //        tabBar.barTintColor = PimpColors.background
