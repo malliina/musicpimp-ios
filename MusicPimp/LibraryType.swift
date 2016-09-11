@@ -21,8 +21,8 @@ protocol LibraryType {
     
     func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void)
     func playlist(id: PlaylistID, onError: PimpError -> Void, f: SavedPlaylist -> Void)
-    func popular(count: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void)
-    func recent(count: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void)
+    func popular(from: Int, until: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void)
+    func recent(from: Int, until: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void)
     func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void)
     func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void)
     

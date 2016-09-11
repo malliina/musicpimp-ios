@@ -26,4 +26,22 @@ class PimpBarButton: UIBarButtonItem {
     func runOnClick(item: UIBarButtonItem) {
         onClick(item)
     }
+    
+//    static func system(systemStyle: UIBarButtonSystemItem, target: AnyObject?, onClick: UIBarButtonItem -> Void) -> UIBarButtonItem {
+//        let a = ActionHack(onClick: onClick)
+//        return UIBarButtonItem(barButtonSystemItem: systemStyle, target: target, action: #selector(a.onAction(_:)))
+//    }
 }
+
+//class ActionHack {
+//    let onClick: UIBarButtonItem -> Void
+//    
+//    init(onClick: UIBarButtonItem -> Void) {
+//        self.onClick = onClick
+//    }
+//    
+//    @objc func onAction(item: UIBarButtonItem) {
+//        Log.info("Action")
+//        return onClick(item)
+//    }
+//}

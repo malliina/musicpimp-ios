@@ -92,6 +92,7 @@ class BaseMusicController : PimpTableController {
         let title = track.title
         let message = track.artist
         let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        sheet.view.window?.backgroundColor = PimpColors.background
         let playAction = playTrackAccessoryAction(track, row: row)
         let addAction = addTrackAccessoryAction(track, row: row)
         let downloadAction = accessoryAction("Download") { _ in
@@ -110,6 +111,10 @@ class BaseMusicController : PimpTableController {
             popover.sourceView = self.view
 //            popover.sourceRect = self.view.frame
         }
+        //sheet.view.tintColor = UIColor.greenColor()
+        //let sheetView = sheet.view.subviews.headOption()?.subviews.headOption()
+        //sheetView?.backgroundColor = UIColor.greenColor()
+        //sheetView?.layer.cornerRadius = 15
         self.presentViewController(sheet, animated: true, completion: nil)
     }
     

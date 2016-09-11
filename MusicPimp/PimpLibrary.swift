@@ -43,12 +43,12 @@ public class PimpLibrary: BaseLibrary {
         client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse, f: f, onError: onError)
     }
     
-    override func popular(count: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void) {
-        client.pimpGetParsed("\(Endpoints.Popular)", parse: parsePopulars, f: f, onError: onError)
+    override func popular(from: Int, until: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void) {
+        client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", parse: parsePopulars, f: f, onError: onError)
     }
     
-    override func recent(count: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void) {
-        client.pimpGetParsed("\(Endpoints.Recent)", parse: parseRecents, f: f, onError: onError)
+    override func recent(from: Int, until: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void) {
+        client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", parse: parseRecents, f: f, onError: onError)
     }
     
     override func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {

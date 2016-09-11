@@ -15,7 +15,8 @@ enum ListMode: Int {
 
 class PlaylistController: BaseMusicController {
     let defaultCellKey = "PimpMusicItemCell"
-    let maxPopularRecentCount = 100
+    let itemsPerLoad = 100
+    let minItemsRemainingBeforeLoadMore = 20
     let emptyMessage = "The playlist is empty."
     var mode: ListMode = .Playlist
     var current: Playlist = Playlist.empty
@@ -87,6 +88,35 @@ class PlaylistController: BaseMusicController {
         return cellHeight()
     }
     
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        maybeLoadMore(indexPath.row)
+    }
+    
+    private func maybeLoadMore(currentRow: Int) {
+        let trackCount = tracks.count
+        if currentRow + minItemsRemainingBeforeLoadMore == trackCount {
+            loadMore()
+        }
+    }
+    
+    func loadMore() {
+        // TODO DRY by refactoring recent and popular handling into reusable modules
+        switch mode {
+        case .Popular:
+            let oldSize = popular.count
+            library.popular(oldSize, until: oldSize + itemsPerLoad, onError: onPopularError) { content in
+                self.onMorePopulars(oldSize, populars: content)
+            }
+        case .Recent:
+            let oldSize = recent.count
+            library.recent(oldSize, until: oldSize + itemsPerLoad, onError: onRecentError) { content in
+                self.onMoreRecents(oldSize, recents: content)
+            }
+        default:
+            Log.info("Lazy not implemented for \(mode)")
+        }
+    }
+    
     override func cellHeight() -> CGFloat {
         switch mode {
         case .Playlist: return defaultCellHeight
@@ -119,11 +149,11 @@ class PlaylistController: BaseMusicController {
         case .Popular:
             popular = []
             renderTable("Loading popular tracks...")
-            library.popular(maxPopularRecentCount, onError: onPopularError, f: onPopularsLoaded)
+            library.popular(0, until: itemsPerLoad, onError: onPopularError, f: onPopularsLoaded)
         case .Recent:
             recent = []
             renderTable("Loading recent tracks...")
-            library.recent(maxPopularRecentCount, onError: onRecentError, f: onRecentsLoaded)
+            library.recent(0, until: itemsPerLoad, onError: onRecentError, f: onRecentsLoaded)
         }
     }
     
@@ -240,6 +270,38 @@ class PlaylistController: BaseMusicController {
     func onPopularsLoaded(populars: [PopularEntry]) {
         popular = populars
         reRenderTable()
+    }
+    
+    func onMoreRecents(from: Int, recents: [RecentEntry]) {
+        recent = appendConditionally(recent, from: from, newContent: recents)
+        onMore(from, newRows: recents.count, expectedSize: recent.count, expectedMode: .Recent)
+    }
+    
+    func onMorePopulars(from: Int, populars: [PopularEntry]) {
+        popular = appendConditionally(popular, from: from, newContent: populars)
+        onMore(from, newRows: populars.count, expectedSize: popular.count, expectedMode: .Popular)
+    }
+    
+    func onMore(from: Int, newRows: Int, expectedSize: Int, expectedMode: ListMode) {
+        let rows: [Int] = Array(from..<from+newRows)
+        let indexPaths = rows.map { row in NSIndexPath(forItem: row, inSection: 0) }
+        onUiThread {
+            if self.mode == expectedMode && (from+newRows) == expectedSize {
+                self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Bottom)
+                Log.info("Updated table with \(indexPaths.count) more items")
+            }
+        }
+    }
+    
+    func appendConditionally<T>(src: [T], from: Int, newContent: [T]) -> [T] {
+        let oldSize = src.count
+        if oldSize == from {
+            return src + newContent
+            //src.appendContentsOf(newContent)
+        } else {
+            Log.info("Not appending because of list size mismatch. Was: \(oldSize), expected \(from)")
+            return src
+        }
     }
     
     func onPopularError(e: PimpError) {

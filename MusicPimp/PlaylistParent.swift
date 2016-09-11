@@ -18,10 +18,11 @@ class PlaylistParent: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(self.savePlaylistAction))
+//        let saveButton = PimpBarButton.system(.Save, target: self, onClick: self.savePlaylistAction)
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(self.savePlaylistAction))
         saveButton.style = UIBarButtonItemStyle.Done
         let dragButton = PimpBarButton(title: "Edit", style: .Plain, onClick: self.dragButtonClicked)
-        // UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(self.dragButtonClicked(_:)))
+//        let loadPlaylistButton = PimpBarButton.system(.Bookmarks, target: self, onClick: self.loadPlaylistClicked)
         let loadPlaylistButton = UIBarButtonItem(barButtonSystemItem: .Bookmarks, target: self, action: #selector(self.loadPlaylistClicked(_:)))
         self.navigationItem.leftBarButtonItems = [ loadPlaylistButton, dragButton ]
         self.dragButton = dragButton
@@ -67,7 +68,7 @@ class PlaylistParent: ContainerParent {
     }
     
 
-    func savePlaylistAction() {
+    func savePlaylistAction(item: UIBarButtonItem) {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?
             displayActionsForPlaylist(playlist)
