@@ -621,7 +621,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Set Volume" id="l6I-hq-rls">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="MeM-oE-PzY">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="MeM-oE-PzY">
                             <connections>
                                 <action selector="backClicked:" destination="2Cn-go-kYH" id="Laa-Sb-Ucy"/>
                             </connections>
