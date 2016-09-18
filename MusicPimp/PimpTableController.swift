@@ -18,7 +18,7 @@ class PimpTableController: FeedbackTable {
     var library: LibraryType { return libraryManager.active }
     var player: PlayerType { return playerManager.active }
     
-    func onLoadError(error: PimpError) {
+    func onLoadError(_ error: PimpError) {
         clearItems()
         let errorMessage = PimpError.stringify(error)
         renderTable(errorMessage)
@@ -29,26 +29,26 @@ class PimpTableController: FeedbackTable {
         
     }
     
-    func playTracks(tracks: [Track]) {
+    func playTracks(_ tracks: [Track]) {
         limitChecked {
             self.playTracks2(tracks)
         }
     }
     
-    private func playTracks2(tracks: [Track]) {
+    fileprivate func playTracks2(_ tracks: [Track]) {
         if let first = tracks.first {
             playAndDownload2(first)
             addTracks2(tracks.tail())
         }
     }
     
-    func addTracks(tracks: [Track]) {
+    func addTracks(_ tracks: [Track]) {
         limitChecked {
             self.addTracks2(tracks)
         }
     }
     
-    private func addTracks2(tracks: [Track]) {
+    fileprivate func addTracks2(_ tracks: [Track]) {
         if !tracks.isEmpty {
             info("Adding \(tracks.count) tracks")
             player.playlist.add(tracks)
@@ -56,18 +56,18 @@ class PimpTableController: FeedbackTable {
         }
     }
     
-    func playAndDownload(track: Track) {
+    func playAndDownload(_ track: Track) {
         limitChecked {
             self.playAndDownload2(track)
         }
     }
     
-    private func playAndDownload2(track: Track) {
+    fileprivate func playAndDownload2(_ track: Track) {
         player.resetAndPlay(track)
         downloadIfNeeded([track])
     }
     
-    func downloadIfNeeded(tracks: [Track]) {
+    func downloadIfNeeded(_ tracks: [Track]) {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
             let tracksToDownload = newTracks.take(maxNewDownloads)
@@ -77,7 +77,7 @@ class PimpTableController: FeedbackTable {
         }
     }
     
-    func startDownload(track: Track) {
+    func startDownload(_ track: Track) {
         BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
     }
 }

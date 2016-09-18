@@ -14,7 +14,7 @@ class ExternalCommandDelegate: NSObject {
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     
-    func initialize(commandCenter: MPRemoteCommandCenter) {
+    func initialize(_ commandCenter: MPRemoteCommandCenter) {
         commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
         commandCenter.pauseCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPause))
         commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onTogglePlayPause))
@@ -26,20 +26,20 @@ class ExternalCommandDelegate: NSObject {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
         commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
-        LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> Track? -> () in
+        LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> (Track?) -> () in
             ecd.onLocalTrackChanged
         })
     }
     
-    func onLocalTrackChanged(track: Track?) {
-        let center = MPNowPlayingInfoCenter.defaultCenter()
+    func onLocalTrackChanged(_ track: Track?) {
+        let center = MPNowPlayingInfoCenter.default()
         if let track = track {
             var info: [String: AnyObject] = [
-                MPMediaItemPropertyTitle: track.title,
-                MPMediaItemPropertyArtist: track.artist,
-                MPMediaItemPropertyAlbumTitle: track.album,
-                MPMediaItemPropertyMediaType: MPMediaType.Music.rawValue,
-                MPMediaItemPropertyPlaybackDuration: NSTimeInterval(track.duration.seconds)
+                MPMediaItemPropertyTitle: track.title as AnyObject,
+                MPMediaItemPropertyArtist: track.artist as AnyObject,
+                MPMediaItemPropertyAlbumTitle: track.album as AnyObject,
+                MPMediaItemPropertyMediaType: MPMediaType.music.rawValue as AnyObject,
+                MPMediaItemPropertyPlaybackDuration: TimeInterval(track.duration.seconds) as AnyObject
             ]
             
             CoverService.sharedInstance.cover(track.artist, album: track.album) {
@@ -88,25 +88,25 @@ class ExternalCommandDelegate: NSObject {
         info("prev")
     }
     
-    func skipForward(skipEvent: MPSkipIntervalCommandEvent) {
+    func skipForward(_ skipEvent: MPSkipIntervalCommandEvent) {
         let interval = skipEvent.interval
         info("skipForward \(interval)")
     }
     
-    func skipBackward(skipEvent: MPSkipIntervalCommandEvent) {
+    func skipBackward(_ skipEvent: MPSkipIntervalCommandEvent) {
         info("skipBackward")
     }
     
-    func seekForward(seekEvent: MPSeekCommandEvent) {
+    func seekForward(_ seekEvent: MPSeekCommandEvent) {
         let t = seekEvent.type
         info("seekForward \(t)")
     }
     
-    func seekBackward(seekEvent: MPSeekCommandEvent) {
+    func seekBackward(_ seekEvent: MPSeekCommandEvent) {
         info("seekBackward")
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 }

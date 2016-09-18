@@ -13,16 +13,22 @@ class SearchResultsController: BaseMusicController {
     
     override var musicItems: [MusicItem] { return results }
     
-    private var latestSearchTerm: String? = nil
+    fileprivate var latestSearchTerm: String? = nil
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // WTF? This is needed to close the gap between the search bar and search results
+        edgesForExtendedLayout = UIRectEdge()
+    }
         
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let track = results[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let track = results[(indexPath as NSIndexPath).row]
         let cell = trackCell(track, index: indexPath)
-        cell?.progressView.hidden = true
+        cell?.progressView.isHidden = true
         return cell!
     }
     
-    func search(term: String) {
+    func search(_ term: String) {
         results = []
         let characters = term.characters.count
         if characters >= 2 {
@@ -45,7 +51,7 @@ class SearchResultsController: BaseMusicController {
         }
     }
     
-    func onSearchFailure(term: String, error: PimpError) {
+    func onSearchFailure(_ term: String, error: PimpError) {
         let message = PimpErrorUtil.stringify(error)
         info("Search for \(term) failed. \(message)")
         if term == latestSearchTerm {

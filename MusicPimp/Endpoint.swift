@@ -55,7 +55,7 @@ class Endpoint: CustomStringConvertible {
     var authQueryString: String {
         get {
             let unencoded = serverType.isCloud ? "s=\(name)&u=\(username)&p=\(password)" : "u=\(username)&p=\(password)"
-            return unencoded.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) ?? unencoded
+            return unencoded.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? unencoded
         }
     }
     

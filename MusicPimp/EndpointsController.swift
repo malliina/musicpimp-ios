@@ -16,36 +16,36 @@ class EndpointsController: BaseTableController {
     
     var subscription: Disposable? = nil
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         endpoints = settings.endpoints()
         renderTable()
     }
     
-    @IBAction func unwindToEndpoints(segue: UIStoryboardSegue) {
+    @IBAction func unwindToEndpoints(_ segue: UIStoryboardSegue) {
         info("Unwind")
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let item = endpoints[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let item = endpoints[(indexPath as NSIndexPath).row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = item.name
         return cell
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let index = indexPath.row
-        endpoints.removeAtIndex(index)
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let index = (indexPath as NSIndexPath).row
+        endpoints.remove(at: index)
         settings.saveAll(endpoints)
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let navController = segue.destinationViewController as? UINavigationController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let navController = segue.destination as? UINavigationController {
             let destController: AnyObject = navController.viewControllers[0]
             if let editController = destController as? EditEndpointController {
                 if let row = self.tableView.indexPathForSelectedRow {
-                    let item = endpoints[row.item]
+                    let item = endpoints[(row as NSIndexPath).item]
                     editController.editedItem = item
                 }
             } else {
@@ -56,7 +56,7 @@ class EndpointsController: BaseTableController {
         }
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.endpoints.count
     }
 }

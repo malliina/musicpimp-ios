@@ -38,17 +38,17 @@ class AlarmsController : PimpTableController {
             self.didToggleNotifications(uiSwitch)
         }
         pushSwitch = onOff
-        settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> Endpoint -> () in
+        settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> (Endpoint) -> () in
             ac.didChangeDefaultAlarmEndpoint
         }
     }
     
-    func didChangeDefaultAlarmEndpoint(e: Endpoint) {
+    func didChangeDefaultAlarmEndpoint(_ e: Endpoint) {
         reloadAlarms()
     }
     
-    func didToggleNotifications(uiSwitch: UISwitch) {
-        let isOn = uiSwitch.on
+    func didToggleNotifications(_ uiSwitch: UISwitch) {
+        let isOn = uiSwitch.isOn
         if let endpoint = endpoint {
             let toggleRegistration = isOn ? registerNotifications : unregisterNotifications
             toggleRegistration(endpoint) {
@@ -57,14 +57,14 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    func registerNotifications(endpoint: Endpoint, onSuccess: () -> Void) {
+    func registerNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
         if let token = settings.pushToken {
             alarmLibrary.registerNotifications(token, tag: endpoint.id, onError: onError, onSuccess: onSuccess)
         }
     }
     
-    func unregisterNotifications(endpoint: Endpoint, onSuccess: () -> Void) {
+    func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
         alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
     }
@@ -79,15 +79,15 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    func loadAlarms(endpoint: Endpoint) {
+    func loadAlarms(_ endpoint: Endpoint) {
         loadAlarms(Libraries.fromEndpoint(endpoint))
     }
     
-    func loadAlarms(library: LibraryType) {
+    func loadAlarms(_ library: LibraryType) {
         library.alarms(onAlarmError, f: onAlarms)
     }
     
-    func saveAndReload(alarm: Alarm) {
+    func saveAndReload(_ alarm: Alarm) {
         if let endpoint = endpoint {
             let library = Libraries.fromEndpoint(endpoint)
             library.saveAlarm(alarm, onError: onError) {
@@ -96,23 +96,23 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    func onAlarms(alarms: [Alarm]) {
+    func onAlarms(_ alarms: [Alarm]) {
         feedbackMessage = nil
         self.alarms = alarms
         renderTable()
     }
     
-    func onAlarmError(error: PimpError) {
+    func onAlarmError(_ error: PimpError) {
         let message = PimpError.stringify(error)
         feedbackMessage = message
         renderTable()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Max one because we display feedback to the user if the table is empty
         if section == alarmsSection {
             return max(alarms.count, 1)
@@ -120,28 +120,28 @@ class AlarmsController : PimpTableController {
         return 1
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        switch indexPath.section {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch (indexPath as NSIndexPath).section {
         case endpointSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
             cell.detailTextLabel?.text = endpoint?.name ?? "None"
-            cell.textLabel?.enabled = isEndpointValid
+            cell.textLabel?.isEnabled = isEndpointValid
             return cell
         case notificationSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier(pushEnabledIdentifier, forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: pushEnabledIdentifier, for: indexPath)
             cell.accessoryView = pushSwitch
             if let endpoint = endpoint {
-                pushSwitch?.on = settings.notificationsEnabled(endpoint)
+                pushSwitch?.isOn = settings.notificationsEnabled(endpoint)
             }
             let isNotificationsToggleEnabled = isEndpointValid && settings.notificationsAllowed
-            cell.textLabel?.enabled = isNotificationsToggleEnabled
-            pushSwitch?.enabled = isNotificationsToggleEnabled
+            cell.textLabel?.isEnabled = isNotificationsToggleEnabled
+            pushSwitch?.isEnabled = isNotificationsToggleEnabled
             return cell
         case alarmsSection:
             if alarms.count == 0 {
                 return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? noAlarmsMessage)
             } else {
-                let item = alarms[indexPath.row]
+                let item = alarms[(indexPath as NSIndexPath).row]
                 let alarmCell: MainSubCell = loadCell(alarmCellKey, index: indexPath)
                 let when = item.when
                 alarmCell.mainTitle.text = item.track.title + " at " + when.time.formatted()
@@ -149,25 +149,25 @@ class AlarmsController : PimpTableController {
                 let uiSwitch = PimpSwitch { (uiSwitch) in
                     self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
                 }
-                uiSwitch.on = item.enabled
+                uiSwitch.isOn = item.enabled
                 alarmCell.accessoryView = uiSwitch
                 return alarmCell
             }
         default:
             // We never get here
-            return tableView.dequeueReusableCellWithIdentifier(BaseMusicController.feedbackIdentifier, forIndexPath: indexPath)
+            return tableView.dequeueReusableCell(withIdentifier: BaseMusicController.feedbackIdentifier, for: indexPath)
         }
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.section == alarmsSection {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (indexPath as NSIndexPath).section == alarmsSection {
             return FeedbackTable.mainAndSubtitleCellHeight
         } else {
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+            return super.tableView(tableView, heightForRowAt: indexPath)
         }
     }
     
-    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case endpointSection:
             return "MusicPimp servers support scheduled playback of music."
@@ -178,13 +178,13 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let row = indexPath.row
-        if indexPath.section == alarmsSection {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let row = (indexPath as NSIndexPath).row
+        if (indexPath as NSIndexPath).section == alarmsSection {
             if let alarm = alarms.get(row),
-                endpoint = endpoint,
-                storyboard = storyboard,
-                dest = storyboard.instantiateViewControllerWithIdentifier("EditAlarm") as? EditAlarmTableViewController {
+                let endpoint = endpoint,
+                let storyboard = storyboard,
+                let dest = storyboard.instantiateViewController(withIdentifier: "EditAlarm") as? EditAlarmTableViewController {
                 dest.initEditAlarm(alarm, endpoint: endpoint)
                 self.navigationController?.pushViewController(dest, animated: true)
             } else {
@@ -193,27 +193,27 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         return isEndpointValid
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let index = indexPath.row
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let index = (indexPath as NSIndexPath).row
         let alarm = alarms[index]
         if let id = alarm.id {
             library.deleteAlarm(id, onError: onError) {
-                self.alarms.removeAtIndex(index)
+                self.alarms.remove(at: index)
                 self.renderTable()
             }
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let segueDestination = segue.destinationViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let segueDestination = segue.destination
         if let endpoint = endpoint {
             if let dest = segueDestination as? EditAlarmTableViewController {
                 if let row = self.tableView.indexPathForSelectedRow {
-                    let index = row.item
+                    let index = (row as NSIndexPath).item
                     if let alarm = alarms.get(index) {
                         dest.initEditAlarm(alarm, endpoint: endpoint)
                     } else {
@@ -226,7 +226,7 @@ class AlarmsController : PimpTableController {
                 if let actualDestination = dest.topViewController as? EditAlarmTableViewController {
                     actualDestination.initNewAlarm(endpoint)
                 } else {
-                    Log.error("Unexpected destination \(segue.destinationViewController)")
+                    Log.error("Unexpected destination \(segue.destination)")
                 }
             }
         } else {
@@ -234,15 +234,15 @@ class AlarmsController : PimpTableController {
         }
     }
     
-    @IBAction func unwindToAlarms(sender: UIStoryboardSegue) {
-        if let source = sender.sourceViewController as? EditAlarmTableViewController,
-            alarm = source.mutableAlarm?.toImmutable() {
+    @IBAction func unwindToAlarms(_ sender: UIStoryboardSegue) {
+        if let source = sender.source as? EditAlarmTableViewController,
+            let alarm = source.mutableAlarm?.toImmutable() {
             saveAndReload(alarm)
         }
     }
     
-    func onAlarmOnOffToggled(alarm: Alarm, uiSwitch: UISwitch) {
-        let isEnabled = uiSwitch.on
+    func onAlarmOnOffToggled(_ alarm: Alarm, uiSwitch: UISwitch) {
+        let isEnabled = uiSwitch.isOn
         info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
         let mutable = MutableAlarm(a: alarm)
         mutable.enabled = isEnabled

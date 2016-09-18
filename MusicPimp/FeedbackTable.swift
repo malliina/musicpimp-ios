@@ -15,25 +15,25 @@ class FeedbackTable: BaseTableController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
+        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
     }
     
-    func loadCell<T>(name: String, index: NSIndexPath) -> T {
+    func loadCell<T>(_ name: String, index: IndexPath) -> T {
         return findCell(name, index: index)!
     }
     
-    func findCell<T>(name: String, index: NSIndexPath) -> T? {
+    func findCell<T>(_ name: String, index: IndexPath) -> T? {
         return identifiedCell(name, index: index) as? T
     }
     
-    func identifiedCell(name: String, index: NSIndexPath) -> UITableViewCell {
-        return self.tableView.dequeueReusableCellWithIdentifier(name, forIndexPath: index)
+    func identifiedCell(_ name: String, index: IndexPath) -> UITableViewCell {
+        return self.tableView.dequeueReusableCell(withIdentifier: name, for: index)
     }
 
-    func feedbackCellWithText(tableView: UITableView, indexPath: NSIndexPath, text: String) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(FeedbackTable.feedbackIdentifier, forIndexPath: indexPath)
+    func feedbackCellWithText(_ tableView: UITableView, indexPath: IndexPath, text: String) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: FeedbackTable.feedbackIdentifier, for: indexPath)
         if let label = cell.textLabel {
-            label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            label.lineBreakMode = NSLineBreakMode.byWordWrapping
             label.numberOfLines = 0
             label.text = text
             label.textColor = PimpColors.titles

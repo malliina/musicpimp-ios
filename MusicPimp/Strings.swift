@@ -9,16 +9,16 @@
 import Foundation
 
 extension String {
-    func startsWith (str: String) -> Bool {
+    func startsWith (_ str: String) -> Bool {
         return self.hasPrefix(str)
     }
     
-    func endsWith (str: String) -> Bool {
+    func endsWith (_ str: String) -> Bool {
         return self.hasSuffix(str)
     }
     
-    func contains (str: String) -> Bool {
-        return self.rangeOfString(str) == nil
+    func contains (_ str: String) -> Bool {
+        return self.range(of: str) == nil
     }
     
     func head() -> Character {
@@ -26,12 +26,12 @@ extension String {
     }
     
     func tail() -> String {
-        return self.substringFromIndex(self.startIndex.advancedBy(1))
+        return self.substring(from: self.characters.index(self.startIndex, offsetBy: 1))
     }
     
     func dropLast() -> String {
-        let endIndex = self.endIndex.advancedBy(-1)
-        return self.substringToIndex(endIndex)
+        let endIndex = self.characters.index(self.endIndex, offsetBy: -1)
+        return self.substring(to: endIndex)
     }
     
     func lastPathComponent() -> String {
@@ -39,15 +39,15 @@ extension String {
     }
     
     func stringByDeletingLastPathComponent() -> String {
-        return (self as NSString).stringByDeletingLastPathComponent
+        return (self as NSString).deletingLastPathComponent
     }
     
     func stringByDeletingPathExtension() -> String {
-        return (self as NSString).stringByDeletingPathExtension
+        return (self as NSString).deletingPathExtension
     }
     
-    func stringByAppendingPathComponent(path: String) -> String {
-        return (self as NSString).stringByAppendingPathComponent(path)
+    func stringByAppendingPathComponent(_ path: String) -> String {
+        return (self as NSString).appendingPathComponent(path)
     }
     
 }

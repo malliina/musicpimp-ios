@@ -9,7 +9,7 @@
 import Foundation
 
 class Libraries {
-    static func fromEndpoint(e: Endpoint) -> LibraryType {
+    static func fromEndpoint(_ e: Endpoint) -> LibraryType {
         if e.id == Endpoint.Local.id {
             return LocalLibrary.sharedInstance
         } else {

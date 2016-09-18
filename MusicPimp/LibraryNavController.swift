@@ -22,7 +22,7 @@ class LibraryNavController: PimpNavController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        libraryListener = libraryManager.libraryChanged.addHandler(self) { (ivc) -> LibraryType -> () in
+        libraryListener = libraryManager.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
             ivc.onLibraryChanged
         }
         resetContentListener()
@@ -30,12 +30,12 @@ class LibraryNavController: PimpNavController {
     
     func resetContentListener() {
         contentListener?.dispose()
-        contentListener = library.contentsUpdated.addHandler(self, handler: { (lm) -> MusicFolder? -> () in
+        contentListener = library.contentsUpdated.addHandler(self, handler: { (lm) -> (MusicFolder?) -> () in
             lm.onContentsUpdated
         })
     }
     
-    func onLibraryChanged(newLibrary: LibraryType) {
+    func onLibraryChanged(_ newLibrary: LibraryType) {
         Log.info("Library changed")
         Util.onUiThread {
             self.pop()
@@ -43,15 +43,15 @@ class LibraryNavController: PimpNavController {
         resetContentListener()
     }
     
-    func onContentsUpdated(m: MusicFolder?) {
+    func onContentsUpdated(_ m: MusicFolder?) {
         Log.info("Contents updated")
         Util.onUiThread {
             self.pop()
         }
     }
     
-    func pop(animated: Bool = false) {
-        self.popToRootViewControllerAnimated(animated)
+    func pop(_ animated: Bool = false) {
+        self.popToRootViewController(animated: animated)
         let children = childViewControllers
 //        Log.info("Children: \(children.count)")
         if children.count == 1 {

@@ -17,12 +17,12 @@ class SourceSettingController: EndpointSelectController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> Endpoint -> () in
+        LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
             ssc.libraryChanged
         }
     }
     
-    func libraryChanged(e: Endpoint) {
+    func libraryChanged(_ e: Endpoint) {
         updateSelected(e)
         renderTable()
     }

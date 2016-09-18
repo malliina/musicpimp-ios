@@ -7,82 +7,83 @@
 //
 
 import Foundation
-public class BaseLibrary: LibraryType {
+open class BaseLibrary: LibraryType {
     var isLocal: Bool { get { return false } }
+    var rootFolderKey: String { get { return "" } }
     let contentsUpdated = Event<MusicFolder?>()
     
-    let notImplementedError = PimpError.SimpleError(ErrorMessage(message: "Not implemented yet"))
+    let notImplementedError = PimpError.simpleError(ErrorMessage(message: "Not implemented yet"))
     
-    func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
+    func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
         
     }
     
-    func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
+    func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
         
     }
     
-    func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
+    func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
         
     }
     
-    func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void) {
+    func tracks(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping ([Track]) -> Void) {
         tracksInner(id,  others: [], acc: [], f: f, onError: onError)
     }
     
     // the saved playlists
-    func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void) {
+    func playlists(_ onError: @escaping (PimpError) -> Void, f: @escaping ([SavedPlaylist]) -> Void) {
         f([])
     }
     
-    func playlist(id: PlaylistID, onError: PimpError -> Void, f: SavedPlaylist -> Void) {
+    func playlist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, f: @escaping (SavedPlaylist) -> Void) {
         onError(notImplementedError)
     }
     
-    func popular(from: Int, until: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void) {
+    func popular(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([PopularEntry]) -> Void) {
         onError(notImplementedError)
     }
     
-    func recent(from: Int, until: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void) {
+    func recent(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([RecentEntry]) -> Void) {
         onError(notImplementedError)
     }
     
-    func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void) {
+    func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void) {
         onError(notImplementedError)
     }
     
-    func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void) {
+    func search(_ term: String, onError: @escaping (PimpError) -> Void, ts: @escaping ([Track]) -> Void) {
         ts([])
     }
     
-    func alarms(onError: PimpError -> Void, f: [Alarm] -> Void) {
+    func alarms(_ onError: @escaping (PimpError) -> Void, f: @escaping ([Alarm]) -> Void) {
         f([])
     }
     
-    func saveAlarm(alarm: Alarm, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    func stopAlarm(onError: PimpError -> Void, onSuccess: () -> Void) {
+    func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    func registerNotifications(token: PushToken, tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    func unregisterNotifications(tag: String, onError: PimpError -> Void, onSuccess: () -> Void) {
+    func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         onSuccess(())
     }
     
-    private func tracksInner(id: String, others: [String], acc: [Track], f: [Track] -> Void, onError: PimpError -> Void){
+    fileprivate func tracksInner(_ id: String, others: [String], acc: [Track], f: @escaping ([Track]) -> Void, onError: @escaping (PimpError) -> Void){
         folder(id, onError: onError) { result in
             let subIDs = result.folders.map { $0.id }
             let remaining = others + subIDs

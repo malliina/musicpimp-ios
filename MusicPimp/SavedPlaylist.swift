@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class SavedPlaylist {
+open class SavedPlaylist {
     let id: PlaylistID?
     let name: String
     let tracks: [Track]
@@ -19,14 +19,14 @@ public class SavedPlaylist {
         self.tracks = tracks
     }
     
-    public var description: String { get { return "Playlist(\(id), \(name), \(tracks.mkString(", ")))" } }
+    open var description: String { get { return "Playlist(\(id), \(name), \(tracks.mkString(", ")))" } }
     
-    public static func toJson(sp: SavedPlaylist) -> [String: AnyObject] {
+    open static func toJson(_ sp: SavedPlaylist) -> [String: AnyObject] {
         let trackIDs = sp.tracks.map { $0.id }
         return [
-            JsonKeys.ID: sp.id?.id ?? NSNull(),
-            JsonKeys.NAME: sp.name,
-            JsonKeys.TRACKS: trackIDs
+            JsonKeys.ID: sp.id?.id as AnyObject? ?? NSNull(),
+            JsonKeys.NAME: sp.name as AnyObject,
+            JsonKeys.TRACKS: trackIDs as AnyObject
         ]
     }
 }

@@ -18,7 +18,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     let playlist: PlaylistType
     let socket: PimpSocket
     
-    private var currentState = PlayerState.empty
+    fileprivate var currentState = PlayerState.empty
     
     init(e: Endpoint) {
         let client = PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader)
@@ -27,7 +27,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         super.init(endpoint: e, client: client)
     }
     
-    func open(onOpen: () -> Void, onError: NSError -> Void) {
+    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
         self.socket.delegate = self
         self.socket.open(onOpen, onError: onError)
     }
@@ -41,11 +41,11 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         return currentState
     }
     
-    func resetAndPlay(track: Track) -> Bool {
+    func resetAndPlay(_ track: Track) -> Bool {
 //        Limiter.sharedInstance.increment()
         return socket.send([
-            JsonKeys.CMD: JsonKeys.PLAY,
-            JsonKeys.TRACK: track.id
+            JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
+            JsonKeys.TRACK: track.id as AnyObject
         ])
     }
     
@@ -57,8 +57,8 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         sendSimple(JsonKeys.STOP)
     }
     
-    func seek(position: Duration) {
-        sendValued(JsonKeys.SEEK, value: Int(position.seconds))
+    func seek(_ position: Duration) {
+        sendValued(JsonKeys.SEEK, value: Int(position.seconds) as AnyObject)
     }
     
     func next() {
@@ -69,30 +69,30 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         sendSimple(JsonKeys.PREV)
     }
     
-    func skip(index: Int) {
-        sendValued(JsonKeys.SKIP, value: index)
+    func skip(_ index: Int) {
+        sendValued(JsonKeys.SKIP, value: index as AnyObject)
     }
     
-    func volume(newVolume: VolumeValue) {
-        sendValued(JsonKeys.VOLUME, value: newVolume.volume)
+    func volume(_ newVolume: VolumeValue) {
+        sendValued(JsonKeys.VOLUME, value: newVolume.volume as AnyObject)
     }
     
-    func sendValued(cmd: String, value: AnyObject) {
+    func sendValued(_ cmd: String, value: AnyObject) {
         let payload = PimpEndpoint.valuedCommand(cmd, value: value)
         socket.send(payload)
     }
     
-    func sendSimple(cmd: String) {
+    func sendSimple(_ cmd: String) {
         let payload = PimpEndpoint.simpleCommand(cmd)
-        socket.send(payload)
+        socket.send(payload as [String : AnyObject])
     }
     
-    func onTimeUpdated(pos: Duration) {
+    func onTimeUpdated(_ pos: Duration) {
         currentState.position = pos
         timeEvent.raise(pos)
     }
     
-    func onTrackChanged(track: Track?) {
+    func onTrackChanged(_ track: Track?) {
         currentState.track = track
         trackEvent.raise(track)
         if let _ = track {
@@ -100,32 +100,32 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         }
     }
     
-    func onMuteToggled(mute: Bool) {
+    func onMuteToggled(_ mute: Bool) {
         currentState.mute = mute
         muteEvent.raise(mute)
     }
     
-    func onVolumeChanged(volume: VolumeValue) {
+    func onVolumeChanged(_ volume: VolumeValue) {
         currentState.volume = volume
         volumeEvent.raise(volume)
     }
     
-    func onStateChanged(state: PlaybackState) {
+    func onStateChanged(_ state: PlaybackState) {
         currentState.state = state
         stateEvent.raise(state)
     }
     
-    func onIndexChanged(index: Int?) {
+    func onIndexChanged(_ index: Int?) {
         currentState.playlistIndex = index
         playlist.indexEvent.raise(index)
     }
     
-    func onPlaylistModified(tracks: [Track]) {
+    func onPlaylistModified(_ tracks: [Track]) {
         currentState.playlist = tracks
         playlist.playlistEvent.raise(Playlist(tracks: tracks, index: currentState.playlistIndex))
     }
     
-    func onState(state: PlayerState) {
+    func onState(_ state: PlayerState) {
         currentState = state
         onPlaylistModified(state.playlist)
         onIndexChanged(state.playlistIndex)

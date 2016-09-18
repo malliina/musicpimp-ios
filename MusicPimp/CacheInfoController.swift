@@ -19,12 +19,12 @@ class CacheInfoController: BaseTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        settings.cacheLimitChanged.addHandler(self) { (cic) -> StorageSize -> () in
+        settings.cacheLimitChanged.addHandler(self) { (cic) -> (StorageSize) -> () in
             cic.onCacheLimitChanged
         }
     }
     
-    func onCacheLimitChanged(newSize: StorageSize) {
+    func onCacheLimitChanged(_ newSize: StorageSize) {
         
     }
 }

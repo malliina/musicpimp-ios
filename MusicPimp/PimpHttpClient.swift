@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 class Endpoints {
     static let
     PING = "/ping",
@@ -49,28 +48,28 @@ class PimpHttpClient: HttpClient {
         self.postHeaders = postHeaders
     }
     
-    func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
+    func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
         pimpGetParsed(Endpoints.PING_AUTH, parse: parseVersion, f: f, onError: onError)
     }
     
-    func pimpGetParsed<T>(resource: String, parse: AnyObject -> T?, f: T -> Void, onError: PimpError -> Void) {
+    func pimpGetParsed<T>(_ resource: String, parse: @escaping (AnyObject) -> T?, f: @escaping (T) -> Void, onError: @escaping (PimpError) -> Void) {
         pimpGet(resource, f: {
             data -> Void in
             if let obj: AnyObject = Json.asJson(data) {
                 if let parsed: T = parse(obj) {
                     f(parsed)
                 } else {
-                    onError(.ParseError)
+                    onError(.parseError)
                     self.log("Parse error.")
                 }
             } else {
-                onError(.ParseError)
+                onError(.parseError)
                 self.log("Not JSON: \(data)")
             }
         }, onError: onError)
     }
     
-    func pimpGet(resource: String, f: NSData -> Void, onError: PimpError -> Void) {
+    func pimpGet(_ resource: String, f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
         let url = baseURL + resource
         log(url)
         self.get(
@@ -80,11 +79,11 @@ class PimpHttpClient: HttpClient {
                 self.responseHandler(resource, data: data, response: response, f: f, onError: onError)
             },
             onError: { (err) -> Void in
-                onError(.NetworkFailure(err))
+                onError(.networkFailure(err))
             })
     }
     
-    func pimpPost(resource: String, payload: [String: AnyObject], f: NSData -> Void, onError: PimpError -> Void) {
+    func pimpPost(_ resource: String, payload: [String: AnyObject], f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
         self.postJSON(
             baseURL + resource,
             headers: postHeaders,
@@ -93,11 +92,11 @@ class PimpHttpClient: HttpClient {
                 self.responseHandler(resource, data: data, response: response, f: f, onError: onError)
             },
             onError: { (err) -> Void in
-                onError(.NetworkFailure(err))
+                onError(.networkFailure(err))
             })
     }
     
-    func responseHandler(resource: String, data: NSData, response: NSHTTPURLResponse, f: NSData -> Void, onError: PimpError -> Void) {
+    func responseHandler(_ resource: String, data: Data, response: HTTPURLResponse, f: (Data) -> Void, onError: (PimpError) -> Void) {
         let statusCode = response.statusCode
         let isStatusOK = (statusCode >= 200) && (statusCode < 300)
         if isStatusOK {
@@ -107,19 +106,19 @@ class PimpHttpClient: HttpClient {
             if let json = Json.asJson(data) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
-            onError(.ResponseFailure(ResponseDetails(resource: resource, code: statusCode, message: errorMessage)))
+            onError(.responseFailure(ResponseDetails(resource: resource, code: statusCode, message: errorMessage)))
         }
     }
     
-    func onRequestError(data: NSData, error: NSError) -> Void {
+    func onRequestError(_ data: Data, error: NSError) -> Void {
         log("Error: \(data)")
     }
     
-    func onMusicFolder(f: MusicFolder) -> Void {
+    func onMusicFolder(_ f: MusicFolder) -> Void {
         log("Tracks: \(f.tracks.count)")
     }
     
-    func parseVersion(obj: AnyObject) -> Version? {
+    func parseVersion(_ obj: AnyObject) -> Version? {
         if let dict = obj as? NSDictionary {
             if let version = dict[JsonKeys.VERSION] as? String {
                 return Version(version: version)
@@ -129,7 +128,7 @@ class PimpHttpClient: HttpClient {
         return nil
     }
     
-    func log(s: String) {
+    func log(_ s: String) {
         Log.info(s)
     }
 }

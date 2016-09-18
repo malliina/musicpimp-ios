@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class PimpNotifications {
-    public static let sharedInstance = PimpNotifications()
+open class PimpNotifications {
+    open static let sharedInstance = PimpNotifications()
     
     let settings = PimpSettings.sharedInstance
     
-    func initNotifications(application: UIApplication) {
+    func initNotifications(_ application: UIApplication) {
         // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW1
-        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+        let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         // the playback notification is displayed as an alert to the user, so we must call this
         application.registerUserNotificationSettings(notificationSettings)
         // registers with APNs
         application.registerForRemoteNotifications()
     }
     
-    func didRegister(deviceToken: NSData) {
+    func didRegister(_ deviceToken: Data) {
         let hexToken = deviceToken.hexString()
         let token = PushToken(token: hexToken)
         Log.info("Got device token \(hexToken)")
@@ -30,17 +30,17 @@ public class PimpNotifications {
         settings.notificationsAllowed = true
     }
     
-    func didFailToRegister(error: NSError) {
-        Log.error("Remote notifications registration failure code \(error.code) \(error.description)")
+    func didFailToRegister(_ error: Error) {
+        Log.error("Remote notifications registration failure code")// \(error.code) \(error.description)")
         settings.pushToken = PushToken(token: PimpSettings.NoPushTokenValue)
         settings.notificationsAllowed = false
     }
     
-    func handleNotification(app: UIApplication, data: [NSObject: AnyObject]) {
+    func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
         Log.info("Handling notification")
         if let tag = data["tag"] as? String,
-            cmd = data["cmd"] as? String,
-            endpoint = settings.endpoints().find({ $0.id == tag }) {
+            let cmd = data["cmd"] as? String,
+            let endpoint = settings.endpoints().find({ $0.id == tag }) {
             if cmd == "stop" {
                 let library = Libraries.fromEndpoint(endpoint)
                 library.stopAlarm(onAlarmError) {
@@ -51,7 +51,7 @@ public class PimpNotifications {
         }
     }
     
-    func onAlarmError(error: PimpError) {
+    func onAlarmError(_ error: PimpError) {
         Log.error("Alarm error")
     }
 }

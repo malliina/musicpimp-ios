@@ -15,7 +15,7 @@ class PimpNavController: UINavigationController {
 //        self.navigationBar.barTintColor = PimpColors.background
         
         self.navigationBar.titleTextAttributes = [
-            NSForegroundColorAttributeName: UIColor.whiteColor()
+            NSForegroundColorAttributeName: UIColor.white
         ]
     }
 }

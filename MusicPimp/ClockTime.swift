@@ -17,27 +17,27 @@ class ClockTime {
         self.minute = minute
     }
     
-    convenience init(date: NSDate) {
-        let calendar = NSCalendar.currentCalendar()
-        let comp = calendar.components([.Hour, .Minute], fromDate: date)
-        self.init(hour: comp.hour, minute: comp.minute)
+    convenience init(date: Date) {
+        let calendar = Calendar.current
+        let comp = (calendar as NSCalendar).components([.hour, .minute], from: date)
+        self.init(hour: comp.hour!, minute: comp.minute!)
     }
     
-    func dateComponents(from: NSDate = NSDate()) -> NSDateComponents {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute], fromDate: from)
-        components.calendar = calendar // wtf
+    func dateComponents(_ from: Date = Date()) -> DateComponents {
+        let calendar = Calendar.current
+        var components = (calendar as NSCalendar).components([.year, .month, .day, .hour, .minute], from: from)
+        (components as NSDateComponents).calendar = calendar // wtf
         components.hour = hour
         components.minute = minute
         return components
     }
     
     func formatted() -> String {
-        if let date = dateComponents().date {
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = .NoStyle
-            formatter.timeStyle = .ShortStyle
-            return formatter.stringFromDate(date)
+        if let date = (dateComponents() as NSDateComponents).date {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
         } else {
             return "an unknown time"
         }

@@ -14,7 +14,7 @@ class PimpUtils {
         self.endpoint = endpoint
     }
     // for cloud, keys s, u, p
-    func urlFor(trackID: String) -> NSURL {
-        return NSURL(string: "\(endpoint.httpBaseUrl)/tracks/\(trackID)?\(endpoint.authQueryString)")!
+    func urlFor(_ trackID: String) -> URL {
+        return URL(string: "\(endpoint.httpBaseUrl)/tracks/\(trackID)?\(endpoint.authQueryString)")!
     }
 }

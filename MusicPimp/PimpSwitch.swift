@@ -10,12 +10,12 @@ import Foundation
 
 // UISwitch that hides the crazy addTarget API
 class PimpSwitch: UISwitch {
-    let onClick: UISwitch -> Void
+    let onClick: (UISwitch) -> Void
     
-    init(onClick: UISwitch -> Void) {
+    init(onClick: @escaping (UISwitch) -> Void) {
         self.onClick = onClick
         super.init(frame: CGRect.zero)
-        addTarget(nil, action: #selector(runOnClick(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        addTarget(nil, action: #selector(runOnClick(_:)), for: UIControlEvents.valueChanged)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -23,7 +23,7 @@ class PimpSwitch: UISwitch {
         super.init(coder: aDecoder)
     }
     
-    @objc private func runOnClick(uiSwitch: UISwitch) {
+    @objc fileprivate func runOnClick(_ uiSwitch: UISwitch) {
         onClick(uiSwitch)
     }
 }

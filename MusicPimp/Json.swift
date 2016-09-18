@@ -8,28 +8,28 @@
 
 import Foundation
 
-public class Json {
-    public static func asJson(input: String) -> AnyObject? {
-        if let data = input.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false), json = asJson(data) {
+open class Json {
+    open static func asJson(_ input: String) -> AnyObject? {
+        if let data = input.data(using: String.Encoding.utf8, allowLossyConversion: false), let json = asJson(data) {
             return json
         }
         return nil
     }
     
-    public static func asJson(data: NSData) -> AnyObject? {
-        return try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+    open static func asJson(_ data: Data) -> AnyObject? {
+        return try! JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0)) as AnyObject?
     }
     
-    public static func stringifyObject(value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
-        return stringify(value, prettyPrinted: prettyPrinted)
+    open static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
+        return stringify(value as AnyObject, prettyPrinted: prettyPrinted)
     }
     
-    public static func stringify(value: AnyObject, prettyPrinted: Bool = true) -> String? {
+    open static func stringify(_ value: AnyObject, prettyPrinted: Bool = true) -> String? {
 //        var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
-        let options = NSJSONWritingOptions.PrettyPrinted
-        if NSJSONSerialization.isValidJSONObject(value) {
-            if let data = try? NSJSONSerialization.dataWithJSONObject(value, options: options) {
-                return NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+        let options = JSONSerialization.WritingOptions.prettyPrinted
+        if JSONSerialization.isValidJSONObject(value) {
+            if let data = try? JSONSerialization.data(withJSONObject: value, options: options) {
+                return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
             }
         }
         return nil

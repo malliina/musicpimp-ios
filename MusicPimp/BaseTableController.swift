@@ -22,15 +22,15 @@ class BaseTableController: UITableViewController {
         self.tableView.tableFooterView = UIView()
     }
     
-    func registerNib(nameAndIdentifier: String) {
-        self.tableView.registerNib(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
+    func registerNib(_ nameAndIdentifier: String) {
+        self.tableView.register(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func renderTable(feedback: String? = nil) {
+    func renderTable(_ feedback: String? = nil) {
         onUiThread {
             if let feedback = feedback {
                 self.setFeedback(feedback)
@@ -41,40 +41,40 @@ class BaseTableController: UITableViewController {
         }
     }
     
-    func onUiThread(code: () -> Void) {
+    func onUiThread(_ code: @escaping () -> Void) {
         Util.onUiThread(code)
     }
     
-    func setFeedback(feedback: String) {
+    func setFeedback(_ feedback: String) {
         self.tableView.backgroundView = self.feedbackLabel(feedback)
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
     }
     
     func clearFeedback() {
         self.tableView.backgroundView = nil
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
     }
     
-    func feedbackLabel(text: String) -> UILabel {
+    func feedbackLabel(_ text: String) -> UILabel {
         // makes no difference afaik, used in a backgroundView so its size is the same as that of the table
         let frame = CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
         let label = FeedbackLabel(frame: frame)
         label.textColor = PimpColors.titles
         label.text = text
         label.numberOfLines = 0
-        label.textAlignment = .Center
+        label.textAlignment = .center
         return label
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
     
-    func error(e: String) {
+    func error(_ e: String) {
         Log.error(e)
     }
     
-    func onError(pimpError: PimpError) {
+    func onError(_ pimpError: PimpError) {
         Util.onError(pimpError)
     }
     
@@ -88,7 +88,7 @@ class IAPConstants {
 }
 
 extension UIViewController {
-    func limitChecked<T>(code: () -> T) -> T? {
+    func limitChecked<T>(_ code: () -> T) -> T? {
         if Limiter.sharedInstance.isWithinLimit() {
             return code()
         } else {
@@ -98,17 +98,17 @@ extension UIViewController {
     }
     
     func suggestPremium() {
-        let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertControllerStyle.Alert)
-        let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertActionStyle.Default) { a -> Void in
+        let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertControllerStyle.alert)
+        let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertActionStyle.default) { a -> Void in
             Log.info("Purchase premium")
             if let storyboard = self.storyboard {
-                let destination = storyboard.instantiateViewControllerWithIdentifier(IAPViewController.StoryboardId)
+                let destination = storyboard.instantiateViewController(withIdentifier: IAPViewController.StoryboardId)
 //                let navigationController = UINavigationController(rootViewController: destination)
 //                self.presentViewController(navigationController, animated: true, completion: nil)
                 self.navigationController?.pushViewController(destination, animated: true)
             }
         }
-        let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertActionStyle.Cancel) { a -> Void in
+        let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertActionStyle.cancel) { a -> Void in
             Log.info("Not interested")
         }
         sheet.addAction(premiumAction)
@@ -116,6 +116,6 @@ extension UIViewController {
         if let popover = sheet.popoverPresentationController {
             popover.sourceView = self.view
         }
-        self.presentViewController(sheet, animated: true, completion: nil)
+        self.present(sheet, animated: true, completion: nil)
     }
 }

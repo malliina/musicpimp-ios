@@ -22,10 +22,10 @@ class ServerTypes {
     
     static let All = [MusicPimp, Cloud, Subsonic]
     
-    static func fromIndex(i: Int) -> ServerType? {
+    static func fromIndex(_ i: Int) -> ServerType? {
         return All.find({ $0.index == i })
     }
-    static func fromName(name: String) -> ServerType? {
+    static func fromName(_ name: String) -> ServerType? {
         return All.find({ $0.name == name })
     }
 }

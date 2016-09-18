@@ -25,22 +25,22 @@ class CoverResult {
         }
     }
     
-    static func noCover(artist: String, album: String) -> CoverResult {
+    static func noCover(_ artist: String, album: String) -> CoverResult {
         return CoverResult(artist: artist, album: album, coverPath: nil)
     }
 }
 
 protocol CoverServiceType {
-    func cover(artist: String, album: String)
+    func cover(_ artist: String, album: String)
 }
 
 class CoverService {
     static let sharedInstance = CoverService()
-    static let coversDir = Files.documentsPath.stringByAppendingString("/covers")
+    static let coversDir = Files.documentsPath + "/covers"
     static let defaultCover = UIImage(named: "pimp-512.png")
     let downloader = Downloader(basePath: coversDir)
     
-    func cover(artist: String, album: String, f: CoverResult -> Void) {
+    func cover(_ artist: String, album: String, f: @escaping (CoverResult) -> Void) {
         let url = coverURL(artist, album: album)
         let relativeCoverFilePath = "\(artist)-\(album).jpg"
         downloader.download(
@@ -51,13 +51,13 @@ class CoverService {
         )
     }
     
-    private func onError(msg: PimpError) -> Void {
+    fileprivate func onError(_ msg: PimpError) -> Void {
         Log.error(PimpError.stringify(msg))
     }
     
-    private func coverURL(artist: String, album: String) -> NSURL {
-        let artEnc = artist.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) ?? artist
-        let albEnc = album.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) ?? album
+    fileprivate func coverURL(_ artist: String, album: String) -> URL {
+        let artEnc = artist.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? artist
+        let albEnc = album.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? album
         return Util.url("https://api.musicpimp.org/covers?artist=\(artEnc)&album=\(albEnc)")
     }
 }

@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class PimpSettings {
+open class PimpSettings {
     static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory", IsPremium = "isPremium"
     
-    public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
+    open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsEvent = Event<[Endpoint]>()
 //    let playerChanged = Event<Endpoint>()
@@ -26,7 +26,7 @@ public class PimpSettings {
         self.impl = impl
     }
     
-    var trackHistory: [NSDate] {
+    var trackHistory: [Date] {
         get {
             if let historyArray = impl.load(PimpSettings.TrackHistory) {
                 return readHistory(historyArray)
@@ -41,17 +41,17 @@ public class PimpSettings {
         }
     }
     
-    public func readHistory(raw: String) -> [NSDate] {
+    open func readHistory(_ raw: String) -> [Date] {
         if let json = Json.asJson(raw) as? NSDictionary,
-            history = json[PimpSettings.TrackHistory] as? [Double] {
-                return history.map { NSDate(timeIntervalSince1970: $0) }
+            let history = json[PimpSettings.TrackHistory] as? [Double] {
+                return history.map { Date(timeIntervalSince1970: $0) }
         }
         return []
     }
     
-    public func serializeHistory(history: [NSDate]) -> String? {
+    open func serializeHistory(_ history: [Date]) -> String? {
         let blob = [ PimpSettings.TrackHistory: history.map { $0.timeIntervalSince1970 } ]
-        return Json.stringifyObject(blob)
+        return Json.stringifyObject(blob as [String : AnyObject])
     }
     
     var changes: Event<Setting> { get { return impl.changes } }
@@ -104,7 +104,7 @@ public class PimpSettings {
     var cacheLimit: StorageSize {
         get {
             if let bytesAsString = impl.load(PimpSettings.CACHE_LIMIT) {
-                if let asLong = NSNumberFormatter().numberFromString(bytesAsString)?.longLongValue {
+                if let asLong = NumberFormatter().number(from: bytesAsString)?.int64Value {
                     return StorageSize.fromBytes(asLong) ?? defaultLimit
                 }
             }
@@ -128,7 +128,7 @@ public class PimpSettings {
         }
     }
     
-    func initDefaultNotificationEndpoint(es: [Endpoint]) -> Endpoint? {
+    func initDefaultNotificationEndpoint(_ es: [Endpoint]) -> Endpoint? {
         let result = es.headOption()
         if let result = result {
             saveDefaultNotificationsEndpoint(result)
@@ -136,22 +136,22 @@ public class PimpSettings {
         return result
     }
     
-    func saveDefaultNotificationsEndpoint(e: Endpoint) {
+    func saveDefaultNotificationsEndpoint(_ e: Endpoint) {
         let errors = impl.save(e.id, key: PimpSettings.defaultAlarmEndpoint)
         if errors == nil {
             defaultAlarmEndpointChanged.raise(e)
         }
     }
     
-    func notificationsEnabled(e: Endpoint) -> Bool {
+    func notificationsEnabled(_ e: Endpoint) -> Bool {
         return impl.load(notificationsKey(e)) == "true"
     }
     
-    func saveNotificationsEnabled(e: Endpoint, enabled: Bool) {
+    func saveNotificationsEnabled(_ e: Endpoint, enabled: Bool) {
         impl.save("\(enabled)", key: notificationsKey(e))
     }
     
-    private func notificationsKey(e: Endpoint) -> String {
+    fileprivate func notificationsKey(_ e: Endpoint) -> String {
         return PimpSettings.NotificationsPrefix + e.id
     }
     
@@ -169,25 +169,25 @@ public class PimpSettings {
         return []
     }
     
-    func activeEndpoint(key: String) -> Endpoint {
+    func activeEndpoint(_ key: String) -> Endpoint {
         if let id = impl.load(key) {
             return endpoints().find({ $0.id == id }) ?? Endpoint.Local
         }
         return Endpoint.Local
     }
     
-    func save(endpoint: Endpoint) {
+    func save(_ endpoint: Endpoint) {
         var es = endpoints()
-        if let idx = es.indexOf({ $0.id == endpoint.id }) {
-            es.removeAtIndex(idx)
-            es.insert(endpoint, atIndex: idx)
+        if let idx = es.index(where: { $0.id == endpoint.id }) {
+            es.remove(at: idx)
+            es.insert(endpoint, at: idx)
         } else {
             es.append(endpoint)
         }
         saveAll(es)
     }
     
-    func saveAll(es: [Endpoint]) {
+    func saveAll(_ es: [Endpoint]) {
         if let stringified = serialize(es) {
             impl.save(stringified, key: PimpSettings.ENDPOINTS)
             let esAfter = endpoints()
@@ -198,23 +198,24 @@ public class PimpSettings {
         }
     }
     
-    func serialize(es: [Endpoint]) -> String? {
+    func serialize(_ es: [Endpoint]) -> String? {
         let jsonified = es.map(PimpJson.sharedInstance.toJson)
-        let blob = [PimpSettings.ENDPOINTS: jsonified]
+        let blob = [PimpSettings.ENDPOINTS: jsonified as AnyObject]
         return Json.stringifyObject(blob, prettyPrinted: true)
     }
     
-    func tasks(sid: String) -> [Int: DownloadInfo] {
+    func tasks(_ sid: String) -> [Int: DownloadInfo] {
         let key = taskKey(sid)
         if let str = impl.load(key),
-            json = Json.asJson(str) as? NSDictionary,
-            tasks = PimpJson.sharedInstance.asTasks(json) {
+            let json = Json.asJson(str) as? NSDictionary,
+            let dict = json as? [String: AnyObject],
+            let tasks = PimpJson.sharedInstance.asTasks(dict) {
             return tasks
         }
         return [:]
     }
     
-    func saveTasks(sid: String, tasks: [Int: DownloadInfo]) {
+    func saveTasks(_ sid: String, tasks: [Int: DownloadInfo]) {
         if let stringified = serialize(tasks) {
             impl.save(stringified, key: taskKey(sid))
         } else {
@@ -222,11 +223,11 @@ public class PimpSettings {
         }
     }
     
-    func taskKey(sid: String) -> String {
+    func taskKey(_ sid: String) -> String {
         return "\(PimpSettings.TASKS)-\(sid)"
     }
     
-    func serialize(tasks: [Int: DownloadInfo]) -> String? {
+    func serialize(_ tasks: [Int: DownloadInfo]) -> String? {
         let jsonified = PimpJson.sharedInstance.toJson(tasks)
         return Json.stringifyObject(jsonified, prettyPrinted: true)
     }

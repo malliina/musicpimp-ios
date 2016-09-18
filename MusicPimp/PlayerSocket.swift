@@ -10,37 +10,36 @@ import Foundation
 
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
-    
     var socket: SRWebSocket? = nil
     let baseURL: String
-    private let request: NSMutableURLRequest
+    fileprivate let request: NSMutableURLRequest
     var isConnected = false
     
     var onOpenCallback: (() -> Void)? = nil
-    var onOpenErrorCallback: (NSError -> Void)? = nil
+    var onOpenErrorCallback: ((Error) -> Void)? = nil
     
     init(baseURL: String, headers: [String: String]) {
         self.baseURL = baseURL
         let url = Util.url(baseURL)
-        request = NSMutableURLRequest(URL: url)
+        request = NSMutableURLRequest(url: url)
         for (key, value) in headers {
             request.addValue(value, forHTTPHeaderField: key)
         }
         super.init()
     }
     
-    func open(onOpen: () -> Void, onError: NSError -> Void) {
+    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
         close()
-        let webSocket = SRWebSocket(URLRequest: request)
-        webSocket.delegate = self
+        let webSocket = SRWebSocket(urlRequest: request as URLRequest!)
+        webSocket?.delegate = self
         self.socket = webSocket
         self.onOpenCallback = onOpen
         self.onOpenErrorCallback = onError
-        webSocket.open()
+        webSocket?.open()
         info("Connecting to \(baseURL)...")
     }
     
-    func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
+    public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         if let message = message as? String {
             info("Got message \(message)")
         } else {
@@ -48,7 +47,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func webSocketDidOpen(webSocket: SRWebSocket!) {
+    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
         if webSocket != self.socket {
             return
         }
@@ -61,12 +60,12 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         isConnected = false
         info("Error for connection to \(baseURL)")
     }
     
-    func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
+    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         isConnected = false
         info("Connection failed to \(baseURL)")
         if let onError = onOpenErrorCallback {
@@ -76,7 +75,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
     
@@ -98,23 +97,23 @@ class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
         self.baseURL = baseURL
     }
     
-    func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         Log.info("Closed socket to \(baseURL), code: \(code)")
     }
     
-    func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
+    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         info("Failed socket to \(baseURL)")
     }
     
-    func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
+    public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         info("Got message from \(baseURL): \(message)")
     }
     
-    func webSocketDidOpen(webSocket: SRWebSocket!) {
+    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
         info("Opened socket to \(baseURL)")
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 }

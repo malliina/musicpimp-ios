@@ -16,25 +16,25 @@ protocol PlayerType {
     var trackEvent: Event<Track?> { get }
     var playlist: PlaylistType { get }
     
-    func open(onOpen: () -> Void, onError: NSError -> Void)
+    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void)
     
     func close()
     
     func current() -> PlayerState
     
-    func resetAndPlay(track: Track) -> Bool
+    func resetAndPlay(_ track: Track) -> Bool
     
     func play()
     
     func pause()
     
-    func seek(position: Duration)
+    func seek(_ position: Duration)
     
     func next()
     
     func prev()
     
-    func skip(index: Int)
+    func skip(_ index: Int)
     
-    func volume(newVolume: VolumeValue)
+    func volume(_ newVolume: VolumeValue)
 }

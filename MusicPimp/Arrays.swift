@@ -9,10 +9,10 @@
 import Foundation
 
 class Arrays {
-    static func move<T>(srcIndex: Int, destIndex: Int, xs: [T]) -> [T] {
+    static func move<T>(_ srcIndex: Int, destIndex: Int, xs: [T]) -> [T] {
         var newXs = xs
-        let passenger = newXs.removeAtIndex(srcIndex)
-        newXs.insert(passenger, atIndex: destIndex)
+        let passenger = newXs.remove(at: srcIndex)
+        newXs.insert(passenger, at: destIndex)
         return newXs
     }
 }
@@ -26,7 +26,7 @@ extension Array {
     // 1 + (2 + (3 + (0)))
     // 6
     //
-    func foldRight<U>(initial: U, f: (Element, U) -> U) -> U {
+    func foldRight<U>(_ initial: U, f: (Element, U) -> U) -> U {
         if let head = self.headOption() {
             return f(head, self.tail().foldRight(initial, f: f))
         } else {
@@ -41,7 +41,7 @@ extension Array {
     // [].foldLeft(6)((acc, e) -> acc + e)
     // 6
     //
-    func foldLeft<U>(initial: U, f: (U, Element) -> U) -> U {
+    func foldLeft<U>(_ initial: U, f: (U, Element) -> U) -> U {
         if let head = self.headOption() {
             let newAcc = f(initial, head)
             return self.tail().foldLeft(newAcc, f: f)
@@ -58,7 +58,7 @@ extension Array {
         return Array(self[1..<self.count])
     }
     
-    func get(index: Int) -> Element? {
+    func get(_ index: Int) -> Element? {
         if count > index {
             return self[index]
         } else {
@@ -66,29 +66,29 @@ extension Array {
         }
     }
     
-    func take(n: Int) -> [Element] {
-        let to = min(n, self.count)
+    func take(_ n: Int) -> [Element] {
+        let to = [n, self.count].min() ?? 0
         return Array(self[0..<to])
     }
     
-    func drop(n: Int) -> [Element] {
+    func drop(_ n: Int) -> [Element] {
         return Array(self[n..<self.count])
     }
     
-    func find(predicate: Element -> Bool) -> Element? {
+    func find(_ predicate: (Element) -> Bool) -> Element? {
         return self.filter(predicate).headOption()
     }
     
-    func exists(predicate: Element -> Bool) -> Bool {
+    func exists(_ predicate: (Element) -> Bool) -> Bool {
         return self.find(predicate) != nil
     }
     
-    func howMany(predicate: Element -> Bool) -> Int {
+    func howMany(_ predicate: (Element) -> Bool) -> Int {
         return self.filter(predicate).count
     }
     
-    func indexOf(predicate: Element -> Bool) -> Int? {
-        for (idx, element) in self.enumerate() {
+    func indexOf(_ predicate: (Element) -> Bool) -> Int? {
+        for (idx, element) in self.enumerated() {
             if predicate(element) {
                 return idx
             }
@@ -96,11 +96,11 @@ extension Array {
         return nil
     }
     
-    func flatMapOpt<U>(f: Element -> U?) -> [U] {
+    func flatMapOpt<U>(_ f: (Element) -> U?) -> [U] {
         return self.map({ f($0) }).filter({ $0 != nil}).map({ $0! })
     }
     
-    func partition(f: Element -> Bool) -> ([Element], [Element]) {
+    func partition(_ f: (Element) -> Bool) -> ([Element], [Element]) {
         var trues: [Element] = []
         var falses: [Element] = []
         for item in self {
@@ -113,14 +113,14 @@ extension Array {
         return (trues, falses)
     }
     
-    func mkString(sep: String) -> String {
+    func mkString(_ sep: String) -> String {
         return mkString("", sep: sep, suffix: "")
     }
     
-    func mkString(prefix: String, sep: String, suffix: String) -> String {
+    func mkString(_ prefix: String, sep: String, suffix: String) -> String {
         let count = self.count
         var ret = count > 0 ? prefix : ""
-        for (idx, element) in self.enumerate() {
+        for (idx, element) in self.enumerated() {
             ret += "\(element)"
             let isLast = idx == count - 1
             if isLast {
@@ -142,22 +142,22 @@ extension Dictionary {
         }
     }
     
-    func mapValues<OutValue>(transform: Value -> OutValue) -> [Key: OutValue] {
+    func mapValues<OutValue>(_ transform: (Value) -> OutValue) -> [Key: OutValue] {
         return self.map { (key, value) -> (Key, OutValue) in
             (key, transform(value))
         }
     }
     
-    func map<OutKey: Hashable, OutValue>(transform: Element -> (OutKey, OutValue)) -> [OutKey: OutValue] {
+    func map<OutKey: Hashable, OutValue>(_ transform: (Element) -> (OutKey, OutValue)) -> [OutKey: OutValue] {
         return self.map { (e) in (transform(e)) }
     }
 
-    func filterKeys(includeElement: Element -> Bool) -> [Key: Value] {
+    func filterKeys(_ includeElement: (Element) -> Bool) -> [Key: Value] {
         let pairs = self.filter(includeElement)
         return Dictionary<Key, Value>(pairs)
     }
     
-    func addAll(other: [Key: Value]) -> [Key: Value] {
+    func addAll(_ other: [Key: Value]) -> [Key: Value] {
         var combined = Dictionary<Key, Value>()
         for(k, v) in self {
             combined.updateValue(v, forKey: k)

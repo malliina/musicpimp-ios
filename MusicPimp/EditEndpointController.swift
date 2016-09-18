@@ -35,20 +35,20 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         super.viewDidLoad()
         let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
         textFields.forEach { (elem) -> () in
-            elem.delegate = self
+            elem?.delegate = self
         }
         if let editedItem = editedItem {
             fill(editedItem)
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if saveButton === sender {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let sender = sender as? UIBarButtonItem, saveButton === sender {
             saveChanges()
         }
     }
@@ -56,20 +56,20 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
     func saveChanges() {
         if let endpoint = parseEndpoint() {
             PimpSettings.sharedInstance.save(endpoint)
-            if activateSwitch.on {
+            if activateSwitch.isOn {
                 Log.info("Activating \(endpoint.name)")
                 LibraryManager.sharedInstance.saveActive(endpoint)
             }
         }
     }
     
-    @IBAction func serverTypeChanged(sender: UISegmentedControl) {
+    @IBAction func serverTypeChanged(_ sender: UISegmentedControl) {
         if let serverType = readServerType(sender) {
             adjustVisibility(serverType)
         }
     }
     
-    @IBAction func testClicked(sender: AnyObject) {
+    @IBAction func testClicked(_ sender: AnyObject) {
         if let endpoint = parseEndpoint() {
             info("Testing \(endpoint.httpBaseUrl)")
             feedback("Connecting...")
@@ -82,55 +82,55 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         }
     }
 
-    private func adjustVisibility(serverType: ServerType) {
-        let cloudViews = [cloudIDLabel, cloudIDField]
-        let nonCloudViews = [nameLabel, nameField, addressLabel, addressField, portLabel, portField, protocolControl]
+    fileprivate func adjustVisibility(_ serverType: ServerType) {
+        let cloudViews: [UIView] = [cloudIDLabel, cloudIDField]
+        let nonCloudViews: [UIView] = [nameLabel, nameField, addressLabel, addressField, portLabel, portField, protocolControl]
         let cloudVisible = serverType.name == ServerTypes.Cloud.name
         for cloudView in cloudViews {
-            cloudView.hidden = !cloudVisible
+            cloudView.isHidden = !cloudVisible
         }
         for nonCloudView in nonCloudViews {
-            nonCloudView.hidden = cloudVisible
+            nonCloudView.isHidden = cloudVisible
         }
     }
     
-    func onTestSuccess(e: Endpoint, v: Version) {
+    func onTestSuccess(_ e: Endpoint, v: Version) {
         let server = e.serverType.name
         feedback("\(server) \(v.version) at your service.")
     }
     
-    func onTestFailure(e: Endpoint, error: PimpError) {
+    func onTestFailure(_ e: Endpoint, error: PimpError) {
         let msg = errorMessage(e, error: error)
         Log.info("Test failed: \(msg)")
         feedback(msg)
     }
     
-    func errorMessage(e: Endpoint, error: PimpError) -> String {
+    func errorMessage(_ e: Endpoint, error: PimpError) -> String {
         switch error {
-            case PimpError.ResponseFailure(let details):
+            case PimpError.responseFailure(let details):
                 let code = details.code
                 switch code {
                     case 401: return "Unauthorized. Check your username/password."
                     default: return "HTTP error code \(code)."
                 }
-            case PimpError.NetworkFailure( _):
+            case PimpError.networkFailure( _):
                 return "Unable to connect to \(e.httpBaseUrl)."
-            case PimpError.ParseError:
+            case PimpError.parseError:
                 return "The response was not understood."
-            case .SimpleError(let message):
+            case .simpleError(let message):
                 return message.message
         }
     }
     
-    func feedback(f: String) {
+    func feedback(_ f: String) {
         Util.onUiThread {
             self.feedbackText.text = f
-            self.feedbackText.font = UIFont.systemFontOfSize(16)
+            self.feedbackText.font = UIFont.systemFont(ofSize: 16)
             self.feedbackText.textColor = PimpColors.titles
         }
     }
     
-    func fill(e: Endpoint) {
+    func fill(_ e: Endpoint) {
         let serverType = e.serverType
         adjustVisibility(serverType)
         typeControl.selectedSegmentIndex = serverType.index
@@ -147,12 +147,12 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         protocolControl.selectedSegmentIndex = protoIndex
     }
 
-    func readServerType(control: UISegmentedControl) -> ServerType? {
+    func readServerType(_ control: UISegmentedControl) -> ServerType? {
         return ServerTypes.fromIndex(control.selectedSegmentIndex)
     }
     
     func parseEndpoint() -> Endpoint? {
-        let id = editedItem?.id ?? NSUUID().UUIDString
+        let id = editedItem?.id ?? UUID().uuidString
         if let serverType = readServerType(typeControl) {
             if serverType.name == ServerTypes.Cloud.name {
                 let existsEmpty = [cloudIDField, usernameField, passwordField].exists({ $0.text!.isEmpty })
@@ -161,7 +161,7 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
                 }
                 return Endpoint(id: id, cloudID: cloudIDField.text!, username: usernameField.text!, password: passwordField.text!)
             } else {
-                if let portText = portField.text, port = Int(portText) {
+                if let portText = portField.text, let port = Int(portText) {
                     let protoIndex = protocolControl.selectedSegmentIndex
                     let ssl = protoIndex == 1
                     let existsEmpty = [nameField, addressField, portField, usernameField, passwordField].exists({ $0.text!.isEmpty })
@@ -175,7 +175,7 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         return nil
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 

@@ -21,30 +21,30 @@ class CacheTableController: CacheInfoController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let onOff = UISwitch(frame: CGRect.zero)
-        onOff.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        onOff.on = settings.cacheEnabled
+        onOff.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControlEvents.valueChanged)
+        onOff.isOn = settings.cacheEnabled
         onOffSwitch = onOff
         currentLimitLabel.text = currentLimitDescription
         updateCacheUsageLabel()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
-    override func onCacheLimitChanged(newSize: StorageSize) {
+    override func onCacheLimitChanged(_ newSize: StorageSize) {
         Util.onUiThread {
             self.currentLimitLabel.text = self.currentLimitDescription
         }
         //renderTable()
     }
     
-    private func updateCacheUsageLabel() {
+    fileprivate func updateCacheUsageLabel() {
         currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.shortDescription
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let reuse = cell.reuseIdentifier {
             switch reuse {
                 case CacheTableController.CacheEnabledCell:
@@ -63,13 +63,13 @@ class CacheTableController: CacheInfoController {
         return cell
     }
     
-    func didToggleCache(uiSwitch: UISwitch) {
-        let isOn = uiSwitch.on
+    func didToggleCache(_ uiSwitch: UISwitch) {
+        let isOn = uiSwitch.isOn
         settings.cacheEnabled = isOn
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
         if let reuseIdentifier = cell?.reuseIdentifier {
             switch reuseIdentifier {
             case CacheTableController.DeleteCacheCell:
@@ -80,7 +80,7 @@ class CacheTableController: CacheInfoController {
             }
         }
     }
-    private func deleteCache() {
+    fileprivate func deleteCache() {
         LocalLibrary.sharedInstance.deleteContents()
         updateCacheUsageLabel()
     }

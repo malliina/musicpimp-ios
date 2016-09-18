@@ -7,21 +7,21 @@
 //
 import Foundation
 
-public class UserPrefs: Persistence {
+open class UserPrefs: Persistence {
     static let sharedInstance = UserPrefs()
     
-    let prefs = NSUserDefaults.standardUserDefaults()
+    let prefs = UserDefaults.standard
     let changes = Event<Setting>()
     
-    func save(contents: String, key: String) -> ErrorMessage? {
-        prefs.setObject(contents, forKey: key)
+    func save(_ contents: String, key: String) -> ErrorMessage? {
+        prefs.set(contents, forKey: key)
         Log.info("Saved \(contents) to \(key)")
         changes.raise(Setting(key: key, contents: contents))
         return nil
     }
     
-    func load(key: String) -> String? {
-        return prefs.stringForKey(key)
+    func load(_ key: String) -> String? {
+        return prefs.string(forKey: key)
     }
 }
 

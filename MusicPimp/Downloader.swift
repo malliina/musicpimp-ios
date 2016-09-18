@@ -12,15 +12,15 @@ class Downloader {
 
     typealias RelativePath = String
     
-    let fileManager = NSFileManager.defaultManager()
-    let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+    let fileManager = FileManager.default
+    let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] 
     let basePath: String
     
     init(basePath: String) {
         self.basePath = basePath
     }
     
-    func download(url: NSURL, relativePath: RelativePath, replace: Bool = false) {
+    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false) {
         download(
             url,
             relativePath: relativePath,
@@ -36,28 +36,28 @@ class Downloader {
         )
     }
     
-    func download(url: NSURL, relativePath: RelativePath, replace: Bool = false, onError: PimpError -> Void, onSuccess: String -> Void) {
+    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (String) -> Void) {
         let destPath = pathTo(relativePath)
         if replace || !Files.exists(destPath) {
             Log.info("Downloading \(url)")
-            let request = NSURLRequest(URL: url)
-            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()!) { (response, data, err) -> Void in
+            let request = URLRequest(url: url)
+            NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.current!) { (response, data, err) -> Void in
                 if(err != nil) {
                     onError(self.simpleError("Error \(err)"))
                 } else {
-                    if let response = response as? NSHTTPURLResponse {
+                    if let response = response as? HTTPURLResponse {
                         if response.isSuccess {
                             if let data = data {
                                 let dir = destPath.stringByDeletingLastPathComponent()
                                 let dirSuccess: Bool
                                 do {
-                                    try self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil)
+                                    try self.fileManager.createDirectory(atPath: dir, withIntermediateDirectories: true, attributes: nil)
                                     dirSuccess = true
                                 } catch _ {
                                     dirSuccess = false
                                 }
                                 if(dirSuccess) {
-                                    let fileSuccess = data.writeToFile(destPath, atomically: true)
+                                    let fileSuccess = (try? data.write(to: URL(fileURLWithPath: destPath), options: [.atomic])) != nil
                                     if(fileSuccess) {
                                         //let size = Files.sharedInstance.fileSize(destPath) crashes
                                         Log.info("Downloaded \(destPath)")
@@ -71,7 +71,7 @@ class Downloader {
 
                             }
                         } else {
-                            onError(.ResponseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))
+                            onError(.responseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))
                         }
                     }
                 }
@@ -82,12 +82,12 @@ class Downloader {
         }
     }
     
-    func prepareDestination(relativePath: RelativePath) -> String? {
+    func prepareDestination(_ relativePath: RelativePath) -> String? {
         let destPath = pathTo(relativePath)
         let dir = destPath.stringByDeletingLastPathComponent()
         let dirSuccess: Bool
         do {
-            try self.fileManager.createDirectoryAtPath(dir, withIntermediateDirectories: true, attributes: nil)
+            try self.fileManager.createDirectory(atPath: dir, withIntermediateDirectories: true, attributes: nil)
             dirSuccess = true
         } catch _ {
             dirSuccess = false
@@ -95,15 +95,15 @@ class Downloader {
         return dirSuccess ? destPath : nil
     }
     
-    func pathTo(relativePath: RelativePath) -> String {
-        return self.basePath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
+    func pathTo(_ relativePath: RelativePath) -> String {
+        return self.basePath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
     }
     
-    func simpleError(message: String) -> PimpError {
-        return PimpError.SimpleError(ErrorMessage(message: message))
+    func simpleError(_ message: String) -> PimpError {
+        return PimpError.simpleError(ErrorMessage(message: message))
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 

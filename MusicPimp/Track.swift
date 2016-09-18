@@ -8,17 +8,17 @@
 
 import Foundation
 
-public class Track: MusicItem, Hashable {
+open class Track: MusicItem, Hashable {
     let album: String
     let artist: String
     let duration: Duration
     let path: String
     let size: StorageSize
-    let url: NSURL
+    let url: URL
     
-    public var hashValue : Int { get { return self.id.hashValue } }
+    open var hashValue : Int { get { return self.id.hashValue } }
     
-    public init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: StorageSize, url: NSURL) {
+    public init(id: String, title: String, album: String, artist: String, duration: Duration, path: String, size: StorageSize, url: URL) {
         self.album = album
         self.artist = artist
         self.duration = duration
@@ -28,14 +28,14 @@ public class Track: MusicItem, Hashable {
         super.init(id: id, title: title)
     }
     
-    public static func toJson(t: Track) -> [String: AnyObject] {
+    open static func toJson(_ t: Track) -> [String: AnyObject] {
         return [
-            JsonKeys.ID: t.id,
-            JsonKeys.TITLE: t.title,
-            JsonKeys.ARTIST: t.artist,
-            JsonKeys.ALBUM: t.album,
-            JsonKeys.SIZE: NSNumber(longLong: t.size.toBytes),
-            JsonKeys.DURATION: NSNumber(longLong: t.duration.seconds)
+            JsonKeys.ID: t.id as AnyObject,
+            JsonKeys.TITLE: t.title as AnyObject,
+            JsonKeys.ARTIST: t.artist as AnyObject,
+            JsonKeys.ALBUM: t.album as AnyObject,
+            JsonKeys.SIZE: NSNumber(value: t.size.toBytes as Int64),
+            JsonKeys.DURATION: NSNumber(value: t.duration.seconds as Int64)
         ]
     }
 }

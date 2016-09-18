@@ -13,23 +13,23 @@ class RepeatDaysController: BaseTableController {
     
     var alarm: MutableAlarm? = nil
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        let row = indexPath.row
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        let row = (indexPath as NSIndexPath).row
         let dayName = weekDayName(row)
-        let accessory = isChecked(row) ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
+        let accessory = isChecked(row) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         cell.textLabel?.text = "Every \(dayName)"
         cell.accessoryType = accessory
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-            let wasChecked = cell.accessoryType == UITableViewCellAccessoryType.Checkmark
-            let newAccessory = wasChecked ? UITableViewCellAccessoryType.None : UITableViewCellAccessoryType.Checkmark
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if let cell = tableView.cellForRow(at: indexPath) {
+            let wasChecked = cell.accessoryType == UITableViewCellAccessoryType.checkmark
+            let newAccessory = wasChecked ? UITableViewCellAccessoryType.none : UITableViewCellAccessoryType.checkmark
             let willBeEnabled = !wasChecked
-            if let day = dayForIndex(indexPath.row), alarm = alarm {
+            if let day = dayForIndex((indexPath as NSIndexPath).row), let alarm = alarm {
                 if willBeEnabled {
                     alarm.when.days.insert(day)
                 } else {
@@ -40,16 +40,16 @@ class RepeatDaysController: BaseTableController {
         }
     }
     
-    func isChecked(row: Int) -> Bool {
+    func isChecked(_ row: Int) -> Bool {
         let day = dayForIndex(row)
-        if let day = day, days = alarm?.when.days {
+        if let day = day, let days = alarm?.when.days {
             return days.contains(day)
         } else {
             return false
         }
     }
     
-    func weekDayName(day: Int) -> String {
+    func weekDayName(_ day: Int) -> String {
         switch day {
         case 0: return "Monday"
         case 1: return "Tuesday"
@@ -62,7 +62,7 @@ class RepeatDaysController: BaseTableController {
         }
     }
     
-    func dayForIndex(day: Int) -> Day? {
+    func dayForIndex(_ day: Int) -> Day? {
         switch day {
         case 0: return Day.Mon
         case 1: return Day.Tue
@@ -75,7 +75,7 @@ class RepeatDaysController: BaseTableController {
         }
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 7
     }
 }

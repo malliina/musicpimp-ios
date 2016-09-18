@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class MusicItem {
+open class MusicItem {
     let id: String
     let title: String
     

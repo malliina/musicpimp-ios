@@ -533,7 +533,7 @@ public extension String {
         ]
     }
 
-    public static func fontAwesomeEnumForIconIdentifier(string: String) -> FAIcon {
+    public static func fontAwesomeEnumForIconIdentifier(_ string: String) -> FAIcon {
         let lookupString = string
         if let icon = enumDictionary[lookupString] {
             return icon
@@ -541,11 +541,11 @@ public extension String {
         return FAIcon.FAGlass
     }
 
-    public static func fontAwesomeIconStringForEnum(value: FAIcon) -> String {
+    public static func fontAwesomeIconStringForEnum(_ value: FAIcon) -> String {
         return fontAwesomeUnicodeStrings[value.rawValue]
     }
 
-    public static func fontAwesomeIconStringForIconIdentifier(identifier: String) -> String {
+    public static func fontAwesomeIconStringForIconIdentifier(_ identifier: String) -> String {
         return fontAwesomeIconStringForEnum(fontAwesomeEnumForIconIdentifier(identifier))
     }
 }

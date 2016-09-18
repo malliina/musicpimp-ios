@@ -11,7 +11,7 @@ import Foundation
 class LibraryManager: EndpointManager {
     static let sharedInstance = LibraryManager()
     
-    private var activeLibrary: LibraryType
+    fileprivate var activeLibrary: LibraryType
     var active: LibraryType { get { return activeLibrary } }
     let libraryChanged = Event<LibraryType>()
     
@@ -19,12 +19,12 @@ class LibraryManager: EndpointManager {
         let settings = PimpSettings.sharedInstance
         activeLibrary = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
         super.init(key: PimpSettings.LIBRARY, settings: settings)
-        changed.addHandler(self, handler: { (lm) -> Endpoint -> () in
+        changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
             lm.onNewLibraryEndpoint
         })
     }
     
-    private func onNewLibraryEndpoint(endpoint: Endpoint) {
+    fileprivate func onNewLibraryEndpoint(_ endpoint: Endpoint) {
         let client = Libraries.fromEndpoint(endpoint)
         activeLibrary = client
         libraryChanged.raise(client)

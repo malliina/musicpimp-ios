@@ -24,7 +24,7 @@ class PurchaseHelper: NSObject {
 }
 
 extension PurchaseHelper: SKProductsRequestDelegate {
-    @objc func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+    @objc func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         let premiumId = PurchaseHelper.PremiumId
         let products = response.products
         for product in products {

@@ -11,25 +11,26 @@ import Foundation
 protocol LibraryType {
     var isLocal: Bool { get }
     var contentsUpdated: Event<MusicFolder?> { get }
+    var rootFolderKey: String { get }
     
-    func pingAuth(onError: PimpError -> Void, f: Version -> Void)
+    func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void)
     
-    func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void)
-    func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void)
-    func tracks(id: String, onError: PimpError -> Void, f: [Track] -> Void)
-    func search(term: String, onError: PimpError -> Void, ts: [Track] -> Void)
+    func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void)
+    func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void)
+    func tracks(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping ([Track]) -> Void)
+    func search(_ term: String, onError: @escaping (PimpError) -> Void, ts: @escaping ([Track]) -> Void)
     
-    func playlists(onError: PimpError -> Void, f: [SavedPlaylist] -> Void)
-    func playlist(id: PlaylistID, onError: PimpError -> Void, f: SavedPlaylist -> Void)
-    func popular(from: Int, until: Int, onError: PimpError -> Void, f: [PopularEntry] -> Void)
-    func recent(from: Int, until: Int, onError: PimpError -> Void, f: [RecentEntry] -> Void)
-    func savePlaylist(sp: SavedPlaylist, onError: PimpError -> Void, onSuccess: PlaylistID -> Void)
-    func deletePlaylist(id: PlaylistID, onError: PimpError -> Void, onSuccess: () -> Void)
+    func playlists(_ onError: @escaping (PimpError) -> Void, f: @escaping ([SavedPlaylist]) -> Void)
+    func playlist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, f: @escaping (SavedPlaylist) -> Void)
+    func popular(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([PopularEntry]) -> Void)
+    func recent(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([RecentEntry]) -> Void)
+    func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void)
+    func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
     
-    func alarms(onError: PimpError -> Void, f: [Alarm] -> Void)
-    func saveAlarm(alarm: Alarm, onError: PimpError -> Void, onSuccess: () -> Void)
-    func deleteAlarm(id: AlarmID, onError: PimpError -> Void, onSuccess: () -> Void)
-    func stopAlarm(onError: PimpError -> Void, onSuccess: () -> Void)
-    func registerNotifications(token: PushToken, tag: String, onError: PimpError -> Void, onSuccess: () -> Void)
-    func unregisterNotifications(tag: String, onError: PimpError -> Void, onSuccess: () -> Void)
+    func alarms(_ onError: @escaping (PimpError) -> Void, f: @escaping ([Alarm]) -> Void)
+    func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
 }

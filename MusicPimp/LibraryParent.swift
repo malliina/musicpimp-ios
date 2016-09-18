@@ -13,14 +13,16 @@ class LibraryParent: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let folder = folder {
-            navigationItem.title = folder.title
-        }
+        let title = (folder?.title ?? "Music")
+        navigationItem.title = title
+//        navigationController?.navigationBar.titleTextAttributes = [
+//            NSFontAttributeName: PimpColors.titleFont
+//        ]
 //        navigationItem.rightBarButtonItem = PimpBarButton(title: "Test", style: .Plain, onClick: refreshClicked)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? LibraryController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? LibraryController {
             destination.selected = folder
         }
     }
@@ -34,7 +36,7 @@ class LibraryParent: ContainerParent {
         }
     }
     
-    func refreshClicked(sender: UIBarButtonItem) {
+    func refreshClicked(_ sender: UIBarButtonItem) {
         Log.info("Item clicked")
     }
 }

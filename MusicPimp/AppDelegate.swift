@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
@@ -32,13 +32,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let launchOptions = launchOptions {
             notifications.handleNotification(application, data: launchOptions)
         }
-        SKPaymentQueue.defaultQueue().addTransactionObserver(TransactionObserver.sharedInstance)
+        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
 //        Log.info("didFinishLaunchingWithOptions")
         initTheme(application)
         return true
     }
     
-    private func test() {
+    fileprivate func test() {
         let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
         for dir in contents.folders {
@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
     
-    func initTheme(app: UIApplication) {
+    func initTheme(_ app: UIApplication) {
         app.delegate?.window??.tintColor = PimpColors.tintColor
         UINavigationBar.appearance().barStyle = PimpColors.barStyle
         UINavigationBar.appearance().tintColor = PimpColors.tintColor
@@ -72,6 +72,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITextView.appearance().backgroundColor = PimpColors.background
         UITextView.appearance().textColor = PimpColors.titles
         PimpView.appearance().backgroundColor = PimpColors.background
+//        UIBarButtonItem.appearance()
+//            .setTitleTextAttributes([NSFontAttributeName : PimpColors.titleFont], forState: UIControlState.Normal)
     }
     
     func initAudio() {
@@ -83,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             categorySuccess = false
         }
         if categorySuccess {
-            ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.sharedCommandCenter())
+            ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
         } else {
             Log.info("Failed to initialize audio category")
             return
@@ -101,29 +103,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Audio session initialized")
     }
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         notifications.didRegister(deviceToken)
     }
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         notifications.didFailToRegister(error)
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         notifications.handleNotification(application, data: userInfo)
     }
     
-    func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         Log.info("Complete: \(identifier)")
         downloadCompletionHandlers[identifier] = completionHandler
     }
     
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         PlayerManager.sharedInstance.active.close()
@@ -131,7 +133,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.info("Entered background")
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         // However, this is not called when the app is first launched.
         connectToPlayer()
@@ -145,16 +147,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func onConnectionOpened() {
         Log.info("Connected")
     }
-    func onConnectionFailure(error: NSError) {
+    func onConnectionFailure(_ error: Error) {
         Log.error("Unable to connect")
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         //Log.info("Became active")
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         settings.trackHistory = Limiter.sharedInstance.history
         Log.info("Terminating")

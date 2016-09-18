@@ -18,15 +18,15 @@ class EndpointSelectController: BaseTableController {
     var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
     var segueID: String { get { return "MusicSource" } }
     
-    @IBAction func unwindToSelf(segue: UIStoryboardSegue) {
+    @IBAction func unwindToSelf(_ segue: UIStoryboardSegue) {
         endpoints = settings.endpoints()
         renderTable()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let navController = segue.destinationViewController as? UINavigationController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let navController = segue.destination as? UINavigationController {
             if let editController = navController.viewControllers[0] as? EditEndpointController,
-                endpoint = sender as? Endpoint {
+                let endpoint = sender as? Endpoint {
                     editController.editedItem = endpoint
             }
         }
@@ -38,78 +38,78 @@ class EndpointSelectController: BaseTableController {
         updateSelected(manager.loadActive())
     }
     
-    func updateSelected(selected: Endpoint) {
+    func updateSelected(_ selected: Endpoint) {
         let id = selected.id
         if id == Endpoint.Local.id {
             selectedIndex = 0
         } else {
-            if let idx = endpoints.indexOf({ $0.id == id }) {
+            if let idx = endpoints.index(where: { $0.id == id }) {
                 selectedIndex = idx + 1
             }
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         renderTable()
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let index = indexPath.row
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let index = (indexPath as NSIndexPath).row
         let endpoint = endpointForIndex(index)
-        let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
-        let accessory = index == selectedIndex ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
+        let accessory = index == selectedIndex ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         cell.accessoryType = accessory
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let index = indexPath.row
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        let index = (indexPath as NSIndexPath).row
         if index == selectedIndex {
             return
         }
         let endpoint = endpointForIndex(index)
         manager.saveActive(endpoint)
         
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = UITableViewCellAccessoryType.checkmark
         
         if let previous = selectedIndex {
-            let previousCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: previous, inSection: 0))
-            previousCell?.accessoryType = UITableViewCellAccessoryType.None
+            let previousCell = tableView.cellForRow(at: IndexPath(row: previous, section: 0))
+            previousCell?.accessoryType = UITableViewCellAccessoryType.none
         }
         selectedIndex = index
     }
     
-    func endpointForIndex(index: Int) -> Endpoint {
+    func endpointForIndex(_ index: Int) -> Endpoint {
         return index == 0 ? Endpoint.Local : endpoints[index-1]
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return endpoints.count + 1 // +1 for local endpoint
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let rowIndex = indexPath.row
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let rowIndex = (indexPath as NSIndexPath).row
         if rowIndex > 0 {
             let edit = endpointRowAction(tableView, title: "Edit") {
                 (index: Int) -> Void in
                 let isPlayer = self.manager as? PlayerManager != nil
                 let segueID = isPlayer ? "EditPlayer" : "EditSource"
-                self.performSegueWithIdentifier(segueID, sender: self.endpoints[index])
+                self.performSegue(withIdentifier: segueID, sender: self.endpoints[index])
             }
             let remove = endpointRowAction(tableView, title: "Remove") {
                 (index: Int) -> Void in
                 // TODO make EndpointsService with operations on endpoints, then listen for endpointsChanged events and react instead
-                self.endpoints.removeAtIndex(index)
+                self.endpoints.remove(at: index)
                 self.settings.saveAll(self.endpoints)
-                let visualIndex = NSIndexPath(forRow: index + 1, inSection: 0)
-                tableView.deleteRowsAtIndexPaths([visualIndex], withRowAnimation: UITableViewRowAnimation.Fade)
+                let visualIndex = IndexPath(row: index + 1, section: 0)
+                tableView.deleteRows(at: [visualIndex], with: UITableViewRowAnimation.fade)
             }
             return [edit, remove]
         }
@@ -117,10 +117,10 @@ class EndpointSelectController: BaseTableController {
         return []
     }
     
-    func endpointRowAction(tableView: UITableView, title: String, f: Int -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
-            (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
-            let endIndex = indexPath.row - 1
+    func endpointRowAction(_ tableView: UITableView, title: String, f: @escaping (Int) -> Void) -> UITableViewRowAction {
+        return UITableViewRowAction(style: UITableViewRowActionStyle.default, title: title) {
+            (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
+            let endIndex = (indexPath as NSIndexPath).row - 1
             if endIndex >= 0 && self.endpoints.count > endIndex {
                 f(endIndex)
             }

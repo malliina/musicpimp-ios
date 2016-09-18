@@ -21,28 +21,29 @@ class LocalLibrary: BaseLibrary {
     
     let supportedExtensions = ["mp3"]
     
-    let fileManager = NSFileManager.defaultManager()
+    let fileManager = FileManager.default
     
-    let musicRootPath = documentsPath.stringByAppendingString("/music")
+    let musicRootPath = documentsPath + "/music"
     
-    var musicRootURL: NSURL { get { return Util.url(self.musicRootPath) } }
+    var musicRootURL: URL { get { return Util.url(self.musicRootPath) } }
     
     var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     
-    func contains(track: Track) -> Bool {
+    func contains(_ track: Track) -> Bool {
         return url(track) != nil
     }
     
-    func url(track: Track) -> NSURL? {
+    func url(_ track: Track) -> URL? {
         let path = track.path
         let absolutePath = pathTo(path)
         if Files.exists(absolutePath) {
-            let attrs: NSDictionary? = try? fileManager.attributesOfItemAtPath(absolutePath)
-            if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, localStorageSize = StorageSize.fromBytes(sizeNum.longLongValue) {
+            if let sizeNum = try? fileManager.attributesOfItem(atPath: absolutePath)[FileAttributeKey.size] as? NSNumber,
+                let size = sizeNum,
+                let localStorageSize = StorageSize.fromBytes(size.int64Value) {
                 let trackSize = track.size
                 if trackSize == localStorageSize {
                     Log.info("Found local track at \(path)")
-                    return NSURL(fileURLWithPath: absolutePath)
+                    return URL(fileURLWithPath: absolutePath)
                 } else {
                     Log.info("Local size of \(localStorageSize) does not match track size of \(trackSize), ignoring local")
                 }
@@ -55,21 +56,21 @@ class LocalLibrary: BaseLibrary {
         return nil
     }
     
-    func pathTo(relativePath: String) -> String {
-        return self.musicRootPath + "/" + relativePath.stringByReplacingOccurrencesOfString("\\", withString: "/")
+    func pathTo(_ relativePath: String) -> String {
+        return self.musicRootPath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
     }
 
     func deleteContents() -> Bool {
         let deleteSuccess: Bool
         do {
-            try fileManager.removeItemAtPath(musicRootPath)
+            try fileManager.removeItem(atPath: musicRootPath)
             deleteSuccess = true
         } catch _ {
             deleteSuccess = false
         }
         let dirRecreateSuccess: Bool
         do {
-            try self.fileManager.createDirectoryAtPath(musicRootPath, withIntermediateDirectories: true, attributes: nil)
+            try self.fileManager.createDirectory(atPath: musicRootPath, withIntermediateDirectories: true, attributes: nil)
             dirRecreateSuccess = true
         } catch _ {
             dirRecreateSuccess = false
@@ -78,11 +79,12 @@ class LocalLibrary: BaseLibrary {
         return deleteSuccess && dirRecreateSuccess
     }
     
-    func parseTrack(absolutePath: String) -> Track? {
-        let attrs: NSDictionary? = try? fileManager.attributesOfItemAtPath(absolutePath)
-        if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber, size = StorageSize.fromBytes(sizeNum.longLongValue) {
-            let url = NSURL(fileURLWithPath: absolutePath)
-            let asset = AVAsset(URL: url)
+    func parseTrack(_ absolutePath: String) -> Track? {
+        let attrs: [FileAttributeKey: Any]? = try? Files.manager.attributesOfItem(atPath: absolutePath)
+        //let attrs: NSDictionary? = try? fileManager.attributesOfItem(atPath: absolutePath) as NSDictionary?
+        if let sizeNum = attrs?[FileAttributeKey.size] as? NSNumber, let size = StorageSize.fromBytes(sizeNum.int64Value) {
+            let url = URL(fileURLWithPath: absolutePath)
+            let asset = AVAsset(url: url)
             var artist: String? = nil
             var album: String? = nil
             var track: String? = nil
@@ -126,23 +128,23 @@ class LocalLibrary: BaseLibrary {
         return nil
     }
     
-    func parseFolder(absolute: String) -> Folder {
+    func parseFolder(_ absolute: String) -> Folder {
         let path = relativize(absolute)
         //Log.info("Abs: \(absolute), relative: \(path)")
         return Folder(id: Util.urlEncodePathWithPlus(path), title: path.lastPathComponent(), path: path)
     }
     
-    func relativize(path: String) -> String {
+    func relativize(_ path: String) -> String {
         let startIdx = musicRootPath.characters.count + 1
         if(path.characters.count > startIdx) {
-            let from = path.startIndex.advancedBy(startIdx)
-            return path.substringFromIndex(from)
+            let from = path.characters.index(path.startIndex, offsetBy: startIdx)
+            return path.substring(from: from)
         } else {
             return path
         }
     }
     
-    func duration(asset: AVAsset) -> Duration? {
+    func duration(_ asset: AVAsset) -> Duration? {
         let time = asset.duration
         let secs = CMTimeGetSeconds(time)
         if(secs.isNormal) {
@@ -151,29 +153,29 @@ class LocalLibrary: BaseLibrary {
         return nil
     }
     
-    override func pingAuth(onError: PimpError -> Void, f: Version -> Void) {
+    override func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
         f(LocalLibrary.currentVersion)
     }
     
-    override func folder(id: String, onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
         let path = Util.urlDecodeWithPlus(id)
         let folder = parseFolder(path)
         //Log.info("ID: \(id)")
         folderAtPath(folder, f: f)
     }
     
-    func isSupportedFile(path: String) -> Bool {
+    func isSupportedFile(_ path: String) -> Bool {
         return supportedExtensions.exists({ path.hasSuffix($0) })
     }
     
-    override func rootFolder(onError: PimpError -> Void, f: MusicFolder -> Void) {
+    override func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
         folderAtPath(Folder.root, f: f)
     }
     
-    func folderAtPath(folder: Folder, f: MusicFolder -> Void) {
-        let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath.stringByAppendingString("/" + folder.path)
-        let items: [String] = (try? fileManager.contentsOfDirectoryAtPath(absolutePath)) ?? []
-        let paths = items.map({ absolutePath.stringByAppendingString("/" + $0) })
+    func folderAtPath(_ folder: Folder, f: (MusicFolder) -> Void) {
+        let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath + ("/" + folder.path)
+        let items: [String] = (try? fileManager.contentsOfDirectory(atPath: absolutePath)) ?? []
+        let paths = items.map({ absolutePath + ("/" + $0) })
         let (directories, files) = paths.partition(Files.isDirectory)
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)

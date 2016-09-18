@@ -8,69 +8,69 @@
 
 import Foundation
 protocol PlayerEventDelegate {
-    func parseStatus(json: NSDictionary) -> PlayerState?
+    func parseStatus(_ json: NSDictionary) -> PlayerState?
     
-    func parseTrack(json: NSDictionary) -> Track?
+    func parseTrack(_ json: NSDictionary) -> Track?
     
-    func onTimeUpdated(pos: Duration)
+    func onTimeUpdated(_ pos: Duration)
     
-    func onTrackChanged(track: Track?)
+    func onTrackChanged(_ track: Track?)
     
-    func onMuteToggled(mute: Bool)
+    func onMuteToggled(_ mute: Bool)
     
-    func onVolumeChanged(volume: VolumeValue)
+    func onVolumeChanged(_ volume: VolumeValue)
     
-    func onStateChanged(state: PlaybackState)
+    func onStateChanged(_ state: PlaybackState)
     
-    func onIndexChanged(index: Int?)
+    func onIndexChanged(_ index: Int?)
     
-    func onPlaylistModified(tracks: [Track])
+    func onPlaylistModified(_ tracks: [Track])
     
-    func onState(state: PlayerState)
+    func onState(_ state: PlayerState)
 }
 
 class LoggingDelegate : PlayerEventDelegate {
-    func parseStatus(json: NSDictionary) -> PlayerState? {
+    func parseStatus(_ json: NSDictionary) -> PlayerState? {
         return nil
     }
     
-    func parseTrack(json: NSDictionary) -> Track? {
+    func parseTrack(_ json: NSDictionary) -> Track? {
         return nil
     }
     
-    func onTimeUpdated(pos: Duration) {
+    func onTimeUpdated(_ pos: Duration) {
         log("Time: \(pos)")
     }
     
-    func onTrackChanged(track: Track?) {
+    func onTrackChanged(_ track: Track?) {
         log("Track: \(track?.id)")
     }
     
-    func onMuteToggled(mute: Bool) {
+    func onMuteToggled(_ mute: Bool) {
         log("Mute: \(mute)")
     }
     
-    func onVolumeChanged(volume: VolumeValue) {
+    func onVolumeChanged(_ volume: VolumeValue) {
         log("Volume: \(volume)")
     }
     
-    func onStateChanged(state: PlaybackState) {
+    func onStateChanged(_ state: PlaybackState) {
         log("State: \(state)")
     }
     
-    func onIndexChanged(index: Int?) {
+    func onIndexChanged(_ index: Int?) {
         log("Index: \(index)")
     }
     
-    func onPlaylistModified(tracks: [Track]) {
+    func onPlaylistModified(_ tracks: [Track]) {
         log("Tracks: \(tracks.description)")
     }
     
-    func onState(state: PlayerState) {
+    func onState(_ state: PlayerState) {
         log("Status")
     }
     
-    func log(s: String) {
+    func log(_ s: String) {
         Log.info(s)
     }
 }

@@ -32,22 +32,22 @@ class ContainerParent: ListeningController {
         self.automaticallyAdjustsScrollViewInsets = false
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         initFooter()
     }
     
-    private func initFooter() {
+    fileprivate func initFooter() {
         onStateChanged(player.current().state)
     }
 
-    override func onStateChanged(state: PlaybackState) {
+    override func onStateChanged(_ state: PlaybackState) {
         let isVisible = state == .Playing
         let toggle = self.constraintToggle
         Util.onUiThread {
-            self.playButton.hidden = !isVisible
-            self.prevButton.hidden = !isVisible
-            self.nextButton.hidden = !isVisible
+            self.playButton.isHidden = !isVisible
+            self.prevButton.isHidden = !isVisible
+            self.nextButton.isHidden = !isVisible
             if isVisible {
                 toggle?.show()
             } else {
@@ -56,15 +56,15 @@ class ContainerParent: ListeningController {
         }
     }
     
-    @IBAction func prevClicked(sender: UIButton) {
+    @IBAction func prevClicked(_ sender: UIButton) {
         player.prev()
     }
     
-    @IBAction func playPauseClicked(sender: UIButton) {
+    @IBAction func playPauseClicked(_ sender: UIButton) {
         self.playOrPause()
     }
     
-    private func playOrPause() {
+    fileprivate func playOrPause() {
         if player.current().isPlaying {
             self.player.pause()
         } else {
@@ -74,7 +74,7 @@ class ContainerParent: ListeningController {
         }
     }
     
-    @IBAction func nextClicked(sender: UIButton) {
+    @IBAction func nextClicked(_ sender: UIButton) {
         player.next()
     }
     

@@ -15,7 +15,7 @@ enum PlaybackState: String {
     case NoMedia = "NoMedia"
     case Unknown = "Unknown"
     
-    static func fromName(name: String) -> PlaybackState? {
+    static func fromName(_ name: String) -> PlaybackState? {
         if let state = PlaybackState(rawValue: name) {
             return state
         } else {

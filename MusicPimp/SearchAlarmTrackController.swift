@@ -17,30 +17,30 @@ class SearchAlarmTrackController: SearchableMusicController {
         renderTable("Search for a track")
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchController.active = true
+        searchController.isActive = true
     }
     
-    override func didPresentSearchController(searchController: UISearchController) {
+    override func didPresentSearchController(_ searchController: UISearchController) {
         searchController.searchBar.becomeFirstResponder()
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let item = itemAt(tableView, indexPath: indexPath), track = item as? Track {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let item = itemAt(tableView, indexPath: indexPath), let track = item as? Track {
             alarm?.track = track
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        tableView.deselectRow(at: indexPath, animated: false)
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
         goBack()
     }
 
     func goBack() {
         let isAddMode = presentingViewController is UINavigationController
         if isAddMode {
-            dismissViewControllerAnimated(true, completion: nil)
+            dismiss(animated: true, completion: nil)
         } else {
-            navigationController!.popViewControllerAnimated(true)
+            navigationController!.popViewController(animated: true)
         }
     }
 }

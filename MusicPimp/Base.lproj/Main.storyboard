@@ -662,7 +662,9 @@
         <scene sceneID="HGh-u6-3RN">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="a6c-8J-00a" customClass="PlayerNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Player" image="second" id="8w3-8Q-1X2"/>
+                    <tabBarItem key="tabBarItem" title="Player" image="second" id="8w3-8Q-1X2">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="sAj-28-bfR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

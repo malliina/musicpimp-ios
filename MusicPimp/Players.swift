@@ -8,7 +8,7 @@
 
 import Foundation
 class Players {
-    static func fromEndpoint(e: Endpoint) -> PlayerType {
+    static func fromEndpoint(_ e: Endpoint) -> PlayerType {
         let serverType = e.serverType
         switch serverType.name {
         case ServerTypes.MusicPimp.name:

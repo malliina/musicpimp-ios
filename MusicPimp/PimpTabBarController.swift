@@ -11,6 +11,7 @@ import UIKit
 
 class PimpTabBarController: UITabBarController {
     let tabIconFontSize: Int32 = 24
+    let tabItemTitleVerticalOffset: CGFloat = -3
     
     override func viewDidLoad() {
         let tabs = tabBar.items
@@ -20,27 +21,26 @@ class PimpTabBarController: UITabBarController {
             decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
             decorate(tabs[3], title: "Settings", fontAwesomeName: "cog")
         }
-//        self.tabBar.backgroundColor = PimpColors.background
-//        tabBar.barTintColor = PimpColors.background
     }
     
-    func decorate(tabItem: UITabBarItem, title: String, fontAwesomeName: String) {
+    func decorate(_ tabItem: UITabBarItem, title: String, fontAwesomeName: String) {
         tabItem.title = title
+        tabItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: tabItemTitleVerticalOffset)
         let (selected, notSelected) = iconPair("fa-\(fontAwesomeName)")
         tabItem.image = notSelected
         tabItem.selectedImage = selected
     }
     
-    func iconPair(name: String) -> (UIImage, UIImage) {
+    func iconPair(_ name: String) -> (UIImage, UIImage) {
         let selected = icon(name, selected: true)
         let notSelected = icon(name, selected: false)
         return (selected, notSelected)
     }
     
-    func icon(name: String, selected: Bool) -> UIImage {
-        let iconColor = selected ? PimpColors.tintColor : UIColor.grayColor()
-        let image = UIImage(icon: name, backgroundColor: UIColor.clearColor(), iconColor: iconColor, fontSize: tabIconFontSize)
-        return image.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+    func icon(_ name: String, selected: Bool) -> UIImage {
+        let iconColor = selected ? PimpColors.tintColor : UIColor.gray
+        let image = UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: iconColor, fontSize: tabIconFontSize)
+        return image!.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
     }
 
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class StorageSize: CustomStringConvertible, Comparable {
+open class StorageSize: CustomStringConvertible, Comparable {
     static let Zero = StorageSize(bytes: 0)
     static let k: Int = 1024
     static let k64 = Int64(StorageSize.k)
@@ -37,7 +37,7 @@ public class StorageSize: CustomStringConvertible, Comparable {
     var toGigs: Int64 { return toMegs / StorageSize.k64 }
     var toTeras: Int64 { return toGigs / StorageSize.k64 }
     
-    public var description: String {
+    open var description: String {
         return shortDescription
     }
     
@@ -49,7 +49,7 @@ public class StorageSize: CustomStringConvertible, Comparable {
         return describe("B", kilos: "KB", megas: "MB", gigas: "GB", teras: "TB")
     }
     
-    private func describe(bytes: String, kilos: String, megas: String, gigas: String, teras: String) -> String {
+    fileprivate func describe(_ bytes: String, kilos: String, megas: String, gigas: String, teras: String) -> String {
         if toTeras >= 10 { return "\(toTeras) \(teras)" }
         else if toGigs >= 10 { return "\(toGigs) \(gigas)" }
         else if toMegs >= 10 { return "\(toMegs) \(megas)" }
@@ -57,23 +57,23 @@ public class StorageSize: CustomStringConvertible, Comparable {
         else { return "\(toBytes) \(bytes)" }
     }
     
-    static func fromBytes(bytes: Int64) -> StorageSize? {
+    static func fromBytes(_ bytes: Int64) -> StorageSize? {
         return bytes >= 0 ? StorageSize(bytes: Int64(bytes)) : nil
     }
     
-    static func fromBytes(bytes: Int) -> StorageSize? {
+    static func fromBytes(_ bytes: Int) -> StorageSize? {
         return bytes >= 0 ? StorageSize(bytes: Int64(bytes)) : nil
     }
     
-    static func fromKilos(kilos: Int) -> StorageSize? {
+    static func fromKilos(_ kilos: Int) -> StorageSize? {
         return kilos >= 0 ? StorageSize(kilos: Int(kilos)) : nil
     }
     
-    static func fromMegs(megs: Int) -> StorageSize? {
+    static func fromMegs(_ megs: Int) -> StorageSize? {
         return megs >= 0 ? StorageSize(megs: Int(megs)) : nil
     }
     
-    static func fromGigas(gigs: Int) -> StorageSize? {
+    static func fromGigas(_ gigs: Int) -> StorageSize? {
         return gigs >= 0 ? StorageSize(gigs: Int(gigs)) : nil
     }
 }

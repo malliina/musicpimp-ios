@@ -9,79 +9,65 @@
 import Foundation
 
 class Util {
-    private static var GlobalMainQueue: dispatch_queue_t {
-        return dispatch_get_main_queue()
+    fileprivate static var GlobalMainQueue: DispatchQueue {
+        return DispatchQueue.main
     }
     
-    private static var GlobalUserInteractiveQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INTERACTIVE.rawValue), 0)
+    
+    class func onUiThread(_ f: @escaping () -> Void) {
+        DispatchQueue.main.async(execute: f)
     }
     
-    private static var GlobalUserInitiatedQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)
+    class func onBackgroundThread(_ f: @escaping () -> Void) {
+        //DispatchQueue.global(attributes: .background).async(execute: f)
+        DispatchQueue.main.async(execute: f)
     }
     
-    private static var GlobalUtilityQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.rawValue), 0)
+    class func urlDecodeWithPlus(_ s: String) -> String {
+        let unplussed = s.replacingOccurrences(of: "+", with: " ")
+        return unplussed.removingPercentEncoding ?? unplussed
     }
     
-    private static var GlobalBackgroundQueue: dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_BACKGROUND.rawValue), 0)
-    }
-    
-    class func onUiThread(f: () -> Void) {
-        dispatch_async(GlobalMainQueue, f)
-    }
-    
-    class func onBackgroundThread(f: () -> Void) {
-        dispatch_async(GlobalBackgroundQueue, f)
-    }
-    
-    class func urlDecodeWithPlus(s: String) -> String {
-        let unplussed = s.stringByReplacingOccurrencesOfString("+", withString: " ")
-        return unplussed.stringByRemovingPercentEncoding ?? unplussed
-    }
-    
-    class func urlEncodePathWithPlus(s: String) -> String {
-        let plussed = s.stringByReplacingOccurrencesOfString(" ", withString: "+")
+    class func urlEncodePathWithPlus(_ s: String) -> String {
+        let plussed = s.replacingOccurrences(of: " ", with: "+")
         return urlEncodePath(plussed)
     }
     
-    class func urlEncodeHost(s: String) -> String {
-        return encodeWith(s, cs: .URLHostAllowedCharacterSet())
+    class func urlEncodeHost(_ s: String) -> String {
+        return encodeWith(s, cs: .urlHostAllowed)
     }
     
-    class func urlEncodePath(s: String) -> String {
-        return encodeWith(s, cs: .URLPathAllowedCharacterSet())
+    class func urlEncodePath(_ s: String) -> String {
+        return encodeWith(s, cs: .urlPathAllowed)
     }
     
-    class func urlEncodeQueryString(s: String) -> String {
-        return encodeWith(s, cs: .URLQueryAllowedCharacterSet())
+    class func urlEncodeQueryString(_ s: String) -> String {
+        return encodeWith(s, cs: .urlQueryAllowed)
     }
     
-    private class func encodeWith(s: String, cs: NSCharacterSet) -> String {
-        return s.stringByAddingPercentEncodingWithAllowedCharacters(cs) ?? s
+    fileprivate class func encodeWith(_ s: String, cs: CharacterSet) -> String {
+        return s.addingPercentEncoding(withAllowedCharacters: cs) ?? s
     }
     
-    static func url(s: String) -> NSURL {
-        return NSURL(string: s)!
+    static func url(_ s: String) -> URL {
+        return URL(string: s)!
     }
     
-    static func onError(pimpError: PimpError) {
+    static func onError(_ pimpError: PimpError) {
         let message = PimpErrorUtil.stringifyDetailed(pimpError)
         Log.error(message)
     }
 }
 
-extension NSData {
+extension Data {
     // thanks Martin, http://codereview.stackexchange.com/a/86613
     func hexString() -> String {
         // "Array" of all bytes
-        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count: self.length)
+        let bytes = UnsafeBufferPointer<UInt8>(start: (self as NSData).bytes.bindMemory(to: UInt8.self, capacity: self.count), count: self.count)
         // Array of hex strings, one for each byte
         let hexBytes = bytes.map { String(format: "%02hhx", $0) }
         // Concatenates all hex strings
-        return hexBytes.joinWithSeparator("")
+        return hexBytes.joined(separator: "")
     }
 }
 

@@ -9,7 +9,7 @@
 import Foundation
 
 
-public class Duration: CustomStringConvertible, Comparable {
+open class Duration: CustomStringConvertible, Comparable {
     static let Zero = Duration(millis: 0)
     let millis: Int64
     var secondsFloat: Float { get { return Float(seconds) } }
@@ -43,10 +43,10 @@ public class Duration: CustomStringConvertible, Comparable {
     
     static func now() -> Duration {
         // can this fail?
-        return NSDate().timeIntervalSince1970.seconds!
+        return Date().timeIntervalSince1970.seconds!
     }
     
-    private func toReadable(duration: Duration) -> String {
+    fileprivate func toReadable(_ duration: Duration) -> String {
         let hours = countHours(duration)
         let hs = padded(hours)
         let mins = padded(countMinutes(duration))
@@ -58,23 +58,23 @@ public class Duration: CustomStringConvertible, Comparable {
         }
     }
     
-    private func padded(time: Int64) -> String {
+    fileprivate func padded(_ time: Int64) -> String {
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
-    private func countSeconds(time: Duration) -> Int64 {
+    fileprivate func countSeconds(_ time: Duration) -> Int64 {
         return time.seconds % 60
     }
     
-    private func countMinutes(time: Duration) -> Int64 {
+    fileprivate func countMinutes(_ time: Duration) -> Int64 {
         return time.minutes % 60
     }
     
-    private func countHours(time: Duration) -> Int64 {
+    fileprivate func countHours(_ time: Duration) -> Int64 {
         return time.seconds / 3600
     }
     
-    public var description: String { get { return toReadable(self) } }
+    open var description: String { get { return toReadable(self) } }
 }
 
 public func ==(lhs: Duration, rhs: Duration) -> Bool {

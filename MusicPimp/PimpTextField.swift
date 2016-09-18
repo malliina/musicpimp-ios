@@ -20,21 +20,21 @@ class PimpTextField: UITextField {
         pimpInit()
     }
     
-    private func pimpInit() {
-        super.autocorrectionType = UITextAutocorrectionType.No
+    fileprivate func pimpInit() {
+        super.autocorrectionType = UITextAutocorrectionType.no
         backgroundColor = PimpColors.lighterBackground
         textColor = PimpColors.titles
     }
     
-    override func drawPlaceholderInRect(rect: CGRect) {
-        if let p: NSString = placeholder, font = self.font {
+    override func drawPlaceholder(in rect: CGRect) {
+        if let p: NSString = placeholder as NSString?, let font = self.font {
             let attributes = defaultTextAttributes.addAll([
                 NSForegroundColorAttributeName : PimpColors.placeholder,
                 NSFontAttributeName: font
             ])
-            let boundingRect = p.boundingRectWithSize(rect.size, options: .UsesLineFragmentOrigin, attributes: attributes, context: nil)
+            let boundingRect = p.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             let point = CGPoint(x: 0, y: (rect.size.height/2)-boundingRect.size.height/2)
-            p.drawAtPoint(point, withAttributes: attributes)
+            p.draw(at: point, withAttributes: attributes)
         }
     }
 }

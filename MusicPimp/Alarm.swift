@@ -21,14 +21,14 @@ class Alarm {
         self.enabled = enabled
     }
     
-    static func toJson(a: Alarm) -> [String: AnyObject] {
+    static func toJson(_ a: Alarm) -> [String: AnyObject] {
         let when = a.when
         let days = when.days.map { $0.rawValue }
         return [
-            JsonKeys.ID: a.id?.id ?? NSNull(),
-            JsonKeys.JOB: [ JsonKeys.TRACK: a.track.id ],
-            JsonKeys.WHEN: [ JsonKeys.Hour: when.hour, JsonKeys.Minute: when.minute, JsonKeys.Days: days ],
-            JsonKeys.Enabled: a.enabled
+            JsonKeys.ID: a.id?.id as AnyObject? ?? NSNull(),
+            JsonKeys.JOB: [ JsonKeys.TRACK: a.track.id ] as AnyObject,
+            JsonKeys.WHEN: [ JsonKeys.Hour: when.hour, JsonKeys.Minute: when.minute, JsonKeys.Days: days ] as AnyObject,
+            JsonKeys.Enabled: a.enabled as AnyObject
         ]
     }
 }
@@ -118,11 +118,11 @@ enum Day: String {
     case Sat = "sat"
     case Sun = "sun"
     
-    static func fromName(name: String) -> Day? {
+    static func fromName(_ name: String) -> Day? {
         return Day(rawValue: name)
     }
     
-    static func index(day: Day) -> Int {
+    static func index(_ day: Day) -> Int {
         switch day {
         case .Mon: return 0
         case .Tue: return 1
@@ -133,7 +133,7 @@ enum Day: String {
         case .Sun: return 6        }
     }
     
-    static func describeDays(days: Set<Day>) -> String {
+    static func describeDays(_ days: Set<Day>) -> String {
         if days.isEmpty {
             return "Never"
         }
@@ -146,7 +146,7 @@ enum Day: String {
         if days == [Day.Mon, Day.Tue, Day.Wed, Day.Thu, Day.Fri] {
             return "Weekdays"
         }
-        return days.sort { (f, s) -> Bool in
+        return days.sorted { (f, s) -> Bool in
             return Day.index(f) < Day.index(s)
             }.mkString(" ")
     }

@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class Throttler {
+open class Throttler {
     let interval: Duration
     
-    private var lastRun: Duration? = nil
+    fileprivate var lastRun: Duration? = nil
     
     init(interval: Duration) {
         self.interval = interval
     }
     
-    func throttled<T>(task: () -> T) -> T? {
+    func throttled<T>(_ task: () -> T) -> T? {
         let now = Duration.now()
         var hasEnoughTimePassed = true
         if let lastRun = lastRun {

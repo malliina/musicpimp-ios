@@ -14,28 +14,28 @@ class Limiter: CustomStringConvertible {
     let welcomeLimit: Int
     let limit: Int
     let duration: Duration
-    private let maxHistory: Int
+    fileprivate let maxHistory: Int
     
-    private var runs: [NSDate] = []
+    fileprivate var runs: [Date] = []
     
-    var history: [NSDate] { return runs }
+    var history: [Date] { return runs }
     
     init(welcomeLimit: Int, limit: Int, duration: Duration) {
         self.welcomeLimit = welcomeLimit
         self.limit = limit
         self.duration = duration
         self.maxHistory = max(welcomeLimit * 2, limit * 3)
-        runs = PimpSettings.sharedInstance.trackHistory
+        runs = PimpSettings.sharedInstance.trackHistory as [Date]
     }
     
     func increment() {
-        let now = NSDate()
-        runs.insert(now, atIndex: 0)
+        let now = Date()
+        runs.insert(now, at: 0)
         runs = runs.take(maxHistory)
     }
     
     func isWithinLimit() -> Bool {
-        let now = NSDate()
+        let now = Date()
         let runsWithinDuration = runs.howMany { date in
             self.diff(now, since: date) < self.duration
         }
@@ -44,8 +44,8 @@ class Limiter: CustomStringConvertible {
 //        return runs.count < welcomeLimit || runsWithinDuration < limit
     }
     
-    func diff(date: NSDate, since: NSDate) -> Duration {
-        let d: Double = date.timeIntervalSinceDate(since)
+    func diff(_ date: Date, since: Date) -> Duration {
+        let d: Double = date.timeIntervalSince(since)
         return d.seconds ?? Duration.Zero
     }
     

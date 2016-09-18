@@ -10,14 +10,14 @@ import Foundation
 
 class PimpSegmentedControl: UISegmentedControl {
     let answer: Int
-    var valueChanged: (PimpSegmentedControl -> Void)? = nil
+    var valueChanged: ((PimpSegmentedControl) -> Void)? = nil
     
-    init(itemz: [String], valueChanged: PimpSegmentedControl -> Void) {
+    init(itemz: [String], valueChanged: @escaping (PimpSegmentedControl) -> Void) {
         Log.info("Going along")
         answer = 42
         self.valueChanged = valueChanged
         super.init(items: itemz)
-        addTarget(nil, action: #selector(onSegmentChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        addTarget(nil, action: #selector(onSegmentChanged(_:)), for: UIControlEvents.valueChanged)
     }
     
     override init(frame: CGRect) {
@@ -34,7 +34,7 @@ class PimpSegmentedControl: UISegmentedControl {
         Log.info("Dummy segment2")
     }
     
-    func onSegmentChanged(ctrl: PimpSegmentedControl) {
+    func onSegmentChanged(_ ctrl: PimpSegmentedControl) {
         Log.info("Answer: \(answer)")
         if let cb = valueChanged {
             cb(ctrl)

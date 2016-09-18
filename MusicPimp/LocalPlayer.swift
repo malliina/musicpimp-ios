@@ -17,16 +17,16 @@ class LocalPlayer: NSObject, PlayerType {
     let limiter = Limiter.sharedInstance
     var isLocal: Bool { get { return true } }
     
-    private let localPlaylist = LocalPlaylist()
+    fileprivate let localPlaylist = LocalPlaylist()
     
     var playlist: PlaylistType { get { return localPlaylist } }
     var playerInfo: PlayerInfo? = nil
     var player: AVPlayer? { get { return playerInfo?.player } }
     
-    private var timeObserver: AnyObject? = nil
-    private var itemStatusContext = 0
-    private var playerStatusContext = 1
-    private let notificationCenter = NSNotificationCenter.defaultCenter()
+    fileprivate var timeObserver: AnyObject? = nil
+    fileprivate var itemStatusContext = 0
+    fileprivate var playerStatusContext = 1
+    fileprivate let notificationCenter = NotificationCenter.default
     
     let stateEvent = Event<PlaybackState>()
     let timeEvent = Event<Duration>()
@@ -34,7 +34,7 @@ class LocalPlayer: NSObject, PlayerType {
     let volumeEvent = Event<VolumeValue>()
     let muteEvent = Event<Bool>()
     
-    func open(onOpen: () -> Void, onError: NSError -> Void) {
+    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
         onOpen(())
     }
     
@@ -85,15 +85,15 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     
-    func seek(position: Duration) {
+    func seek(_ position: Duration) {
         // fucking hell
         let scale: Int32 = 1
         let pos64 = Float64(position.seconds)
         let posTime = CMTimeMakeWithSeconds(pos64, scale)
-        player?.seekToTime(posTime)
+        player?.seek(to: posTime)
     }
     
-    func volume(newVolume: VolumeValue) {
+    func volume(_ newVolume: VolumeValue) {
         player?.volume = newVolume.toFloat()
     }
     
@@ -122,11 +122,11 @@ class LocalPlayer: NSObject, PlayerType {
         playFromPlaylist({ $0.prev() })
     }
     
-    func skip(index: Int) {
+    func skip(_ index: Int) {
         playFromPlaylist({ $0.skip(index) })
     }
     
-    private func playFromPlaylist(f: LocalPlaylist -> Track?) -> Track? {
+    fileprivate func playFromPlaylist(_ f: (LocalPlaylist) -> Track?) -> Track? {
         if let track = f(localPlaylist) {
             closePlayer()
             initAndPlay(track)
@@ -137,11 +137,11 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     
-    func resetAndPlay(track: Track) -> Bool {
+    func resetAndPlay(_ track: Track) -> Bool {
         return resetAndPlay([track])
     }
     
-    func resetAndPlay(tracks: [Track]) -> Bool {
+    func resetAndPlay(_ tracks: [Track]) -> Bool {
         closePlayer()
         localPlaylist.reset(tracks)
         if let first = tracks.first {
@@ -150,50 +150,50 @@ class LocalPlayer: NSObject, PlayerType {
         return true
     }
     
-    private func initAndPlay(track: Track) {
+    fileprivate func initAndPlay(_ track: Track) {
         limiter.increment()
         info("Playing \(track.title)")
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
-        let playerItem = AVPlayerItem(URL: preferredUrl)
-        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &itemStatusContext)
+        let playerItem = AVPlayerItem(url: preferredUrl)
+        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,
             selector: #selector(LocalPlayer.playedToEnd(_:)),
-            name: AVPlayerItemDidPlayToEndTimeNotification,
+            name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
             object: p.currentItem)
         notificationCenter.addObserver(self,
             selector: #selector(LocalPlayer.failedToPlayToEnd(_:)),
-            name: AVPlayerItemFailedToPlayToEndTimeNotification,
+            name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime,
             object: p.currentItem)
-        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.Initial, context: &playerStatusContext)
+        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &playerStatusContext)
         playerInfo = PlayerInfo(player: p, track: track)
         trackEvent.raise(track)
-        timeObserver = player?.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(1, 1), queue: dispatch_get_main_queue()) { (time) -> Void in
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: DispatchQueue.main) { (time) -> Void in
             let secs = CMTimeGetSeconds(time)
             if let duration = secs.seconds {
                 self.timeEvent.raise(duration)
             } else {
                 Log.error("Unable to convert time to Duration: \(secs)")
             }
-        }
+        } as AnyObject?
         play()
     }
     
-    @objc func playedToEnd(notification: NSNotification) {
+    @objc func playedToEnd(_ notification: Notification) {
         info("Playback ended.")
         next()
     }
     
-    @objc func failedToPlayToEnd(notification: NSNotification) {
+    @objc func failedToPlayToEnd(_ notification: Notification) {
         info("Failed to play to end.")
         next()
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if context == &itemStatusContext {
             if let item = object as? AVPlayerItem {
                 switch(item.status) {
-                case AVPlayerItemStatus.Failed:
+                case AVPlayerItemStatus.failed:
                     info("AVPlayerItemStatus.Failed")
                     closePlayer()
                 default:
@@ -205,7 +205,7 @@ class LocalPlayer: NSObject, PlayerType {
         } else if context == &playerStatusContext {
             if let p = object as? AVPlayer {
                 switch(p.status) {
-                case AVPlayerStatus.Failed:
+                case AVPlayerStatus.failed:
                     info("Player failed")
                 default:
                     break
@@ -214,7 +214,7 @@ class LocalPlayer: NSObject, PlayerType {
                 info("Non-player object")
             }
         } else {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
     
@@ -227,14 +227,14 @@ class LocalPlayer: NSObject, PlayerType {
             if let timeObserver: AnyObject = timeObserver {
                 player.removeTimeObserver(timeObserver)
             }
-            notificationCenter.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: player.currentItem)
-            notificationCenter.removeObserver(self, name: AVPlayerItemFailedToPlayToEndTimeNotification, object: player.currentItem)
+            notificationCenter.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+            notificationCenter.removeObserver(self, name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: player.currentItem)
             timeObserver = nil
         }
         playerInfo = nil
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 }

@@ -13,16 +13,16 @@ class SearchableMusicController: BaseMusicController {
     var restoredState = SearchControllerRestorableState()
     var resultsController: SearchResultsController!
     var searchController: UISearchController!
-    private var latestSearchString: String? = nil
+    fileprivate var latestSearchString: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initSearch()
     }
     
-    func itemAt(tableView: UITableView, indexPath: NSIndexPath) -> MusicItem? {
+    func itemAt(_ tableView: UITableView, indexPath: IndexPath) -> MusicItem? {
         let items = tableView == self.tableView ? musicItems : resultsController.musicItems
-        let row = indexPath.row
+        let row = (indexPath as NSIndexPath).row
         if items.count > row {
             return items[row]
         } else {
@@ -45,7 +45,7 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         var wasFirstResponder = false
     }
     
-    private func initSearch() {
+    fileprivate func initSearch() {
         resultsController = SearchResultsController()
         resultsController.tableView.delegate = self
         searchController = UISearchController(searchResultsController: resultsController)
@@ -57,12 +57,13 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         definesPresentationContext = false
+//        searchController.edgesForExtendedLayout = UIRectEdge.None
     }
     
-    private func restoreSearch() {
+    fileprivate func restoreSearch() {
         // Restore the searchController's active state.
         if restoredState.wasActive {
-            searchController.active = restoredState.wasActive
+            searchController.isActive = restoredState.wasActive
             restoredState.wasActive = false
             
             if restoredState.wasFirstResponder {
@@ -72,55 +73,55 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         }
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
     
-    func presentSearchController(searchController: UISearchController) {
+    func presentSearchController(_ searchController: UISearchController) {
     }
     
-    func willPresentSearchController(searchController: UISearchController) {
+    func willPresentSearchController(_ searchController: UISearchController) {
     }
     
-    func didPresentSearchController(searchController: UISearchController) {
+    func didPresentSearchController(_ searchController: UISearchController) {
     }
     
-    func willDismissSearchController(searchController: UISearchController) {
+    func willDismissSearchController(_ searchController: UISearchController) {
     }
     
-    func didDismissSearchController(searchController: UISearchController) {
+    func didDismissSearchController(_ searchController: UISearchController) {
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         // Strips out all the leading and trailing spaces.
-        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
-        let strippedString = searchController.searchBar.text?.stringByTrimmingCharactersInSet(whitespaceCharacterSet) ?? ""
+        let whitespaceCharacterSet = CharacterSet.whitespaces
+        let strippedString = searchController.searchBar.text?.trimmingCharacters(in: whitespaceCharacterSet) ?? ""
         self.resultsController.search(strippedString)
     }
     
-    override func encodeRestorableStateWithCoder(coder: NSCoder) {
-        super.encodeRestorableStateWithCoder(coder)
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
         
         // Encode the view state so it can be restored later.
         
         // Encode the title.
-        coder.encodeObject(navigationItem.title!, forKey:RestorationKeys.viewControllerTitle.rawValue)
+        coder.encode(navigationItem.title!, forKey:RestorationKeys.viewControllerTitle.rawValue)
         
         // Encode the search controller's active state.
-        coder.encodeBool(searchController.active, forKey:RestorationKeys.searchControllerIsActive.rawValue)
+        coder.encode(searchController.isActive, forKey:RestorationKeys.searchControllerIsActive.rawValue)
         
         // Encode the first responser status.
-        coder.encodeBool(searchController.searchBar.isFirstResponder(), forKey:RestorationKeys.searchBarIsFirstResponder.rawValue)
+        coder.encode(searchController.searchBar.isFirstResponder, forKey:RestorationKeys.searchBarIsFirstResponder.rawValue)
         
         // Encode the search bar text.
-        coder.encodeObject(searchController.searchBar.text, forKey:RestorationKeys.searchBarText.rawValue)
+        coder.encode(searchController.searchBar.text, forKey:RestorationKeys.searchBarText.rawValue)
     }
     
-    override func decodeRestorableStateWithCoder(coder: NSCoder) {
-        super.decodeRestorableStateWithCoder(coder)
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
         
         // Restore the title.
-        guard let decodedTitle = coder.decodeObjectForKey(RestorationKeys.viewControllerTitle.rawValue) as? String else {
+        guard let decodedTitle = coder.decodeObject(forKey: RestorationKeys.viewControllerTitle.rawValue) as? String else {
             fatalError("A title did not exist. In your app, handle this gracefully.")
         }
         title = decodedTitle
@@ -129,15 +130,15 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         // We can't make the searchController active here since it's not part of the view
         // hierarchy yet, instead we do it in viewWillAppear.
         //
-        restoredState.wasActive = coder.decodeBoolForKey(RestorationKeys.searchControllerIsActive.rawValue)
+        restoredState.wasActive = coder.decodeBool(forKey: RestorationKeys.searchControllerIsActive.rawValue)
         
         // Restore the first responder status:
         // Like above, we can't make the searchController first responder here since it's not part of the view
         // hierarchy yet, instead we do it in viewWillAppear.
         //
-        restoredState.wasFirstResponder = coder.decodeBoolForKey(RestorationKeys.searchBarIsFirstResponder.rawValue)
+        restoredState.wasFirstResponder = coder.decodeBool(forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
         
         // Restore the text in the search field.
-        searchController.searchBar.text = coder.decodeObjectForKey(RestorationKeys.searchBarText.rawValue) as? String
+        searchController.searchBar.text = coder.decodeObject(forKey: RestorationKeys.searchBarText.rawValue) as? String
     }
 }

@@ -22,26 +22,24 @@ class LibraryController: SearchableMusicController {
     
     var header: UIView? = nil
     
-    private var downloadUpdates: Disposable? = nil
-    private var downloadState: [Track: TrackProgress] = [:]
+    fileprivate var downloadUpdates: Disposable? = nil
+    fileprivate var downloadState: [Track: TrackProgress] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setFeedback(loadingMessage)
         if let folder = selected {
-            self.navigationItem.title = folder.title
             loadFolder(folder.id)
         } else {
-//            self.navigationItem.title = "MUSIC"
             loadRoot()
         }
     }
     
-    private func resetLibrary() {
+    fileprivate func resetLibrary() {
         loadRoot()
     }
     
-    func loadFolder(id: String) {
+    func loadFolder(_ id: String) {
         library.folder(id, onError: onLoadError, f: onFolder)
     }
     
@@ -49,12 +47,12 @@ class LibraryController: SearchableMusicController {
         library.rootFolder(onLoadError, f: onFolder)
     }
     
-    func onFolder(f: MusicFolder) {
+    func onFolder(_ f: MusicFolder) {
         folder = f
         self.renderTable(computeMessage(folder))
     }
     
-    func computeMessage(folder: MusicFolder) -> String? {
+    func computeMessage(_ folder: MusicFolder) -> String? {
         let isEmpty = folder.items.isEmpty
         if let selected = selected {
             return isEmpty ? "No tracks in folder \(selected.title)." : nil
@@ -77,38 +75,38 @@ class LibraryController: SearchableMusicController {
         //folder = MusicFolder.empty
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return libraryCell(tableView, indexPath: indexPath)
     }
     
-    private func libraryCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        let item = musicItems[indexPath.row]
+    fileprivate func libraryCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let item = musicItems[(indexPath as NSIndexPath).row]
         let isFolder = item as? Folder != nil
         if isFolder {
             let folderCell = identifiedCell("FolderCell", index: indexPath)
             folderCell.textLabel?.text = item.title
 //            folderCell.textLabel?.textColor = PimpColors.titles
-            folderCell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            folderCell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             return folderCell
         } else {
-            if let track = item as? Track, pimpCell = trackCell(track, index: indexPath) {
+            if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {
                 if let downloadProgress = downloadState[track] {
                     //info("Setting progress to \(downloadProgress.progress)")
                     pimpCell.progressView.progress = downloadProgress.progress
-                    pimpCell.progressView.hidden = false
+                    pimpCell.progressView.isHidden = false
                 } else {
-                    pimpCell.progressView.hidden = true
+                    pimpCell.progressView.isHidden = true
                 }
                 return pimpCell
             } else {
                 // we should never get here
-                return super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+                return super.tableView(tableView, cellForRowAt: indexPath)
             }
         }
     }
     
-    func sheetAction(title: String, item: MusicItem, onTrack: Track -> Void, onFolder: Folder -> Void) -> UIAlertAction {
-        return UIAlertAction(title: title, style: UIAlertActionStyle.Default) { (a) -> Void in
+    func sheetAction(_ title: String, item: MusicItem, onTrack: @escaping (Track) -> Void, onFolder: @escaping (Folder) -> Void) -> UIAlertAction {
+        return UIAlertAction(title: title, style: UIAlertActionStyle.default) { (a) -> Void in
             if let track = item as? Track {
                 onTrack(track)
             }
@@ -119,10 +117,10 @@ class LibraryController: SearchableMusicController {
     }
     
     // When this method is defined, cells become swipeable
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let playAction = musicItemAction(
             tableView,
             title: "Play",
@@ -138,9 +136,9 @@ class LibraryController: SearchableMusicController {
         return [playAction, addAction]
     }
     
-    func musicItemAction(tableView: UITableView, title: String, onTrack: Track -> Void, onFolder: Folder -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: title) {
-            (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+    func musicItemAction(_ tableView: UITableView, title: String, onTrack: @escaping (Track) -> Void, onFolder: @escaping (Folder) -> Void) -> UITableViewRowAction {
+        return UITableViewRowAction(style: UITableViewRowActionStyle.default, title: title) {
+            (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             if let tappedItem = self.itemAt(tableView, indexPath: indexPath) {
                 if let track = tappedItem as? Track {
                     onTrack(track)
@@ -154,19 +152,19 @@ class LibraryController: SearchableMusicController {
     }
     
     // Used when the user clicks a track or otherwise modifies the player
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let item = itemAt(tableView, indexPath: indexPath), track = item as? Track {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let item = itemAt(tableView, indexPath: indexPath), let track = item as? Track {
             playAndDownload(track)
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        tableView.deselectRow(at: indexPath, animated: false)
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
     }
     
     // Performs segue if the user clicked a folder
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == LibraryController.LIBRARY {
             if let row = self.tableView.indexPathForSelectedRow {
-                let index = row.item
+                let index = (row as NSIndexPath).item
                 return musicItems.count > index && musicItems[index] is Folder
             } else {
                 info("Cannot navigate to item at row \(index)")
@@ -181,11 +179,11 @@ class LibraryController: SearchableMusicController {
     }
     
     // Used when the user taps a folder, initiating a navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let dest = segue.destinationViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let dest = segue.destination
         if let destination = dest as? LibraryParent {
             if let row = self.tableView.indexPathForSelectedRow {
-                let folder = musicItems[row.item]
+                let folder = musicItems[(row as NSIndexPath).item]
                 destination.folder = folder
             } else {
                 Log.error("No index, destination \(dest)")
@@ -195,8 +193,8 @@ class LibraryController: SearchableMusicController {
         }
     }
     
-    @IBAction func unwindToItems(segue: UIStoryboardSegue) {
-        let src = segue.sourceViewController as? LibraryController
+    @IBAction func unwindToItems(_ segue: UIStoryboardSegue) {
+        let src = segue.source as? LibraryController
         if let id = src?.selected?.id {
             loadFolder(id)
         } else {
@@ -206,15 +204,15 @@ class LibraryController: SearchableMusicController {
 }
 
 extension LibraryController {
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         downloadState = [:]
-        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self) { (lc) -> DownloadProgressUpdate -> () in
+        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self) { (lc) -> (DownloadProgressUpdate) -> () in
             lc.onDownloadProgressUpdate
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if downloadState.isEmpty {
             disposeDownloadProgress()
@@ -226,24 +224,24 @@ extension LibraryController {
         downloadUpdates = nil
     }
     
-    func onDownloadProgressUpdate(dpu: DownloadProgressUpdate) {
+    func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
         let tracks = folder.tracks
         if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
-            index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
+            let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
                 let isDownloadComplete = track.size == dpu.written
                 if isDownloadComplete {
-                    downloadState.removeValueForKey(track)
-                    let isVisible = (isViewLoaded() && view.window != nil)
+                    downloadState.removeValue(forKey: track)
+                    let isVisible = (isViewLoaded && view.window != nil)
                     if !isVisible && downloadState.isEmpty {
                         disposeDownloadProgress()
                     }
                 } else {
                     downloadState[track] = TrackProgress(track: track, dpu: dpu)
                 }
-                let itemIndexPath = NSIndexPath(forRow: index, inSection: 0)
+                let itemIndexPath = IndexPath(row: index, section: 0)
                 
                 Util.onUiThread {
-                    self.tableView.reloadRowsAtIndexPaths([itemIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+                    self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
                 }
         }
     }

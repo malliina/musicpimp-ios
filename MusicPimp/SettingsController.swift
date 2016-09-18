@@ -26,42 +26,42 @@ class SettingsController: CacheInfoController {
         super.viewDidLoad()
         let libraryManager = LibraryManager.sharedInstance
         let playerManager = PlayerManager.sharedInstance
-        libraryManager.changed.addHandler(self) { (sc) -> Endpoint -> () in
+        libraryManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
             sc.onLibraryChanged
         }
-        playerManager.changed.addHandler(self) { (sc) -> Endpoint -> () in
+        playerManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
             sc.onPlayerChanged
         }
-        settings.cacheEnabledChanged.addHandler(self) { (sc) -> Bool -> () in
+        settings.cacheEnabledChanged.addHandler(self) { (sc) -> (Bool) -> () in
             sc.onCacheEnabledChanged
         }
     }
     
-    private func onLibraryChanged(newLibrary: Endpoint) {
+    fileprivate func onLibraryChanged(_ newLibrary: Endpoint) {
         renderTable()
     }
     
-    private func onPlayerChanged(newPlayer: Endpoint) {
+    fileprivate func onPlayerChanged(_ newPlayer: Endpoint) {
         renderTable()
     }
     
-    private func onCacheEnabledChanged(newEnabled: Bool) {
+    fileprivate func onCacheEnabledChanged(_ newEnabled: Bool) {
         renderTable()
     }
     
-    override func onCacheLimitChanged(newLimit: StorageSize) {
+    override func onCacheLimitChanged(_ newLimit: StorageSize) {
         renderTable()
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let reuseIdentifier = cell.reuseIdentifier {
             cell.detailTextLabel?.text = textForIdentifier(reuseIdentifier)
         }
         return cell
     }
     
-    private func textForIdentifier(reuseIdentifier: String) -> String {
+    fileprivate func textForIdentifier(_ reuseIdentifier: String) -> String {
         switch reuseIdentifier {
             case "MusicSource": return activeLibrary.name
             case "PlaybackDevice": return activePlayer.name
@@ -70,12 +70,12 @@ class SettingsController: CacheInfoController {
         }
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
     }
 }

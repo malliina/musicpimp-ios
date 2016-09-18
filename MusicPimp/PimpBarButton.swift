@@ -9,9 +9,9 @@
 import Foundation
 
 class PimpBarButton: UIBarButtonItem {
-    let onClick: UIBarButtonItem -> Void
+    let onClick: (UIBarButtonItem) -> Void
     
-    init(title: String, style: UIBarButtonItemStyle, onClick: UIBarButtonItem -> Void) {
+    init(title: String, style: UIBarButtonItemStyle, onClick: @escaping (UIBarButtonItem) -> Void) {
         self.onClick = onClick
         super.init()
         self.style = style
@@ -23,7 +23,7 @@ class PimpBarButton: UIBarButtonItem {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func runOnClick(item: UIBarButtonItem) {
+    func runOnClick(_ item: UIBarButtonItem) {
         onClick(item)
     }
     

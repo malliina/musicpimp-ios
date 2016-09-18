@@ -10,16 +10,16 @@ import Foundation
 
 class FilePersistence : Persistence {
     
-    let dir = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0]
+    let dir = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
     
     let changes = Event<Setting>()
     
     // are you fucking kidding me?
-    func load(path: String) -> String? {
+    func load(_ path: String) -> String? {
         let file = dir.stringByAppendingPathComponent(path)
         var loadError: NSError?
         do {
-            let contents = try NSString(contentsOfFile: file, encoding: NSUTF8StringEncoding)
+            let contents = try NSString(contentsOfFile: file, encoding: String.Encoding.utf8.rawValue)
             if let _ = loadError {
                 return nil
             } else {
@@ -32,12 +32,12 @@ class FilePersistence : Persistence {
     }
     
     
-    func save(contents: String, key: String) -> ErrorMessage? {
+    func save(_ contents: String, key: String) -> ErrorMessage? {
         let file = dir.stringByAppendingPathComponent(key)
         var saveError: NSError?
         let written: Bool
         do {
-            try contents.writeToFile(file, atomically: true, encoding: NSUTF8StringEncoding)
+            try contents.write(toFile: file, atomically: true, encoding: String.Encoding.utf8)
             written = true
         } catch let error as NSError {
             saveError = error

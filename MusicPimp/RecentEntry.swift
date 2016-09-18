@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class RecentEntry {
+open class RecentEntry {
     let track: Track
-    let when: NSDate
+    let when: Date
     
-    init(track: Track, when: NSDate) {
+    init(track: Track, when: Date) {
         self.track = track
         self.when = when
     }

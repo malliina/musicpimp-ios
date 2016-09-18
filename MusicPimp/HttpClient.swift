@@ -8,22 +8,22 @@ import Foundation
 class HttpClient {
     static let JSON = "application/json", CONTENT_TYPE = "Content-Type", ACCEPT = "Accept", GET = "GET", POST = "POST", AUTHORIZATION = "Authorization", BASIC = "Basic"
 
-    static func basicAuthValue(username: String, password: String) -> String {
+    static func basicAuthValue(_ username: String, password: String) -> String {
         let encodable = "\(username):\(password)"
         let encoded = encodeBase64(encodable)
         return "\(HttpClient.BASIC) \(encoded)"
     }
     
-    static func authHeader(word: String, unencoded: String) -> String {
+    static func authHeader(_ word: String, unencoded: String) -> String {
         let encoded = HttpClient.encodeBase64(unencoded)
         return "\(word) \(encoded)"
     }
     
-    static func encodeBase64(unencoded: String) -> String {
-        return unencoded.dataUsingEncoding(NSUTF8StringEncoding)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions())
+    static func encodeBase64(_ unencoded: String) -> String {
+        return unencoded.data(using: String.Encoding.utf8)!.base64EncodedString(options: NSData.Base64EncodingOptions())
     }
     
-    func get(url: String, headers: [String: String] = [:], onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
+    func get(_ url: String, headers: [String: String] = [:], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
         //Log.info(url)
         //let encodedString = url
         //let encodedString = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
@@ -31,11 +31,11 @@ class HttpClient {
 //        url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URL)
 //        let encodedString = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
         let encodedString: String? = url
-        if let encodedString = encodedString, nsURL = NSURL(string: encodedString) {
+        if let encodedString = encodedString, let nsURL = URL(string: encodedString) {
             get(nsURL, headers: headers) { (data, response, error) -> Void in
                 if let error = error {
-                    onError(RequestFailure(url: nsURL, code: error.code, data: data))
-                } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
+                    onError(RequestFailure(url: nsURL, code: error._code, data: data))
+                } else if let httpResponse = response as? HTTPURLResponse, let data = data {
                     onResponse(data, httpResponse)
                 } else {
                     Log.error("Unable to interpret HTTP response to URL \(encodedString)")
@@ -45,23 +45,19 @@ class HttpClient {
             Log.info("Invalid URL: \(url)")
         }
     }
-    func get(url: NSURL, headers: [String: String] = [:], completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
+    
+    func get(_ url: URL, headers: [String: String] = [:], completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
         executeRequest(
-            url,
-            f: {(req) -> (Void) in
-                req.HTTPMethod = HttpClient.GET
-                for (key, value) in headers {
-                    req.addValue(value, forHTTPHeaderField: key)
-                }
-            },
+            buildRequest(url: url, httpMethod: HttpClient.GET, headers: headers, body: nil),
             completionHandler: completionHandler)
     }
-    func postJSON(url: String, headers: [String: String] = [:], payload: AnyObject, onResponse: (NSData, NSHTTPURLResponse) -> Void, onError: RequestFailure -> Void) {
-        let nsURL = NSURL(string: url)!
+    
+    func postJSON(_ url: String, headers: [String: String] = [:], payload: [String: AnyObject], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
+        let nsURL = URL(string: url)!
         postJSON(nsURL, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
             if let error = error {
-                onError(RequestFailure(url: nsURL, code: error.code, data: data))
-            } else if let httpResponse = response as? NSHTTPURLResponse, data = data {
+                onError(RequestFailure(url: nsURL, code: error._code, data: data))
+            } else if let httpResponse = response as? HTTPURLResponse, let data = data {
                 onResponse(data, httpResponse)
             } else {
                 Log.error("Unable to interpret HTTP response to URL \(url)")
@@ -69,31 +65,33 @@ class HttpClient {
         }
     }
 
-    func postJSON(url: NSURL, headers: [String: String] = [:], jsonObj: AnyObject, completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
+    func postJSON(_ url: URL, headers: [String: String] = [:], jsonObj: [String: AnyObject], completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
+        let req = buildRequest(url: url, httpMethod: HttpClient.POST, headers: headers, body: try? JSONSerialization.data(withJSONObject: jsonObj, options: []))
         executeRequest(
-            url,
-            f: { (req) -> (Void) in
-                req.HTTPMethod = HttpClient.POST
-                for (key, value) in headers {
-                    req.addValue(value, forHTTPHeaderField: key)
-                }
-                //let isValid = NSJSONSerialization.isValidJSONObject(jsonObj)
-                let body: NSData? = try? NSJSONSerialization.dataWithJSONObject(jsonObj, options: [])
-                req.HTTPBody = body
-            },
+            req,
             completionHandler: completionHandler)
     }
     
     func executeRequest(
-        url: NSURL,
-        f: NSMutableURLRequest -> Void,
-        completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)) {
-        let req = NSMutableURLRequest(URL: url)
-        req.timeoutInterval = NSTimeInterval.abs(5)
-        f(req)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(req, completionHandler: completionHandler)
+        _ req: URLRequest,
+        //f: (URLRequest) -> Void,
+        completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
+        //let req = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 5)
+        //f(req)
+        let session = URLSession.shared
+        let task = session.dataTask(with: req, completionHandler: completionHandler)
         task.resume()
     }
+    
+    func buildRequest(url: URL, httpMethod: String, headers: [String: String], body: Data?) -> URLRequest {
+        var req = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 5)
+        req.httpMethod = httpMethod
+        for (key, value) in headers {
+            req.addValue(value, forHTTPHeaderField: key)
+        }
+        if let body = body {
+            req.httpBody = body
+        }
+        return req
+    }
 }
-

@@ -11,8 +11,8 @@ protocol PlaylistType {
     var indexEvent: Event<Int?> { get }
     var playlistEvent: Event<Playlist> { get }
     var trackAdded: Event<Track> { get }
-    func add(track: Track)
-    func add(tracks: [Track])
-    func removeIndex(index: Int)
-    func move(src: Int, dest: Int)
+    func add(_ track: Track)
+    func add(_ tracks: [Track])
+    func removeIndex(_ index: Int)
+    func move(_ src: Int, dest: Int)
 }

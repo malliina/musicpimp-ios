@@ -15,7 +15,7 @@ class VolumeViewController: PimpViewController {
     
     @IBOutlet var volumeSlider: UISlider!
     
-    private var appearedListeners: [Disposable] = []
+    fileprivate var appearedListeners: [Disposable] = []
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     
@@ -26,7 +26,7 @@ class VolumeViewController: PimpViewController {
         updateVolume()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateVolume()
         listenWhenAppeared(player)
@@ -36,51 +36,51 @@ class VolumeViewController: PimpViewController {
         volumeSlider.value = sliderValue(player.current().volume)
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         unlistenWhenDisappeared()
     }
     
-    func installFaImage(name: String, button: UIButton) {
-        button.setTitle("", forState: .Normal)
+    func installFaImage(_ name: String, button: UIButton) {
+        button.setTitle("", for: UIControlState())
 //        button.titleLabel?.text = ""
-        button.setImage(faImage(name), forState: UIControlState.Normal)
+        button.setImage(faImage(name), for: UIControlState())
     }
     
-    func faImage(name: String) -> UIImage {
-        return UIImage(icon: name, backgroundColor: UIColor.clearColor(), iconColor: UIColor.blueColor(), fontSize: 28)
+    func faImage(_ name: String) -> UIImage {
+        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 28)
     }
     
-    @IBAction func userDidChangeVolume(sender: UISlider) {
+    @IBAction func userDidChangeVolume(_ sender: UISlider) {
         let percent = sender.value / (sender.maximumValue - sender.minimumValue)
         let volume = VolumeValue(volume: Int(100.0 * percent))
         player.volume(volume)
     }
     
-    @IBAction func backClicked(sender: UIBarButtonItem) {
-        dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func backClicked(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
     
-    private func onVolumeChanged(volume: VolumeValue) {
+    fileprivate func onVolumeChanged(_ volume: VolumeValue) {
         let value = sliderValue(volume)
         Util.onUiThread {
             self.volumeSlider.value = value
         }
     }
     
-    func sliderValue(volume: VolumeValue) -> Float {
+    func sliderValue(_ volume: VolumeValue) -> Float {
         return volume.toFloat() * (volumeSlider.maximumValue - volumeSlider.minimumValue)
     }
     
-    private func listenWhenAppeared(targetPlayer: PlayerType) {
+    fileprivate func listenWhenAppeared(_ targetPlayer: PlayerType) {
         unlistenWhenDisappeared()
-        let listener = targetPlayer.volumeEvent.addHandler(self, handler: { (pc) -> VolumeValue -> () in
+        let listener = targetPlayer.volumeEvent.addHandler(self, handler: { (pc) -> (VolumeValue) -> () in
             pc.onVolumeChanged
         })
         appearedListeners = [listener]
     }
     
-    private func unlistenWhenDisappeared() {
+    fileprivate func unlistenWhenDisappeared() {
         for listener in appearedListeners {
             listener.dispose()
         }

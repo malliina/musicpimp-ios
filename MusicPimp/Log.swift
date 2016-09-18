@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class Log {
-    static func info<T>(msg: T) -> Void {
+open class Log {
+    static func info<T>(_ msg: T) -> Void {
         print(msg)
     }
-    static func error<T>(msg: T) -> Void {
+    static func error<T>(_ msg: T) -> Void {
         print(msg)
     }
 }

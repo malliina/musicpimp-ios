@@ -30,26 +30,26 @@ class EditAlarmTableViewController: BaseTableController {
         datePicker.setValue(PimpColors.titles, forKey: "textColor")
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         renderTable()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         updateDate()
         super.viewWillDisappear(animated)
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
 
-    func initEditAlarm(alarm: Alarm, endpoint: Endpoint) {
+    func initEditAlarm(_ alarm: Alarm, endpoint: Endpoint) {
         self.mutableAlarm = MutableAlarm(a: alarm)
         self.endpoint = endpoint
     }
     
-    func initNewAlarm(endpoint: Endpoint) {
+    func initNewAlarm(_ endpoint: Endpoint) {
         self.endpoint = endpoint
     }
     
@@ -57,10 +57,10 @@ class EditAlarmTableViewController: BaseTableController {
     
     @IBOutlet var datePicker: UIDatePicker!
   
-    func clockTime(date: NSDate) -> ClockTime {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Hour, .Minute], fromDate: date)
-        return ClockTime(hour: components.hour, minute: components.minute)
+    func clockTime(_ date: Date) -> ClockTime {
+        let calendar = Calendar.current
+        let components = (calendar as NSCalendar).components([.hour, .minute], from: date)
+        return ClockTime(hour: components.hour!, minute: components.minute!)
     }
     
     func updateDate() {
@@ -73,23 +73,23 @@ class EditAlarmTableViewController: BaseTableController {
     }
     
     // adapted from http://stackoverflow.com/a/12741639
-    func changeDate(datePicker: UIDatePicker, time: ClockTime) {
+    func changeDate(_ datePicker: UIDatePicker, time: ClockTime) {
         let components = time.dateComponents(datePicker.date)
-        if let date = components.date {
+        if let date = (components as NSDateComponents).date {
             datePicker.date = date
         }
     }
     
-    @IBAction func cancel(sender: UIBarButtonItem) {
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
         goBack()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        if saveButton === sender {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let sender = sender as? UIBarButtonItem, saveButton === sender {
             updateDate()
         }
-        let dest = segue.destinationViewController
+        let dest = segue.destination
         if let destination = dest as? RepeatDaysController {
             destination.alarm = self.mutableAlarm
         }
@@ -98,8 +98,8 @@ class EditAlarmTableViewController: BaseTableController {
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let reuseIdentifier = cell.reuseIdentifier {
             switch reuseIdentifier {
             case timePickerIdentifier:
@@ -116,12 +116,12 @@ class EditAlarmTableViewController: BaseTableController {
                 cell.detailTextLabel?.text = mutableAlarm?.track?.title ?? "No track"
                 break
             case playIdentifier:
-                cell.textLabel?.enabled = mutableAlarm?.track != nil
+                cell.textLabel?.isEnabled = mutableAlarm?.track != nil
                 break
             case deleteAlarmIdentifier:
-                cell.textLabel?.enabled = mutableAlarm?.id != nil
+                cell.textLabel?.isEnabled = mutableAlarm?.id != nil
                 cell.textLabel?.textColor = PimpColors.deletion
-                cell.selectionStyle = UITableViewCellSelectionStyle.Default
+                cell.selectionStyle = UITableViewCellSelectionStyle.default
                 break
             default:
                 break
@@ -130,12 +130,12 @@ class EditAlarmTableViewController: BaseTableController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let identifier = tableView.cellForRowAtIndexPath(indexPath)?.reuseIdentifier {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let identifier = tableView.cellForRow(at: indexPath)?.reuseIdentifier {
             switch identifier {
             case deleteAlarmIdentifier:
-                if let alarmId = mutableAlarm?.id, endpoint = endpoint {
-                    tableView.deselectRowAtIndexPath(indexPath, animated: false)
+                if let alarmId = mutableAlarm?.id, let endpoint = endpoint {
+                    tableView.deselectRow(at: indexPath, animated: false)
                     Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId, onError: onError) {
                         Util.onUiThread {
                             self.goBack(true)
@@ -144,8 +144,8 @@ class EditAlarmTableViewController: BaseTableController {
                 }
                 break
             case playIdentifier:
-                tableView.deselectRowAtIndexPath(indexPath, animated: false)
-                if let track = mutableAlarm?.track, endpoint = endpoint {
+                tableView.deselectRow(at: indexPath, animated: false)
+                if let track = mutableAlarm?.track, let endpoint = endpoint {
                     let player = Players.fromEndpoint(endpoint)
                     player.open({ () -> Void in
                         let success = player.resetAndPlay(track)
@@ -162,16 +162,16 @@ class EditAlarmTableViewController: BaseTableController {
         }
     }
     
-    func onConnectError(e: NSError) {
+    func onConnectError(_ e: Error) {
         
     }
     
-    func goBack(didDelete: Bool = false) {
+    func goBack(_ didDelete: Bool = false) {
         let isAddMode = presentingViewController != nil
         if isAddMode {
-            dismissViewControllerAnimated(true, completion: nil)
+            dismiss(animated: true, completion: nil)
         } else {
-            navigationController!.popViewControllerAnimated(true)
+            navigationController!.popViewController(animated: true)
             if didDelete {
                 if let alarmsController = navigationController!.viewControllers.last as? AlarmsController {
                     // reloads so that the deleted alarm entry disappears from the table we now return to

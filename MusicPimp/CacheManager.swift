@@ -20,13 +20,13 @@ class CacheManager {
         self.throttler = Throttler(interval: 1.hours)
     }
     
-    func maintainDiskSpace(maxSize: StorageSize) -> StorageSize {
+    func maintainDiskSpace(_ maxSize: StorageSize) -> StorageSize {
         let amountDeleted = throttler.throttled { () -> StorageSize in
             self.defaultCleanup(maxSize)
         }
         return amountDeleted ?? StorageSize.Zero
     }
-    func defaultCleanup(maxSize: StorageSize) -> StorageSize {
+    func defaultCleanup(_ maxSize: StorageSize) -> StorageSize {
         return cleanup(folder, maxSize: maxSize, shovelSize: shovelSize)
     }
     
@@ -37,7 +37,7 @@ class CacheManager {
     /// - parameter shovelSize: the minumum amount to delete from dir if its size exceeds maxSize
     ///
     /// :return: the amount acutally deleted
-    func cleanup(dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) -> StorageSize {
+    func cleanup(_ dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) -> StorageSize {
         let currentSize = Files.sharedInstance.folderSize(dir.url)
         let sizeDiff = currentSize - maxSize
         let needsCleanup = sizeDiff.bytes > 0
@@ -62,7 +62,7 @@ class CacheManager {
     /// - parameter amount: the amount to delete, approximately
     ///
     /// - returns: the amount actually deleted
-    func free(dir: Directory, amount: StorageSize) -> StorageSize {
+    func free(_ dir: Directory, amount: StorageSize) -> StorageSize {
         return dir.contents().paths.foldLeft(StorageSize.Zero) { (deleted, path) -> StorageSize in
             let hasDeletedEnough = deleted >= amount
             if hasDeletedEnough {

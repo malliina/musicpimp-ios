@@ -21,23 +21,23 @@ class AlarmEndpointController: BaseTableController {
         selectedId = settings.defaultNotificationEndpoint()?.id
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return endpoints.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let index = indexPath.row
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let index = (indexPath as NSIndexPath).row
         let endpoint = endpoints[index]
-        let cell = tableView.dequeueReusableCellWithIdentifier(endpointIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
-        let accessory = endpoint.id == selectedId ? UITableViewCellAccessoryType.Checkmark : UITableViewCellAccessoryType.None
+        let accessory = endpoint.id == selectedId ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         cell.accessoryType = accessory
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let endpoint = endpoints[indexPath.row]
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        let endpoint = endpoints[(indexPath as NSIndexPath).row]
         selectedId = endpoint.id
         settings.saveDefaultNotificationsEndpoint(endpoint)
         renderTable()

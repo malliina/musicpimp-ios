@@ -12,9 +12,9 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
     
     @IBOutlet var nameText: UITextField!
     
-    @IBAction func cancel(sender: UIBarButtonItem) {
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
 //        self.navigationController?.popViewControllerAnimated(true)
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBOutlet var saveButton: UIBarButtonItem!
@@ -28,17 +28,17 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         super.viewDidLoad()
         nameText.delegate = self
         checkValidName()
-        nameText.addTarget(self, action: #selector(SavePlaylistViewController.textFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
+        nameText.addTarget(self, action: #selector(SavePlaylistViewController.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if saveButton === sender {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let sender = sender as? UIBarButtonItem, saveButton === sender {
             name = nameText.text ?? ""
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if saveButton === sender {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if let sender = sender as? UIBarButtonItem,saveButton === sender {
             let name = nameText.text ?? ""
             return !name.isEmpty
         } else {
@@ -46,16 +46,16 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         }
     }
     
-    func textFieldDidChange(textField: UITextField) {
+    func textFieldDidChange(_ textField: UITextField) {
         checkValidName()
     }
     
     func checkValidName() {
         let text = nameText.text ?? ""
-        saveButton.enabled = !text.isEmpty
+        saveButton.isEnabled = !text.isEmpty
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         nameText.resignFirstResponder()
         return true
     }

@@ -124,7 +124,6 @@
 		7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206B11A1547370032C01D /* LaunchScreen.xib */; };
 		7DC206BF1A1547380032C01D /* MusicPimpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206BE1A1547380032C01D /* MusicPimpTests.swift */; };
 		7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */; };
-		7DC2FB701D527C9900A6FADD /* MyTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB6F1D527C9900A6FADD /* MyTable.swift */; };
 		7DC2FB721D56104A00A6FADD /* ListeningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB711D56104A00A6FADD /* ListeningController.swift */; };
 		7DC2FB741D57693600A6FADD /* ConstraintToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */; };
 		7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */; };
@@ -311,7 +310,6 @@
 		7DC206BD1A1547380032C01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DC206BE1A1547380032C01D /* MusicPimpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPimpTests.swift; sourceTree = "<group>"; };
 		7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistParent.swift; sourceTree = "<group>"; };
-		7DC2FB6F1D527C9900A6FADD /* MyTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTable.swift; sourceTree = "<group>"; };
 		7DC2FB711D56104A00A6FADD /* ListeningController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListeningController.swift; sourceTree = "<group>"; };
 		7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintToggle.swift; sourceTree = "<group>"; };
 		7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -482,13 +480,13 @@
 				7DB1B3AF1B10DBFE0012B8AE /* JsonKeys.swift */,
 				7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */,
 				7D6756D61B0A64E100BC0CA9 /* LibraryType.swift */,
+				7D0CA9831AF505E3008F72EC /* PlaybackState.swift */,
+				7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */,
 				7D0CA9851AF50F15008F72EC /* PlayerInfo.swift */,
 				7D6756DC1B0BB95900BC0CA9 /* Players.swift */,
-				7D0CA9831AF505E3008F72EC /* PlaybackState.swift */,
 				7DB1B3B31B1102C50012B8AE /* PlayerState.swift */,
 				7D6756D21B091EFE00BC0CA9 /* PlayerType.swift */,
 				7D6756D41B09200300BC0CA9 /* PlaylistType.swift */,
-				7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */,
 				7DC359771B3F0A51003B01B6 /* Volume.swift */,
 			);
 			name = Audio;
@@ -558,7 +556,6 @@
 				7DC3596C1B371212003B01B6 /* LibraryNavController.swift */,
 				7DC891481D5F775800331A4D /* LibraryParent.swift */,
 				7DC2FB711D56104A00A6FADD /* ListeningController.swift */,
-				7DC2FB6F1D527C9900A6FADD /* MyTable.swift */,
 				7DC891581D78AC8A00331A4D /* PimpNavController.swift */,
 				7DC359681B35F196003B01B6 /* PimpTabBarController.swift */,
 				7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */,
@@ -620,12 +617,13 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
-				7D349E7E1D8543E500EE9AF4 /* Concurrent */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
 				7DBCD79E1B26120C006460D1 /* Cloud */,
+				7DC891541D71B75800331A4D /* Colors.swift */,
 				7D31C1461BC81C7200189687 /* ColorScheme */,
+				7D349E7E1D8543E500EE9AF4 /* Concurrent */,
 				7D78C2941AF3CCA8001F0A65 /* Disposable.swift */,
 				7D0CA98F1AF69950008F72EC /* Endpoint.swift */,
 				7D6756CE1B08B26200BC0CA9 /* EndpointManager.swift */,
@@ -645,6 +643,7 @@
 				7D0CA9931AF699C6008F72EC /* Network */,
 				7D6756BC1B01094800BC0CA9 /* Persistence.swift */,
 				7DB1B3A71B10C08A0012B8AE /* Pimp */,
+				7DC891561D71B8C400331A4D /* PimpColors.swift */,
 				7D6756C41B0744B100BC0CA9 /* PimpError.swift */,
 				7D6756B81AFD581000BC0CA9 /* PimpJson.swift */,
 				7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */,
@@ -661,8 +660,6 @@
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
 				7D31A32F1C679B750035E9D0 /* Views */,
-				7DC891541D71B75800331A4D /* Colors.swift */,
-				7DC891561D71B8C400331A4D /* PimpColors.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";
@@ -783,12 +780,13 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Skogberg Labs";
 				TargetAttributes = {
 					7DC206A01A1547370032C01D = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = D2T2QC36Z9;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -800,6 +798,7 @@
 					};
 					7DC206B71A1547380032C01D = {
 						CreatedOnToolsVersion = 6.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 7DC206A01A1547370032C01D;
 					};
 				};
@@ -869,7 +868,6 @@
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
 				7D32B8021D4E5F7800869703 /* PimpSegmentedControl.swift in Sources */,
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
-				7DC2FB701D527C9900A6FADD /* MyTable.swift in Sources */,
 				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
 				7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
@@ -1055,8 +1053,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1065,6 +1065,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1100,8 +1101,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1109,6 +1112,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1119,6 +1123,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1136,6 +1141,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1151,6 +1157,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1166,6 +1173,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicPimp.app/MusicPimp";
 			};
 			name = Debug;
@@ -1178,6 +1186,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicPimp.app/MusicPimp";
 			};
 			name = Release;

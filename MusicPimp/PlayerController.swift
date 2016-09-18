@@ -34,7 +34,7 @@ class PlayerController: ListeningController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let volumeIconFontSize: Int32 = 24
-        volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clearColor(), iconColor: UIColor.blueColor(), fontSize: volumeIconFontSize)
+        volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: volumeIconFontSize)
         listenWhenLoaded(player)
 //        labelContianer.backgroundColor = PimpColors.background
         pause.setFontAwesomeTitle(playIconName)
@@ -47,21 +47,21 @@ class PlayerController: ListeningController {
         updateNavigationBarVisibility(self.view.frame.size.height)
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         updateNavigationBarVisibility(size.height)
     }
     
-    func updateNavigationBarVisibility(height: CGFloat) {
+    func updateNavigationBarVisibility(_ height: CGFloat) {
         let isHidden = height < minHeightForNav
         self.navigationController?.setNavigationBarHidden(isHidden, animated: true)
     }
     
-    func updatePlayPause(isPlaying: Bool) {
+    func updatePlayPause(_ isPlaying: Bool) {
         let faIcon = isPlaying ? "fa-pause" : playIconName
         pause.setFontAwesomeTitle(faIcon)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let current = player.current()
         updatePlayPause(current.isPlaying)
@@ -84,7 +84,7 @@ class PlayerController: ListeningController {
         }
     }
     
-    override func updateMedia(track: Track) {
+    override func updateMedia(_ track: Track) {
         Util.onUiThread {
             self.updateDuration(track.duration)
             self.titleLabel.text = track.title
@@ -94,12 +94,12 @@ class PlayerController: ListeningController {
         }
     }
     
-    private func updateCover(track: Track) {
+    fileprivate func updateCover(_ track: Track) {
         CoverService.sharedInstance.cover(track.artist, album: track.album) {
             (result) -> () in
             var image = CoverService.defaultCover
             // the track may have changed between the time the cover was requested and received
-            if let imageResult = result.image where self.player.current().track?.title == track.title {
+            if let imageResult = result.image , self.player.current().track?.title == track.title {
                 image = imageResult
             }
             if let image = image {
@@ -110,29 +110,29 @@ class PlayerController: ListeningController {
         }
     }
     
-    private func updateDuration(duration: Duration) {
+    fileprivate func updateDuration(_ duration: Duration) {
         seek.maximumValue = duration.secondsFloat
         durationLabel.text = duration.description
     }
     
-    private func updatePosition(position: Duration) {
+    fileprivate func updatePosition(_ position: Duration) {
         seek.value = position.secondsFloat
         positionLabel.text = position.description
     }
     
-    override func onTimeUpdated(position: Duration) {
+    override func onTimeUpdated(_ position: Duration) {
         updatePosition(position)
     }
     
-    override func onStateChanged(state: PlaybackState) {
+    override func onStateChanged(_ state: PlaybackState) {
         updatePlayPause(state == .Playing)
     }
     
-    @IBAction func pauseClicked(sender: AnyObject) {
+    @IBAction func pauseClicked(_ sender: AnyObject) {
         self.playOrPause()
     }
     
-    private func playOrPause() {
+    fileprivate func playOrPause() {
         if player.current().isPlaying {
             self.player.pause()
         } else {
@@ -142,7 +142,7 @@ class PlayerController: ListeningController {
         }
     }
     
-    @IBAction func sliderChanged(sender: AnyObject) {
+    @IBAction func sliderChanged(_ sender: AnyObject) {
         let seekValue = seek.value
         // TODO throttle
         if let pos = seekValue.seconds {
@@ -155,27 +155,27 @@ class PlayerController: ListeningController {
         }
     }
     
-    @IBAction func nextClicked(sender: AnyObject) {
+    @IBAction func nextClicked(_ sender: AnyObject) {
         limitChecked {
             self.player.next()
         }
     }
     
-    @IBAction func previousClicked(sender: AnyObject) {
+    @IBAction func previousClicked(_ sender: AnyObject) {
         limitChecked {
             self.player.prev()
         }
     }
     
-    func info(s: String) {
+    func info(_ s: String) {
         Log.info(s)
     }
 }
 
 extension UIButton {
-    func setFontAwesomeTitle(fontAwesomeName: String) {
-        let buttonText = String.fontAwesomeIconStringForIconIdentifier(fontAwesomeName)
-        self.setTitle(buttonText, forState: UIControlState.Normal)
+    func setFontAwesomeTitle(_ fontAwesomeName: String) {
+        let buttonText = String.fontAwesomeIconString(forIconIdentifier: fontAwesomeName)
+        self.setTitle(buttonText, for: UIControlState())
     }
 }
 
@@ -184,10 +184,10 @@ extension UIColor
     // http://stackoverflow.com/a/29044899
     func isLight() -> Bool
     {
-        let components = CGColorGetComponents(self.CGColor)
-        let first = components[0] * 299
-        let second = components[1] * 587
-        let third = components[2] * 114
+        let components = self.cgColor.components
+        let first = (components?[0])! * 299
+        let second = (components?[1])! * 587
+        let third = (components?[2])! * 114
         let brightness = (first + second + third) / 1000
         
         if brightness < 0.5
@@ -204,7 +204,7 @@ extension UIColor
 extension UIFont {
     
     var monospacedDigitFont: UIFont {
-        let oldFontDescriptor = fontDescriptor()
+        let oldFontDescriptor = fontDescriptor
         let newFontDescriptor = oldFontDescriptor.monospacedDigitFontDescriptor
         return UIFont(descriptor: newFontDescriptor, size: 0)
     }
@@ -216,7 +216,7 @@ private extension UIFontDescriptor {
     var monospacedDigitFontDescriptor: UIFontDescriptor {
         let fontDescriptorFeatureSettings = [[UIFontFeatureTypeIdentifierKey: kNumberSpacingType, UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]]
         let fontDescriptorAttributes = [UIFontDescriptorFeatureSettingsAttribute: fontDescriptorFeatureSettings]
-        let fontDescriptor = self.fontDescriptorByAddingAttributes(fontDescriptorAttributes)
+        let fontDescriptor = self.addingAttributes(fontDescriptorAttributes)
         return fontDescriptor
     }
     

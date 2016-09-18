@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class PlaylistID {
+open class PlaylistID {
     let id: Int
     
     init(id: Int) {

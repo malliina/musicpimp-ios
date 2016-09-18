@@ -9,26 +9,26 @@
 import Foundation
 
 enum PimpError {
-    case ParseError
-    case ResponseFailure(ResponseDetails)
-    case NetworkFailure(RequestFailure)
-    case SimpleError(ErrorMessage)
+    case parseError
+    case responseFailure(ResponseDetails)
+    case networkFailure(RequestFailure)
+    case simpleError(ErrorMessage)
     
-    static func stringify(error: PimpError) -> String {
+    static func stringify(_ error: PimpError) -> String {
         return PimpErrorUtil.stringify(error)
     }
     
-    static func simple(message: String) -> PimpError {
-        return PimpError.SimpleError(ErrorMessage(message: message))
+    static func simple(_ message: String) -> PimpError {
+        return PimpError.simpleError(ErrorMessage(message: message))
     }
 }
 
 class PimpErrorUtil {
-    static func stringify(error: PimpError) -> String {
+    static func stringify(_ error: PimpError) -> String {
         switch error {
-        case .ParseError:
+        case .parseError:
             return "Parse error."
-        case .ResponseFailure(let details):
+        case .responseFailure(let details):
             let code = details.code
             switch code {
             case 400: // Bad Request
@@ -44,16 +44,16 @@ class PimpErrorUtil {
                     return "Error code: \(code)."
                 }
             }
-        case .NetworkFailure( _):
+        case .networkFailure( _):
             return "A network error occurred."
-        case .SimpleError(let message):
+        case .simpleError(let message):
             return message.message
         }
     }
     
-    static func stringifyDetailed(error: PimpError) -> String {
+    static func stringifyDetailed(_ error: PimpError) -> String {
         switch error {
-        case .NetworkFailure(let request):
+        case .networkFailure(let request):
             return "Unable to connect to \(request.url.description), status code \(request.code)."
         default:
             return stringify(error)
@@ -74,11 +74,11 @@ class ResponseDetails {
 }
 
 class RequestFailure {
-    let url: NSURL
+    let url: URL
     let code: Int
-    let data: NSData?
+    let data: Data?
     
-    init(url: NSURL, code: Int, data: NSData?) {
+    init(url: URL, code: Int, data: Data?) {
         self.url = url
         self.code = code
         self.data = data

@@ -13,23 +13,23 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
     static let sharedInstance = TransactionObserver()
     let events = Event<SKPaymentTransaction>()
     
-    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             let state = transaction.transactionState
             switch(state) {
-            case SKPaymentTransactionState.Purchasing:
+            case SKPaymentTransactionState.purchasing:
                 onPurchasing(transaction)
                 break
-            case SKPaymentTransactionState.Purchased:
+            case SKPaymentTransactionState.purchased:
                 onPurchased(transaction)
                 break
-            case SKPaymentTransactionState.Deferred:
+            case SKPaymentTransactionState.deferred:
                 onDeferred()
                 break
-            case SKPaymentTransactionState.Failed:
+            case SKPaymentTransactionState.failed:
                 onFailed()
                 break
-            case SKPaymentTransactionState.Restored:
+            case SKPaymentTransactionState.restored:
                 onRestored(transaction)
                 break
 //            default:
@@ -37,21 +37,21 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
 //                break
             }
             events.raise(transaction)
-            if state == .Purchased || state == .Failed || state == .Restored {
+            if state == .purchased || state == .failed || state == .restored {
                 finishTransaction(transaction)
             }
         }
     }
     
-    func finishTransaction(transaction: SKPaymentTransaction) {
-        SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+    func finishTransaction(_ transaction: SKPaymentTransaction) {
+        SKPaymentQueue.default().finishTransaction(transaction)
     }
     
-    func onPurchasing(transaction: SKPaymentTransaction) {
+    func onPurchasing(_ transaction: SKPaymentTransaction) {
         
     }
     
-    func onPurchased(transaction: SKPaymentTransaction) {
+    func onPurchased(_ transaction: SKPaymentTransaction) {
         enable(transaction)
     }
     
@@ -63,11 +63,11 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
         
     }
     
-    func onRestored(transaction: SKPaymentTransaction) {
+    func onRestored(_ transaction: SKPaymentTransaction) {
         enable(transaction)
     }
     
-    private func enable(transaction: SKPaymentTransaction) {
+    fileprivate func enable(_ transaction: SKPaymentTransaction) {
         if transaction.payment.productIdentifier == PurchaseHelper.PremiumId {
             PimpSettings.sharedInstance.isUserPremium = true
         }

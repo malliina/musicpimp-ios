@@ -11,10 +11,10 @@ import Foundation
 class LocalPlaylist: BasePlaylist, PlaylistType {
     static let sharedInstance = LocalPlaylist()
     
-    private var ts: [Track] = []
-    private var p: Int? = nil
+    fileprivate var ts: [Track] = []
+    fileprivate var p: Int? = nil
     
-    static func newPlaylistIndex(current: Int, src: Int, dest: Int) -> Int {
+    static func newPlaylistIndex(_ current: Int, src: Int, dest: Int) -> Int {
         if src == current {
             return dest
         } else if src < current && dest >= current {
@@ -49,7 +49,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         return positionTransform({$0 - 1})
     }
     
-    func skip(index: Int) -> Track? {
+    func skip(_ index: Int) -> Track? {
         return positionTransform({ pos in index })
     }
     
@@ -57,11 +57,11 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         return ts
     }
     
-    func reset(track: Track) {
+    func reset(_ track: Track) {
         reset([track])
     }
     
-    func reset(tracks: [Track]) {
+    func reset(_ tracks: [Track]) {
         ts = tracks
         p = ts.count > 0 ? 0 : nil
         playlistUpdated()
@@ -69,17 +69,17 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         onTracksAdded(tracks)
     }
     
-    func add(track: Track) {
+    func add(_ track: Track) {
         add([track])
     }
     
-    func add(tracks: [Track]) {
-        ts.appendContentsOf(tracks)
+    func add(_ tracks: [Track]) {
+        ts.append(contentsOf: tracks)
         playlistUpdated()
         onTracksAdded(tracks)
     }
     
-    func move(src: Int, dest: Int) {
+    func move(_ src: Int, dest: Int) {
         if src != dest {
             //let newTracks = Arrays.move(src, destIndex: dest, xs: ts)
             ts = Arrays.move(src, destIndex: dest, xs: ts)
@@ -90,14 +90,14 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         }
     }
     
-    private func onTracksAdded(ts: [Track]) {
+    fileprivate func onTracksAdded(_ ts: [Track]) {
         for track in ts {
             trackAdded.raise(track)
         }
     }
     
-    func removeIndex(index: Int) {
-        ts.removeAtIndex(index)
+    func removeIndex(_ index: Int) {
+        ts.remove(at: index)
         if let position = position() {
             if position == index {
                 p = nil
@@ -108,11 +108,11 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         playlistUpdated()
     }
     
-    private func playlistUpdated() {
+    fileprivate func playlistUpdated() {
         playlistEvent.raise(Playlist(tracks: ts, index: p))
     }
     
-    private func positionTransform(f: Int -> Int) -> Track? {
+    fileprivate func positionTransform(_ f: (Int) -> Int) -> Track? {
         var nextPos = 0
         if let currentPos = p {
             nextPos = f(currentPos)
@@ -125,7 +125,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         return nil
     }
     
-    private func trackAt(pos: Int) -> Track? {
+    fileprivate func trackAt(_ pos: Int) -> Track? {
         if pos >= 0 && pos < ts.count {
             return ts[pos]
         }

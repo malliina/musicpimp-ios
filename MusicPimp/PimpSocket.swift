@@ -21,8 +21,8 @@ class PimpSocket: PlayerSocket {
         super.init(baseURL: baseURL, headers: headers)
     }
     
-    func send(dict: [String: AnyObject]) -> Bool {
-        if let payload = Json.stringifyObject(dict, prettyPrinted: false), socket = socket {
+    func send(_ dict: [String: AnyObject]) -> Bool {
+        if let payload = Json.stringifyObject(dict, prettyPrinted: false), let socket = socket {
             socket.send(payload)
             //Log.info("Sent \(payload) to \(baseURL))")
             return true
@@ -32,7 +32,7 @@ class PimpSocket: PlayerSocket {
         }
     }
     
-    override func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
+    override func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         if let message = message as? String {
 //            Log.info("Got message \(message)")
             if let dict = Json.asJson(message) as? NSDictionary {
@@ -87,7 +87,7 @@ class PimpSocket: PlayerSocket {
                         }
                         break
                     case JsonKeys.WELCOME:
-                        socket?.send(Json.stringifyObject([JsonKeys.CMD: JsonKeys.STATUS]))
+                        socket?.send(Json.stringifyObject([JsonKeys.CMD: JsonKeys.STATUS as AnyObject]))
                         break
                     case JsonKeys.PING:
                         break

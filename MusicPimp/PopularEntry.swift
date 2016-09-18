@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class PopularEntry {
+open class PopularEntry {
     let track: Track
     let playbackCount: Int
     

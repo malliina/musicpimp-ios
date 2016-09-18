@@ -10,7 +10,7 @@ import Foundation
 protocol Volume {
     var value: UInt { get }
 }
-func volume(value: UInt) -> Volume? {
+func volume(_ value: UInt) -> Volume? {
     class Vol: Volume {
         let value: UInt
         init(value: UInt) {

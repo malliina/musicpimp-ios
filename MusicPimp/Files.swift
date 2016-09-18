@@ -9,16 +9,17 @@
 import Foundation
 
 class Path {
-    let url: NSURL
-    init(url: NSURL) {
+    let url: URL
+    init(url: URL) {
         self.url = url
     }
     var isDirectory: Bool { return url.isDirectory }
     var isFile: Bool { return url.isFile }
     var name: String { return url.name }
-    var lastModified: NSDate? { return Files.lastModified(url) }
-    var lastAccessed: NSDate? { return Files.lastAccessed(url) }
+    var lastModified: Date? { return Files.lastModified(url) }
+    var lastAccessed: Date? { return Files.lastAccessed(url) }
 }
+
 class Directory: Path {
     var size: StorageSize { return calculateSize() }
     
@@ -30,18 +31,20 @@ class Directory: Path {
         return Files.sharedInstance.listContents(url)
     }
 }
+
 class File: Path {
     lazy var size: StorageSize = self.calculateSize()
     
-    private func calculateSize() -> StorageSize {
-        let bytes = Files.numberKey(url, key: NSURLFileSizeKey) ?? 0
-        return bytes.unsignedLongLongValue.bytes
+    fileprivate func calculateSize() -> StorageSize {
+        let bytes = Files.numberKey(url, key: URLResourceKey.fileSizeKey.rawValue) ?? 0
+        return bytes.uint64Value.bytes
     }
     
-    static func fromPath(absolutePath: String) -> File {
-        return File(url: NSURL(fileURLWithPath: absolutePath))
+    static func fromPath(_ absolutePath: String) -> File {
+        return File(url: URL(fileURLWithPath: absolutePath))
     }
 }
+
 class FolderContents {
     let folders: [Directory]
     let files: [File]
@@ -52,19 +55,19 @@ class FolderContents {
         self.files = files
     }
     
-    private func allPaths() -> [Path] {
+    fileprivate func allPaths() -> [Path] {
         let folderPaths: [Path] = folders
         let filePaths: [Path] = files
         return folderPaths + filePaths
     }
 }
 
-extension NSURL {
+extension URL {
     var isDirectory: Bool {
-        return Files.booleanKey(self, key: NSURLIsDirectoryKey)
+        return Files.booleanKey(self, key: URLResourceKey.isDirectoryKey.rawValue)
     }
     var isFile: Bool {
-        return Files.booleanKey(self, key: NSURLIsRegularFileKey)
+        return Files.booleanKey(self, key: URLResourceKey.isRegularFileKey.rawValue)
     }
     var name: String {
         return Files.localize(self)
@@ -74,65 +77,77 @@ extension NSURL {
 class Files {
     static let sharedInstance = Files()
     
-    static let manager = NSFileManager.defaultManager()
-    static let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+    static let manager = FileManager.default
+    static let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] 
     
-    static func localize(url: NSURL) -> String {
-        return resourceValue(url, key: NSURLLocalizedNameKey)!
+    static func localize(_ url: URL) -> String {
+        return resourceValue(url, key: URLResourceKey.localizedNameKey.rawValue)!
     }
-    static func lastAccessed(url: NSURL) -> NSDate? {
-        return resourceValue(url, key: NSURLContentAccessDateKey)
+    
+    static func lastAccessed(_ url: URL) -> Date? {
+        return resourceValue(url, key: URLResourceKey.contentAccessDateKey.rawValue)
     }
-    static func lastModified(url: NSURL) -> NSDate? {
-        return resourceValue(url, key: NSURLContentModificationDateKey)
+    
+    static func lastModified(_ url: URL) -> Date? {
+        return resourceValue(url, key: URLResourceKey.contentModificationDateKey.rawValue)
     }
-    static func booleanKey(url: NSURL, key: String) -> Bool {
+    
+    static func booleanKey(_ url: URL, key: String) -> Bool {
         return numberKey(url, key: key)?.boolValue ?? false
     }
-    static func numberKey(url: NSURL, key: String) -> NSNumber? {
+    
+    static func numberKey(_ url: URL, key: String) -> NSNumber? {
         return resourceValue(url, key: key)
     }
-    static func resourceValue<T>(url: NSURL, key: String) -> T? {
+    
+    static func resourceValue<T>(_ url: URL, key: String) -> T? {
         var res: AnyObject? = nil
         do {
-            try url.getResourceValue(&res, forKey: key)
+            try (url as NSURL).getResourceValue(&res, forKey: URLResourceKey(rawValue: key))
         } catch _ {
         }
         return res as? T
     }
-    static func exists(path: String) -> Bool {
-        return manager.fileExistsAtPath(path)
+    
+    static func exists(_ path: String) -> Bool {
+        return manager.fileExists(atPath: path)
     }
-    static func isDirectory(path: String) -> Bool {
+    
+    static func isDirectory(_ path: String) -> Bool {
         var isDirectory: ObjCBool = false
-        manager.fileExistsAtPath(path, isDirectory: &isDirectory)
+        manager.fileExists(atPath: path, isDirectory: &isDirectory)
         return isDirectory.boolValue
     }
-    func delete(file: File) -> Bool {
+    
+    func delete(_ file: File) -> Bool {
         return delete(file.url)
     }
-    func delete(url: NSURL) -> Bool {
+    
+    func delete(_ url: URL) -> Bool {
         do {
-            try Files.manager.removeItemAtURL(url)
+            try Files.manager.removeItem(at: url)
             return true
         } catch _ {
             return false
         }
     }
-    func fileSize(absolutePath: String) -> StorageSize? {
-        let attrs: NSDictionary? = try? Files.manager.attributesOfItemAtPath(absolutePath)
-        if let sizeNum = attrs?.objectForKey(NSFileSize) as? NSNumber {
-            let size = sizeNum.unsignedLongLongValue.bytes
+    
+    func fileSize(_ absolutePath: String) -> StorageSize? {
+        let attrs: [FileAttributeKey: Any]? = try? Files.manager.attributesOfItem(atPath: absolutePath)
+        let maybeSize = attrs?[FileAttributeKey.size]
+        if let sizeNum = maybeSize as? NSNumber {
+            let size = sizeNum.uint64Value.bytes
             return size
         }
         return nil
     }
-    func folderSize(dir: NSURL) -> StorageSize {
+    
+    func folderSize(_ dir: URL) -> StorageSize {
         let files = enumerateFiles(dir, recursive: true)
         if let files = files {
             var acc = StorageSize.Zero
             for file in files {
-                if let url = file as? NSURL {
+                if let url = file as? URL {
                     let summed = acc + File(url: url).size
                     acc = summed
                 }
@@ -142,37 +157,41 @@ class Files {
             return StorageSize.Zero
         }
     }
-    func listContents(dir: NSURL) -> FolderContents {
+    
+    func listContents(_ dir: URL) -> FolderContents {
         let urls = listPathsAsURLs(dir)
         let (folders, files) = urls.partition({ $0.isDirectory })
         let dirs = folders.map({ (url) -> Directory in Directory(url: url) })
         let fs = files.map({ (url) -> File in File(url: url) })
         return FolderContents(folders: dirs, files: fs)
     }
-    func listPathsAsURLs(dir: NSURL) -> [NSURL] {
-        return enumeratePaths(dir, recursive: false)?.allObjects as? [NSURL] ?? []
+    
+    func listPathsAsURLs(_ dir: URL) -> [URL] {
+        return enumeratePaths(dir, recursive: false)?.allObjects as? [URL] ?? []
     }
-    func enumerateFiles(dir: NSURL, recursive: Bool = false) -> NSDirectoryEnumerator? {
-        return enumeratePaths(dir, keys: [NSURLIsRegularFileKey], recursive: recursive)
+    
+    func enumerateFiles(_ dir: URL, recursive: Bool = false) -> FileManager.DirectoryEnumerator? {
+        return enumeratePaths(dir, keys: [URLResourceKey.isRegularFileKey], recursive: recursive)
     }
-    func enumerateDirectories(dir: NSURL) -> NSDirectoryEnumerator? {
-        return enumeratePaths(dir, keys: [NSURLIsDirectoryKey], recursive: false)
+    
+    func enumerateDirectories(_ dir: URL) -> FileManager.DirectoryEnumerator? {
+        return enumeratePaths(dir, keys: [URLResourceKey.isDirectoryKey], recursive: false)
     }
-    func enumeratePaths(dir: NSURL, recursive: Bool = false) -> NSDirectoryEnumerator? {
-        let keys = [NSURLIsDirectoryKey, NSURLIsRegularFileKey]
+    
+    func enumeratePaths(_ dir: URL, recursive: Bool = false) -> FileManager.DirectoryEnumerator? {
+        let keys = [URLResourceKey.isDirectoryKey, URLResourceKey.isRegularFileKey]
         return enumeratePaths(dir, keys: keys, recursive: recursive)
     }
-    func enumeratePaths(dir: NSURL, keys: [String], recursive: Bool = false) -> NSDirectoryEnumerator? {
-        let options = recursive ? NSDirectoryEnumerationOptions() : NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants
+    
+    func enumeratePaths(_ dir: URL, keys: [URLResourceKey], recursive: Bool = false) -> FileManager.DirectoryEnumerator? {
+        let options = recursive ? FileManager.DirectoryEnumerationOptions() : FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants
         return enumeratePathsBase(dir, keys: keys, options: options)
     }
-    func enumeratePathsBase(dir: NSURL, keys: [String], options: NSDirectoryEnumerationOptions) -> NSDirectoryEnumerator? {
-        return Files.manager.enumeratorAtURL(dir, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
+    
+    func enumeratePathsBase(_ dir: URL, keys: [URLResourceKey], options: FileManager.DirectoryEnumerationOptions) -> FileManager.DirectoryEnumerator? {
+        return Files.manager.enumerator(at: dir, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
             return true
         }
     }
 
 }
-
-
-

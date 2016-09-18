@@ -26,36 +26,36 @@ class IAPViewController: PimpViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         togglePurchaseViews(true)
-        TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> SKPaymentTransaction -> () in
+        TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> (SKPaymentTransaction) -> () in
             iap.onTransactionUpdate
         }
     }
     
-    func onTransactionUpdate(transaction: SKPaymentTransaction) {
+    func onTransactionUpdate(_ transaction: SKPaymentTransaction) {
         switch(transaction.transactionState) {
-        case SKPaymentTransactionState.Purchasing:
+        case SKPaymentTransactionState.purchasing:
             setStatus("Purchasing...")
             break
-        case SKPaymentTransactionState.Purchased:
+        case SKPaymentTransactionState.purchased:
             setStatus("Purchased!")
             showUserOwnsPremium()
             break
-        case SKPaymentTransactionState.Deferred:
+        case SKPaymentTransactionState.deferred:
             setStatus("Deferred...")
             break
-        case SKPaymentTransactionState.Failed:
-            let domain = transaction.error?.domain ?? "unknown domain"
+        case SKPaymentTransactionState.failed:
+            let domain = transaction.error?._domain ?? "unknown domain"
             Log.info("Purchase failed. Domain: \(domain)")
             setStatus("Purchase failed.")
             break
-        case SKPaymentTransactionState.Restored:
+        case SKPaymentTransactionState.restored:
             setStatus("Restored.")
             showUserOwnsPremium()
             break
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if PimpSettings.sharedInstance.isUserPremium {
             showUserOwnsPremium()
@@ -69,26 +69,26 @@ class IAPViewController: PimpViewController {
         togglePurchaseViews(true)
     }
     
-    func togglePurchaseViews(hidden: Bool) {
+    func togglePurchaseViews(_ hidden: Bool) {
         Util.onUiThread {
-            for view in [self.purchaseButton, self.alreadyPurchasedLabel, self.restoreButton] {
-                view.hidden = hidden
+            for view in [self.purchaseButton, self.alreadyPurchasedLabel, self.restoreButton] as [UIView] {
+                view.isHidden = hidden
             }
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         request?.cancel()
         request = nil
     }
     
     // Profit!
-    @IBAction func purchaseClicked(sender: UIButton) {
+    @IBAction func purchaseClicked(_ sender: UIButton) {
         purchase()
     }
     
-    @IBAction func restoreClicked(sender: UIButton) {
+    @IBAction func restoreClicked(_ sender: UIButton) {
         restore()
     }
     
@@ -96,13 +96,13 @@ class IAPViewController: PimpViewController {
         Log.info("Starting purchase procedure...")
         if let premiumProduct = premiumProduct {
             let paymentRequest = SKMutablePayment(product: premiumProduct)
-            SKPaymentQueue.defaultQueue().addPayment(paymentRequest)
+            SKPaymentQueue.default().add(paymentRequest)
         }
     }
     
     func restore() {
 //        statusLabel.text = "Restoring..."
-        SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+        SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
     func loadProductIdentifiers() {
@@ -113,7 +113,7 @@ class IAPViewController: PimpViewController {
         request.start()
     }
     
-    func setStatus(text: String) {
+    func setStatus(_ text: String) {
         Util.onUiThread {
             self.statusLabel.text = text
         }
@@ -121,7 +121,7 @@ class IAPViewController: PimpViewController {
 }
 
 extension IAPViewController: SKProductsRequestDelegate {
-    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         if request == self.request {
             products = response.products
             let premiumId = PurchaseHelper.PremiumId
@@ -150,11 +150,11 @@ extension IAPViewController: SKProductsRequestDelegate {
         }
     }
     
-    func formatPrice(product: SKProduct) -> String? {
-        let formatter = NSNumberFormatter()
-        formatter.formatterBehavior = NSNumberFormatterBehavior.Behavior10_4
-        formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
+    func formatPrice(_ product: SKProduct) -> String? {
+        let formatter = NumberFormatter()
+        formatter.formatterBehavior = NumberFormatter.Behavior.behavior10_4
+        formatter.numberStyle = NumberFormatter.Style.currency
         formatter.locale = product.priceLocale
-        return formatter.stringFromNumber(product.price)
+        return formatter.string(from: product.price)
     }
 }

@@ -20,7 +20,7 @@ class BaseMusicController : PimpTableController {
         registerNib(trackReuseIdentifier)
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return musicItems.count
     }
     
@@ -28,7 +28,7 @@ class BaseMusicController : PimpTableController {
         return defaultCellHeight
     }
     
-    func trackCell(item: Track, index: NSIndexPath) -> PimpMusicItemCell? {
+    func trackCell(_ item: Track, index: IndexPath) -> PimpMusicItemCell? {
         if let pimpCell: PimpMusicItemCell = findCell(trackReuseIdentifier, index: index) {
             pimpCell.titleLabel?.text = item.title
             installTrackAccessoryView(pimpCell)
@@ -39,7 +39,7 @@ class BaseMusicController : PimpTableController {
         }
     }
     
-    func installTrackAccessoryView(cell: UITableViewCell) {
+    func installTrackAccessoryView(_ cell: UITableViewCell) {
         // TODO move the below code to PimpMusicItemCell, then provide observable of accessoryClicked:event
         if let accessory = createTrackAccessory() {
             cell.accessoryView = accessory
@@ -50,20 +50,20 @@ class BaseMusicController : PimpTableController {
         let topAndBottomInset: CGFloat = max(0, (cellHeight() - defaultCellHeight) / 2)
         if let image = UIImage(named: "more_filled_grey-100.png") {
             let rightPadding = BaseMusicController.accessoryRightPadding
-            let button = UIButton(type: UIButtonType.Custom)
+            let button = UIButton(type: UIButtonType.custom)
             let frame = CGRect(x: 0, y: 0, width: defaultCellHeight + rightPadding, height: cellHeight())
             button.frame = frame
-            button.setImage(image, forState: UIControlState.Normal)
-            button.backgroundColor = UIColor.clearColor()
+            button.setImage(image, for: UIControlState())
+            button.backgroundColor = UIColor.clear
             button.contentEdgeInsets = UIEdgeInsets(top: topAndBottomInset, left: 0, bottom: topAndBottomInset, right: rightPadding)
-            button.contentMode = UIViewContentMode.ScaleAspectFit
-            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), forControlEvents: UIControlEvents.TouchUpInside)
+            button.contentMode = UIViewContentMode.scaleAspectFit
+            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
             return button
         }
         return nil
     }
     
-    func accessoryClicked(sender: AnyObject, event: AnyObject) {
+    func accessoryClicked(_ sender: AnyObject, event: AnyObject) {
         if let row = clickedRow(event) {
             let item = musicItems[row]
             if let track = item as? Track {
@@ -78,27 +78,27 @@ class BaseMusicController : PimpTableController {
     }
     
     // TODO add link to source (SO?)
-    func clickedRow(touchEvent: AnyObject) -> Int? {
-        if let touch = touchEvent.allTouches()?.first {
-            let point = touch.locationInView(tableView)
-            if let indexPath = tableView.indexPathForRowAtPoint(point) {
-                return indexPath.row
+    func clickedRow(_ touchEvent: AnyObject) -> Int? {
+        if let touch = touchEvent.allTouches??.first {
+            let point = touch.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: point) {
+                return (indexPath as NSIndexPath).row
             }
         }
         return nil
     }
     
-    func displayActionsForTrack(track: Track, row: Int) {
+    func displayActionsForTrack(_ track: Track, row: Int) {
         let title = track.title
         let message = track.artist
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
         sheet.view.window?.backgroundColor = PimpColors.background
         let playAction = playTrackAccessoryAction(track, row: row)
         let addAction = addTrackAccessoryAction(track, row: row)
         let downloadAction = accessoryAction("Download") { _ in
             self.downloadIfNeeded([track])
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
             
         }
         sheet.addAction(playAction)
@@ -115,28 +115,28 @@ class BaseMusicController : PimpTableController {
         //let sheetView = sheet.view.subviews.headOption()?.subviews.headOption()
         //sheetView?.backgroundColor = UIColor.greenColor()
         //sheetView?.layer.cornerRadius = 15
-        self.presentViewController(sheet, animated: true, completion: nil)
+        self.present(sheet, animated: true, completion: nil)
     }
     
-    func playTrackAccessoryAction(track: Track, row: Int) -> UIAlertAction {
+    func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
         return accessoryAction("Play", action: { _ in self.playTrack(track) })
     }
     
-    func addTrackAccessoryAction(track: Track, row: Int) -> UIAlertAction {
+    func addTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
         return accessoryAction("Add", action: { _ in self.addTrack(track) })
     }
     
-    func displayActionsForFolder(folder: Folder, row: Int) {
+    func displayActionsForFolder(_ folder: Folder, row: Int) {
         let title = folder.title
         let id = folder.id
         let message = ""
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
         let playAction = accessoryAction("Play", action: { _ in self.playFolder(id) })
         let addAction = accessoryAction("Add", action: { _ in self.addFolder(id) })
         let downloadAction = accessoryAction("Download") { _ in
             self.library.tracks(id, onError: self.onError, f: self.downloadIfNeeded)
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
             
         }
         sheet.addAction(playAction)
@@ -145,28 +145,28 @@ class BaseMusicController : PimpTableController {
             sheet.addAction(downloadAction)
         }
         sheet.addAction(cancelAction)
-        self.presentViewController(sheet, animated: true, completion: nil)
+        self.present(sheet, animated: true, completion: nil)
     }
     
-    func accessoryAction(title: String, action: UIAlertAction -> Void) -> UIAlertAction {
-        return UIAlertAction(title: title, style: UIAlertActionStyle.Default, handler: action)
+    func accessoryAction(_ title: String, action: @escaping (UIAlertAction) -> Void) -> UIAlertAction {
+        return UIAlertAction(title: title, style: UIAlertActionStyle.default, handler: action)
     }
 
 
-    func playFolder(id: String) {
+    func playFolder(_ id: String) {
         library.tracks(id, onError: onError, f: playTracks)
     }
     
-    func playTrack(track: Track) {
+    func playTrack(_ track: Track) {
         playTracks([track])
     }
     
-    func addFolder(id: String) {
+    func addFolder(_ id: String) {
         info("Adding folder")
         library.tracks(id, onError: onError, f: addTracks)
     }
     
-    func addTrack(track: Track) {
+    func addTrack(_ track: Track) {
         addTracks([track])
     }
 }

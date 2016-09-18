@@ -11,7 +11,7 @@ import Foundation
 class PlayerManager: EndpointManager {
     static let sharedInstance = PlayerManager()
     
-    private var activePlayer: PlayerType
+    fileprivate var activePlayer: PlayerType
     var active: PlayerType { get { return activePlayer } }
     let playerChanged = Event<PlayerType>()
     
@@ -19,14 +19,14 @@ class PlayerManager: EndpointManager {
         let settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
-        changed.addHandler(self, handler: { (lm) -> Endpoint -> () in
+        changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
             lm.onNewPlayerEndpoint
         })
         // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)
         // activePlayer.open()
     }
     
-    private func onNewPlayerEndpoint(endpoint: Endpoint) {
+    fileprivate func onNewPlayerEndpoint(_ endpoint: Endpoint) {
         activePlayer.close()
         let p = Players.fromEndpoint(endpoint)
         activePlayer = p
@@ -39,7 +39,7 @@ class PlayerManager: EndpointManager {
         
     }
     
-    func onError(error: NSError) {
+    func onError(_ error: Error) {
         
     }
 }

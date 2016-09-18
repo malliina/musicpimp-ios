@@ -19,7 +19,8 @@ class PimpColors {
     static let selectedBackground = PimpColors.selected
 //    static let tintColor = UIColor.greenColor()
     static let tintColor = PimpColors.selected
-    static let barStyle = UIBarStyle.Black
-    static let deletion = UIColor.redColor()
+    static let barStyle = UIBarStyle.black
+    static let deletion = UIColor.red
     static let placeholder = PimpColors.separator
+    static let titleFont = UIFont.boldSystemFont(ofSize: 13)
 }
