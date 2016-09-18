@@ -1,6 +1,3 @@
 # MusicPimp-iOS
 
-The MusicPimp app for iOS.
-
-Work-in-progress.
-
+This is the MusicPimp app for iOS. For more information, see www.musicpimp.org.
