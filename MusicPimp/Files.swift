@@ -161,7 +161,7 @@ class Files {
     func listContents(_ dir: URL) -> FolderContents {
         let urls = listPathsAsURLs(dir)
         let (folders, files) = urls.partition({ $0.isDirectory })
-        let dirs = folders.map({ (url) -> Directory in Directory(url: url) })
+        let dirs = folders.map { (url) -> Directory in Directory(url: url) }
         let fs = files.map({ (url) -> File in File(url: url) })
         return FolderContents(folders: dirs, files: fs)
     }
@@ -189,8 +189,12 @@ class Files {
     }
     
     func enumeratePathsBase(_ dir: URL, keys: [URLResourceKey], options: FileManager.DirectoryEnumerationOptions) -> FileManager.DirectoryEnumerator? {
-        return Files.manager.enumerator(at: dir, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
-            return true
+        if dir.isDirectory {
+            return Files.manager.enumerator(at: dir, includingPropertiesForKeys: keys, options: options) { (url, err) -> Bool in
+                return true
+            }
+        } else {
+            return nil
         }
     }
 
