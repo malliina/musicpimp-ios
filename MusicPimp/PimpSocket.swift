@@ -13,7 +13,7 @@ class PimpSocket: PlayerSocket {
     
     var delegate: PlayerEventDelegate = LoggingDelegate()
     
-    init(baseURL: String, authValue: String) {
+    init(baseURL: URL, authValue: String) {
         let headers = [
             HttpClient.AUTHORIZATION: authValue,
             HttpClient.ACCEPT: PimpHttpClient.PIMP_VERSION_18

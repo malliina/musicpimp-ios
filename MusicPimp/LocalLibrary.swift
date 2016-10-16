@@ -25,7 +25,7 @@ class LocalLibrary: BaseLibrary {
     
     let musicRootPath = documentsPath + "/music"
     
-    var musicRootURL: URL { get { return Util.url(self.musicRootPath) } }
+    var musicRootURL: URL { get { return URL(string: self.musicRootPath)! } }
     
     var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     

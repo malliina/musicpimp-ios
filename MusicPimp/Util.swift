@@ -48,11 +48,7 @@ class Util {
     fileprivate class func encodeWith(_ s: String, cs: CharacterSet) -> String {
         return s.addingPercentEncoding(withAllowedCharacters: cs) ?? s
     }
-    
-    static func url(_ s: String) -> URL {
-        return URL(string: s)!
-    }
-    
+        
     static func onError(_ pimpError: PimpError) {
         let message = PimpErrorUtil.stringifyDetailed(pimpError)
         Log.error(message)

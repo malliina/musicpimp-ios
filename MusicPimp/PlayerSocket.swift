@@ -11,26 +11,26 @@ import Foundation
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
     var socket: SRWebSocket? = nil
-    let baseURL: String
-    fileprivate let request: NSMutableURLRequest
+    let baseURL: URL
+    fileprivate let request: URLRequest
     var isConnected = false
     
     var onOpenCallback: (() -> Void)? = nil
     var onOpenErrorCallback: ((Error) -> Void)? = nil
     
-    init(baseURL: String, headers: [String: String]) {
+    init(baseURL: URL, headers: [String: String]) {
         self.baseURL = baseURL
-        let url = Util.url(baseURL)
-        request = NSMutableURLRequest(url: url)
+        var baseRequest = URLRequest(url: self.baseURL)
         for (key, value) in headers {
-            request.addValue(value, forHTTPHeaderField: key)
+            baseRequest.addValue(value, forHTTPHeaderField: key)
         }
+        self.request = baseRequest
         super.init()
     }
     
     func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
         close()
-        let webSocket = SRWebSocket(urlRequest: request as URLRequest!)
+        let webSocket = SRWebSocket(urlRequest: request)
         webSocket?.delegate = self
         self.socket = webSocket
         self.onOpenCallback = onOpen
@@ -91,9 +91,9 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
 }
 
 class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
-    let baseURL: String
+    let baseURL: URL
     
-    init(baseURL: String) {
+    init(baseURL: URL) {
         self.baseURL = baseURL
     }
     

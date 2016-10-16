@@ -28,6 +28,24 @@ class MusicPimpTests: XCTestCase {
 //        XCTAssert(s == "", "String methods should return the empty string if operating on one")
 //    }
     
+    func testUrls() {
+        let url: URL? = URL(string: "http://www.google.com")
+        XCTAssert(url != nil)
+        if let url = url {
+            XCTAssertEqual(url.absoluteString, "http://www.google.com")
+            XCTAssertEqual(URL(string: "/tracks", relativeTo: url)!.absoluteString, "http://www.google.com/tracks")
+            XCTAssertEqual(URL(string: "tracks", relativeTo: url)!.absoluteString, "http://www.google.com/tracks")
+            XCTAssertEqual(url.absoluteString, "http://www.google.com")
+            let queried = URL(string: "tracks?a=b", relativeTo: url)
+            XCTAssert(queried != nil)
+            if let queried = queried {
+                XCTAssertEqual(queried.absoluteString, "http://www.google.com/tracks?a=b")
+            }
+            let folderUrl = URL(string: "folders/Apocalyptica%5CApocalyptica+-+7th+symphony+2010", relativeTo: url)!
+            XCTAssertEqual(folderUrl.absoluteString, "http://www.google.com/folders/Apocalyptica%5CApocalyptica+-+7th+symphony+2010")
+        }
+    }
+    
     func testExample() {
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")

@@ -23,26 +23,15 @@ class HttpClient {
         return unencoded.data(using: String.Encoding.utf8)!.base64EncodedString(options: NSData.Base64EncodingOptions())
     }
     
-    func get(_ url: String, headers: [String: String] = [:], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
-        //Log.info(url)
-        //let encodedString = url
-        //let encodedString = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLPathAllowedCharacterSet())!
-        //Log.info(encodedString)
-//        url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URL)
-//        let encodedString = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-        let encodedString: String? = url
-        if let encodedString = encodedString, let nsURL = URL(string: encodedString) {
-            get(nsURL, headers: headers) { (data, response, error) -> Void in
-                if let error = error {
-                    onError(RequestFailure(url: nsURL, code: error._code, data: data))
-                } else if let httpResponse = response as? HTTPURLResponse, let data = data {
-                    onResponse(data, httpResponse)
-                } else {
-                    Log.error("Unable to interpret HTTP response to URL \(encodedString)")
-                }
+    func get(_ url: URL, headers: [String: String] = [:], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
+        get(url, headers: headers) { (data, response, error) -> Void in
+            if let error = error {
+                onError(RequestFailure(url: url, code: error._code, data: data))
+            } else if let httpResponse = response as? HTTPURLResponse, let data = data {
+                onResponse(data, httpResponse)
+            } else {
+                Log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
             }
-        } else {
-            Log.info("Invalid URL: \(url)")
         }
     }
     
@@ -52,15 +41,14 @@ class HttpClient {
             completionHandler: completionHandler)
     }
     
-    func postJSON(_ url: String, headers: [String: String] = [:], payload: [String: AnyObject], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
-        let nsURL = URL(string: url)!
-        postJSON(nsURL, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
+    func postJSON(_ url: URL, headers: [String: String] = [:], payload: [String: AnyObject], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
+        postJSON(url, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
             if let error = error {
-                onError(RequestFailure(url: nsURL, code: error._code, data: data))
+                onError(RequestFailure(url: url, code: error._code, data: data))
             } else if let httpResponse = response as? HTTPURLResponse, let data = data {
                 onResponse(data, httpResponse)
             } else {
-                Log.error("Unable to interpret HTTP response to URL \(url)")
+                Log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
             }
         }
     }

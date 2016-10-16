@@ -9,7 +9,7 @@
 import Foundation
 
 class Endpoint: CustomStringConvertible {
-    static let Local = Endpoint(id: "local", serverType: ServerTypes.Local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")
+    static let Local = Endpoint(id: "local", serverType: ServerTypes.Local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")!
     
     let id: String
     let serverType: ServerType
@@ -19,8 +19,10 @@ class Endpoint: CustomStringConvertible {
     let port: Int
     let username: String
     let password: String
+    let httpBaseUrl: URL
+    let wsBaseUrl: URL
     
-    init(id: String, serverType: ServerType, name: String, ssl: Bool, address: String, port: Int, username: String, password: String) {
+    init?(id: String, serverType: ServerType, name: String, ssl: Bool, address: String, port: Int, username: String, password: String) {
         self.id = id
         self.serverType = serverType
         self.name = name
@@ -29,19 +31,20 @@ class Endpoint: CustomStringConvertible {
         self.port = port
         self.username = username
         self.password = password
+        let httpProto = ssl ? "https" : "http"
+        let wsProto = ssl ? "wss" : "ws"
+        let httpUrl = URL(string: "\(httpProto)://\(address):\(port)")
+        let wsUrl = URL(string: "\(wsProto)://\(address):\(port)")
+        if let httpUrl = httpUrl, let wsUrl = wsUrl {
+            self.httpBaseUrl = httpUrl
+            self.wsBaseUrl = wsUrl
+        } else {
+            return nil
+        }
     }
-    init(id: String, cloudID: String, username: String, password: String) {
-        self.id = id
-        self.serverType = ServerTypes.Cloud
-        self.name = cloudID
-        self.ssl = true
-        self.address = "cloud.musicpimp.org"
-        self.port = 443
-        //self.ssl = false
-        //self.address = "10.0.0.20"
-        //self.port = 9000
-        self.username = username
-        self.password = password
+    
+    convenience init?(id: String, cloudID: String, username: String, password: String) {
+        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
     }
     
     // TODO polymorphism
@@ -63,12 +66,6 @@ class Endpoint: CustomStringConvertible {
     }
     
     var description: String { get { return "Endpoint \(name) at \(username)@\(httpBaseUrl)" } }
-    
-    var httpProto: String { get { return ssl ? "https" : "http" } }
-    var wsProto: String { get { return ssl ? "wss" : "ws" } }
-    
-    var httpBaseUrl: String { get { return "\(httpProto)://\(address):\(port)" } }
-    var wsBaseUrl: String { get { return "\(wsProto)://\(address):\(port)" } }
-    
+
     var supportsAlarms: Bool { get { return serverType == ServerTypes.MusicPimp || serverType == ServerTypes.Cloud } }
 }

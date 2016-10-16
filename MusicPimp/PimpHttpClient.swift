@@ -26,18 +26,14 @@ class Endpoints {
 }
 
 class PimpHttpClient: HttpClient {
-    let baseURL: String
+    let baseURL: URL
     let defaultHeaders: [String: String]
     let postHeaders: [String: String]
     
     static let PIMP_VERSION_18 = "application/vnd.musicpimp.v18+json"
     
-    init(baseURL: String, authValue: String) {
-        if(baseURL.endsWith("/")) {
-            self.baseURL = baseURL.dropLast()
-        } else {
-            self.baseURL = baseURL
-        }
+    init(baseURL: URL, authValue: String) {
+        self.baseURL = baseURL
         let headers = [
             HttpClient.AUTHORIZATION: authValue,
             HttpClient.ACCEPT: PimpHttpClient.PIMP_VERSION_18
@@ -70,8 +66,8 @@ class PimpHttpClient: HttpClient {
     }
     
     func pimpGet(_ resource: String, f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
-        let url = baseURL + resource
-        log(url)
+        let url = URL(string: resource, relativeTo: baseURL)!
+        log(url.absoluteString)
         self.get(
             url,
             headers: defaultHeaders,
@@ -85,7 +81,7 @@ class PimpHttpClient: HttpClient {
     
     func pimpPost(_ resource: String, payload: [String: AnyObject], f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
         self.postJSON(
-            baseURL + resource,
+            URL(string: resource, relativeTo: baseURL)!,
             headers: postHeaders,
             payload: payload,
             onResponse: { (data, response) -> Void in

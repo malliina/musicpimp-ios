@@ -22,7 +22,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     
     init(e: Endpoint) {
         let client = PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader)
-        self.socket = PimpSocket(baseURL: e.wsBaseUrl + Endpoints.WS_PLAYBACK, authValue: e.authHeader)
+        self.socket = PimpSocket(baseURL: URL(string: Endpoints.WS_PLAYBACK, relativeTo: e.wsBaseUrl)!, authValue: e.authHeader)
         self.playlist = PimpPlaylist(socket: self.socket)
         super.init(endpoint: e, client: client)
     }

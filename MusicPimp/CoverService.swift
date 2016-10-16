@@ -41,23 +41,26 @@ class CoverService {
     let downloader = Downloader(basePath: coversDir)
     
     func cover(_ artist: String, album: String, f: @escaping (CoverResult) -> Void) {
-        let url = coverURL(artist, album: album)
-        let relativeCoverFilePath = "\(artist)-\(album).jpg"
-        downloader.download(
-            url,
-            relativePath: relativeCoverFilePath,
-            onError: { (err) -> () in f(CoverResult.noCover(artist, album: album)) },
-            onSuccess: { (path) -> () in f(CoverResult(artist: artist, album: album, coverPath: path)) }
-        )
+        if let url = coverURL(artist, album: album) {
+            let relativeCoverFilePath = "\(artist)-\(album).jpg"
+            downloader.download(
+                url,
+                relativePath: relativeCoverFilePath,
+                onError: { (err) -> () in f(CoverResult.noCover(artist, album: album)) },
+                onSuccess: { (path) -> () in f(CoverResult(artist: artist, album: album, coverPath: path)) }
+            )
+        } else {
+            f(CoverResult.noCover(artist, album: album))
+        }
     }
     
     fileprivate func onError(_ msg: PimpError) -> Void {
         Log.error(PimpError.stringify(msg))
     }
     
-    fileprivate func coverURL(_ artist: String, album: String) -> URL {
+    fileprivate func coverURL(_ artist: String, album: String) -> URL? {
         let artEnc = artist.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? artist
         let albEnc = album.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? album
-        return Util.url("https://api.musicpimp.org/covers?artist=\(artEnc)&album=\(albEnc)")
+        return URL(string: "https://api.musicpimp.org/covers?artist=\(artEnc)&album=\(albEnc)")
     }
 }
