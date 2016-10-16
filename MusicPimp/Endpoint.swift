@@ -37,6 +37,9 @@ class Endpoint: CustomStringConvertible {
         self.ssl = true
         self.address = "cloud.musicpimp.org"
         self.port = 443
+        //self.ssl = false
+        //self.address = "10.0.0.20"
+        //self.port = 9000
         self.username = username
         self.password = password
     }

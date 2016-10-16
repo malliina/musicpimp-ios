@@ -17,7 +17,8 @@ open class Json {
     }
     
     open static func asJson(_ data: Data) -> AnyObject? {
-        return try! JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0)) as AnyObject?
+        let attempt = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
+        return attempt as AnyObject?
     }
     
     open static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
