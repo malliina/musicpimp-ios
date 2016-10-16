@@ -35,6 +35,19 @@ class LibraryController: SearchableMusicController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let trackListener = player.trackEvent.addHandler(self) { (me) -> (Track?) -> () in
+            me.onTrackChanged
+        }
+        listeners = [trackListener]
+    }
+    
+    func onTrackChanged(track: Track?) {
+        // updates any highlighted row
+        renderTable()
+    }
+    
     fileprivate func resetLibrary() {
         loadRoot()
     }
@@ -85,18 +98,11 @@ class LibraryController: SearchableMusicController {
         if isFolder {
             let folderCell = identifiedCell("FolderCell", index: indexPath)
             folderCell.textLabel?.text = item.title
-//            folderCell.textLabel?.textColor = PimpColors.titles
             folderCell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             return folderCell
         } else {
             if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {
-                if let downloadProgress = downloadState[track] {
-                    //info("Setting progress to \(downloadProgress.progress)")
-                    pimpCell.progressView.progress = downloadProgress.progress
-                    pimpCell.progressView.isHidden = false
-                } else {
-                    pimpCell.progressView.isHidden = true
-                }
+                paintTrackCell(cell: pimpCell, track: track, isHighlight: self.player.current().track?.id == track.id, downloadState: downloadState)
                 return pimpCell
             } else {
                 // we should never get here

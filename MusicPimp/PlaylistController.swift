@@ -33,7 +33,7 @@ class PlaylistController: BaseMusicController {
     }
     override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
-    var listeners: [Disposable] = []
+    
     fileprivate var downloadState: [Track: TrackProgress] = [:]
     
     var searchController: UISearchController!
@@ -60,18 +60,14 @@ class PlaylistController: BaseMusicController {
         onNewPlaylist(currentPlaylist)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        stopListening()
-    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = (indexPath as NSIndexPath).row
         switch mode {
         case .playlist:
-            let isCurrent = index == current.index
-            let isHighlight = isCurrent
             let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
-            decorateCell(cell, track: tracks[index], isHighlight: isHighlight)
+            let track = tracks[index]
+            cell.titleLabel?.text = track.title
+            paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: downloadState)
             return cell
         case .popular:
             let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
@@ -124,13 +120,6 @@ class PlaylistController: BaseMusicController {
         }
     }
     
-    func stopListening() {
-        for listener in listeners {
-            listener.dispose()
-        }
-        listeners = []
-    }
-    
     func dragClicked(_ dragButton: UIBarButtonItem) {
         let isEditing = self.tableView.isEditing
         self.tableView.setEditing(!isEditing, animated: true)
@@ -175,20 +164,6 @@ class PlaylistController: BaseMusicController {
     func decorateTwoLines(_ cell: MainAndSubtitleCell, first: String, second: String) {
         cell.mainTitle?.text = first
         cell.subtitle?.text = second
-    }
-    
-    func decorateCell(_ cell: PimpMusicItemCell, track: Track, isHighlight: Bool) {
-        if let downloadProgress = downloadState[track] {
-            //info("Setting progress to \(downloadProgress.progress)")
-            cell.progressView.progress = downloadProgress.progress
-            cell.progressView.isHidden = false
-        } else {
-            cell.progressView.isHidden = true
-        }
-        cell.titleLabel?.text = track.title
-        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
-        cell.titleLabel?.textColor = titleColor
-        cell.selectionStyle = selectionStyle
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

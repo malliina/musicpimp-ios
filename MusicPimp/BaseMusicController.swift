@@ -15,6 +15,8 @@ class BaseMusicController : PimpTableController {
     
     var musicItems: [MusicItem] { return [] }
     
+    var listeners: [Disposable] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerNib(trackReuseIdentifier)
@@ -23,6 +25,19 @@ class BaseMusicController : PimpTableController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return musicItems.count
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopListening()
+    }
+    
+    func stopListening() {
+        for listener in listeners {
+            listener.dispose()
+        }
+        listeners = []
+    }
+
     
     func cellHeight() -> CGFloat {
         return defaultCellHeight
@@ -37,6 +52,20 @@ class BaseMusicController : PimpTableController {
             Log.error("Unable to find track cell for track \(item.title)")
             return nil
         }
+    }
+    
+    func paintTrackCell(cell: PimpMusicItemCell, track: Track, isHighlight: Bool, downloadState: [Track: TrackProgress]) {
+        if let downloadProgress = downloadState[track] {
+            //info("Setting progress to \(downloadProgress.progress)")
+            cell.progressView.progress = downloadProgress.progress
+            cell.progressView.isHidden = false
+        } else {
+            cell.progressView.isHidden = true
+        }
+        let isHighlight = self.player.current().track?.id == track.id
+        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
+        cell.titleLabel?.textColor = titleColor
+        cell.selectionStyle = selectionStyle
     }
     
     func installTrackAccessoryView(_ cell: UITableViewCell) {
