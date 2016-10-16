@@ -181,18 +181,20 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         let taskID = downloadTask.taskIdentifier
         if let downloadInfo = tasks[taskID] {
             let destURL = downloadInfo.destinationURL
-            let copySuccess: Bool
+            // Attempt to remove any previous file
             do {
-                try fileManager.moveItem(at: location, to: destURL)
-                copySuccess = true
-            } catch _ {
-                copySuccess = false
+                try fileManager.removeItem(at: destURL)
+                Log.info("Removed previous version of \(destURL).")
+            } catch {
+                
             }
             let relPath = downloadInfo.relativePath
-            if copySuccess {
-                info("Completed download of \(relPath)")
-            } else {
-                info("File copy of \(relPath) failed to \(destURL)")
+            do {
+                try fileManager.moveItem(at: location, to: destURL)
+                info("Completed download of \(relPath).")
+            } catch let err {
+                Log.error("Copy failed \(err)")
+                info("File copy of \(relPath) failed to \(destURL).")
             }
         }
     }
