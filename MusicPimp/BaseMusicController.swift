@@ -76,7 +76,8 @@ class BaseMusicController : PimpTableController {
     }
     
     func createTrackAccessory() -> UIButton? {
-        let topAndBottomInset: CGFloat = max(0, (cellHeight() - defaultCellHeight) / 2)
+        let topAndBottomInset: CGFloat = max(0, (cellHeight() - defaultCellHeight) / 2 + 10)
+        let leftInset: CGFloat = 18
         if let image = UIImage(named: "more_filled_grey-100.png") {
             let rightPadding = BaseMusicController.accessoryRightPadding
             let button = UIButton(type: UIButtonType.custom)
@@ -84,7 +85,7 @@ class BaseMusicController : PimpTableController {
             button.frame = frame
             button.setImage(image, for: UIControlState())
             button.backgroundColor = UIColor.clear
-            button.contentEdgeInsets = UIEdgeInsets(top: topAndBottomInset, left: 0, bottom: topAndBottomInset, right: rightPadding)
+            button.contentEdgeInsets = UIEdgeInsets(top: topAndBottomInset, left: leftInset, bottom: topAndBottomInset, right: rightPadding)
             button.contentMode = UIViewContentMode.scaleAspectFit
             button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
             return button
