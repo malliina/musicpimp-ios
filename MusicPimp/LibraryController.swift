@@ -24,6 +24,8 @@ class LibraryController: SearchableMusicController {
     
     fileprivate var downloadUpdates: Disposable? = nil
     fileprivate var downloadState: [Track: TrackProgress] = [:]
+    fileprivate var lastDownloadUpdate: DispatchTime? = nil
+    let fps: UInt64 = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -245,10 +247,25 @@ extension LibraryController {
                     downloadState[track] = TrackProgress(track: track, dpu: dpu)
                 }
                 let itemIndexPath = IndexPath(row: index, section: 0)
-                
-                Util.onUiThread {
-                    self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+            
+            
+                let now = DispatchTime.now()
+                let shouldUpdate = isDownloadComplete || enoughTimePassed(now: now)
+                if shouldUpdate {
+                    lastDownloadUpdate = now
+                    Util.onUiThread {
+                        self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+                    }
                 }
+        }
+    }
+    
+    func enoughTimePassed(now: DispatchTime) -> Bool {
+        if let last = lastDownloadUpdate {
+            let durationNanos = now.uptimeNanoseconds - last.uptimeNanoseconds
+            return durationNanos / 1000000 > (1000 / fps)
+        } else {
+            return true
         }
     }
 }
