@@ -35,6 +35,8 @@ class PlaylistController: BaseMusicController {
     var selected: MusicItem? = nil
     
     fileprivate var downloadState: [Track: TrackProgress] = [:]
+    fileprivate var lastDownloadUpdate: DispatchTime? = nil
+    let fps: UInt64 = 10
     
     var searchController: UISearchController!
     
@@ -304,22 +306,29 @@ class PlaylistController: BaseMusicController {
     }
     
     func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
-        //info("Written \(dpu.written) of \(dpu.relativePath)")
-        if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
-            let index = tracks.indexOf({ (item: Track) -> Bool in item.path == track.path }) {
-            let isDownloadComplete = track.size == dpu.written
-            if isDownloadComplete {
-                downloadState.removeValue(forKey: track)
-            } else {
-                downloadState[track] = TrackProgress(track: track, dpu: dpu)
-            }
-            let itemIndexPath = IndexPath(row: index, section: 0)
-            
-            onUiThread {
-                // The app crashed if reloading a row while concurrently dragging and dropping rows.
-                // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
-                if !self.tableView.isEditing {
-                    self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+        if mode == .playlist {
+            if let track = current.tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
+                let index = current.tracks.indexOf({ (item: Track) -> Bool in item.path == track.path }) {
+                let isDownloadComplete = track.size == dpu.written
+                if isDownloadComplete {
+                    downloadState.removeValue(forKey: track)
+                } else {
+                    downloadState[track] = TrackProgress(track: track, dpu: dpu)
+                }
+                let itemIndexPath = IndexPath(row: index, section: 0)
+                
+                let now = DispatchTime.now()
+                let shouldUpdate = isDownloadComplete || LibraryController.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
+                
+                if shouldUpdate {
+                    lastDownloadUpdate = now
+                    onUiThread {
+                        // The app crashed if reloading a row while concurrently dragging and dropping rows.
+                        // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
+                        if !self.tableView.isEditing && index < self.tracks.count {
+                            self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+                        }
+                    }
                 }
             }
         }

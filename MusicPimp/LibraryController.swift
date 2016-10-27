@@ -239,6 +239,7 @@ extension LibraryController {
                 let isDownloadComplete = track.size == dpu.written
                 if isDownloadComplete {
                     downloadState.removeValue(forKey: track)
+                    // wtf is this?
                     let isVisible = (isViewLoaded && view.window != nil)
                     if !isVisible && downloadState.isEmpty {
                         disposeDownloadProgress()
@@ -248,9 +249,8 @@ extension LibraryController {
                 }
                 let itemIndexPath = IndexPath(row: index, section: 0)
             
-            
                 let now = DispatchTime.now()
-                let shouldUpdate = isDownloadComplete || enoughTimePassed(now: now)
+                let shouldUpdate = isDownloadComplete || LibraryController.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
                 if shouldUpdate {
                     lastDownloadUpdate = now
                     Util.onUiThread {
@@ -260,8 +260,8 @@ extension LibraryController {
         }
     }
     
-    func enoughTimePassed(now: DispatchTime) -> Bool {
-        if let last = lastDownloadUpdate {
+    static func enoughTimePassed(now: DispatchTime, last: DispatchTime?, fps: UInt64) -> Bool {
+        if let last = last {
             let durationNanos = now.uptimeNanoseconds - last.uptimeNanoseconds
             return durationNanos / 1000000 > (1000 / fps)
         } else {

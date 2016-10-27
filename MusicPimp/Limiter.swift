@@ -25,7 +25,7 @@ class Limiter: CustomStringConvertible {
         self.limit = limit
         self.duration = duration
         self.maxHistory = max(welcomeLimit * 2, limit * 3)
-        runs = PimpSettings.sharedInstance.trackHistory as [Date]
+        runs = PimpSettings.sharedInstance.trackHistory
     }
     
     func increment() {
