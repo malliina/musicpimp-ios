@@ -21,6 +21,8 @@ class DownloadProgressUpdate {
     var relativePath: String { return info.relativePath }
     var destinationURL: URL { return info.destinationURL }
     
+    var isComplete: Bool? { get { return written == totalExpected } }
+    
     init(info: DownloadInfo, writtenDelta: StorageSize, written: StorageSize, totalExpected: StorageSize?) {
         self.info = info
         self.writtenDelta = writtenDelta
@@ -30,6 +32,10 @@ class DownloadProgressUpdate {
     
     func copy(_ newTotalExpected: StorageSize) -> DownloadProgressUpdate {
         return DownloadProgressUpdate(info: info, writtenDelta: writtenDelta, written: written, totalExpected: newTotalExpected)
+    }
+    
+    static func initial(info: DownloadInfo, size: StorageSize) -> DownloadProgressUpdate {
+        return DownloadProgressUpdate(info: info, writtenDelta: StorageSize.Zero, written: StorageSize.Zero, totalExpected: size)
     }
 }
 
@@ -113,24 +119,25 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         }
     }
     
-    func download(_ url: URL, relativePath: RelativePath) -> ErrorMessage? {
+    func download(_ url: URL, relativePath: RelativePath) -> DownloadInfo? {
         info("Preparing download of \(relativePath) from \(url)")
         if let destPath = prepareDestination(relativePath) {
             let destURL = URL(fileURLWithPath: destPath)
             let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
             self.info("Download \(url) to dest path \(destPath) with url \(destURL)")
-            return download(url, info: info)
+            download(url, info: info)
+            return info
         } else {
-            return ErrorMessage(message: "Unable to prepare destination URL \(relativePath)")
+            Log.error("Unable to prepare destination URL \(relativePath)")
+            return nil
         }
     }
     
-    func download(_ src: URL, info: DownloadInfo) -> ErrorMessage? {
+    private func download(_ src: URL, info: DownloadInfo) {
         let request = URLRequest(url: src)
         let task = session.downloadTask(with: request)
         saveTask(task.taskIdentifier, di: info)
         task.resume()
-        return nil
     }
     
     func saveTask(_ taskID: Int, di: DownloadInfo) {

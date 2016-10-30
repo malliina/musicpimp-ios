@@ -34,34 +34,39 @@ class PlaylistController: BaseMusicController {
     override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
     
-    fileprivate var downloadState: [Track: TrackProgress] = [:]
-    fileprivate var lastDownloadUpdate: DispatchTime? = nil
-    let fps: UInt64 = 10
-    
     var searchController: UISearchController!
     
+    private var reloadOnDidAppear = false
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         registerNib(PlaylistController.mainAndSubtitleCellKey)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        downloadState = [:]
         let playlistDisposable = player.playlist.playlistEvent.addHandler(self) { (plc: PlaylistController) -> (Playlist) -> () in
             plc.onNewPlaylist
         }
         let indexDisposable = player.playlist.indexEvent.addHandler(self) { (plc: PlaylistController) -> (Int?) -> () in
             plc.onIndexChanged
         }
-        let downloadProgressDisposable = BackgroundDownloader.musicDownloader.events.addHandler(self) { (plc) -> (DownloadProgressUpdate) -> () in
-            plc.onDownloadProgressUpdate
-        }
-        listeners = [playlistDisposable, indexDisposable, downloadProgressDisposable]
+        let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
+        listeners = [playlistDisposable, indexDisposable, downloadDisposable]
         let state = player.current()
         let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
         onNewPlaylist(currentPlaylist)
+        if reloadOnDidAppear {
+            reRenderTable()
+        }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !DownloadUpdater.instance.isEmpty {
+            reloadOnDidAppear = true
+        }
+    }
+        
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = (indexPath as NSIndexPath).row
         switch mode {
@@ -69,7 +74,7 @@ class PlaylistController: BaseMusicController {
             let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
             let track = tracks[index]
             cell.titleLabel?.text = track.title
-            paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: downloadState)
+            paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: DownloadUpdater.instance.progressFor(track: track))
             return cell
         case .popular:
             let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
@@ -304,32 +309,22 @@ class PlaylistController: BaseMusicController {
         self.current = Playlist(tracks: current.tracks, index: index)
         renderTable()
     }
+}
+
+extension PlaylistController {
+    func onProgress(track: TrackProgress) {
+        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
+            updateRows(row: index)
+        }
+    }
     
-    func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
-        if mode == .playlist {
-            if let track = current.tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
-                let index = current.tracks.indexOf({ (item: Track) -> Bool in item.path == track.path }) {
-                let isDownloadComplete = track.size == dpu.written
-                if isDownloadComplete {
-                    downloadState.removeValue(forKey: track)
-                } else {
-                    downloadState[track] = TrackProgress(track: track, dpu: dpu)
-                }
-                let itemIndexPath = IndexPath(row: index, section: 0)
-                
-                let now = DispatchTime.now()
-                let shouldUpdate = isDownloadComplete || LibraryController.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
-                
-                if shouldUpdate {
-                    lastDownloadUpdate = now
-                    onUiThread {
-                        // The app crashed if reloading a row while concurrently dragging and dropping rows.
-                        // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
-                        if !self.tableView.isEditing && index < self.tracks.count {
-                            self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
-                        }
-                    }
-                }
+    private func updateRows(row: Int) {
+        let itemIndexPath = IndexPath(row: row, section: 0)
+        onUiThread {
+            // The app crashed if reloading a row while concurrently dragging and dropping rows.
+            // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
+            if !self.tableView.isEditing && row < self.tracks.count && self.mode == .playlist {
+                self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
             }
         }
     }

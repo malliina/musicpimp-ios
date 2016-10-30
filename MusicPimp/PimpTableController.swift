@@ -78,6 +78,7 @@ class PimpTableController: FeedbackTable {
     }
     
     func startDownload(_ track: Track) {
-        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
+        DownloadUpdater.instance.download(track: track)
+//        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
     }
 }

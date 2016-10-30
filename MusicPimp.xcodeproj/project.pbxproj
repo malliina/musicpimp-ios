@@ -59,6 +59,7 @@
 		7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */; };
 		7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */; };
 		7D61A7011AA4E14F00F21622 /* LibraryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D61A7001AA4E14F00F21622 /* LibraryController.swift */; };
+		7D622DCB1DC61EAD00958FAA /* CompositeDisposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D622DCA1DC61EAD00958FAA /* CompositeDisposable.swift */; };
 		7D62879A1D7C36850053BF52 /* PimpLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6287991D7C36850053BF52 /* PimpLabel.swift */; };
 		7D62879C1D7C36930053BF52 /* PimpCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D62879B1D7C36930053BF52 /* PimpCell.swift */; };
 		7D62879E1D7C37190053BF52 /* PimpButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D62879D1D7C37190053BF52 /* PimpButton.swift */; };
@@ -89,6 +90,7 @@
 		7D6756D91B0A6AEE00BC0CA9 /* LocalLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */; };
 		7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */; };
 		7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DC1B0BB95900BC0CA9 /* Players.swift */; };
+		7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */; };
 		7D748D1D1AC724B5009B0401 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D748D1C1AC724B5009B0401 /* Util.swift */; };
 		7D74F3581BF902DA0004506B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D74F3571BF902DA0004506B /* Media.xcassets */; };
 		7D74F35A1BFA6FFE0004506B /* AlarmsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3591BFA6FFE0004506B /* AlarmsController.swift */; };
@@ -241,6 +243,7 @@
 		7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheTableController.swift; sourceTree = "<group>"; };
 		7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPlaylist.swift; sourceTree = "<group>"; };
 		7D61A7001AA4E14F00F21622 /* LibraryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryController.swift; sourceTree = "<group>"; };
+		7D622DCA1DC61EAD00958FAA /* CompositeDisposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositeDisposable.swift; sourceTree = "<group>"; };
 		7D6287991D7C36850053BF52 /* PimpLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpLabel.swift; sourceTree = "<group>"; };
 		7D62879B1D7C36930053BF52 /* PimpCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpCell.swift; sourceTree = "<group>"; };
 		7D62879D1D7C37190053BF52 /* PimpButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpButton.swift; sourceTree = "<group>"; };
@@ -271,6 +274,7 @@
 		7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalLibrary.swift; sourceTree = "<group>"; };
 		7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libraries.swift; sourceTree = "<group>"; };
 		7D6756DC1B0BB95900BC0CA9 /* Players.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
+		7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadUpdater.swift; sourceTree = "<group>"; };
 		7D748D1C1AC724B5009B0401 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		7D74F3571BF902DA0004506B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		7D74F3591BFA6FFE0004506B /* AlarmsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsController.swift; sourceTree = "<group>"; };
@@ -579,6 +583,7 @@
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
+				7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -660,6 +665,7 @@
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
 				7D31A32F1C679B750035E9D0 /* Views */,
+				7D622DCA1DC61EAD00958FAA /* CompositeDisposable.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";
@@ -890,6 +896,7 @@
 				7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */,
 				7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */,
 				7D31A3311C679B9A0035E9D0 /* FeedbackLabel.swift in Sources */,
+				7D622DCB1DC61EAD00958FAA /* CompositeDisposable.swift in Sources */,
 				7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */,
 				7DC891471D5F4C0100331A4D /* ContainerParent.swift in Sources */,
 				7DB1B3A41B0E44BE0012B8AE /* Downloader.swift in Sources */,
@@ -933,6 +940,7 @@
 				7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */,
 				7D406B081BD2789600EE6609 /* SavePlaylistViewController.swift in Sources */,
 				7D6287A21D7C38960053BF52 /* PimpTextField.swift in Sources */,
+				7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */,
 				7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */,
 				7DB1B3AC1B10CDD00012B8AE /* PimpLibrary.swift in Sources */,
 				7D6287A41D7C5C1B0053BF52 /* PimpView.swift in Sources */,

@@ -19,9 +19,9 @@ class PlayerManager: EndpointManager {
         let settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
-        changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
+        changed.addHandler(self) { (lm) -> (Endpoint) -> () in
             lm.onNewPlayerEndpoint
-        })
+        }
         // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)
         // activePlayer.open()
     }

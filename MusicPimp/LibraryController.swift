@@ -23,9 +23,7 @@ class LibraryController: SearchableMusicController {
     var header: UIView? = nil
     
     fileprivate var downloadUpdates: Disposable? = nil
-    fileprivate var downloadState: [Track: TrackProgress] = [:]
-    fileprivate var lastDownloadUpdate: DispatchTime? = nil
-    let fps: UInt64 = 10
+    private var reloadOnDidAppear = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +40,18 @@ class LibraryController: SearchableMusicController {
         let trackListener = player.trackEvent.addHandler(self) { (me) -> (Track?) -> () in
             me.onTrackChanged
         }
-        listeners = [trackListener]
+        let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
+        listeners = [trackListener, downloadDisposable]
+        if reloadOnDidAppear {
+            renderTable(computeMessage(folder))
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !DownloadUpdater.instance.isEmpty {
+            reloadOnDidAppear = true
+        }
     }
     
     func onTrackChanged(track: Track?) {
@@ -104,7 +113,7 @@ class LibraryController: SearchableMusicController {
             return folderCell
         } else {
             if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {
-                paintTrackCell(cell: pimpCell, track: track, isHighlight: self.player.current().track?.id == track.id, downloadState: downloadState)
+                paintTrackCell(cell: pimpCell, track: track, isHighlight: self.player.current().track?.id == track.id, downloadState: DownloadUpdater.instance.progressFor(track: track))
                 return pimpCell
             } else {
                 // we should never get here
@@ -191,10 +200,9 @@ class LibraryController: SearchableMusicController {
         let dest = segue.destination
         if let destination = dest as? LibraryParent {
             if let row = self.tableView.indexPathForSelectedRow {
-                let folder = musicItems[(row as NSIndexPath).item]
-                destination.folder = folder
+                destination.folder = musicItems[row.item]
             } else {
-                Log.error("No index, destination \(dest)")
+                error("No index, destination \(dest)")
             }
         } else {
             error("Unknown destination controller \(dest)")
@@ -212,60 +220,16 @@ class LibraryController: SearchableMusicController {
 }
 
 extension LibraryController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        downloadState = [:]
-        downloadUpdates = BackgroundDownloader.musicDownloader.events.addHandler(self) { (lc) -> (DownloadProgressUpdate) -> () in
-            lc.onDownloadProgressUpdate
+    func onProgress(track: TrackProgress) {
+        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
+            updateRows(row: index)
         }
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if downloadState.isEmpty {
-            disposeDownloadProgress()
-        }
-    }
-    
-    func disposeDownloadProgress() {
-        downloadUpdates?.dispose()
-        downloadUpdates = nil
-    }
-    
-    func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
-        let tracks = folder.tracks
-        if let track = tracks.find({ (t: Track) -> Bool in t.path == dpu.relativePath }),
-            let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.id }) {
-                let isDownloadComplete = track.size == dpu.written
-                if isDownloadComplete {
-                    downloadState.removeValue(forKey: track)
-                    // wtf is this?
-                    let isVisible = (isViewLoaded && view.window != nil)
-                    if !isVisible && downloadState.isEmpty {
-                        disposeDownloadProgress()
-                    }
-                } else {
-                    downloadState[track] = TrackProgress(track: track, dpu: dpu)
-                }
-                let itemIndexPath = IndexPath(row: index, section: 0)
-            
-                let now = DispatchTime.now()
-                let shouldUpdate = isDownloadComplete || LibraryController.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
-                if shouldUpdate {
-                    lastDownloadUpdate = now
-                    Util.onUiThread {
-                        self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
-                    }
-                }
-        }
-    }
-    
-    static func enoughTimePassed(now: DispatchTime, last: DispatchTime?, fps: UInt64) -> Bool {
-        if let last = last {
-            let durationNanos = now.uptimeNanoseconds - last.uptimeNanoseconds
-            return durationNanos / 1000000 > (1000 / fps)
-        } else {
-            return true
+
+    private func updateRows(row: Int) {
+        let itemIndexPath = IndexPath(row: row, section: 0)
+        Util.onUiThread {
+            self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
         }
     }
 }
