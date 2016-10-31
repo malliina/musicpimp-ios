@@ -12,5 +12,8 @@ class PimpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = PimpColors.background
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSFontAttributeName: PimpColors.titleFont
+        ]
     }
 }

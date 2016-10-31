@@ -21,7 +21,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Select to Play"
+        navigationItem.title = "SELECT TO PLAY"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.goBack))
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: playlistCell)
         loadPlaylists()

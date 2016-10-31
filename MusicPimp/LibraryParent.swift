@@ -13,11 +13,8 @@ class LibraryParent: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let title = (folder?.title ?? "Music")
+        let title = (folder?.title.uppercased() ?? "MUSIC")
         navigationItem.title = title
-//        navigationController?.navigationBar.titleTextAttributes = [
-//            NSFontAttributeName: PimpColors.titleFont
-//        ]
 //        navigationItem.rightBarButtonItem = PimpBarButton(title: "Test", style: .Plain, onClick: refreshClicked)
     }
     

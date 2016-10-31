@@ -33,6 +33,8 @@ class LibraryController: SearchableMusicController {
         } else {
             loadRoot()
         }
+//        self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
+//        self.tableView.setContentOffset(CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height), animated: false)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -45,6 +47,7 @@ class LibraryController: SearchableMusicController {
         if reloadOnDidAppear {
             renderTable(computeMessage(folder))
         }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -52,6 +55,11 @@ class LibraryController: SearchableMusicController {
         if !DownloadUpdater.instance.isEmpty {
             reloadOnDidAppear = true
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
     }
     
     func onTrackChanged(track: Track?) {

@@ -28,10 +28,6 @@ class PlaylistParent: ContainerParent {
         self.dragButton = dragButton
         // the first element in the array is right-most
         self.navigationItem.rightBarButtonItems = [ saveButton ]
-        navigationItem.title = "PLAYLIST"
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSFontAttributeName: PimpColors.titleFont
-        ]
         initScope(scopeSegment)
     }
     

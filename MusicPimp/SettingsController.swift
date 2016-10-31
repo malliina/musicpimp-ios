@@ -26,15 +26,19 @@ class SettingsController: CacheInfoController {
         super.viewDidLoad()
         let libraryManager = LibraryManager.sharedInstance
         let playerManager = PlayerManager.sharedInstance
-        libraryManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
+        let _ = libraryManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
             sc.onLibraryChanged
         }
-        playerManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
+        let _ = playerManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
             sc.onPlayerChanged
         }
-        settings.cacheEnabledChanged.addHandler(self) { (sc) -> (Bool) -> () in
+        let _ = settings.cacheEnabledChanged.addHandler(self) { (sc) -> (Bool) -> () in
             sc.onCacheEnabledChanged
         }
+        navigationItem.title = "SETTINGS"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSFontAttributeName: PimpColors.titleFont
+        ]
     }
     
     fileprivate func onLibraryChanged(_ newLibrary: Endpoint) {

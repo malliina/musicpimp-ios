@@ -20,7 +20,7 @@ class ListeningController: PimpViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
+        let _ = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
             pc.onNewPlayer
         }
     }

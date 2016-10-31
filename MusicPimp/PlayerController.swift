@@ -45,6 +45,19 @@ class PlayerController: ListeningController {
         positionLabel.textColor = PimpColors.subtitles
         durationLabel.textColor = PimpColors.subtitles
         updateNavigationBarVisibility(self.view.frame.size.height)
+        Log.info("Image: \(seek.currentThumbImage)")
+        
+        if let thumbImage = CoverService.defaultCover {
+            seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 12, height: 12)), for: .normal)
+        }
+    }
+    
+    func imageWithSize(image: UIImage, scaledToSize newSize: CGSize) -> UIImage{
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
+        image.draw(in: CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: newSize.width, height: newSize.height)))
+        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return newImage
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

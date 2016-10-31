@@ -20,6 +20,10 @@ class BaseTableController: UITableViewController {
         self.view.backgroundColor = PimpColors.background
         // Removes separators when there are no more rows
         self.tableView.tableFooterView = UIView()
+        
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSFontAttributeName: PimpColors.titleFont
+        ]
     }
     
     func registerNib(_ nameAndIdentifier: String) {
