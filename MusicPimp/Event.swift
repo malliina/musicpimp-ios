@@ -28,6 +28,19 @@ open class Event<T> {
             eventHandlers.append(wrapper)
             return wrapper
     }
+    
+    func first<U: AnyObject>(_ target: U, handler: @escaping (U) -> EventHandler) -> Disposable {
+        let wrapper = OneTimeSubscription(target: target, handler: handler, event: self)
+        eventHandlers.append(wrapper)
+        return wrapper
+    }
+}
+
+private class OneTimeSubscription<T: AnyObject, U>: EventHandlerWrapper<T, U> {
+    override func invoke(_ data: Any) {
+        super.invoke(data)
+        dispose()
+    }
 }
 
 private class EventHandlerWrapper<T: AnyObject, U> : Invocable, Disposable {
@@ -52,18 +65,6 @@ private class EventHandlerWrapper<T: AnyObject, U> : Invocable, Disposable {
             event.eventHandlers.filter { $0 !== self }
     }
 }
-
-//class CompositeDisposable<T: Disposable> {
-//    let inners: [T]
-//    init(inners: [T]) {
-//        self.inners = inners
-//    }
-//    func dispose() {
-//        for inner in inners {
-//            inner.dispose()
-//        }
-//    }
-//}
 
 private protocol Invocable: class {
     func invoke(_ data: Any)

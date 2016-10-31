@@ -38,7 +38,7 @@ class AlarmsController : PimpTableController {
             self.didToggleNotifications(uiSwitch)
         }
         pushSwitch = onOff
-        settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> (Endpoint) -> () in
+        let _ = settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> (Endpoint) -> () in
             ac.didChangeDefaultAlarmEndpoint
         }
     }
@@ -52,16 +52,40 @@ class AlarmsController : PimpTableController {
         if let endpoint = endpoint {
             let toggleRegistration = isOn ? registerNotifications : unregisterNotifications
             toggleRegistration(endpoint) {
-                self.settings.saveNotificationsEnabled(endpoint, enabled: isOn)
+                let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: isOn)
             }
         }
     }
     
     func registerNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
-        let alarmLibrary = Libraries.fromEndpoint(endpoint)
         if let token = settings.pushToken {
-            alarmLibrary.registerNotifications(token, tag: endpoint.id, onError: onError, onSuccess: onSuccess)
+            registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+        } else {
+            askUserForPermission { (accessGranted) in
+                if let token = self.settings.pushToken, accessGranted {
+                    self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+                } else {
+                    let error = PimpError.simple("User did not grant permission to send notifications")
+                    self.onRegisterError(error: error, endpoint: endpoint)
+                }
+            }
         }
+    }
+    
+    func registerWithToken(token: PushToken, endpoint: Endpoint, onSuccess: @escaping () -> Void) {
+        let alarmLibrary = Libraries.fromEndpoint(endpoint)
+        alarmLibrary.registerNotifications(token, tag: endpoint.id, onError: { (err) in self.onRegisterError(error: err, endpoint: endpoint) }, onSuccess: onSuccess)
+    }
+    
+    func askUserForPermission(onResult: @escaping (Bool) -> Void) {
+        let _ = PimpSettings.sharedInstance.notificationPermissionChanged.first(self) { (view) -> (Bool) -> () in
+            onResult
+        }
+        PimpNotifications.sharedInstance.initNotifications(UIApplication.shared)
+    }
+    
+    func onRegisterError(error: PimpError, endpoint: Endpoint) {
+        Log.error(PimpError.stringify(error))
     }
     
     func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
@@ -133,9 +157,8 @@ class AlarmsController : PimpTableController {
             if let endpoint = endpoint {
                 pushSwitch?.isOn = settings.notificationsEnabled(endpoint)
             }
-            let isNotificationsToggleEnabled = isEndpointValid && settings.notificationsAllowed
-            cell.textLabel?.isEnabled = isNotificationsToggleEnabled
-            pushSwitch?.isEnabled = isNotificationsToggleEnabled
+            cell.textLabel?.isEnabled = isEndpointValid
+            pushSwitch?.isEnabled = isEndpointValid
             return cell
         case alarmsSection:
             if alarms.count == 0 {

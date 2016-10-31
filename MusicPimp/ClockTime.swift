@@ -25,15 +25,15 @@ class ClockTime {
     
     func dateComponents(_ from: Date = Date()) -> DateComponents {
         let calendar = Calendar.current
-        var components = (calendar as NSCalendar).components([.year, .month, .day, .hour, .minute], from: from)
-        (components as NSDateComponents).calendar = calendar // wtf
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: from)
+        components.calendar = calendar // wtf
         components.hour = hour
         components.minute = minute
         return components
     }
     
     func formatted() -> String {
-        if let date = (dateComponents() as NSDateComponents).date {
+        if let date = dateComponents().date {
             let formatter = DateFormatter()
             formatter.dateStyle = .none
             formatter.timeStyle = .short

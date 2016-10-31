@@ -14,11 +14,10 @@ open class PimpSettings {
     open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsEvent = Event<[Endpoint]>()
-//    let playerChanged = Event<Endpoint>()
-//    let libraryChanged = Event<Endpoint>()
     let cacheLimitChanged = Event<StorageSize>()
     let cacheEnabledChanged = Event<Bool>()
     let defaultAlarmEndpointChanged = Event<Endpoint>()
+    let notificationPermissionChanged = Event<Bool>()
     
     let impl: Persistence
     
@@ -36,7 +35,7 @@ open class PimpSettings {
         
         set(newHistory) {
             if let json = serializeHistory(newHistory) ?? serializeHistory([]) {
-                impl.save(json, key: PimpSettings.TrackHistory)
+                let _ = impl.save(json, key: PimpSettings.TrackHistory)
             }
         }
     }
@@ -67,17 +66,19 @@ open class PimpSettings {
             return nil
         }
         set(newToken) {
-            if let newToken = newToken {
-                impl.save(newToken.token, key: PimpSettings.PushTokenKey)
-            } else {
-                impl.save(PimpSettings.NoPushTokenValue, key: PimpSettings.PushTokenKey)
-            }
+            let token = newToken?.token ?? PimpSettings.NoPushTokenValue
+            let _ = impl.save(token, key: PimpSettings.PushTokenKey)
         }
     }
     
     var notificationsAllowed: Bool {
         get { return impl.load(PimpSettings.NotificationsAllowed) == "true" }
-        set(allowed) { impl.save("\(allowed)", key: PimpSettings.NotificationsAllowed) }
+        set(allowed) {
+            let errors = impl.save("\(allowed)", key: PimpSettings.NotificationsAllowed)
+            if errors == nil {
+                notificationPermissionChanged.raise(allowed)
+            }
+        }
     }
     
     var cacheEnabled: Bool {
@@ -91,11 +92,9 @@ open class PimpSettings {
     }
     
     var isUserPremium: Bool {
-        get {
-            return impl.load(PimpSettings.IsPremium) == "true"
-        }
+        get { return impl.load(PimpSettings.IsPremium) == "true" }
         set(value) {
-            impl.save("\(value)", key: PimpSettings.IsPremium)
+            let _ = impl.save("\(value)", key: PimpSettings.IsPremium)
         }
     }
     
@@ -147,8 +146,8 @@ open class PimpSettings {
         return impl.load(notificationsKey(e)) == "true"
     }
     
-    func saveNotificationsEnabled(_ e: Endpoint, enabled: Bool) {
-        impl.save("\(enabled)", key: notificationsKey(e))
+    func saveNotificationsEnabled(_ e: Endpoint, enabled: Bool) -> ErrorMessage? {
+        return impl.save("\(enabled)", key: notificationsKey(e))
     }
     
     fileprivate func notificationsKey(_ e: Endpoint) -> String {
@@ -189,7 +188,7 @@ open class PimpSettings {
     
     func saveAll(_ es: [Endpoint]) {
         if let stringified = serialize(es) {
-            impl.save(stringified, key: PimpSettings.ENDPOINTS)
+            let _ = impl.save(stringified, key: PimpSettings.ENDPOINTS)
             let esAfter = endpoints()
             Log.info("Endpoints now: \(esAfter.count)")
             endpointsEvent.raise(esAfter)
@@ -215,11 +214,13 @@ open class PimpSettings {
         return [:]
     }
     
-    func saveTasks(_ sid: String, tasks: [Int: DownloadInfo]) {
+    func saveTasks(_ sid: String, tasks: [Int: DownloadInfo]) -> ErrorMessage? {
         if let stringified = serialize(tasks) {
-            impl.save(stringified, key: taskKey(sid))
+            return impl.save(stringified, key: taskKey(sid))
         } else {
-            Log.error("Unable to save tasks")
+            let msg = "Unable to serialize tasks"
+            Log.error(msg)
+            return ErrorMessage(message: msg)
         }
     }
     
