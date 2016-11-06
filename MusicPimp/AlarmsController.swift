@@ -59,13 +59,20 @@ class AlarmsController : PimpTableController {
     
     func registerNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
         if let token = settings.pushToken {
+            Log.info("Registering with previously saved push token...")
             registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
         } else {
+            Log.info("No saved push token. Asking for permission...")
             askUserForPermission { (accessGranted) in
                 if let token = self.settings.pushToken, accessGranted {
+                    Log.info("Permission granted, registering with \(endpoint.address)")
                     self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
                 } else {
-                    let error = PimpError.simple("User did not grant permission to send notifications")
+                    self.onUiThread {
+                        self.pushSwitch?.isOn = false
+                    }
+                    
+                    let error = PimpError.simple("The user did not grant permission to send notifications")
                     self.onRegisterError(error: error, endpoint: endpoint)
                 }
             }
@@ -89,6 +96,7 @@ class AlarmsController : PimpTableController {
     }
     
     func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
+        Log.info("Unregistering from \(endpoint.address)...")
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
         alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
     }

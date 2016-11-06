@@ -19,7 +19,7 @@ class EndpointManager {
     }
     
     func saveActive(_ e: Endpoint) {
-        settings.impl.save(e.id, key: key)
+        let _ = settings.impl.save(e.id, key: key)
         changed.raise(e)
     }
     

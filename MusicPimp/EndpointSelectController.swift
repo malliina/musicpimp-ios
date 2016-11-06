@@ -23,6 +23,7 @@ class EndpointSelectController: BaseTableController {
         renderTable()
     }
     
+    // called when the user is about to edit an endpoint
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let navController = segue.destination as? UINavigationController {
             if let editController = navController.viewControllers[0] as? EditEndpointController,
@@ -35,7 +36,6 @@ class EndpointSelectController: BaseTableController {
     override func viewDidLoad() {
         super.viewDidLoad()
         endpoints = settings.endpoints()
-        updateSelected(manager.loadActive())
     }
     
     func updateSelected(_ selected: Endpoint) {
@@ -51,11 +51,12 @@ class EndpointSelectController: BaseTableController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateSelected(manager.loadActive())
         renderTable()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         let endpoint = endpointForIndex(index)
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
@@ -66,7 +67,7 @@ class EndpointSelectController: BaseTableController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         if index == selectedIndex {
             return
         }
@@ -95,7 +96,7 @@ class EndpointSelectController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let rowIndex = (indexPath as NSIndexPath).row
+        let rowIndex = indexPath.row
         if rowIndex > 0 {
             let edit = endpointRowAction(tableView, title: "Edit") {
                 (index: Int) -> Void in
@@ -106,8 +107,12 @@ class EndpointSelectController: BaseTableController {
             let remove = endpointRowAction(tableView, title: "Remove") {
                 (index: Int) -> Void in
                 // TODO make EndpointsService with operations on endpoints, then listen for endpointsChanged events and react instead
-                self.endpoints.remove(at: index)
+                let active = self.manager.loadActive()
+                let removed = self.endpoints.remove(at: index)
                 self.settings.saveAll(self.endpoints)
+                if active.id == removed.id {
+                    self.manager.saveActive(Endpoint.Local)
+                }
                 let visualIndex = IndexPath(row: index + 1, section: 0)
                 tableView.deleteRows(at: [visualIndex], with: UITableViewRowAnimation.fade)
             }
@@ -120,7 +125,7 @@ class EndpointSelectController: BaseTableController {
     func endpointRowAction(_ tableView: UITableView, title: String, f: @escaping (Int) -> Void) -> UITableViewRowAction {
         return UITableViewRowAction(style: UITableViewRowActionStyle.default, title: title) {
             (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
-            let endIndex = (indexPath as NSIndexPath).row - 1
+            let endIndex = indexPath.row - 1
             if endIndex >= 0 && self.endpoints.count > endIndex {
                 f(endIndex)
             }

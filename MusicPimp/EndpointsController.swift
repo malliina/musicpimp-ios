@@ -14,8 +14,6 @@ class EndpointsController: BaseTableController {
         
     var endpoints: [Endpoint] = []
     
-    var subscription: Disposable? = nil
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         endpoints = settings.endpoints()
@@ -27,14 +25,14 @@ class EndpointsController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = endpoints[(indexPath as NSIndexPath).row]
+        let item = endpoints[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = item.name
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         endpoints.remove(at: index)
         settings.saveAll(endpoints)
         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
@@ -45,7 +43,7 @@ class EndpointsController: BaseTableController {
             let destController: AnyObject = navController.viewControllers[0]
             if let editController = destController as? EditEndpointController {
                 if let row = self.tableView.indexPathForSelectedRow {
-                    let item = endpoints[(row as NSIndexPath).item]
+                    let item = endpoints[row.item]
                     editController.editedItem = item
                 }
             } else {

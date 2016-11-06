@@ -18,6 +18,7 @@ open class PimpNotifications {
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         // the playback notification is displayed as an alert to the user, so we must call this
         application.registerUserNotificationSettings(notificationSettings)
+        Log.info("Registering with APNs...")
         // registers with APNs
         application.registerForRemoteNotifications()
     }
@@ -31,7 +32,16 @@ open class PimpNotifications {
     }
     
     func didFailToRegister(_ error: Error) {
-        Log.error("Remote notifications registration failure code")// \(error.code) \(error.description)")
+        Log.error("Remote notifications registration failure")
+        disableNotifications()
+    }
+    
+    func didNotGetPermission() {
+        Log.info("The user did not grant permission to send notifications")
+        disableNotifications()
+    }
+    
+    private func disableNotifications() {
         settings.pushToken = PushToken(token: PimpSettings.NoPushTokenValue)
         settings.notificationsAllowed = false
     }

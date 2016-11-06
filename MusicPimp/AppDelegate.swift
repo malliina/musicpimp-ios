@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         connectToPlayer()
-        notifications.initNotifications(application)
+//        notifications.initNotifications(application)
         if let launchOptions = launchOptions {
             notifications.handleNotification(application, data: launchOptions)
         }
@@ -110,6 +110,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         notifications.didFailToRegister(error)
+    }
+    
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        let allowed = notificationSettings.types == .none
+        if !allowed {
+            notifications.didNotGetPermission()
+        }
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
