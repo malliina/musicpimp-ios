@@ -40,6 +40,7 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func updateCacheUsageLabel() {
+        Log.info("Current usage: \(LocalLibrary.sharedInstance.size.shortDescription)")
         currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.shortDescription
     }
     
@@ -81,7 +82,7 @@ class CacheTableController: CacheInfoController {
         }
     }
     fileprivate func deleteCache() {
-        LocalLibrary.sharedInstance.deleteContents()
+        let _ = LocalLibrary.sharedInstance.deleteContents()
         updateCacheUsageLabel()
     }
 }

@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
 //        Log.info("didFinishLaunchingWithOptions")
         initTheme(application)
+//        test()
         return true
     }
     

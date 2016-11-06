@@ -14,7 +14,7 @@ class CacheLimitController: BaseTableController {
     var current: StorageSize { return settings.cacheLimit }
     
     override func viewDidLoad() {
-        settings.cacheLimitChanged.addHandler(self) { (clf) -> (StorageSize) -> () in
+        let _ = settings.cacheLimitChanged.addHandler(self) { (clf) -> (StorageSize) -> () in
             clf.onCacheLimitChanged
         }
     }

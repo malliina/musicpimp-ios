@@ -154,6 +154,7 @@ class Files {
             }
             return acc
         } else {
+            Log.info("Unable to determine size of directory at URL \(dir)")
             return StorageSize.Zero
         }
     }

@@ -50,13 +50,16 @@ class BaseTableController: UITableViewController {
     }
     
     func setFeedback(_ feedback: String) {
-        self.tableView.backgroundView = self.feedbackLabel(feedback)
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        configureTable(background: self.feedbackLabel(feedback), separatorStyle: UITableViewCellSeparatorStyle.none)
     }
     
     func clearFeedback() {
-        self.tableView.backgroundView = nil
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+        configureTable(background: nil, separatorStyle: UITableViewCellSeparatorStyle.singleLine)
+    }
+    
+    func configureTable(background: UIView?, separatorStyle: UITableViewCellSeparatorStyle) {
+        self.tableView.backgroundView = background
+        self.tableView.separatorStyle = separatorStyle
     }
     
     func feedbackLabel(_ text: String) -> UILabel {
