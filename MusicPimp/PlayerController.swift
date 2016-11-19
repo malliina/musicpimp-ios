@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class PlayerController: ListeningController {
+    static let seekThumbImage = UIImage(named: "oval-32.png")
+    
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
@@ -45,10 +47,9 @@ class PlayerController: ListeningController {
         positionLabel.textColor = PimpColors.subtitles
         durationLabel.textColor = PimpColors.subtitles
         updateNavigationBarVisibility(self.view.frame.size.height)
-        Log.info("Image: \(seek.currentThumbImage)")
         
-        if let thumbImage = CoverService.defaultCover {
-            seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 12, height: 12)), for: .normal)
+        if let thumbImage = PlayerController.seekThumbImage {
+            seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 8, height: 8)), for: .normal)
         }
     }
     

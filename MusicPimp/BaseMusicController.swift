@@ -56,13 +56,11 @@ class BaseMusicController : PimpTableController {
     
     func paintTrackCell(cell: PimpMusicItemCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
-            //info("Setting progress to \(downloadProgress.progress)")
             cell.progressView.progress = downloadProgress.progress
             cell.progressView.isHidden = false
         } else {
             cell.progressView.isHidden = true
         }
-        let isHighlight = self.player.current().track?.id == track.id
         let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
         cell.titleLabel?.textColor = titleColor
         cell.selectionStyle = selectionStyle

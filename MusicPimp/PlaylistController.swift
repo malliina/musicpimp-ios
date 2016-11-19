@@ -158,7 +158,7 @@ class PlaylistController: BaseMusicController {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
-        let formattedDate = formatter.string(from: track.when as Date)
+        let formattedDate = formatter.string(from: track.when)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
         installTrackAccessoryView(cell)
     }

@@ -167,6 +167,7 @@
 		7DE944D71BE67C4900CD441B /* MusicItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE944D61BE67C4900CD441B /* MusicItem.swift */; };
 		7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00B1AED50B300F25B9B /* Arrays.swift */; };
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
+		7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -359,6 +360,7 @@
 		7DE944D61BE67C4900CD441B /* MusicItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicItem.swift; sourceTree = "<group>"; };
 		7DF5C00B1AED50B300F25B9B /* Arrays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrays.swift; sourceTree = "<group>"; };
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
+		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -700,6 +702,7 @@
 		7DC359551B35BDD8003B01B6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */,
 				7DC891521D623FB600331A4D /* pimp-512.png */,
 				7DC891501D623E8100331A4D /* pimp-4096.png */,
 				7D2C779E1B9352A20066A7B5 /* more_filled_darker-100.png */,
@@ -836,6 +839,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DC206AE1A1547370032C01D /* Main.storyboard in Resources */,
+				7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */,
 				7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */,
 				7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */,
 				7DC206B01A1547370032C01D /* Images.xcassets in Resources */,
