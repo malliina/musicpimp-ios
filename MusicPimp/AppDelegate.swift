@@ -113,7 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        let allowed = notificationSettings.types == .none
+        let allowed = notificationSettings.types != .none
         if !allowed {
             notifications.didNotGetPermission()
         }

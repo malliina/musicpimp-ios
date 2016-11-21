@@ -64,9 +64,13 @@ class AlarmsController : PimpTableController {
         } else {
             Log.info("No saved push token. Asking for permission...")
             askUserForPermission { (accessGranted) in
-                if let token = self.settings.pushToken, accessGranted {
-                    Log.info("Permission granted, registering with \(endpoint.address)")
-                    self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+                if accessGranted {
+                    if let token = self.settings.pushToken {
+                        Log.info("Permission granted, registering with \(endpoint.address)")
+                        self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+                    } else {
+                        Log.info("Access granted, but no token available.")
+                    }
                 } else {
                     self.onUiThread {
                         self.pushSwitch?.isOn = false
