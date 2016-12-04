@@ -14,7 +14,9 @@ class SearchAlarmTrackController: SearchableMusicController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        renderTable("Search for a track")
+        renderTable("Search for a track") {
+            self.tableView.tableHeaderView = self.searchController.searchBar
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

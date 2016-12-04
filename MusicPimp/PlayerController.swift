@@ -53,10 +53,11 @@ class PlayerController: ListeningController {
         }
     }
     
-    func imageWithSize(image: UIImage, scaledToSize newSize: CGSize) -> UIImage{
+    // TODO source? SO?
+    func imageWithSize(image: UIImage, scaledToSize newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
-        image.draw(in: CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: newSize.width, height: newSize.height)))
-        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        image.draw(in: CGRect(origin: CGPoint(x: 0,y: 0), size: CGSize(width: newSize.width, height: newSize.height)))
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return newImage
     }

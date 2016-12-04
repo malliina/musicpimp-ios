@@ -12,6 +12,8 @@ class BaseMusicController : PimpTableController {
     let trackReuseIdentifier = "PimpMusicItemCell"
     let defaultCellHeight: CGFloat = 44
     static let accessoryRightPadding: CGFloat = 14
+    static let accessoryImageSize = CGSize(width: 16, height: 16)
+    static let accessoryImage: UIImage? = UIImage(named: "more_filled_grey-100.png")?.withSize(scaledToSize: accessoryImageSize)
     
     var musicItems: [MusicItem] { return [] }
     
@@ -74,17 +76,20 @@ class BaseMusicController : PimpTableController {
     }
     
     func createTrackAccessory() -> UIButton? {
-        let topAndBottomInset: CGFloat = max(0, (cellHeight() - defaultCellHeight) / 2 + 10)
-        let leftInset: CGFloat = 18
-        if let image = UIImage(named: "more_filled_grey-100.png") {
-            let rightPadding = BaseMusicController.accessoryRightPadding
+        if let image = BaseMusicController.accessoryImage {
+            let accessoryHeight = cellHeight()
+            let accessoryWidth = accessoryHeight
             let button = UIButton(type: UIButtonType.custom)
-            let frame = CGRect(x: 0, y: 0, width: defaultCellHeight + rightPadding, height: cellHeight())
+            let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: accessoryHeight)
             button.frame = frame
             button.setImage(image, for: UIControlState())
             button.backgroundColor = UIColor.clear
-            button.contentEdgeInsets = UIEdgeInsets(top: topAndBottomInset, left: leftInset, bottom: topAndBottomInset, right: rightPadding)
             button.contentMode = UIViewContentMode.scaleAspectFit
+            // - 15 because otherwise the accessory didn't look good on all cell sizes
+            // TODO fix properly once I know how to
+            let maxInset = max(0, accessoryWidth - BaseMusicController.accessoryImageSize.width - 15)
+            let leftInset = min(30, maxInset)
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: 0)
             button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
             return button
         }

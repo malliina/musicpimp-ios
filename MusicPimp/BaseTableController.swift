@@ -35,6 +35,10 @@ class BaseTableController: UITableViewController {
     }
     
     func renderTable(_ feedback: String? = nil) {
+        renderTable(feedback) { () }
+    }
+    
+    func renderTable(_ feedback: String?, _ afterData: @escaping () -> Void) {
         onUiThread {
             if let feedback = feedback {
                 self.setFeedback(feedback)
@@ -42,6 +46,7 @@ class BaseTableController: UITableViewController {
                 self.clearFeedback()
             }
             self.tableView.reloadData()
+            afterData()
         }
     }
     

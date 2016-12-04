@@ -52,7 +52,8 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         searchController.searchResultsUpdater = self
         searchController.searchBar.sizeToFit()
         searchController.searchBar.placeholder = "Search track or artist"
-        tableView.tableHeaderView = searchController.searchBar
+//        tableView.tableHeaderView = searchController.searchBar
+//        tableView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.size.height)
         searchController.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self

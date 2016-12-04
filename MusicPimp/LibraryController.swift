@@ -33,8 +33,6 @@ class LibraryController: SearchableMusicController {
         } else {
             loadRoot()
         }
-//        self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-//        self.tableView.setContentOffset(CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height), animated: false)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,7 +45,6 @@ class LibraryController: SearchableMusicController {
         if reloadOnDidAppear {
             renderTable(computeMessage(folder))
         }
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -81,7 +78,10 @@ class LibraryController: SearchableMusicController {
     
     func onFolder(_ f: MusicFolder) {
         folder = f
-        self.renderTable(computeMessage(folder))
+        self.renderTable(computeMessage(folder)) {
+            self.tableView.tableHeaderView = self.searchController.searchBar
+            self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
+        }
     }
     
     func computeMessage(_ folder: MusicFolder) -> String? {

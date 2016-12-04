@@ -53,6 +53,21 @@ class Util {
         let message = PimpErrorUtil.stringifyDetailed(pimpError)
         Log.error(message)
     }
+    
+    // TODO source? SO?
+    static func imageWithSize(image: UIImage, scaledToSize newSize: CGSize) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
+        image.draw(in: CGRect(origin: CGPoint(x: 0,y: 0), size: CGSize(width: newSize.width, height: newSize.height)))
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+}
+
+extension UIImage {
+    func withSize(scaledToSize: CGSize) -> UIImage {
+        return Util.imageWithSize(image: self, scaledToSize: scaledToSize)
+    }
 }
 
 extension Data {
