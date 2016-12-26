@@ -55,7 +55,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let row = (indexPath as NSIndexPath).row
         if playlists.count > 0 && playlists.count > row {
             let item = playlists[row]
-            playTracks(item.tracks)
+            _ = playTracks(item.tracks)
         }
         tableView.deselectRow(at: indexPath, animated: false)
         goBack()

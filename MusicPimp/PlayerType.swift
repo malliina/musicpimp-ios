@@ -22,19 +22,24 @@ protocol PlayerType {
     
     func current() -> PlayerState
     
-    func resetAndPlay(_ track: Track) -> Bool
+    /// Resets the playlist to the given track only, and starts playback.
+    ///
+    /// - parameter track: track to play
+    ///
+    /// - returns: an error message, if any
+    func resetAndPlay(_ track: Track) -> ErrorMessage?
     
-    func play()
+    func play() -> ErrorMessage?
     
-    func pause()
+    func pause() -> ErrorMessage?
     
-    func seek(_ position: Duration)
+    func seek(_ position: Duration) -> ErrorMessage?
     
-    func next()
+    func next() -> ErrorMessage?
     
-    func prev()
+    func prev() -> ErrorMessage?
     
-    func skip(_ index: Int)
+    func skip(_ index: Int) -> ErrorMessage?
     
-    func volume(_ newVolume: VolumeValue)
+    func volume(_ newVolume: VolumeValue) -> ErrorMessage?
 }

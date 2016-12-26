@@ -41,7 +41,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         return currentState
     }
     
-    func resetAndPlay(_ track: Track) -> Bool {
+    func resetAndPlay(_ track: Track) -> ErrorMessage? {
 //        Limiter.sharedInstance.increment()
         return socket.send([
             JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
@@ -49,42 +49,42 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         ])
     }
     
-    func play() {
-        sendSimple(JsonKeys.RESUME)
+    func play() -> ErrorMessage? {
+        return sendSimple(JsonKeys.RESUME)
     }
     
-    func pause() {
-        sendSimple(JsonKeys.STOP)
+    func pause() -> ErrorMessage? {
+        return sendSimple(JsonKeys.STOP)
     }
     
-    func seek(_ position: Duration) {
-        sendValued(JsonKeys.SEEK, value: Int(position.seconds) as AnyObject)
+    func seek(_ position: Duration) -> ErrorMessage? {
+        return sendValued(JsonKeys.SEEK, value: Int(position.seconds) as AnyObject)
     }
     
-    func next() {
-        sendSimple(JsonKeys.NEXT)
+    func next() -> ErrorMessage? {
+        return sendSimple(JsonKeys.NEXT)
     }
     
-    func prev() {
-        sendSimple(JsonKeys.PREV)
+    func prev() -> ErrorMessage? {
+        return sendSimple(JsonKeys.PREV)
     }
     
-    func skip(_ index: Int) {
-        sendValued(JsonKeys.SKIP, value: index as AnyObject)
+    func skip(_ index: Int)  -> ErrorMessage? {
+        return sendValued(JsonKeys.SKIP, value: index as AnyObject)
     }
     
-    func volume(_ newVolume: VolumeValue) {
-        sendValued(JsonKeys.VOLUME, value: newVolume.volume as AnyObject)
+    func volume(_ newVolume: VolumeValue) -> ErrorMessage? {
+        return sendValued(JsonKeys.VOLUME, value: newVolume.volume as AnyObject)
     }
     
-    func sendValued(_ cmd: String, value: AnyObject) {
+    func sendValued(_ cmd: String, value: AnyObject) -> ErrorMessage? {
         let payload = PimpEndpoint.valuedCommand(cmd, value: value)
-        socket.send(payload)
+        return socket.send(payload)
     }
     
-    func sendSimple(_ cmd: String) {
+    func sendSimple(_ cmd: String) -> ErrorMessage? {
         let payload = PimpEndpoint.simpleCommand(cmd)
-        socket.send(payload as [String : AnyObject])
+        return socket.send(payload as [String : AnyObject])
     }
     
     func onTimeUpdated(_ pos: Duration) {

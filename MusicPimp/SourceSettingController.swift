@@ -17,7 +17,7 @@ class SourceSettingController: EndpointSelectController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
+        subscription = LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
             ssc.libraryChanged
         }
     }

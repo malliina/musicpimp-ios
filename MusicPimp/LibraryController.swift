@@ -149,14 +149,14 @@ class LibraryController: SearchableMusicController {
         let playAction = musicItemAction(
             tableView,
             title: "Play",
-            onTrack: { (t) -> Void in self.playTrack(t) },
-            onFolder: { (f) -> Void in self.playFolder(f.id) }
+            onTrack: { (t) -> Void in _ = self.playTrack(t) },
+            onFolder: { (f) -> Void in _ = self.playFolder(f.id) }
         )
         let addAction = musicItemAction(
             tableView,
             title: "Add",
-            onTrack: { (t) -> Void in self.addTrack(t) },
-            onFolder: { (f) -> Void in self.addFolder(f.id) }
+            onTrack: { (t) -> Void in _ = self.addTrack(t) },
+            onFolder: { (f) -> Void in _ = self.addFolder(f.id) }
         )
         return [playAction, addAction]
     }
@@ -179,7 +179,7 @@ class LibraryController: SearchableMusicController {
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = itemAt(tableView, indexPath: indexPath), let track = item as? Track {
-            playAndDownload(track)
+            _ = playAndDownload(track)
         }
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)

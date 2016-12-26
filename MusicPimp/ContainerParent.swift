@@ -57,7 +57,7 @@ class ContainerParent: ListeningController {
     }
     
     @IBAction func prevClicked(_ sender: UIButton) {
-        player.prev()
+        _ = player.prev()
     }
     
     @IBAction func playPauseClicked(_ sender: UIButton) {
@@ -66,16 +66,16 @@ class ContainerParent: ListeningController {
     
     fileprivate func playOrPause() {
         if player.current().isPlaying {
-            self.player.pause()
+            _ = self.player.pause()
         } else {
-            limitChecked {
+            _ = limitChecked {
                 self.player.play()
             }
         }
     }
     
     @IBAction func nextClicked(_ sender: UIButton) {
-        player.next()
+        _ = player.next()
     }
     
     func findChild<T>() -> T? {

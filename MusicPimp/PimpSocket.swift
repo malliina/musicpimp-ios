@@ -21,14 +21,15 @@ class PimpSocket: PlayerSocket {
         super.init(baseURL: baseURL, headers: headers)
     }
     
-    func send(_ dict: [String: AnyObject]) -> Bool {
+    func send(_ dict: [String: AnyObject]) -> ErrorMessage? {
         if let payload = Json.stringifyObject(dict, prettyPrinted: false), let socket = socket {
             socket.send(payload)
             //Log.info("Sent \(payload) to \(baseURL))")
-            return true
+            return nil
         } else {
-            Log.error("Unable to send payload over socket")
-            return false
+            let msg = "Unable to send payload over socket"
+            Log.error(msg)
+            return ErrorMessage(message: msg)
         }
     }
     

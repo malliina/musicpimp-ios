@@ -22,11 +22,12 @@ class IAPViewController: PimpViewController {
     @IBOutlet var purchaseButton: UIButton!
     @IBOutlet var alreadyPurchasedLabel: UILabel!
     @IBOutlet var restoreButton: UIButton!
+    var disposable: Disposable? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         togglePurchaseViews(true)
-        TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> (SKPaymentTransaction) -> () in
+        disposable = TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> (SKPaymentTransaction) -> () in
             iap.onTransactionUpdate
         }
     }

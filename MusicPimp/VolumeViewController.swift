@@ -54,7 +54,7 @@ class VolumeViewController: PimpViewController {
     @IBAction func userDidChangeVolume(_ sender: UISlider) {
         let percent = sender.value / (sender.maximumValue - sender.minimumValue)
         let volume = VolumeValue(volume: Int(100.0 * percent))
-        player.volume(volume)
+        _ = player.volume(volume)
     }
     
     @IBAction func backClicked(_ sender: UIBarButtonItem) {

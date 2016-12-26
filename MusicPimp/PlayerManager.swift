@@ -14,12 +14,13 @@ class PlayerManager: EndpointManager {
     fileprivate var activePlayer: PlayerType
     var active: PlayerType { get { return activePlayer } }
     let playerChanged = Event<PlayerType>()
+    var disposable: Disposable? = nil
     
     init() {
         let settings = PimpSettings.sharedInstance
         activePlayer = Players.fromEndpoint(settings.activeEndpoint(PimpSettings.PLAYER))
         super.init(key: PimpSettings.PLAYER, settings: settings)
-        changed.addHandler(self) { (lm) -> (Endpoint) -> () in
+        disposable = changed.addHandler(self) { (lm) -> (Endpoint) -> () in
             lm.onNewPlayerEndpoint
         }
         // not called here, because it's instead called in AppDelegate.application(... didFinishLaunchingWithOptions ...)

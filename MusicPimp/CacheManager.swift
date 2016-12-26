@@ -36,7 +36,7 @@ class CacheManager {
     /// - parameter maxSize: the maximum allowed size of dir
     /// - parameter shovelSize: the minumum amount to delete from dir if its size exceeds maxSize
     ///
-    /// :return: the amount acutally deleted
+    /// - returns: the amount acutally deleted
     func cleanup(_ dir: Directory, maxSize: StorageSize, shovelSize: StorageSize) -> StorageSize {
         let currentSize = Files.sharedInstance.folderSize(dir.url)
         let sizeDiff = currentSize - maxSize

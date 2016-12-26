@@ -129,7 +129,7 @@ class BaseMusicController : PimpTableController {
         let playAction = playTrackAccessoryAction(track, row: row)
         let addAction = addTrackAccessoryAction(track, row: row)
         let downloadAction = accessoryAction("Download") { _ in
-            self.downloadIfNeeded([track])
+            _ = self.downloadIfNeeded([track])
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
             
@@ -152,11 +152,11 @@ class BaseMusicController : PimpTableController {
     }
     
     func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
-        return accessoryAction("Play", action: { _ in self.playTrack(track) })
+        return accessoryAction("Play", action: { _ in _ = self.playTrack(track) })
     }
     
     func addTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
-        return accessoryAction("Add", action: { _ in self.addTrack(track) })
+        return accessoryAction("Add", action: { _ in _ = self.addTrack(track) })
     }
     
     func displayActionsForFolder(_ folder: Folder, row: Int) {
@@ -167,7 +167,7 @@ class BaseMusicController : PimpTableController {
         let playAction = accessoryAction("Play", action: { _ in self.playFolder(id) })
         let addAction = accessoryAction("Add", action: { _ in self.addFolder(id) })
         let downloadAction = accessoryAction("Download") { _ in
-            self.library.tracks(id, onError: self.onError, f: self.downloadIfNeeded)
+            self.withTracks(id: id, f: self.downloadIfNeeded)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
             
@@ -187,19 +187,22 @@ class BaseMusicController : PimpTableController {
 
 
     func playFolder(_ id: String) {
-        library.tracks(id, onError: onError, f: playTracks)
+        withTracks(id: id, f: self.playTracks)
     }
     
-    func playTrack(_ track: Track) {
-        playTracks([track])
+    func playTrack(_ track: Track) -> ErrorMessage? {
+        return playTracks([track]).headOption()
     }
     
     func addFolder(_ id: String) {
-        info("Adding folder")
-        library.tracks(id, onError: onError, f: addTracks)
+        withTracks(id: id, f: self.addTracks)
     }
     
-    func addTrack(_ track: Track) {
-        addTracks([track])
+    func withTracks(id: String, f: @escaping ([Track]) -> [ErrorMessage]) {
+        library.tracks(id, onError: onError) { tracks in _ = f(tracks) }
+    }
+    
+    func addTrack(_ track: Track) -> ErrorMessage? {
+        return addTracks([track]).headOption()
     }
 }

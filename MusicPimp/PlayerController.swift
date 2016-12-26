@@ -149,9 +149,9 @@ class PlayerController: ListeningController {
     
     fileprivate func playOrPause() {
         if player.current().isPlaying {
-            self.player.pause()
+            _ = self.player.pause()
         } else {
-            limitChecked {
+            _ = limitChecked {
                 self.player.play()
             }
         }
@@ -162,7 +162,7 @@ class PlayerController: ListeningController {
         // TODO throttle
         if let pos = seekValue.seconds {
             info("Seek to \(seekValue)")
-            limitChecked {
+            _ = limitChecked {
                 self.player.seek(pos)
             }
         } else {
@@ -171,13 +171,13 @@ class PlayerController: ListeningController {
     }
     
     @IBAction func nextClicked(_ sender: AnyObject) {
-        limitChecked {
+        _ = limitChecked {
             self.player.next()
         }
     }
     
     @IBAction func previousClicked(_ sender: AnyObject) {
-        limitChecked {
+        _ = limitChecked {
             self.player.prev()
         }
     }

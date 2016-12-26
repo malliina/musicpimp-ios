@@ -13,6 +13,7 @@ class ExternalCommandDelegate: NSObject {
     static let sharedInstance = ExternalCommandDelegate()
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
+    var disposable: Disposable? = nil
     
     func initialize(_ commandCenter: MPRemoteCommandCenter) {
         commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
@@ -26,7 +27,7 @@ class ExternalCommandDelegate: NSObject {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
         commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
-        LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> (Track?) -> () in
+        disposable = LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> (Track?) -> () in
             ecd.onLocalTrackChanged
         })
     }
@@ -55,36 +56,36 @@ class ExternalCommandDelegate: NSObject {
     }
     
     func onPlay() {
-        player.play()
+        _ = player.play()
         info("onPlay")
     }
     
     func onPause() {
-        player.pause()
+        _ = player.pause()
         info("onPause")
     }
     
     func onTogglePlayPause() {
         if player.current().isPlaying {
-            player.pause()
+            _ = player.pause()
         } else {
-            player.play()
+            _ = player.play()
         }
         info("onTogglePlayPause")
     }
     
     func onStop() {
-        player.pause()
+        _ = player.pause()
         info("onStop")
     }
     
     func next() {
-        player.next()
+        _ = player.next()
         info("next")
     }
     
     func prev() {
-        player.prev()
+        _ = player.prev()
         info("prev")
     }
     

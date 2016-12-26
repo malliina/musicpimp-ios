@@ -29,56 +29,74 @@ class PimpTableController: FeedbackTable {
         
     }
     
-    func playTracks(_ tracks: [Track]) {
-        limitChecked {
+    func playTracks(_ tracks: [Track]) -> [ErrorMessage] {
+        return limitChecked {
             self.playTracks2(tracks)
-        }
+        } ??  []
     }
     
-    fileprivate func playTracks2(_ tracks: [Track]) {
+    fileprivate func playTracks2(_ tracks: [Track]) -> [ErrorMessage] {
         if let first = tracks.first {
-            playAndDownload2(first)
-            addTracks2(tracks.tail())
+            let firstError = playAndDownload2(first)
+            if let firstError = firstError {
+                return [firstError]
+            } else {
+                return addTracks2(tracks.tail())
+            }
+        } else {
+            return []
         }
     }
     
-    func addTracks(_ tracks: [Track]) {
-        limitChecked {
+    func addTracks(_ tracks: [Track]) -> [ErrorMessage] {
+        return limitChecked {
             self.addTracks2(tracks)
-        }
+        } ?? []
     }
     
-    fileprivate func addTracks2(_ tracks: [Track]) {
+    fileprivate func addTracks2(_ tracks: [Track]) -> [ErrorMessage] {
         if !tracks.isEmpty {
             info("Adding \(tracks.count) tracks")
-            player.playlist.add(tracks)
-            downloadIfNeeded(tracks)
+            let errors = player.playlist.add(tracks)
+            if errors.isEmpty {
+                return downloadIfNeeded(tracks)
+            } else {
+                return errors
+            }
+        } else {
+            return []
         }
     }
     
-    func playAndDownload(_ track: Track) {
-        limitChecked {
-            self.playAndDownload2(track)
+    func playAndDownload(_ track: Track) -> ErrorMessage? {
+        let error = limitChecked {
+            return self.playAndDownload2(track)
+        }
+        return error ?? nil
+    }
+    
+    fileprivate func playAndDownload2(_ track: Track) -> ErrorMessage? {
+        let error = player.resetAndPlay(track)
+        if error != nil {
+            return downloadIfNeeded([track]).headOption()
+        } else {
+            return error
         }
     }
     
-    fileprivate func playAndDownload2(_ track: Track) {
-        player.resetAndPlay(track)
-        downloadIfNeeded([track])
-    }
-    
-    func downloadIfNeeded(_ tracks: [Track]) {
+    func downloadIfNeeded(_ tracks: [Track]) -> [ErrorMessage] {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
             let tracksToDownload = newTracks.take(maxNewDownloads)
-            for track in tracksToDownload {
+            return tracksToDownload.flatMapOpt({ (track) -> ErrorMessage? in
                 startDownload(track)
-            }
+            })
+        } else {
+            return []
         }
     }
     
-    func startDownload(_ track: Track) {
-        DownloadUpdater.instance.download(track: track)
-//        BackgroundDownloader.musicDownloader.download(track.url, relativePath: track.path)
+    func startDownload(_ track: Track) -> ErrorMessage? {
+        return DownloadUpdater.instance.download(track: track)
     }
 }

@@ -69,17 +69,18 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         onTracksAdded(tracks)
     }
     
-    func add(_ track: Track) {
-        add([track])
+    func add(_ track: Track) -> ErrorMessage? {
+        return add([track]).headOption()
     }
     
-    func add(_ tracks: [Track]) {
+    func add(_ tracks: [Track]) -> [ErrorMessage] {
         ts.append(contentsOf: tracks)
         playlistUpdated()
         onTracksAdded(tracks)
+        return []
     }
     
-    func move(_ src: Int, dest: Int) {
+    func move(_ src: Int, dest: Int) -> ErrorMessage? {
         if src != dest {
             //let newTracks = Arrays.move(src, destIndex: dest, xs: ts)
             ts = Arrays.move(src, destIndex: dest, xs: ts)
@@ -88,6 +89,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
             }
             playlistUpdated()
         }
+        return nil
     }
     
     fileprivate func onTracksAdded(_ ts: [Track]) {
@@ -96,7 +98,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         }
     }
     
-    func removeIndex(_ index: Int) {
+    func removeIndex(_ index: Int) -> ErrorMessage? {
         ts.remove(at: index)
         if let position = position() {
             if position == index {
@@ -106,6 +108,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
             }
         }
         playlistUpdated()
+        return nil
     }
     
     fileprivate func playlistUpdated() {

@@ -178,10 +178,10 @@ class PlaylistController: BaseMusicController {
         limitChecked {
             switch self.mode {
             case .playlist:
-                self.player.skip(index)
+                _ = self.player.skip(index)
             default:
                 let track = self.tracks[index]
-                self.playTrack(track)
+                _ = self.playTrack(track)
             }
         }
         tableView.deselectRow(at: indexPath, animated: false)
@@ -195,7 +195,7 @@ class PlaylistController: BaseMusicController {
         if mode == .playlist {
             let index = (indexPath as NSIndexPath).row
             tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
-            limitChecked {
+            _ = limitChecked {
                 self.player.playlist.removeIndex(index)
             }
         } else {
@@ -217,7 +217,7 @@ class PlaylistController: BaseMusicController {
         let newTracks = Arrays.move(sourceRow, destIndex: destinationRow, xs: current.tracks)
         let newIndex = computeNewIndex(sourceRow, dest: destinationRow)
         current = Playlist(tracks: newTracks, index: newIndex)
-        player.playlist.move(sourceRow, dest: destinationRow)
+        _ = player.playlist.move(sourceRow, dest: destinationRow)
     }
     
     func computeNewIndex(_ src: Int, dest: Int) -> Int? {
@@ -234,7 +234,7 @@ class PlaylistController: BaseMusicController {
         default:
             // starts playback of the selected track, and appends the rest to the playlist
             return accessoryAction("Start Playback Here") { _ in
-                self.playTracks(self.tracks.drop(row))
+                _ = self.playTracks(self.tracks.drop(row))
             }
         }
     }
