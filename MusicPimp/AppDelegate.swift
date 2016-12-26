@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISegmentedControl.appearance().backgroundColor = PimpColors.background
         // titles for cell texts
         UILabel.appearance().textColor = PimpColors.titles
-        UISearchBar.appearance().barStyle = PimpColors.barStyle
+//        UISearchBar.appearance().barStyle = PimpColors.searchBarStyle
         UITextView.appearance().backgroundColor = PimpColors.background
         UITextView.appearance().textColor = PimpColors.titles
         PimpView.appearance().backgroundColor = PimpColors.background

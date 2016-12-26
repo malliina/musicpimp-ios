@@ -19,7 +19,9 @@ class PimpColors {
     static let selectedBackground = PimpColors.selected
 //    static let tintColor = UIColor.greenColor()
     static let tintColor = PimpColors.selected
+    // used by tabbar, navigationbar,
     static let barStyle = UIBarStyle.black
+    static let searchBarStyle = UIBarStyle.default
     static let deletion = UIColor.red
     static let placeholder = PimpColors.separator
     static let titleFont = UIFont.boldSystemFont(ofSize: 13)

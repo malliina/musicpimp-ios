@@ -22,7 +22,7 @@ class SearchableMusicController: BaseMusicController {
     
     func itemAt(_ tableView: UITableView, indexPath: IndexPath) -> MusicItem? {
         let items = tableView == self.tableView ? musicItems : resultsController.musicItems
-        let row = (indexPath as NSIndexPath).row
+        let row = indexPath.row
         if items.count > row {
             return items[row]
         } else {
@@ -50,13 +50,18 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         resultsController.tableView.delegate = self
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.placeholder = "Search track or artist"
+        let searchBar = searchController.searchBar
+        searchBar.sizeToFit()
+//        searchBar.searchBarStyle = UISearchBarStyle.minimal
+        searchBar.barStyle = UIBarStyle.default
+//        searchBar.barTintColor = UIColor.clear
+        searchBar.isTranslucent = true
+        searchBar.placeholder = "Search track or artist"
 //        tableView.tableHeaderView = searchController.searchBar
 //        tableView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.size.height)
         searchController.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
+        searchBar.delegate = self
         definesPresentationContext = false
 //        searchController.edgesForExtendedLayout = UIRectEdge.None
     }
