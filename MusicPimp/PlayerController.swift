@@ -38,7 +38,6 @@ class PlayerController: ListeningController {
         let volumeIconFontSize: Int32 = 24
         volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: volumeIconFontSize)
         listenWhenLoaded(player)
-//        labelContianer.backgroundColor = PimpColors.background
         pause.setFontAwesomeTitle(playIconName)
         prevButton.setFontAwesomeTitle("fa-step-backward")
         nextButton.setFontAwesomeTitle("fa-step-forward")

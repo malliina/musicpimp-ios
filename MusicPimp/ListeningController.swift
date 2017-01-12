@@ -23,6 +23,9 @@ class ListeningController: PimpViewController {
         let _ = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
             pc.onNewPlayer
         }
+        let _ = libraryManager.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
+            ivc.onLibraryChanged
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,6 +64,10 @@ class ListeningController: PimpViewController {
     
     func onNewPlayer(_ newPlayer: PlayerType) {
         reinstallListeners(newPlayer)
+    }
+    
+    func onLibraryChanged(_ newLibrary: LibraryType) {
+        
     }
     
     func listenWhenLoaded(_ targetPlayer: PlayerType) {

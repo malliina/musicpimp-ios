@@ -17,7 +17,15 @@ class PlaylistController: BaseMusicController {
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
     let minItemsRemainingBeforeLoadMore = 20
-    let emptyMessage = "The playlist is empty."
+    var emptyMessage: String {
+        get {
+            switch mode {
+            case .playlist: return "The playlist is empty."
+            case .popular: return "No popular tracks."
+            case .recent: return "No recent tracks."
+            }
+        }
+    }
     var mode: ListMode = .playlist
     var current: Playlist = Playlist.empty
     var recent: [RecentEntry] = []
@@ -61,7 +69,7 @@ class PlaylistController: BaseMusicController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillDisappear(animated)
         if !DownloadUpdater.instance.isEmpty {
             reloadOnDidAppear = true
         }
@@ -137,8 +145,8 @@ class PlaylistController: BaseMusicController {
     
     // parent calls this one
     func maybeRefresh(_ targetMode: ListMode) {
+        Log.info("Refreshing with mode \(targetMode)")
         mode = targetMode
-        //dragButton.enabled = targetMode == .Playlist
         switch targetMode {
         case .playlist:
             reRenderTable()
@@ -241,7 +249,9 @@ class PlaylistController: BaseMusicController {
 
     func onNewPlaylist(_ playlist: Playlist) {
         self.current = playlist
-        reRenderTable()
+        if mode == .playlist {
+            reRenderTable()
+        }
     }
     
     func onRecentsLoaded(_ recents: [RecentEntry]) {

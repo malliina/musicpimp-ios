@@ -18,6 +18,7 @@ class PlaylistParent: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 //        let saveButton = PimpBarButton.system(.Save, target: self, onClick: self.savePlaylistAction)
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.savePlaylistAction))
         saveButton.style = UIBarButtonItemStyle.done
@@ -31,8 +32,14 @@ class PlaylistParent: ContainerParent {
         initScope(scopeSegment)
     }
     
+    override func onLibraryChanged(_ newLibrary: LibraryType) {
+        scopeChanged(scopeSegment)
+    }
+    
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
         ctrl.addTarget(self, action: #selector(self.scopeChanged(_:)), for: UIControlEvents.valueChanged)
+        //ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.red], for: UIControlState.selected)
+        ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: UIControlState.normal)
     }
     
     func scopeChanged(_ ctrl: UISegmentedControl) {
@@ -67,7 +74,6 @@ class PlaylistParent: ContainerParent {
         return findChild()
     }
     
-
     func savePlaylistAction(_ item: UIBarButtonItem) {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?
@@ -104,7 +110,6 @@ class PlaylistParent: ContainerParent {
             if let spvc = vc as? SavePlaylistViewController, let playlist = savedPlaylist {
                 spvc.name = playlist.name
             }
-            //            self.navigationController?.pushViewController(vc, animated: true)
             let navController = UINavigationController(rootViewController: vc)
             self.present(navController, animated: true, completion: nil)
         } else {

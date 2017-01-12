@@ -66,7 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let backgroundView = PimpView()
         backgroundView.backgroundColor = PimpColors.selectedBackground
         UITableViewCell.appearance().selectedBackgroundView = backgroundView
-        UISegmentedControl.appearance().backgroundColor = PimpColors.background
+        //UISegmentedControl.appearance().backgroundColor = PimpColors.background
         // titles for cell texts
         UILabel.appearance().textColor = PimpColors.titles
 //        UISearchBar.appearance().barStyle = PimpColors.searchBarStyle
