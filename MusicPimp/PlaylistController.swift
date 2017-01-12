@@ -168,12 +168,12 @@ class PlaylistController: BaseMusicController {
         formatter.doesRelativeDateFormatting = true
         let formattedDate = formatter.string(from: track.when)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
-        installTrackAccessoryView(cell)
+        installTrackAccessoryView(cell, true)
     }
     
     func decoratePopularCell(_ cell: MainAndSubtitleCell, track: PopularEntry) {
         decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
-        installTrackAccessoryView(cell)
+        installTrackAccessoryView(cell, true)
     }
     
     func decorateTwoLines(_ cell: MainAndSubtitleCell, first: String, second: String) {
