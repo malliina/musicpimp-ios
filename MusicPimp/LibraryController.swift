@@ -229,6 +229,7 @@ class LibraryController: SearchableMusicController {
 
 extension LibraryController {
     func onProgress(track: TrackProgress) {
+        //Log.info("track \(track.track.title) \(track.dpu.written)")
         if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
             updateRows(row: index)
         }

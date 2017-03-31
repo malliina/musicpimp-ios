@@ -77,7 +77,7 @@ class PimpTableController: FeedbackTable {
     
     fileprivate func playAndDownload2(_ track: Track) -> ErrorMessage? {
         let error = player.resetAndPlay(track)
-        if error != nil {
+        if error == nil {
             return downloadIfNeeded([track]).headOption()
         } else {
             return error
@@ -88,6 +88,7 @@ class PimpTableController: FeedbackTable {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
             let tracksToDownload = newTracks.take(maxNewDownloads)
+            Log.info("Downloading \(tracksToDownload.count) tracks")
             return tracksToDownload.flatMapOpt({ (track) -> ErrorMessage? in
                 startDownload(track)
             })

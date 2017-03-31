@@ -193,7 +193,6 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
                 try fileManager.removeItem(at: destURL)
                 Log.info("Removed previous version of \(destURL).")
             } catch {
-                
             }
             let relPath = downloadInfo.relativePath
             do {
@@ -221,7 +220,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
             events.raise(update)
         } else {
             if taskOpt == nil {
-                info("Download task not found: \(taskID)")
+                //info("Download task not found: \(taskID)")
             } else {
                 info("Unable to parse bytes of download progress: \(bytesWritten), \(totalBytesWritten)")
             }

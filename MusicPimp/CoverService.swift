@@ -59,8 +59,12 @@ class CoverService {
     }
     
     fileprivate func coverURL(_ artist: String, album: String) -> URL? {
-        let artEnc = artist.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? artist
-        let albEnc = album.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? album
+        let artEnc = queryStringEncoded(s: artist)
+        let albEnc = queryStringEncoded(s: album)
         return URL(string: "https://api.musicpimp.org/covers?artist=\(artEnc)&album=\(albEnc)")
+    }
+    
+    func queryStringEncoded(s: String) -> String {
+        return s.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? s
     }
 }

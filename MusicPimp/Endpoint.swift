@@ -43,8 +43,12 @@ class Endpoint: CustomStringConvertible {
         }
     }
     
+//    convenience init?(id: String, cloudID: String, username: String, password: String) {
+//        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
+//    }
+    
     convenience init?(id: String, cloudID: String, username: String, password: String) {
-        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
+        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: false, address: "10.0.0.21", port: 9000, username: username, password: password)
     }
     
     // TODO polymorphism
