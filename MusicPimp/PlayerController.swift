@@ -9,27 +9,23 @@
 import Foundation
 import UIKit
 
-class PlayerController: ListeningController {
+class PlayerController: ListeningController, PlaybackDelegate {
     static let seekThumbImage = UIImage(named: "oval-32.png")
     
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
+    @IBOutlet var playbackFooter: PlaybackFooter!
     @IBOutlet var labelContainer: UIView!
     @IBOutlet var volumeBarButton: UIBarButtonItem!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var albumLabel: UILabel!
     @IBOutlet var artistLabel: UILabel!
-    @IBOutlet var pause: UIButton!
-    @IBOutlet var prevButton: UIButton!
-    @IBOutlet var nextButton: UIButton!
     @IBOutlet var seek: UISlider!
     @IBOutlet var positionLabel: UILabel!
     @IBOutlet var durationLabel: UILabel!
     
     @IBOutlet var coverImage: UIImageView!
-    
-    let playIconName = "fa-play"
     
     let minHeightForNav: CGFloat = 450
     
@@ -37,10 +33,9 @@ class PlayerController: ListeningController {
         super.viewDidLoad()
         let volumeIconFontSize: Int32 = 24
         volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: volumeIconFontSize)
+        playbackFooter.delegate = self
+        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
         listenWhenLoaded(player)
-        pause.setFontAwesomeTitle(playIconName)
-        prevButton.setFontAwesomeTitle("fa-step-backward")
-        nextButton.setFontAwesomeTitle("fa-step-forward")
         self.labelContainer.backgroundColor = PimpColors.background
         albumLabel.textColor = PimpColors.subtitles
         positionLabel.textColor = PimpColors.subtitles
@@ -71,8 +66,7 @@ class PlayerController: ListeningController {
     }
     
     func updatePlayPause(_ isPlaying: Bool) {
-        let faIcon = isPlaying ? "fa-pause" : playIconName
-        pause.setFontAwesomeTitle(faIcon)
+        playbackFooter.updatePlayPause(isPlaying: isPlaying)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -142,8 +136,20 @@ class PlayerController: ListeningController {
         updatePlayPause(state == .Playing)
     }
     
-    @IBAction func pauseClicked(_ sender: AnyObject) {
-        self.playOrPause()
+    func onPrev() {
+        _ = limitChecked {
+            self.player.prev()
+        }
+    }
+    
+    func onPlayPause() {
+        playOrPause()
+    }
+    
+    func onNext() {
+        _ = limitChecked {
+            self.player.next()
+        }
     }
     
     fileprivate func playOrPause() {
@@ -160,24 +166,11 @@ class PlayerController: ListeningController {
         let seekValue = seek.value
         // TODO throttle
         if let pos = seekValue.seconds {
-            info("Seek to \(seekValue)")
             _ = limitChecked {
                 self.player.seek(pos)
             }
         } else {
             Log.info("Unable to convert value to Duration: \(seekValue)")
-        }
-    }
-    
-    @IBAction func nextClicked(_ sender: AnyObject) {
-        _ = limitChecked {
-            self.player.next()
-        }
-    }
-    
-    @IBAction func previousClicked(_ sender: AnyObject) {
-        _ = limitChecked {
-            self.player.prev()
         }
     }
     

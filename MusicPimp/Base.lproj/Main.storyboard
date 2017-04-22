@@ -10,11 +10,6 @@
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="FontAwesome.ttf">
-            <string>FontAwesome</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--MUSIC-->
         <scene sceneID="AKp-e0-Oph">
@@ -385,50 +380,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gNd-Wx-vhV" customClass="PimpButton" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="247.5" y="563" width="103.5" height="47"/>
-                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="35"/>
-                                <state key="normal" title="&gt;">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="nextClicked:" destination="f4S-4e-fvh" eventType="touchUpInside" id="eR0-zh-djR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJx-uE-1K7" customClass="PimpButton" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="24" y="563" width="103.5" height="47"/>
-                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="35"/>
-                                <state key="normal" title="&lt;">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="previousClicked:" destination="f4S-4e-fvh" eventType="touchUpInside" id="PYV-tW-Fwp"/>
-                                </connections>
-                            </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="wlc-QP-kpP" customClass="PimpSlider" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="22" y="517" width="331" height="31"/>
+                                <rect key="frame" x="22" y="506" width="331" height="31"/>
                                 <connections>
                                     <action selector="sliderChanged:" destination="f4S-4e-fvh" eventType="valueChanged" id="lrd-W8-h2W"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okO-f9-gIo" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="300" y="500" width="51" height="15"/>
+                                <rect key="frame" x="300" y="489" width="51" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfo-hW-UGT" customClass="PimpButton" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="135.5" y="555" width="104" height="63"/>
-                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="50"/>
-                                <state key="normal" title="P">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pauseClicked:" destination="f4S-4e-fvh" eventType="touchUpInside" id="rRA-Cx-On3"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Fb6-Fa-cUz" userLabel="labelContainer">
-                                <rect key="frame" x="16" y="392" width="343" height="100"/>
+                                <rect key="frame" x="16" y="381" width="343" height="100"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yxa-2r-5U5" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
                                         <rect key="frame" x="8" y="50" width="327" height="21"/>
@@ -464,10 +429,10 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-8w-MU5" userLabel="coverContainer">
-                                <rect key="frame" x="24" y="72" width="327" height="316"/>
+                                <rect key="frame" x="24" y="72" width="327" height="305"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="pimp-512.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZwI-4B-Qxg">
-                                        <rect key="frame" x="-92.5" y="-98" width="512" height="512"/>
+                                        <rect key="frame" x="-92.5" y="-103.5" width="512" height="512"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -477,40 +442,38 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNY-mM-L8n" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="24" y="501" width="47" height="14"/>
+                                <rect key="frame" x="24" y="490" width="47" height="14"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chB-Me-lua" customClass="PlaybackFooter" customModule="MusicPimp" customModuleProvider="target">
+                                <rect key="frame" x="16" y="544" width="343" height="66"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="66" id="nJh-OJ-IGb"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="gNd-Wx-vhV" firstAttribute="leading" secondItem="mfo-hW-UGT" secondAttribute="trailing" constant="8" id="2yy-dx-gPF"/>
                             <constraint firstItem="okO-f9-gIo" firstAttribute="top" secondItem="Fb6-Fa-cUz" secondAttribute="bottom" constant="8" id="3oW-y5-y66"/>
-                            <constraint firstItem="zFx-Jp-bmB" firstAttribute="top" secondItem="gNd-Wx-vhV" secondAttribute="bottom" constant="8" id="8SS-Ec-ohG"/>
-                            <constraint firstItem="zFx-Jp-bmB" firstAttribute="top" secondItem="mfo-hW-UGT" secondAttribute="bottom" id="AML-oa-sOJ"/>
+                            <constraint firstItem="zFx-Jp-bmB" firstAttribute="top" secondItem="chB-Me-lua" secondAttribute="bottom" constant="8" id="C4q-3F-sod"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Fb6-Fa-cUz" secondAttribute="trailing" id="DLK-c4-c1m"/>
-                            <constraint firstItem="zFx-Jp-bmB" firstAttribute="top" secondItem="PJx-uE-1K7" secondAttribute="bottom" constant="8" id="HV6-k0-HdY"/>
-                            <constraint firstItem="PJx-uE-1K7" firstAttribute="width" secondItem="mfo-hW-UGT" secondAttribute="width" id="Jpw-Tg-l3a"/>
-                            <constraint firstItem="mfo-hW-UGT" firstAttribute="top" secondItem="wlc-QP-kpP" secondAttribute="bottom" constant="8" id="KEH-z0-7T1"/>
                             <constraint firstAttribute="trailingMargin" secondItem="okO-f9-gIo" secondAttribute="trailing" constant="8" id="MeJ-oH-2FY"/>
-                            <constraint firstItem="gNd-Wx-vhV" firstAttribute="centerY" secondItem="mfo-hW-UGT" secondAttribute="centerY" id="UFG-Z9-ueX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wlc-QP-kpP" secondAttribute="trailing" constant="8" id="UPZ-tK-Dhl"/>
                             <constraint firstItem="5Vj-8w-MU5" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" constant="8" id="Uwr-eT-fEj"/>
+                            <constraint firstItem="chB-Me-lua" firstAttribute="top" secondItem="wlc-QP-kpP" secondAttribute="bottom" constant="8" id="VlO-8U-Uep"/>
                             <constraint firstItem="HNY-mM-L8n" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" constant="8" id="XLn-AX-R4O"/>
-                            <constraint firstItem="mfo-hW-UGT" firstAttribute="width" secondItem="gNd-Wx-vhV" secondAttribute="width" id="cyS-cL-mG4"/>
-                            <constraint firstItem="PJx-uE-1K7" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" constant="8" id="dXg-be-Jjv"/>
                             <constraint firstItem="wlc-QP-kpP" firstAttribute="top" secondItem="okO-f9-gIo" secondAttribute="bottom" constant="2" id="fPz-6z-B3s"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="gNd-Wx-vhV" secondAttribute="trailing" constant="8" id="ib2-H6-m8D"/>
-                            <constraint firstItem="PJx-uE-1K7" firstAttribute="centerY" secondItem="mfo-hW-UGT" secondAttribute="centerY" id="kHB-mJ-Uv0"/>
+                            <constraint firstItem="chB-Me-lua" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" id="hXK-Md-xpZ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5Vj-8w-MU5" secondAttribute="trailing" constant="8" id="mQI-5h-rFo"/>
-                            <constraint firstItem="mfo-hW-UGT" firstAttribute="centerX" secondItem="afz-lM-Twv" secondAttribute="centerX" id="mV6-Wj-QqC"/>
                             <constraint firstItem="Fb6-Fa-cUz" firstAttribute="top" secondItem="5Vj-8w-MU5" secondAttribute="bottom" constant="4" id="mg0-Df-Ntn"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="chB-Me-lua" secondAttribute="trailing" id="nwP-g6-xg0"/>
                             <constraint firstItem="5Vj-8w-MU5" firstAttribute="top" secondItem="UkG-Qi-IrF" secondAttribute="bottom" constant="8" id="oiS-N6-LJf"/>
                             <constraint firstItem="Fb6-Fa-cUz" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" id="otr-s3-sEG"/>
                             <constraint firstItem="wlc-QP-kpP" firstAttribute="leading" secondItem="afz-lM-Twv" secondAttribute="leadingMargin" constant="8" id="pia-w1-EwK"/>
                             <constraint firstItem="wlc-QP-kpP" firstAttribute="top" secondItem="HNY-mM-L8n" secondAttribute="bottom" constant="2" id="q1h-Iu-sbh"/>
-                            <constraint firstItem="mfo-hW-UGT" firstAttribute="leading" secondItem="PJx-uE-1K7" secondAttribute="trailing" constant="8" id="zHV-OA-oYb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PLAYER" id="eri-hT-qjU">
@@ -526,10 +489,8 @@
                         <outlet property="coverImage" destination="ZwI-4B-Qxg" id="hU4-DX-Fyi"/>
                         <outlet property="durationLabel" destination="okO-f9-gIo" id="XO7-ke-s5N"/>
                         <outlet property="labelContainer" destination="Fb6-Fa-cUz" id="VRR-aJ-gkv"/>
-                        <outlet property="nextButton" destination="gNd-Wx-vhV" id="bnl-HI-LNI"/>
-                        <outlet property="pause" destination="mfo-hW-UGT" id="2mi-T9-4qv"/>
+                        <outlet property="playbackFooter" destination="chB-Me-lua" id="0cC-BO-llh"/>
                         <outlet property="positionLabel" destination="HNY-mM-L8n" id="wzl-sU-YBa"/>
-                        <outlet property="prevButton" destination="PJx-uE-1K7" id="n8x-H1-vsl"/>
                         <outlet property="seek" destination="wlc-QP-kpP" id="8qV-QF-jAU"/>
                         <outlet property="titleLabel" destination="Hdm-UC-hpW" id="8Pu-cl-dHI"/>
                         <outlet property="volumeBarButton" destination="3iK-V0-dOF" id="O7o-Wo-nhz"/>
@@ -537,7 +498,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hzc-Kt-tNX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="732" y="1670"/>
+            <point key="canvasLocation" x="732" y="1669.1154422788607"/>
         </scene>
         <!--SET VOLUME-->
         <scene sceneID="v06-6F-Vig">

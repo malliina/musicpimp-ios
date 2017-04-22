@@ -32,6 +32,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     override func onStateChanged(_ state: PlaybackState) {
         let isVisible = state == .Playing
         Util.onUiThread {
+            self.playbackFooter.updatePlayPause(isPlaying: isVisible)
             self.playbackFooter.isHidden = !isVisible
             self.playbackFooterHeight.constant = isVisible ? self.playbackFooterHeightValue : 0
         }

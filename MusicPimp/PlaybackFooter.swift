@@ -21,7 +21,6 @@ class PlaybackFooter: UIView {
     @IBOutlet var nextButton: UIButton!
 
     var delegate: PlaybackDelegate? = nil
-    
    
     @IBAction func prevClicked(_ sender: UIButton) {
         delegate?.onPrev()
@@ -35,13 +34,38 @@ class PlaybackFooter: UIView {
     
     var contentView : UIView?
     
+    let playIconName = "fa-play"
+    let pauseIconName = "fa-pause"
+    
+    func updatePlayPause(isPlaying: Bool) {
+        let iconName = isPlaying ? pauseIconName : playIconName
+        playPauseButton.setFontAwesomeTitle(iconName)
+    }
+    
+    func setSizes(prev: CGFloat, playPause: CGFloat, next: CGFloat) {
+        setAwesomeSize(button: prevButton, size: prev)
+        setAwesomeSize(button: playPauseButton, size: playPause)
+        setAwesomeSize(button: nextButton, size: next)
+    }
+    
+    private func setAwesomeSize(button: UIButton, size: CGFloat) {
+        button.titleLabel?.font = UIFont(awesomeFontOfSize: size)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = PimpColors.background
         self.contentView?.backgroundColor = PimpColors.background
         prevButton.setFontAwesomeTitle("fa-step-backward")
-        playPauseButton.setFontAwesomeTitle("fa-pause")
+        updatePlayPause(isPlaying: false)
         nextButton.setFontAwesomeTitle("fa-step-forward")
+        initColor(buttons: [prevButton, playPauseButton, nextButton])
+    }
+    
+    private func initColor(buttons: [UIButton]) {
+        buttons.forEach { (button) in
+            button.titleLabel?.textColor = PimpColors.tintColor
+        }
     }
     
     override init(frame: CGRect) {
