@@ -625,13 +625,13 @@
 		7DC206A31A1547370032C01D /* MusicPimp */ = {
 			isa = PBXGroup;
 			children = (
-				7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */,
 				7DC206A61A1547370032C01D /* AppDelegate.swift */,
 				7DF5C00B1AED50B300F25B9B /* Arrays.swift */,
 				7D9E48A81ADA78C500D5CDDF /* Audio */,
 				7DBCD79E1B26120C006460D1 /* Cloud */,
 				7DC891541D71B75800331A4D /* Colors.swift */,
 				7D31C1461BC81C7200189687 /* ColorScheme */,
+				7D622DCA1DC61EAD00958FAA /* CompositeDisposable.swift */,
 				7D349E7E1D8543E500EE9AF4 /* Concurrent */,
 				7D78C2941AF3CCA8001F0A65 /* Disposable.swift */,
 				7D0CA98F1AF69950008F72EC /* Endpoint.swift */,
@@ -649,6 +649,7 @@
 				7D9E48A61AD972A800D5CDDF /* Log.swift */,
 				7DC206AC1A1547370032C01D /* Main.storyboard */,
 				7DE944D11BE67B5A00CD441B /* Models */,
+				7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */,
 				7D0CA9931AF699C6008F72EC /* Network */,
 				7D6756BC1B01094800BC0CA9 /* Persistence.swift */,
 				7DB1B3A71B10C08A0012B8AE /* Pimp */,
@@ -669,7 +670,6 @@
 				7D748D1C1AC724B5009B0401 /* Util.swift */,
 				7DBCD7A31B28B547006460D1 /* ViewControllers */,
 				7D31A32F1C679B750035E9D0 /* Views */,
-				7D622DCA1DC61EAD00958FAA /* CompositeDisposable.swift */,
 			);
 			path = MusicPimp;
 			sourceTree = "<group>";

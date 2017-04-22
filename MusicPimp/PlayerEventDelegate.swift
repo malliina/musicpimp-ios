@@ -43,7 +43,7 @@ class LoggingDelegate : PlayerEventDelegate {
     }
     
     func onTrackChanged(_ track: Track?) {
-        log("Track: \(track?.id)")
+        log("Track: \(track?.id ?? "None")")
     }
     
     func onMuteToggled(_ mute: Bool) {
@@ -59,7 +59,7 @@ class LoggingDelegate : PlayerEventDelegate {
     }
     
     func onIndexChanged(_ index: Int?) {
-        log("Index: \(index)")
+        log("Index: \(index ?? -1)")
     }
     
     func onPlaylistModified(_ tracks: [Track]) {

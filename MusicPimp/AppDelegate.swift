@@ -43,10 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
         for dir in contents.folders {
-            Log.info("\(dir.name), last modified: \(dir.lastModified?.description), accessed: \(dir.lastAccessed)")
+            Log.info("\(dir.name), last modified: \(dir.lastModified?.description ?? "never"), accessed: \(dir.lastAccessed?.description ?? "never")")
         }
         for file in contents.files {
-            Log.info("\(file.name), size: \(file.size), last modified: \(file.lastModified?.description)")
+            Log.info("\(file.name), size: \(file.size), last modified: \(file.lastModified?.description ?? "never")")
         }
         let dirs = contents.folders.count
         let files = contents.files.count

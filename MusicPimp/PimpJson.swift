@@ -46,7 +46,7 @@ open class PimpJson {
     func toJson(_ di: DownloadInfo) -> [String: AnyObject] {
         return [
             PimpJson.RELATIVE_PATH: di.relativePath as AnyObject,
-            PimpJson.DESTINATION_URL: di.destinationURL.absoluteString as AnyObject? ?? "" as AnyObject
+            PimpJson.DESTINATION_URL: di.destinationURL.absoluteString as AnyObject
         ]
     }
     

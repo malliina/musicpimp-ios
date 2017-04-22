@@ -148,12 +148,13 @@ class EditAlarmTableViewController: BaseTableController {
                 if let track = mutableAlarm?.track, let endpoint = endpoint {
                     let player = Players.fromEndpoint(endpoint)
                     player.open({ () -> Void in
-                        let success = player.resetAndPlay(track)
+                        let success = player.resetAndPlay(track)?.message ?? "success"
                         Log.info("Playing \(track.title): \(success)")
                         player.close()
                         }, onError: onConnectError)
                 } else {
-                    Log.error("Cannot play track, \(mutableAlarm?.track?.title)")
+                    let desc = mutableAlarm?.track?.title ?? "no alarm or track"
+                    Log.error("Cannot play track, \(desc)")
                 }
                 break
             default:

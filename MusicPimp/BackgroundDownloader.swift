@@ -137,7 +137,10 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         let request = URLRequest(url: src)
         let task = session.downloadTask(with: request)
         saveTask(task.taskIdentifier, di: info)
-        task.resume()
+        // Delays the (background) download so that any playback might start earlier
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10), execute: {
+            task.resume()
+        })
     }
     
     func saveTask(_ taskID: Int, di: DownloadInfo) {
@@ -240,7 +243,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         let sid = session.configuration.identifier
-        info("All complete for session \(sid)")
+        info("All complete for session \(sid ?? "unknown")")
         if let sid = sid, let app = UIApplication.shared.delegate as? AppDelegate,
             let handler = app.downloadCompletionHandlers.removeValue(forKey: sid) {
                 handler()

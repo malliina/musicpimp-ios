@@ -19,7 +19,7 @@ open class SavedPlaylist {
         self.tracks = tracks
     }
     
-    open var description: String { get { return "Playlist(\(id), \(name), \(tracks.mkString(", ")))" } }
+    open var description: String { get { return "Playlist(\(id ?? PlaylistID(id: -1)), \(name), \(tracks.mkString(", ")))" } }
     
     open static func toJson(_ sp: SavedPlaylist) -> [String: AnyObject] {
         let trackIDs = sp.tracks.map { $0.id }

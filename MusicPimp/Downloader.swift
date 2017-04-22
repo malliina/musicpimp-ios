@@ -42,7 +42,7 @@ class Downloader {
             Log.info("Downloading \(url)")
             let request = URLRequest(url: url)
             NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.current!) { (response, data, err) -> Void in
-                if(err != nil) {
+                if let err = err {
                     onError(self.simpleError("Error \(err)"))
                 } else {
                     if let response = response as? HTTPURLResponse {
