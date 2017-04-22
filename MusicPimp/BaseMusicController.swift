@@ -25,7 +25,7 @@ class BaseMusicController : PimpTableController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return musicItems.count
+        return currentFeedback == nil ? musicItems.count : 0
     }
     
     override func viewWillDisappear(_ animated: Bool) {

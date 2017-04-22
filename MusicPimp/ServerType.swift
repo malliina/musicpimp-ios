@@ -15,12 +15,12 @@ public struct ServerType {
 }
 
 class ServerTypes {
-    static let MusicPimp = ServerType(name: "MusicPimp", index: 0)
-    static let Cloud = ServerType(name: "Cloud", index: 1)
+    static let Cloud = ServerType(name: "Cloud", index: 0)
+    static let MusicPimp = ServerType(name: "MusicPimp", index: 1)
     static let Subsonic = ServerType(name: "Subsonic", index: 2)
     static let Local = ServerType(name: "Local", index: 3)
     
-    static let All = [MusicPimp, Cloud, Subsonic]
+    static let All = [Cloud, MusicPimp, Subsonic]
     
     static func fromIndex(_ i: Int) -> ServerType? {
         return All.find({ $0.index == i })

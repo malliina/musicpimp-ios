@@ -99,6 +99,5 @@ class PimpTableController: FeedbackTable {
     
     func startDownload(_ track: Track) -> ErrorMessage? {
         return DownloadUpdater.instance.download(track: track)
-        //return nil
     }
 }

@@ -8,27 +8,15 @@
 
 import Foundation
 
-class ContainerParent: ListeningController {
-    @IBOutlet var prevButton: UIButton!
-    @IBOutlet var playButton: UIButton!
-    @IBOutlet var nextButton: UIButton!
+class ContainerParent: ListeningController, PlaybackDelegate {
+    let playbackFooterHeightValue: CGFloat = 44
     
-    @IBOutlet var playBottom: NSLayoutConstraint!
-    @IBOutlet var nextBottom: NSLayoutConstraint!
-    @IBOutlet var prevBottom: NSLayoutConstraint!
-    @IBOutlet var nextTop: NSLayoutConstraint!
-    @IBOutlet var prevHeight: NSLayoutConstraint!
-    @IBOutlet var playHeight: NSLayoutConstraint!
-    @IBOutlet var nextHeight: NSLayoutConstraint!
-    
-    var constraintToggle: ConstraintToggle? = nil
+    @IBOutlet var playbackFooter: PlaybackFooter!
+    @IBOutlet var playbackFooterHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        constraintToggle = ConstraintToggle(constraints: [prevBottom, playBottom, nextBottom, nextTop, prevHeight, playHeight, nextHeight])
-        prevButton.setFontAwesomeTitle("fa-step-backward")
-        playButton.setFontAwesomeTitle("fa-pause")
-        nextButton.setFontAwesomeTitle("fa-step-forward")
+        playbackFooter.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -43,25 +31,22 @@ class ContainerParent: ListeningController {
 
     override func onStateChanged(_ state: PlaybackState) {
         let isVisible = state == .Playing
-        let toggle = self.constraintToggle
         Util.onUiThread {
-            self.playButton.isHidden = !isVisible
-            self.prevButton.isHidden = !isVisible
-            self.nextButton.isHidden = !isVisible
-            if isVisible {
-                toggle?.show()
-            } else {
-                toggle?.hide()
-            }
+            self.playbackFooter.isHidden = !isVisible
+            self.playbackFooterHeight.constant = isVisible ? self.playbackFooterHeightValue : 0
         }
     }
     
-    @IBAction func prevClicked(_ sender: UIButton) {
+    func onPrev() {
         _ = player.prev()
     }
     
-    @IBAction func playPauseClicked(_ sender: UIButton) {
+    func onPlayPause() {
         self.playOrPause()
+    }
+    
+    func onNext() {
+        _ = player.next()
     }
     
     fileprivate func playOrPause() {
@@ -72,10 +57,6 @@ class ContainerParent: ListeningController {
                 self.player.play()
             }
         }
-    }
-    
-    @IBAction func nextClicked(_ sender: UIButton) {
-        _ = player.next()
     }
     
     func findChild<T>() -> T? {

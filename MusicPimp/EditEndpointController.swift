@@ -39,6 +39,8 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         }
         if let editedItem = editedItem {
             fill(editedItem)
+        } else {
+            updateVisibility(segment: typeControl)
         }
     }
     
@@ -64,8 +66,14 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
     }
     
     @IBAction func serverTypeChanged(_ sender: UISegmentedControl) {
-        if let serverType = readServerType(sender) {
+        updateVisibility(segment: sender)
+    }
+    
+    func updateVisibility(segment: UISegmentedControl) {
+        if let serverType = readServerType(segment) {
             adjustVisibility(serverType)
+        } else {
+            Log.error("Unable to determine server type.")
         }
     }
     

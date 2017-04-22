@@ -13,6 +13,7 @@ class BaseTableController: UITableViewController {
     let settings = PimpSettings.sharedInstance
     
     let limiter = Limiter.sharedInstance
+    var currentFeedback: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,10 +56,12 @@ class BaseTableController: UITableViewController {
     }
     
     func setFeedback(_ feedback: String) {
+        currentFeedback = feedback
         configureTable(background: self.feedbackLabel(feedback), separatorStyle: UITableViewCellSeparatorStyle.none)
     }
     
     func clearFeedback() {
+        currentFeedback = nil
         configureTable(background: nil, separatorStyle: UITableViewCellSeparatorStyle.singleLine)
     }
     

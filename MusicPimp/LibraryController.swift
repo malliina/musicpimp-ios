@@ -15,6 +15,7 @@ class LibraryController: SearchableMusicController {
     let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
     let loadingMessage = "Loading..."
     let noTracksMessage = "No tracks."
+    let FolderCellId = "FolderCell"
     
     var folder: MusicFolder = MusicFolder.empty
     override var musicItems: [MusicItem] { return folder.items }
@@ -115,7 +116,7 @@ class LibraryController: SearchableMusicController {
         let item = musicItems[(indexPath as NSIndexPath).row]
         let isFolder = item as? Folder != nil
         if isFolder {
-            let folderCell = identifiedCell("FolderCell", index: indexPath)
+            let folderCell = identifiedCell(FolderCellId, index: indexPath)
             folderCell.textLabel?.text = item.title
             folderCell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             return folderCell

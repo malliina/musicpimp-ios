@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
+		610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
 		7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D072FEE1B12394E000D416D /* PlayerSocket.swift */; };
@@ -185,6 +187,8 @@
 		1A6A61E06A765CCD8765B423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		1BE3548DC70AC366EDEEE0B3 /* libPods-MusicPimp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MusicPimp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		565D35CA22DF7A73D3BE5F17 /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
+		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
+		610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
 		7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEventDelegate.swift; sourceTree = "<group>"; };
 		7D072FEE1B12394E000D416D /* PlayerSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSocket.swift; sourceTree = "<group>"; };
@@ -447,6 +451,8 @@
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
+				610350461EAB9ED700F85F04 /* PlaybackFooter.xib */,
+				610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -553,6 +559,7 @@
 				7D66863D1B498200003C92E4 /* CacheLimitController.swift */,
 				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
 				7DC891461D5F4C0000331A4D /* ContainerParent.swift */,
+				7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */,
 				7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */,
 				7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */,
 				7D0CA9891AF68EE7008F72EC /* EndpointsController.swift */,
@@ -586,7 +593,6 @@
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
-				7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -839,6 +845,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DC206AE1A1547370032C01D /* Main.storyboard in Resources */,
+				610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */,
 				7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */,
 				7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */,
 				7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */,
@@ -873,6 +880,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D61A7011AA4E14F00F21622 /* LibraryController.swift in Sources */,
+				610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */,
 				7DC3596F1B37121F003B01B6 /* PlaylistNavController.swift in Sources */,
 				7DB1B3B21B1102270012B8AE /* PimpPlaylist.swift in Sources */,
 				7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */,

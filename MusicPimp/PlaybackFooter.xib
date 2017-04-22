@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="FontAwesome.ttf">
+            <string>FontAwesome</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaybackFooter" customModule="MusicPimp" customModuleProvider="target">
+            <connections>
+                <outlet property="nextButton" destination="P4E-Jd-jg7" id="GQg-bs-MkY"/>
+                <outlet property="playPauseButton" destination="ymV-yr-Dxt" id="ovA-lO-rD7"/>
+                <outlet property="prevButton" destination="Shk-Xm-ahe" id="hWo-PZ-1nJ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Shk-Xm-ahe">
+                    <rect key="frame" x="0.0" y="0.0" width="119.5" height="44"/>
+                    <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="17"/>
+                    <state key="normal" title="&lt;"/>
+                    <connections>
+                        <action selector="prevClicked:" destination="-1" eventType="touchUpInside" id="2Hw-XA-TLR"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ymV-yr-Dxt">
+                    <rect key="frame" x="127.5" y="0.0" width="120" height="44"/>
+                    <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="17"/>
+                    <state key="normal" title="P"/>
+                    <connections>
+                        <action selector="playPauseClicked:" destination="-1" eventType="touchUpInside" id="Y3D-gX-ghl"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P4E-Jd-jg7">
+                    <rect key="frame" x="255.5" y="0.0" width="119.5" height="44"/>
+                    <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="17"/>
+                    <state key="normal" title="&gt;"/>
+                    <connections>
+                        <action selector="nextClicked:" destination="-1" eventType="touchUpInside" id="UkE-rT-1pO"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="P4E-Jd-jg7" firstAttribute="width" secondItem="Shk-Xm-ahe" secondAttribute="width" id="JAW-ss-4Bp"/>
+                <constraint firstItem="P4E-Jd-jg7" firstAttribute="height" secondItem="Shk-Xm-ahe" secondAttribute="height" id="NoJ-DR-MCN"/>
+                <constraint firstItem="P4E-Jd-jg7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="RKc-yb-Jib"/>
+                <constraint firstItem="P4E-Jd-jg7" firstAttribute="leading" secondItem="ymV-yr-Dxt" secondAttribute="trailing" constant="8" id="Sel-Bq-eh5"/>
+                <constraint firstItem="Shk-Xm-ahe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="YGN-v0-Ff4"/>
+                <constraint firstItem="ymV-yr-Dxt" firstAttribute="leading" secondItem="Shk-Xm-ahe" secondAttribute="trailing" constant="8" id="Z1n-ig-jqY"/>
+                <constraint firstItem="Shk-Xm-ahe" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="aMo-td-bff"/>
+                <constraint firstItem="ymV-yr-Dxt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="eYd-BH-bx2"/>
+                <constraint firstItem="ymV-yr-Dxt" firstAttribute="height" secondItem="Shk-Xm-ahe" secondAttribute="height" id="f32-RF-Ib9"/>
+                <constraint firstItem="ymV-yr-Dxt" firstAttribute="leading" secondItem="Shk-Xm-ahe" secondAttribute="trailing" constant="8" id="hyP-VB-tUT"/>
+                <constraint firstAttribute="bottom" secondItem="P4E-Jd-jg7" secondAttribute="bottom" id="kDl-3k-MVG"/>
+                <constraint firstAttribute="bottom" secondItem="Shk-Xm-ahe" secondAttribute="bottom" id="oNO-2b-w67"/>
+                <constraint firstAttribute="trailing" secondItem="P4E-Jd-jg7" secondAttribute="trailing" id="sic-da-qhF"/>
+                <constraint firstItem="ymV-yr-Dxt" firstAttribute="width" secondItem="Shk-Xm-ahe" secondAttribute="width" id="tKo-CK-s3b"/>
+                <constraint firstAttribute="bottom" secondItem="ymV-yr-Dxt" secondAttribute="bottom" id="tPF-pQ-PjS"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-35" y="16"/>
+        </view>
+    </objects>
+</document>

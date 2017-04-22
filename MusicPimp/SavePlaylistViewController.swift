@@ -38,7 +38,7 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if let sender = sender as? UIBarButtonItem,saveButton === sender {
+        if let sender = sender as? UIBarButtonItem, saveButton === sender {
             let name = nameText.text ?? ""
             return !name.isEmpty
         } else {
