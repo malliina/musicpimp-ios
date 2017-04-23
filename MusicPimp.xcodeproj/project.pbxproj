@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
 		610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */; };
+		668634F1E8285A6F35DDE052 /* Pods_MusicPimpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
 		7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D072FEE1B12394E000D416D /* PlayerSocket.swift */; };
@@ -170,6 +171,7 @@
 		7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00B1AED50B300F25B9B /* Arrays.swift */; };
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
 		7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */; };
+		DEB6116DA464B36D9B81E870 /* Pods_MusicPimp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F29B02358B1F8661962092CD /* Pods_MusicPimp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,12 +185,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0AFD02AC2476A77033EC5E76 /* Pods-MusicPimp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.debug.xcconfig"; sourceTree = "<group>"; };
 		1A6A61E06A765CCD8765B423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
-		1BE3548DC70AC366EDEEE0B3 /* libPods-MusicPimp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MusicPimp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		565D35CA22DF7A73D3BE5F17 /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
+		2851BF835BE065061CE12054 /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
+		411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
 		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
 		610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
+		71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimpTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
 		7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEventDelegate.swift; sourceTree = "<group>"; };
 		7D072FEE1B12394E000D416D /* PlayerSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSocket.swift; sourceTree = "<group>"; };
@@ -365,6 +367,9 @@
 		7DF5C00B1AED50B300F25B9B /* Arrays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrays.swift; sourceTree = "<group>"; };
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
+		9EB7803F3781357D112B2C1C /* Pods-MusicPimpTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.release.xcconfig"; sourceTree = "<group>"; };
+		C834EE5B8513D2F3CCB450AF /* Pods-MusicPimp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.debug.xcconfig"; sourceTree = "<group>"; };
+		F29B02358B1F8661962092CD /* Pods_MusicPimp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -374,6 +379,7 @@
 			files = (
 				7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */,
 				7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */,
+				DEB6116DA464B36D9B81E870 /* Pods_MusicPimp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +387,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				668634F1E8285A6F35DDE052 /* Pods_MusicPimpTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,18 +402,10 @@
 				7D0730201B123C6D000D416D /* CFNetwork.framework */,
 				7D07301E1B123C5E000D416D /* Security.framework */,
 				7D07301C1B123C52000D416D /* Foundation.framework */,
-				1BE3548DC70AC366EDEEE0B3 /* libPods-MusicPimp.a */,
+				F29B02358B1F8661962092CD /* Pods_MusicPimp.framework */,
+				71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3DD0E81B48B55DD61B806DE1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				0AFD02AC2476A77033EC5E76 /* Pods-MusicPimp.debug.xcconfig */,
-				565D35CA22DF7A73D3BE5F17 /* Pods-MusicPimp.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		7D07302B1B1390A0000D416D /* SocketRocket */ = {
@@ -610,12 +609,12 @@
 				7DC206BB1A1547380032C01D /* MusicPimpTests */,
 				7DC3595F1B35C8AD003B01B6 /* NSString+FontAwesome.h */,
 				7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */,
-				3DD0E81B48B55DD61B806DE1 /* Pods */,
 				7DC206A21A1547370032C01D /* Products */,
 				7D07302B1B1390A0000D416D /* SocketRocket */,
 				7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */,
 				7DC359601B35E73A003B01B6 /* UIFont+FontAwesome.h */,
 				7DC359611B35E73A003B01B6 /* UIImage+FontAwesome.h */,
+				EEF517F43F4D9BE9660F5245 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -751,6 +750,17 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		EEF517F43F4D9BE9660F5245 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C834EE5B8513D2F3CCB450AF /* Pods-MusicPimp.debug.xcconfig */,
+				2851BF835BE065061CE12054 /* Pods-MusicPimp.release.xcconfig */,
+				411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */,
+				9EB7803F3781357D112B2C1C /* Pods-MusicPimpTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -758,9 +768,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7DC206C21A1547380032C01D /* Build configuration list for PBXNativeTarget "MusicPimp" */;
 			buildPhases = (
+				EB140F4C824659ADC54D21B5 /* [CP] Check Pods Manifest.lock */,
 				7DC2069D1A1547370032C01D /* Sources */,
 				7DC2069E1A1547370032C01D /* Frameworks */,
 				7DC2069F1A1547370032C01D /* Resources */,
+				7B0F4FF99C082F8F85F592D5 /* [CP] Embed Pods Frameworks */,
+				3B27483E8DDEC61EEBD1D964 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -775,9 +788,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7DC206C51A1547380032C01D /* Build configuration list for PBXNativeTarget "MusicPimpTests" */;
 			buildPhases = (
+				D628195B91968CEA3AB04464 /* [CP] Check Pods Manifest.lock */,
 				7DC206B41A1547380032C01D /* Sources */,
 				7DC206B51A1547380032C01D /* Frameworks */,
 				7DC206B61A1547380032C01D /* Resources */,
+				CA2935D74561DF845603CADB /* [CP] Embed Pods Frameworks */,
+				5E66D6E5989E45DC0D83B360 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -873,6 +889,99 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3B27483E8DDEC61EEBD1D964 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5E66D6E5989E45DC0D83B360 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B0F4FF99C082F8F85F592D5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA2935D74561DF845603CADB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D628195B91968CEA3AB04464 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		EB140F4C824659ADC54D21B5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7DC2069D1A1547370032C01D /* Sources */ = {
@@ -1153,6 +1262,7 @@
 		};
 		7DC206C31A1547380032C01D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C834EE5B8513D2F3CCB450AF /* Pods-MusicPimp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicPimp/MusicPimp.entitlements;
@@ -1171,6 +1281,7 @@
 		};
 		7DC206C41A1547380032C01D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2851BF835BE065061CE12054 /* Pods-MusicPimp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicPimp/MusicPimp.entitlements;
@@ -1189,6 +1300,7 @@
 		};
 		7DC206C61A1547380032C01D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1206,6 +1318,7 @@
 		};
 		7DC206C71A1547380032C01D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9EB7803F3781357D112B2C1C /* Pods-MusicPimpTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
