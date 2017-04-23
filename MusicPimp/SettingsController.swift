@@ -21,6 +21,7 @@ class SettingsController: CacheInfoController {
     @IBOutlet var sourcePicker: UIPickerView!
     
     @IBOutlet var cacheDetail: UILabel!
+    @IBOutlet var creditsCell: PimpCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,6 +80,14 @@ class SettingsController: CacheInfoController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = indexPath.section
+        let row = indexPath.row
+        if section == 3 && row == 1 {
+            // Credits
+//            let dest = Credits()
+            let dest = Credits(nibName: "Credits", bundle: .main)
+            self.navigationController?.pushViewController(dest, animated: false)
+        }
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
     }

@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     
+//    var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
     var window: UIWindow?
     
     let audioSession = AVAudioSession.sharedInstance()
@@ -24,6 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+//        window?.makeKeyAndVisible()
+//        window?.rootViewController = Credits()
+        
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()

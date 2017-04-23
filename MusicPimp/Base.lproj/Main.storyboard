@@ -104,7 +104,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="80e-00-faj" customClass="LibraryNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Music" image="first" id="we9-wG-i5f"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Red-nG-W9B">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Red-nG-W9B">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -585,7 +585,7 @@
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sAj-28-bfR">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sAj-28-bfR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -781,9 +781,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Ovi-Zv-Yvp" kind="show" id="67F-hB-8i7"/>
-                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -796,6 +793,7 @@
                     <navigationItem key="navigationItem" title="SETTINGS" id="Ler-46-2xs"/>
                     <connections>
                         <outlet property="cacheDetail" destination="zPo-iG-LQI" id="TSp-nH-G3f"/>
+                        <outlet property="creditsCell" destination="A7v-eA-ZDC" id="oqw-Ha-ao1"/>
                         <outlet property="libraryDetail" destination="AWN-7y-08I" id="EQA-XT-GiO"/>
                         <outlet property="playerDetail" destination="WVd-Vk-Xza" id="HBw-TV-Wrd"/>
                     </connections>
@@ -807,7 +805,7 @@
         <!--CREDITS-->
         <scene sceneID="vKg-Yv-AvY">
             <objects>
-                <viewController id="Ovi-Zv-Yvp" customClass="PimpViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ovi-Zv-Yvp" customClass="CreditsViewController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eja-vq-dw7"/>
                         <viewControllerLayoutGuide type="bottom" id="Xqe-U3-KZ5"/>
@@ -817,7 +815,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Design by Alisa." textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9A-aN-yyM" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="589" width="343" height="21"/>
+                                <rect key="frame" x="16" y="638" width="343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1370,7 +1368,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Qb8-2z-Giv" customClass="SettingsNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" image="second" id="ezX-N8-NNt"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="hxN-dh-wZK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hxN-dh-wZK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1389,7 +1387,7 @@
             <objects>
                 <navigationController storyboardIdentifier="EditEndpointNav" automaticallyAdjustsScrollViewInsets="NO" id="yjN-5Z-clh" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Lq3-6u-yPT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Lq3-6u-yPT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1793,7 +1791,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tKJ-rg-KFT" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jd5-Lm-mL2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jd5-Lm-mL2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1893,7 +1891,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LTP-pt-TwE" customClass="PimpNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="ufx-Rb-qp6">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ufx-Rb-qp6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1911,7 +1909,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Y7s-m3-oya" customClass="PimpNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YiJ-eH-UN6">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YiJ-eH-UN6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1929,7 +1927,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="akq-Uo-iSX" customClass="PimpNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="8jW-t5-Qkl">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8jW-t5-Qkl">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1948,7 +1946,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="who-yM-yBw" customClass="PlaylistNavController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="ty3-Ji-Ywt"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="xj0-zi-m88">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xj0-zi-m88">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

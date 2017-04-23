@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
 		610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */; };
+		6103504B1EACC73D00F85F04 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504A1EACC73D00F85F04 /* Credits.swift */; };
+		6103504D1EAD01FD00F85F04 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */; };
 		668634F1E8285A6F35DDE052 /* Pods_MusicPimpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
@@ -190,6 +192,8 @@
 		411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
 		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
 		610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
+		6103504A1EACC73D00F85F04 /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
+		6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
 		71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimpTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
 		7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEventDelegate.swift; sourceTree = "<group>"; };
@@ -558,6 +562,8 @@
 				7D66863D1B498200003C92E4 /* CacheLimitController.swift */,
 				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
 				7DC891461D5F4C0000331A4D /* ContainerParent.swift */,
+				6103504A1EACC73D00F85F04 /* Credits.swift */,
+				6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */,
 				7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */,
 				7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */,
 				7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */,
@@ -1004,6 +1010,7 @@
 				7D6756B91AFD581000BC0CA9 /* PimpJson.swift in Sources */,
 				7D6756B71AFD55A200BC0CA9 /* PimpSettings.swift in Sources */,
 				7D6756D91B0A6AEE00BC0CA9 /* LocalLibrary.swift in Sources */,
+				6103504B1EACC73D00F85F04 /* Credits.swift in Sources */,
 				7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */,
 				7D1608BF1BE7BD9E0007B943 /* Folder.swift in Sources */,
 				7DC359641B35E853003B01B6 /* UIFont+FontAwesome.m in Sources */,
@@ -1054,6 +1061,7 @@
 				7DE944D51BE67C2900CD441B /* Track.swift in Sources */,
 				7DC891591D78AC8A00331A4D /* PimpNavController.swift in Sources */,
 				7D6756CB1B08B24A00BC0CA9 /* PlayerManager.swift in Sources */,
+				6103504D1EAD01FD00F85F04 /* CreditsViewController.swift in Sources */,
 				7D0CA98A1AF68EE7008F72EC /* EndpointsController.swift in Sources */,
 				7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */,
 				7DB430E31C42BEC400CF22DC /* VolumeValue.swift in Sources */,
