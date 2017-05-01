@@ -7,10 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498C6C27044382E317113E /* SnapMusicCell.swift */; };
+		33498D172ED1004161A84549 /* SnapLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */; };
+		33498E03D12D1B46D6E4B9BA /* SnapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334982F712798EFB9B7735E0 /* SnapContainer.swift */; };
 		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
 		610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */; };
 		6103504B1EACC73D00F85F04 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504A1EACC73D00F85F04 /* Credits.swift */; };
 		6103504D1EAD01FD00F85F04 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */; };
+		618ECD3B1EB7522C0018B309 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3A1EB7522C0018B309 /* BaseView.swift */; };
+		618ECD3D1EB752870018B309 /* SnapPlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */; };
+		618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */; };
 		668634F1E8285A6F35DDE052 /* Pods_MusicPimpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
@@ -189,11 +195,17 @@
 /* Begin PBXFileReference section */
 		1A6A61E06A765CCD8765B423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		2851BF835BE065061CE12054 /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
+		334982F712798EFB9B7735E0 /* SnapContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapContainer.swift; sourceTree = "<group>"; };
+		33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLibrary.swift; sourceTree = "<group>"; };
+		33498C6C27044382E317113E /* SnapMusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMusicCell.swift; sourceTree = "<group>"; };
 		411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
 		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
 		610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
 		6103504A1EACC73D00F85F04 /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
+		618ECD3A1EB7522C0018B309 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
+		618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapPlaybackFooter.swift; sourceTree = "<group>"; };
+		618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMainSubCell.swift; sourceTree = "<group>"; };
 		71195D063A40D82FD2EFBF26 /* Pods_MusicPimpTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimpTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
 		7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEventDelegate.swift; sourceTree = "<group>"; };
@@ -435,6 +447,7 @@
 		7D31A32F1C679B750035E9D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				618ECD3A1EB7522C0018B309 /* BaseView.swift */,
 				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
@@ -443,19 +456,22 @@
 				7DC891441D5A73C100331A4D /* MainSubCell.swift */,
 				7DC891421D5A737A00331A4D /* MainSubCell.xib */,
 				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
+				7D62879D1D7C37190053BF52 /* PimpButton.swift */,
+				7D62879B1D7C36930053BF52 /* PimpCell.swift */,
+				7D6287991D7C36850053BF52 /* PimpLabel.swift */,
 				7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */,
 				7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */,
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
-				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
-				7D6287991D7C36850053BF52 /* PimpLabel.swift */,
-				7D62879B1D7C36930053BF52 /* PimpCell.swift */,
-				7D62879D1D7C37190053BF52 /* PimpButton.swift */,
 				7D62879F1D7C372D0053BF52 /* PimpSlider.swift */,
+				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
-				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
-				610350461EAB9ED700F85F04 /* PlaybackFooter.xib */,
+				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
 				610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */,
+				610350461EAB9ED700F85F04 /* PlaybackFooter.xib */,
+				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
+				33498C6C27044382E317113E /* SnapMusicCell.swift */,
+				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -593,6 +609,8 @@
 				7D31C14D1BC9A63500189687 /* SearchResultsController.swift */,
 				7D0CA98B1AF6940B008F72EC /* SettingsController.swift */,
 				7DC359701B37122A003B01B6 /* SettingsNavController.swift */,
+				334982F712798EFB9B7735E0 /* SnapContainer.swift */,
+				33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */,
 				7D6756C61B07CDCA00BC0CA9 /* SourceSettingController.swift */,
 				7DC359721B371426003B01B6 /* TabNavController.swift */,
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
@@ -1005,6 +1023,7 @@
 				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
 				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
 				7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */,
+				618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */,
 				7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */,
 				7D28D4291C2D95F700B3F62F /* TrackProgress.swift in Sources */,
 				7D6756B91AFD581000BC0CA9 /* PimpJson.swift in Sources */,
@@ -1078,9 +1097,11 @@
 				7D1608C11BE7BDB40007B943 /* Version.swift in Sources */,
 				7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */,
 				7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */,
+				618ECD3D1EB752870018B309 /* SnapPlaybackFooter.swift in Sources */,
 				7DC2FB741D57693600A6FADD /* ConstraintToggle.swift in Sources */,
 				7DE944D71BE67C4900CD441B /* MusicItem.swift in Sources */,
 				7DB1B3B41B1102C50012B8AE /* PlayerState.swift in Sources */,
+				618ECD3B1EB7522C0018B309 /* BaseView.swift in Sources */,
 				7D28D4331C39A5CF00B3F62F /* PushToken.swift in Sources */,
 				7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */,
 				7D78C2911AF3B73D001F0A65 /* Event.swift in Sources */,
@@ -1138,6 +1159,9 @@
 				7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,
+				33498D172ED1004161A84549 /* SnapLibrary.swift in Sources */,
+				33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */,
+				33498E03D12D1B46D6E4B9BA /* SnapContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

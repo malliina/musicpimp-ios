@@ -27,9 +27,9 @@ class BaseTableController: UITableViewController {
         ]
     }
     
-    func registerNib(_ nameAndIdentifier: String) {
-        self.tableView.register(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
-    }
+//    func registerNib(_ nameAndIdentifier: String) {
+//        self.tableView.register(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
+//    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1

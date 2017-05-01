@@ -86,7 +86,7 @@ class SettingsController: CacheInfoController {
             // Credits
 //            let dest = Credits()
             let dest = Credits(nibName: "Credits", bundle: .main)
-            self.navigationController?.pushViewController(dest, animated: false)
+            self.navigationController?.pushViewController(dest, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)

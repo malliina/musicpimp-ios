@@ -14,13 +14,20 @@ class PimpTabBarController: UITabBarController {
     let tabItemTitleVerticalOffset: CGFloat = -3
     
     override func viewDidLoad() {
-        let tabs = tabBar.items
-        if let tabs = tabs {
-            decorate(tabs[0], title: "Music", fontAwesomeName: "music")
-            decorate(tabs[1], title: "Player", fontAwesomeName: "play-circle")
-            decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
-            decorate(tabs[3], title: "Settings", fontAwesomeName: "cog")
-        }
+        super.viewDidLoad()
+        viewControllers = [
+                attachTab(vc: SnapContainer(), title: "Music", fontAwesomeName: "music"),
+                attachTab(vc: LibraryController(), title: "Player", fontAwesomeName: "play-circle"),
+                attachTab(vc: UIViewController(), title: "Playlist", fontAwesomeName: "list"),
+                attachTab(vc: UIViewController(), title: "Settings", fontAwesomeName: "cog")
+        ].map { vc in UINavigationController(rootViewController: vc) }
+    }
+
+    func attachTab(vc: UIViewController, title: String, fontAwesomeName: String) -> UIViewController {
+        let item = UITabBarItem()
+        decorate(item, title: title, fontAwesomeName: fontAwesomeName)
+        vc.tabBarItem = item
+        return vc
     }
     
     func decorate(_ tabItem: UITabBarItem, title: String, fontAwesomeName: String) {

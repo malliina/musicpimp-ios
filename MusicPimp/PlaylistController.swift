@@ -48,7 +48,7 @@ class PlaylistController: BaseMusicController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerNib(PlaylistController.mainAndSubtitleCellKey)
+//        registerNib(PlaylistController.mainAndSubtitleCellKey)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,9 +79,9 @@ class PlaylistController: BaseMusicController {
         let index = (indexPath as NSIndexPath).row
         switch mode {
         case .playlist:
-            let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
+            let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
             let track = tracks[index]
-            cell.titleLabel?.text = track.title
+            cell.title.text = track.title
             paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: DownloadUpdater.instance.progressFor(track: track))
             return cell
         case .popular:

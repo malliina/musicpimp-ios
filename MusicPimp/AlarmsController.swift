@@ -31,7 +31,8 @@ class AlarmsController : PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerNib(alarmCellKey)
+//        registerNib(alarmCellKey)
+        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: alarmCellKey)
         reloadAlarms()
         // TODO create custom UISwitch with toggle handler
         let onOff = PimpSwitch { (uiSwitch) in

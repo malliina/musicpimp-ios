@@ -24,7 +24,7 @@ class SearchResultsController: BaseMusicController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let track = results[(indexPath as NSIndexPath).row]
         let cell = trackCell(track, index: indexPath)
-        cell?.progressView.isHidden = true
+        cell?.progress.isHidden = true
         return cell!
     }
     

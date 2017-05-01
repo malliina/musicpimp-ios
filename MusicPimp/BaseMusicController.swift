@@ -9,6 +9,7 @@
 import Foundation
 
 class BaseMusicController : PimpTableController {
+    let FolderCellId = "FolderCell"
     let trackReuseIdentifier = "PimpMusicItemCell"
     let defaultCellHeight: CGFloat = 44
     static let accessoryRightPadding: CGFloat = 14
@@ -21,7 +22,9 @@ class BaseMusicController : PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerNib(trackReuseIdentifier)
+        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: trackReuseIdentifier)
+        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: FolderCellId)
+//        registerNib(trackReuseIdentifier)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -45,9 +48,9 @@ class BaseMusicController : PimpTableController {
         return defaultCellHeight
     }
     
-    func trackCell(_ item: Track, index: IndexPath) -> PimpMusicItemCell? {
-        if let pimpCell: PimpMusicItemCell = findCell(trackReuseIdentifier, index: index) {
-            pimpCell.titleLabel?.text = item.title
+    func trackCell(_ item: Track, index: IndexPath) -> SnapMusicCell? {
+        if let pimpCell: SnapMusicCell = findCell(trackReuseIdentifier, index: index) {
+            pimpCell.title.text = item.title
             installTrackAccessoryView(pimpCell)
             return pimpCell
         } else {
@@ -56,15 +59,15 @@ class BaseMusicController : PimpTableController {
         }
     }
     
-    func paintTrackCell(cell: PimpMusicItemCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
+    func paintTrackCell(cell: SnapMusicCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
-            cell.progressView.progress = downloadProgress.progress
-            cell.progressView.isHidden = false
+            cell.progress.progress = downloadProgress.progress
+            cell.progress.isHidden = false
         } else {
-            cell.progressView.isHidden = true
+            cell.progress.isHidden = true
         }
         let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
-        cell.titleLabel?.textColor = titleColor
+        cell.title.textColor = titleColor
         cell.selectionStyle = selectionStyle
     }
     
@@ -117,7 +120,7 @@ class BaseMusicController : PimpTableController {
         if let touch = touchEvent.allTouches??.first {
             let point = touch.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: point) {
-                return (indexPath as NSIndexPath).row
+                return indexPath.row
             }
         }
         return nil
@@ -144,12 +147,7 @@ class BaseMusicController : PimpTableController {
         sheet.addAction(cancelAction)
         if let popover = sheet.popoverPresentationController {
             popover.sourceView = self.view
-//            popover.sourceRect = self.view.frame
         }
-        //sheet.view.tintColor = UIColor.greenColor()
-        //let sheetView = sheet.view.subviews.headOption()?.subviews.headOption()
-        //sheetView?.backgroundColor = UIColor.greenColor()
-        //sheetView?.layer.cornerRadius = 15
         self.present(sheet, animated: true, completion: nil)
     }
     

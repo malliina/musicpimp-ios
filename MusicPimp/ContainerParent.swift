@@ -9,13 +9,12 @@
 import Foundation
 
 class ContainerParent: ListeningController, PlaybackDelegate {
+    let playbackFooter = SnapPlaybackFooter()
     let playbackFooterHeightValue: CGFloat = 44
-    
-    @IBOutlet var playbackFooter: PlaybackFooter!
-    @IBOutlet var playbackFooterHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initPlaybackFooter()
         playbackFooter.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
     }
@@ -28,13 +27,23 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     fileprivate func initFooter() {
         onStateChanged(player.current().state)
     }
+    
+    func initPlaybackFooter() {
+        view.addSubview(playbackFooter)
+        playbackFooter.snp.makeConstraints { make in
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(playbackFooterHeightValue)
+        }
+    }
 
     override func onStateChanged(_ state: PlaybackState) {
         let isVisible = state == .Playing
         Util.onUiThread {
             self.playbackFooter.updatePlayPause(isPlaying: isVisible)
-            self.playbackFooter.isHidden = !isVisible
-            self.playbackFooterHeight.constant = isVisible ? self.playbackFooterHeightValue : 0
+//            self.playbackFooter.isHidden = !isVisible
+//            self.playbackFooterHeight.constant = isVisible ? self.playbackFooterHeightValue : 0
         }
     }
     

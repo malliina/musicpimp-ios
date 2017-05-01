@@ -13,60 +13,47 @@ import SnapKit
 class Credits: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "SNAPCREDITS"
-        view.snp.makeConstraints { make in
-//            make.top.equalTo(topLayoutGuide.snp.bottom)
-//            make.bottom.equalTo(bottomLayoutGuide.snp.top)
-//            make.top.equalTo(topLayoutGuide.snp.bottom)
-            make.height.equalTo(300)
-        }
-//        self.edgesForExtendedLayout = .all
-//        self.extendedLayoutIncludesOpaqueBars = true
+        navigationItem.title = "CREDITS"
+        edgesForExtendedLayout = []
+        initUI()
     }
-    
-    override func loadView() {
-//        self.edgesForExtendedLayout = .left
-//        let wrapper = UIView()
-//        wrapper.snp.makeConstraints { make in
-//            make.top.equalTo(topLayoutGuide.snp.bottom)
-//            make.bottom.equalTo(bottomLayoutGuide.snp.top)
-//        }
-//
-//        let wrapper = WrapperView()
-//        wrapper.addSubview(CreditsView())
-        view = CreditsView()
-    }
-}
 
-class WrapperView: BaseView {
-    var view: UIView? = nil
+    func initUI() {
+//        let credits = CreditsView()
+//        view.addSubview(credits)
+//        credits.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+    }
+
+    override func loadView() {
+        self.view = CreditsView()
+    }
 }
 
 class CreditsView: BaseView {
     let developedLabel = UILabel()
     let designedLabel = UILabel()
-    
+
     override func configureView() {
-        backgroundColor = UIColor.cyan
         addSubviews(views: [developedLabel, designedLabel])
-        
+
         initLabel(label: developedLabel, text: "Developed by Michael Skogberg.")
         initLabel(label: designedLabel, text: "Design by Alisa.")
-        
+
         developedLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
-//
-//        designedLabel.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.trailing.equalToSuperview()
-//            make.centerX.equalToSuperview()
-//            make.bottom.equalToSuperview().offset(-8)
-//        }
-//        designedLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+
+        designedLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-8)
+        }
     }
     
     func initLabel(label: UILabel, text: String) {
@@ -75,26 +62,5 @@ class CreditsView: BaseView {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
-    }
-}
-
-// https://medium.com/swift-digest/good-swift-bad-swift-part-1-f58f71da3575
-class BaseView: UIView {
-    init() {
-        super.init(frame: CGRect.zero)
-        configureView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configureView()
-    }
-    
-    func addSubviews(views: [UIView]) {
-        views.forEach(addSubview)
-    }
-    
-    func configureView() {
-        
     }
 }
