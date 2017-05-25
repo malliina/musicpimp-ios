@@ -158,7 +158,7 @@ class AlarmsController : PimpTableController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch (indexPath as NSIndexPath).section {
+        switch indexPath.section {
         case endpointSection:
             let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
             cell.detailTextLabel?.text = endpoint?.name ?? "None"
@@ -196,7 +196,7 @@ class AlarmsController : PimpTableController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath as NSIndexPath).section == alarmsSection {
+        if indexPath.section == alarmsSection {
             return FeedbackTable.mainAndSubtitleCellHeight
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -215,8 +215,8 @@ class AlarmsController : PimpTableController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = (indexPath as NSIndexPath).row
-        if (indexPath as NSIndexPath).section == alarmsSection {
+        let row = indexPath.row
+        if indexPath.section == alarmsSection {
             if let alarm = alarms.get(row),
                 let endpoint = endpoint,
                 let storyboard = storyboard,
@@ -234,7 +234,7 @@ class AlarmsController : PimpTableController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         let alarm = alarms[index]
         if let id = alarm.id {
             library.deleteAlarm(id, onError: onError) {
@@ -249,7 +249,7 @@ class AlarmsController : PimpTableController {
         if let endpoint = endpoint {
             if let dest = segueDestination as? EditAlarmTableViewController {
                 if let row = self.tableView.indexPathForSelectedRow {
-                    let index = (row as NSIndexPath).item
+                    let index = row.item
                     if let alarm = alarms.get(index) {
                         dest.initEditAlarm(alarm, endpoint: endpoint)
                     } else {

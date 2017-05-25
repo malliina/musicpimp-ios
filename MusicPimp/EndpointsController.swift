@@ -38,6 +38,16 @@ class EndpointsController: BaseTableController {
         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let row = indexPath.row
+        if let endpoint = endpoints.get(row) {
+            let dest = EditEndpointController()
+            dest.editedItem = endpoint
+            self.navigationController?.pushViewController(dest, animated: true)
+        }
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let navController = segue.destination as? UINavigationController {
             let destController: AnyObject = navController.viewControllers[0]

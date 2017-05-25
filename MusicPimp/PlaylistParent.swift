@@ -8,25 +8,24 @@
 
 import Foundation
 
+fileprivate extension Selector {
+    static let dragClicked = #selector(PlaylistParent.dragButtonClicked(_:))
+    static let savePlaylist = #selector(PlaylistParent.savePlaylistAction(_:))
+    static let loadPlaylist = #selector(PlaylistParent.loadPlaylistClicked(_:))
+    static let scopeChanged = #selector(PlaylistParent.scopeChanged(_:))
+}
+
 class PlaylistParent: ContainerParent {
-    @IBOutlet var scopeSegment: UISegmentedControl!
-    
-    var dragButton: UIBarButtonItem?
-    
+    let scopeSegment = UISegmentedControl()
+    let dragButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: .dragClicked)
+    let saveButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: .savePlaylist)
+    let loadButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: .loadPlaylist)
     // non-nil if the playlist is server-loaded
     var savedPlaylist: SavedPlaylist? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let saveButton = PimpBarButton.system(.Save, target: self, onClick: self.savePlaylistAction)
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.savePlaylistAction))
-        saveButton.style = UIBarButtonItemStyle.done
-        let dragButton = PimpBarButton(title: "Edit", style: .plain, onClick: self.dragButtonClicked)
-//        let loadPlaylistButton = PimpBarButton.system(.Bookmarks, target: self, onClick: self.loadPlaylistClicked)
-        let loadPlaylistButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(self.loadPlaylistClicked(_:)))
-        self.navigationItem.leftBarButtonItems = [ loadPlaylistButton, dragButton ]
-        self.dragButton = dragButton
+        self.navigationItem.leftBarButtonItems = [ loadButton, dragButton ]
         // the first element in the array is right-most
         self.navigationItem.rightBarButtonItems = [ saveButton ]
         initScope(scopeSegment)
@@ -37,15 +36,14 @@ class PlaylistParent: ContainerParent {
     }
     
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
-        ctrl.addTarget(self, action: #selector(self.scopeChanged(_:)), for: UIControlEvents.valueChanged)
-        //ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.red], for: UIControlState.selected)
+        ctrl.addTarget(self, action: .scopeChanged, for: UIControlEvents.valueChanged)
         ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: UIControlState.normal)
     }
     
     func scopeChanged(_ ctrl: UISegmentedControl) {
         if let pc = findPlaylist() {
             let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .playlist
-            dragButton?.isEnabled = mode == .playlist
+            dragButton.isEnabled = mode == .playlist
             pc.maybeRefresh(mode)
         } else {
             Log.info("Unable to find embedded PlaylistController")

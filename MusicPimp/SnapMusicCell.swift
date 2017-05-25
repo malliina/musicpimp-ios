@@ -10,6 +10,7 @@ class SnapMusicCell: SnapCell {
     let progress = UIProgressView(progressViewStyle: .default)
 
     override func configureView() {
+        installTrackAccessoryView()
         initTitle()
         initProgress()
     }
@@ -33,18 +34,4 @@ class SnapMusicCell: SnapCell {
             make.bottom.equalToSuperview()
         }
     }
-}
-
-class SnapCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configureView()
-    }
-    
-    func configureView() {}
 }

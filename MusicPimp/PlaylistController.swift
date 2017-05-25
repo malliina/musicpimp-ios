@@ -76,7 +76,7 @@ class PlaylistController: BaseMusicController {
     }
         
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         switch mode {
         case .playlist:
             let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
@@ -100,7 +100,7 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        maybeLoadMore((indexPath as NSIndexPath).row)
+        maybeLoadMore(indexPath.row)
     }
     
     fileprivate func maybeLoadMore(_ currentRow: Int) {
@@ -168,12 +168,12 @@ class PlaylistController: BaseMusicController {
         formatter.doesRelativeDateFormatting = true
         let formattedDate = formatter.string(from: track.when)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
-        installTrackAccessoryView(cell, true)
+        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
     func decoratePopularCell(_ cell: MainAndSubtitleCell, track: PopularEntry) {
         decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
-        installTrackAccessoryView(cell, true)
+        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
     func decorateTwoLines(_ cell: MainAndSubtitleCell, first: String, second: String) {
@@ -182,7 +182,7 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         limitChecked {
             switch self.mode {
             case .playlist:

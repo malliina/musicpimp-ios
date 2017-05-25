@@ -23,18 +23,9 @@ class EndpointSelectController: BaseTableController {
         renderTable()
     }
     
-    // called when the user is about to edit an endpoint
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let navController = segue.destination as? UINavigationController {
-            if let editController = navController.viewControllers[0] as? EditEndpointController,
-                let endpoint = sender as? Endpoint {
-                    editController.editedItem = endpoint
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: endpointIdentifier)
         endpoints = settings.endpoints()
     }
     
@@ -60,6 +51,7 @@ class EndpointSelectController: BaseTableController {
         let endpoint = endpointForIndex(index)
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
+        cell.textLabel?.textColor = PimpColors.titles
         let accessory = index == selectedIndex ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         cell.accessoryType = accessory
         return cell
@@ -100,9 +92,13 @@ class EndpointSelectController: BaseTableController {
         if rowIndex > 0 {
             let edit = endpointRowAction(tableView, title: "Edit") {
                 (index: Int) -> Void in
-                let isPlayer = self.manager as? PlayerManager != nil
-                let segueID = isPlayer ? "EditPlayer" : "EditSource"
-                self.performSegue(withIdentifier: segueID, sender: self.endpoints[index])
+                if let endpoint = self.endpoints.get(index) {
+                    let dest = EditEndpointController()
+                    dest.editedItem = endpoint
+                    self.navigationController?.pushViewController(dest, animated: true)
+                } else {
+                    Log.error("No endpoint at index \(index)")
+                }
             }
             let remove = endpointRowAction(tableView, title: "Remove") {
                 (index: Int) -> Void in

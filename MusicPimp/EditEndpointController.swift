@@ -9,38 +9,97 @@
 import Foundation
 import UIKit
 
+fileprivate extension Selector {
+    static let serverTypeChanged = #selector(EditEndpointController.serverTypeChanged(_:))
+    static let testClicked = #selector(EditEndpointController.testClicked(_:))
+}
+
 class EditEndpointController: PimpViewController, UITextFieldDelegate {
+    let scrollView = UIScrollView()
+    let nameLabel = UILabel()
+    let typeControl = UISegmentedControl()
+    let nameField = UITextField()
+    let addressField = UITextField()
+    let portField = UITextField()
+    let usernameLabel = UILabel()
+    let usernameField = UITextField()
+    let passwordLabel = UILabel()
+    let passwordField = UITextField()
+    let protocolControl = UISegmentedControl()
+    let portLabel = UILabel()
+    let addressLabel = UILabel()
+    let cloudIDField = UITextField()
+    let cloudIDLabel = UILabel()
+    let activateSwitch = UISwitch()
+    let feedbackText = UITextView()
     
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var typeControl: UISegmentedControl!
-    @IBOutlet var nameField: UITextField!
-    @IBOutlet var addressField: UITextField!
-    @IBOutlet var portField: UITextField!
-    @IBOutlet var usernameField: UITextField!
-    @IBOutlet var passwordField: UITextField!
-    @IBOutlet var protocolControl: UISegmentedControl!
-    @IBOutlet var portLabel: UILabel!
-    @IBOutlet var addressLabel: UILabel!
-    @IBOutlet var cloudIDField: UITextField!
-    @IBOutlet var cloudIDLabel: UILabel!
-    @IBOutlet var activateSwitch: UISwitch!
-    @IBOutlet var feedbackText: UITextView!
-    
-    @IBOutlet weak var saveButton: UIBarButtonItem!
+    let saveButton = UIBarButtonItem()
     
     var segueID: String? = nil
     var editedItem: Endpoint? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
-        textFields.forEach { (elem) -> () in
-            elem?.delegate = self
-        }
+        initUI()
         if let editedItem = editedItem {
             fill(editedItem)
         } else {
             updateVisibility(segment: typeControl)
+        }
+    }
+    
+    func initUI() {
+        nameLabel.text = "Name"
+        cloudIDLabel.text = "Cloud ID"
+        addressLabel.text = "Address"
+        portLabel.text = "Port"
+        usernameLabel.text = "Username"
+        passwordLabel.text = "Password"
+        let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
+        textFields.forEach { elem -> () in
+            elem.delegate = self
+        }
+        let nonTextFields = [nameLabel, typeControl, protocolControl, portLabel, addressLabel, usernameLabel, passwordLabel, cloudIDLabel, activateSwitch, feedbackText]
+        let views: [UIView] = nonTextFields + textFields
+        views.forEach { inputView in
+            scrollView.addSubview(inputView)
+        }
+        view.addSubview(scrollView)
+        baseConstraints(views: [scrollView])
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.snp.topMargin).offset(8)
+            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-20)
+        }
+        typeControl.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+        }
+        let fields = [typeControl, cloudIDLabel, cloudIDField, addressLabel, addressField, portLabel, portField, usernameLabel, usernameField, passwordLabel, passwordField, protocolControl]
+        stack(views: fields)
+        fields.forEach(leadingTrailingToSuper(target:))
+        cloudIDLabel.snp.makeConstraints { make in
+            make.top.equalTo(typeControl.snp.bottom).offset(8)
+        }
+        typeControl.addTarget(self, action: .serverTypeChanged, for: .valueChanged)
+    }
+    
+    func stack(views: [UIView]) {
+        if let first = views.get(0), let second = views.get(1) {
+            stackTwo(top: first, bottom: second)
+            stack(views: views.tail())
+        } else {
+            return
+        }
+    }
+    
+    func stackTwo(top: UIView, bottom: UIView) {
+        bottom.snp.makeConstraints { (make) in
+            make.top.equalTo(top.snp.bottom).offset(8)
+        }
+    }
+    
+    func leadingTrailingToSuper(target: UIView) {
+        target.snp.makeConstraints { (make) in
+            make.trailing.leading.equalToSuperview()
         }
     }
     
@@ -65,7 +124,7 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func serverTypeChanged(_ sender: UISegmentedControl) {
+    func serverTypeChanged(_ sender: UISegmentedControl) {
         updateVisibility(segment: sender)
     }
     
@@ -77,7 +136,7 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func testClicked(_ sender: AnyObject) {
+    func testClicked(_ sender: AnyObject) {
         if let endpoint = parseEndpoint() {
             info("Testing \(endpoint.httpBaseUrl)")
             feedback("Connecting...")

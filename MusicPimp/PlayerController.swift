@@ -9,34 +9,37 @@
 import Foundation
 import UIKit
 
+fileprivate extension Selector {
+    static let volumeClicked = #selector(PlayerController.onVolumeBarButtonClicked)
+}
+
 class PlayerController: ListeningController, PlaybackDelegate {
     static let seekThumbImage = UIImage(named: "oval-32.png")
     
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
-    @IBOutlet var playbackFooter: PlaybackFooter!
-    @IBOutlet var labelContainer: UIView!
-    @IBOutlet var volumeBarButton: UIBarButtonItem!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var albumLabel: UILabel!
-    @IBOutlet var artistLabel: UILabel!
-    @IBOutlet var seek: UISlider!
-    @IBOutlet var positionLabel: UILabel!
-    @IBOutlet var durationLabel: UILabel!
+    let playbackFooter = SnapPlaybackFooter()
+    //let labelContainer = UIView()
+    let volumeBarButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24), style: .plain, target: self, action: .volumeClicked)
+    let titleLabel = UILabel()
+    let albumLabel = UILabel()
+    let artistLabel = UILabel()
+    let seek = UISlider()
+    let positionLabel = UILabel()
+    let durationLabel = UILabel()
     
-    @IBOutlet var coverImage: UIImageView!
+    let coverImage: UIImageView = UIImageView()
     
     let minHeightForNav: CGFloat = 450
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let volumeIconFontSize: Int32 = 24
-        volumeBarButton.image = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: volumeIconFontSize)
-        playbackFooter.delegate = self
-        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
+        edgesForExtendedLayout = []
+        navigationItem.title = "PLAYER"
+        initUI()
         listenWhenLoaded(player)
-        self.labelContainer.backgroundColor = PimpColors.background
+        //self.labelContainer.backgroundColor = PimpColors.background
         albumLabel.textColor = PimpColors.subtitles
         positionLabel.textColor = PimpColors.subtitles
         durationLabel.textColor = PimpColors.subtitles
@@ -44,6 +47,86 @@ class PlayerController: ListeningController, PlaybackDelegate {
         
         if let thumbImage = PlayerController.seekThumbImage {
             seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 8, height: 8)), for: .normal)
+        }
+    }
+    
+    func onVolumeBarButtonClicked() {
+        // present volume viewcontroller modally
+        let dest = VolumeViewController()
+        self.present(dest, animated: true, completion: nil)
+    }
+    
+    func initUI() {
+        addSubviews(views: [playbackFooter, seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverImage])
+        baseConstraints(views: [playbackFooter, seek, artistLabel, albumLabel, titleLabel, coverImage])
+        initPlaybackFooter()
+        initSeek()
+        initLabels()
+        initCover()
+    }
+    
+    func initPlaybackFooter() {
+        playbackFooter.delegate = self
+        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
+        playbackFooter.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.height.equalTo(66)
+            make.top.equalTo(seek.snp.bottom).offset(16)
+        }
+    }
+    
+    func initSeek() {
+        seek.snp.makeConstraints { make in
+            make.top.equalTo(positionLabel.snp.bottom).offset(2)
+            make.top.equalTo(durationLabel.snp.bottom).offset(2)
+        }
+        positionLabel.textAlignment = .left
+        positionLabel.snp.makeConstraints { make in
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.top.equalTo(artistLabel.snp.bottom).offset(8)
+            make.trailing.equalTo(durationLabel.snp.leading)
+            make.width.equalTo(durationLabel.snp.width)
+        }
+        durationLabel.textAlignment = .right
+        durationLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.top.equalTo(artistLabel.snp.bottom).offset(8)
+        }
+    }
+    
+    func initLabels() {
+        centered(labels: [titleLabel, albumLabel, artistLabel])
+        titleLabel.font = UIFont.systemFont(ofSize: 28)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(coverImage.snp.bottom).offset(16)
+        }
+        albumLabel.font = UIFont.systemFont(ofSize: 17)
+        albumLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+        }
+        artistLabel.font = UIFont.systemFont(ofSize: 17)
+        artistLabel.snp.makeConstraints { make in
+            make.top.equalTo(albumLabel.snp.bottom).offset(8)
+        }
+    }
+    
+    func initCover() {
+        coverImage.image = CoverService.defaultCover
+        coverImage.snp.makeConstraints { make in
+            make.top.equalTo(self.view.snp.topMargin).offset(8)
+        }
+        //coverImage.contentMode = .scaleAspectFit
+        coverImage.clipsToBounds = true
+        //coverImage.backgroundColor = UIColor.yellow
+    }
+    
+    func centered(labels: [UILabel]) {
+        labels.forEach { label in
+            label.textAlignment = .center
+            //label.adjustsFontSizeToFitWidth = true
+            //label.lineBreakMode = .byTruncatingTail
+            label.numberOfLines = 0
+            //label.minimumScaleFactor = 1
         }
     }
     

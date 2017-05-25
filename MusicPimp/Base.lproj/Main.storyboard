@@ -244,7 +244,6 @@
                     <connections>
                         <outlet property="playbackFooter" destination="yzc-l1-BuF" id="yvs-3K-QZH"/>
                         <outlet property="playbackFooterHeight" destination="Hrc-r0-IYP" id="oh3-I5-dGB"/>
-                        <outlet property="scopeSegment" destination="57d-h8-M9g" id="wf5-Lc-10r"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RbG-OJ-YU2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -382,9 +381,6 @@
                         <subviews>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="wlc-QP-kpP" customClass="PimpSlider" customModule="MusicPimp" customModuleProvider="target">
                                 <rect key="frame" x="22" y="506" width="331" height="31"/>
-                                <connections>
-                                    <action selector="sliderChanged:" destination="f4S-4e-fvh" eventType="valueChanged" id="lrd-W8-h2W"/>
-                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okO-f9-gIo" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
                                 <rect key="frame" x="300" y="489" width="51" height="15"/>
@@ -431,7 +427,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-8w-MU5" userLabel="coverContainer">
                                 <rect key="frame" x="24" y="72" width="327" height="305"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="pimp-512.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZwI-4B-Qxg">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="pimp-512.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZwI-4B-Qxg">
                                         <rect key="frame" x="-92.5" y="-103.5" width="512" height="512"/>
                                     </imageView>
                                 </subviews>
@@ -477,23 +473,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PLAYER" id="eri-hT-qjU">
-                        <barButtonItem key="rightBarButtonItem" title="V" id="3iK-V0-dOF">
-                            <connections>
-                                <segue destination="akq-Uo-iSX" kind="presentation" id="KdG-Zc-zCM"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="V" id="3iK-V0-dOF"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="albumLabel" destination="Yxa-2r-5U5" id="Lvx-Q0-Ush"/>
-                        <outlet property="artistLabel" destination="PEd-W1-tLX" id="djG-4y-8pu"/>
                         <outlet property="coverImage" destination="ZwI-4B-Qxg" id="hU4-DX-Fyi"/>
-                        <outlet property="durationLabel" destination="okO-f9-gIo" id="XO7-ke-s5N"/>
                         <outlet property="labelContainer" destination="Fb6-Fa-cUz" id="VRR-aJ-gkv"/>
-                        <outlet property="playbackFooter" destination="chB-Me-lua" id="0cC-BO-llh"/>
-                        <outlet property="positionLabel" destination="HNY-mM-L8n" id="wzl-sU-YBa"/>
-                        <outlet property="seek" destination="wlc-QP-kpP" id="8qV-QF-jAU"/>
-                        <outlet property="titleLabel" destination="Hdm-UC-hpW" id="8Pu-cl-dHI"/>
-                        <outlet property="volumeBarButton" destination="3iK-V0-dOF" id="O7o-Wo-nhz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hzc-Kt-tNX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -754,9 +738,6 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <connections>
-                                            <segue destination="gg5-Ho-NnV" kind="show" id="ONp-jQ-sx5"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Credits" textLabel="VPy-lK-l3z" detailTextLabel="6Cq-3i-1A3" style="IBUITableViewCellStyleValue1" id="A7v-eA-ZDC" customClass="PimpCell" customModule="MusicPimp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="443.5" width="375" height="44"/>
@@ -1112,7 +1093,7 @@
         <!--EDIT ENDPOINT-->
         <scene sceneID="oac-0e-WCt">
             <objects>
-                <viewController storyboardIdentifier="EditEndpoint" automaticallyAdjustsScrollViewInsets="NO" id="snm-uf-AuH" customClass="EditEndpointController" customModule="MusicPimp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditEndpoint" automaticallyAdjustsScrollViewInsets="NO" id="snm-uf-AuH" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="EDR-6L-HAA"/>
                         <viewControllerLayoutGuide type="bottom" id="z6E-qM-ikD"/>
@@ -1130,9 +1111,6 @@
                                             <segment title="Cloud"/>
                                             <segment title="MusicPimp"/>
                                         </segments>
-                                        <connections>
-                                            <action selector="serverTypeChanged:" destination="snm-uf-AuH" eventType="valueChanged" id="xJu-sd-9cn"/>
-                                        </connections>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cgl-V1-S7D">
                                         <rect key="frame" x="8" y="56" width="311" height="21"/>
@@ -1190,9 +1168,6 @@
                                         <state key="normal" title="Test Connectivity">
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <connections>
-                                            <action selector="testClicked:" destination="snm-uf-AuH" eventType="touchUpInside" id="bw3-jf-UBT"/>
-                                        </connections>
                                     </button>
                                     <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="open MusicPimp's web interface" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="POq-eK-ZzI" customClass="PimpTextField" customModule="MusicPimp" customModuleProvider="target">
                                         <rect key="frame" x="8" y="85" width="311" height="30"/>
@@ -1339,23 +1314,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="activateSwitch" destination="cvI-z1-DmJ" id="bIj-5Y-HVo"/>
-                        <outlet property="addressField" destination="QPx-Oe-BIU" id="iJL-bF-4PL"/>
-                        <outlet property="addressLabel" destination="qR8-Da-t49" id="GRD-Eo-ovP"/>
-                        <outlet property="cloudIDField" destination="POq-eK-ZzI" id="uNc-Rm-orw"/>
-                        <outlet property="cloudIDLabel" destination="Ag6-N2-6cr" id="zUX-Y5-mg6"/>
-                        <outlet property="feedbackText" destination="t8x-e4-Xz2" id="N2z-fW-x3k"/>
-                        <outlet property="nameField" destination="GAC-N4-HC5" id="LR4-xj-GfZ"/>
-                        <outlet property="nameLabel" destination="Cgl-V1-S7D" id="SE0-5h-jb8"/>
-                        <outlet property="passwordField" destination="teQ-aR-ZBJ" id="RUD-mK-b3J"/>
-                        <outlet property="portField" destination="Mvr-NQ-3uf" id="L9Q-0T-zYq"/>
-                        <outlet property="portLabel" destination="LZh-4r-D3p" id="QbB-RN-dCZ"/>
-                        <outlet property="protocolControl" destination="ubx-MG-Bsb" id="VI1-kU-Vph"/>
-                        <outlet property="saveButton" destination="1Ls-lk-Zd4" id="Cl6-nB-II4"/>
-                        <outlet property="typeControl" destination="IF7-X6-3Nq" id="uu4-yW-l0s"/>
-                        <outlet property="usernameField" destination="igl-Aq-0IB" id="66V-X4-SWH"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WGH-0c-LW4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="fgO-2X-UYo" userLabel="Exit" sceneMemberID="exit"/>
@@ -1817,13 +1775,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading products..." textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d14-QU-WSp" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="72" width="343" height="34"/>
+                                <rect key="frame" x="16" y="28" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="NUI-xD-a0U" customClass="PimpButton" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="138" width="343" height="34"/>
+                                <rect key="frame" x="16" y="94" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="Purchase MusicPimp Premium">
                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1833,13 +1791,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Already purchased?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDN-5D-f00" customClass="PimpLabel" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="204" width="343" height="34"/>
+                                <rect key="frame" x="16" y="160" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Ymt-FM-bsQ" customClass="PimpButton" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="270" width="343" height="34"/>
+                                <rect key="frame" x="16" y="226" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="Restore MusicPimp Premium"/>
                                 <connections>
@@ -1847,7 +1805,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MtX-XD-wIs" customClass="PimpView" customModule="MusicPimp" customModuleProvider="target">
-                                <rect key="frame" x="16" y="312" width="343" height="298"/>
+                                <rect key="frame" x="16" y="268" width="343" height="391"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
@@ -1875,12 +1833,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MUSICPIMP PREMIUM" id="rsH-Up-3BI"/>
-                    <connections>
-                        <outlet property="alreadyPurchasedLabel" destination="GDN-5D-f00" id="HhC-xc-ydt"/>
-                        <outlet property="purchaseButton" destination="NUI-xD-a0U" id="R9F-UU-hBf"/>
-                        <outlet property="restoreButton" destination="Ymt-FM-bsQ" id="ZH4-z7-Cqp"/>
-                        <outlet property="statusLabel" destination="d14-QU-WSp" id="bns-V7-MqB"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wr2-zx-LyH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

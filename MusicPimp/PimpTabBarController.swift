@@ -17,9 +17,9 @@ class PimpTabBarController: UITabBarController {
         super.viewDidLoad()
         viewControllers = [
                 attachTab(vc: SnapContainer(), title: "Music", fontAwesomeName: "music"),
-                attachTab(vc: LibraryController(), title: "Player", fontAwesomeName: "play-circle"),
+                attachTab(vc: PlayerController(), title: "Player", fontAwesomeName: "play-circle"),
                 attachTab(vc: UIViewController(), title: "Playlist", fontAwesomeName: "list"),
-                attachTab(vc: UIViewController(), title: "Settings", fontAwesomeName: "cog")
+                attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog")
         ].map { vc in UINavigationController(rootViewController: vc) }
     }
 

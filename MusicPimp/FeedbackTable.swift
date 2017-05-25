@@ -15,19 +15,7 @@ class FeedbackTable: BaseTableController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: FeedbackTable.feedbackIdentifier)
-    }
-    
-    func loadCell<T>(_ name: String, index: IndexPath) -> T {
-        return findCell(name, index: index)!
-    }
-    
-    func findCell<T>(_ name: String, index: IndexPath) -> T? {
-        return identifiedCell(name, index: index) as? T
-    }
-    
-    func identifiedCell(_ name: String, index: IndexPath) -> UITableViewCell {
-        return self.tableView.dequeueReusableCell(withIdentifier: name, for: index)
+        registerCell(reuseIdentifier: FeedbackTable.feedbackIdentifier)
     }
 
     func feedbackCellWithText(_ tableView: UITableView, indexPath: IndexPath, text: String) -> UITableViewCell {
