@@ -13,7 +13,6 @@ class Util {
         return DispatchQueue.main
     }
     
-    
     class func onUiThread(_ f: @escaping () -> Void) {
         DispatchQueue.main.async(execute: f)
     }

@@ -16,17 +16,11 @@ class EndpointSelectController: BaseTableController {
     var selectedIndex: Int? = nil
     // override this shit. thanks for abstract classes, Apple
     var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
-    var segueID: String { get { return "MusicSource" } }
-    
-    @IBAction func unwindToSelf(_ segue: UIStoryboardSegue) {
-        endpoints = settings.endpoints()
-        renderTable()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: endpointIdentifier)
-        endpoints = settings.endpoints()
+//        endpoints = settings.endpoints()
     }
     
     func updateSelected(_ selected: Endpoint) {
@@ -42,6 +36,8 @@ class EndpointSelectController: BaseTableController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+//        Log.info("Will app")
+        endpoints = settings.endpoints()
         updateSelected(manager.loadActive())
         renderTable()
     }

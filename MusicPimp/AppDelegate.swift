@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         window?.makeKeyAndVisible()
-        window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
+//        window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
+        window?.rootViewController = UINavigationController(rootViewController: CacheTableController())
         
         // Override point for customization after application launch.
         initAudio()

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class RowSpec {
+    static let empty = RowSpec(reuseIdentifier: "", text: "")
     let reuseIdentifier: String
     let text: String
     
@@ -45,7 +46,6 @@ class SettingsController: CacheInfoController {
     override func viewDidLoad() {
         super.viewDidLoad()
         [playbackDeviceId, musicSourceId, cacheId, alarmId, aboutId, creditsId].forEach { id in
-//            registerCell(reuseIdentifier: id)
             self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
         }
         let _ = libraryManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
@@ -172,7 +172,7 @@ class SettingsController: CacheInfoController {
             case playbackDeviceId:
                 return PlayerSettingController()
             case cacheId:
-                return CacheInfoController()
+                return CacheTableController()
             case alarmId:
                 return AlarmsController()
             case aboutId:

@@ -8,35 +8,42 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 fileprivate extension Selector {
+    static let saveClicked = #selector(EditEndpointController.onSave(_:))
+    static let cancelClicked = #selector(EditEndpointController.onCancel(_:))
     static let serverTypeChanged = #selector(EditEndpointController.serverTypeChanged(_:))
     static let testClicked = #selector(EditEndpointController.testClicked(_:))
 }
 
-class EditEndpointController: PimpViewController, UITextFieldDelegate {
+class EditEndpointController: PimpViewController {
     let scrollView = UIScrollView()
+    let content = UIView()
     let nameLabel = UILabel()
-    let typeControl = UISegmentedControl()
-    let nameField = UITextField()
-    let addressField = UITextField()
-    let portField = UITextField()
+    let typeControl = UISegmentedControl(items: ["Cloud", "MusicPimp"])
+    let nameField = PimpTextField()
+    let portField = PimpTextField()
     let usernameLabel = UILabel()
-    let usernameField = UITextField()
+    let usernameField = PimpTextField()
     let passwordLabel = UILabel()
-    let passwordField = UITextField()
-    let protocolControl = UISegmentedControl()
+    let passwordField = PimpTextField()
+    let protocolControl = UISegmentedControl(items: ["HTTP", "HTTPS"])
     let portLabel = UILabel()
     let addressLabel = UILabel()
-    let cloudIDField = UITextField()
+    let addressField = PimpTextField()
     let cloudIDLabel = UILabel()
+    let cloudIDField = PimpTextField()
+    let activateLabel = UILabel()
     let activateSwitch = UISwitch()
+    let testButton = UIButton()
     let feedbackText = UITextView()
-    
-    let saveButton = UIBarButtonItem()
     
     var segueID: String? = nil
     var editedItem: Endpoint? = nil
+    
+    var pimpConstraint: Constraint? = nil
+    var cloudConstraint: Constraint? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,69 +56,133 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
     }
     
     func initUI() {
-        nameLabel.text = "Name"
-        cloudIDLabel.text = "Cloud ID"
-        addressLabel.text = "Address"
-        portLabel.text = "Port"
-        usernameLabel.text = "Username"
-        passwordLabel.text = "Password"
-        let textFields = [nameField, addressField, portField, usernameField, passwordField, cloudIDField]
-        textFields.forEach { elem -> () in
-            elem.delegate = self
-        }
-        let nonTextFields = [nameLabel, typeControl, protocolControl, portLabel, addressLabel, usernameLabel, passwordLabel, cloudIDLabel, activateSwitch, feedbackText]
-        let views: [UIView] = nonTextFields + textFields
-        views.forEach { inputView in
-            scrollView.addSubview(inputView)
-        }
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: .cancelClicked)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .saveClicked)
         view.addSubview(scrollView)
-        baseConstraints(views: [scrollView])
-        scrollView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.snp.topMargin).offset(8)
-            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-20)
+        scrollView.addSubview(content)
+        scrollView.snp.makeConstraints { (make) in
+            make.edges.equalTo(view).inset(UIEdgeInsets.zero)
+        }
+        content.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(scrollView).inset(UIEdgeInsets.zero)
+            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview().priority(.medium)
+            make.width.lessThanOrEqualTo(500).priority(.high)
+        }
+        let labels = [nameLabel, portLabel, addressLabel, usernameLabel, passwordLabel, cloudIDLabel, activateLabel]
+        labels.forEach { (label) in
+            label.textColor = PimpColors.titles
+        }
+        let views: [UIView] = [typeControl, cloudIDLabel, cloudIDField, nameLabel, nameField, addressLabel, addressField, portLabel, portField, usernameLabel, usernameField, passwordLabel, passwordField, protocolControl, activateLabel, activateSwitch, testButton, feedbackText]
+        views.forEach { (v) in
+            content.addSubview(v)
         }
         typeControl.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
+            make.top.equalTo(content).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
         }
-        let fields = [typeControl, cloudIDLabel, cloudIDField, addressLabel, addressField, portLabel, portField, usernameLabel, usernameField, passwordLabel, passwordField, protocolControl]
-        stack(views: fields)
-        fields.forEach(leadingTrailingToSuper(target:))
-        cloudIDLabel.snp.makeConstraints { make in
+        typeControl.selectedSegmentIndex = 0
+        cloudIDLabel.text = "Cloud ID"
+        cloudIDLabel.snp.makeConstraints { (make) in
             make.top.equalTo(typeControl.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        nameLabel.text = "Name"
+        nameLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(typeControl.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        cloudIDField.placeholderText = "cloud123"
+        cloudIDField.snp.makeConstraints { (make) in
+            make.top.equalTo(cloudIDLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        nameField.placeholderText = "home computer"
+        nameField.snp.makeConstraints { (make) in
+            make.top.equalTo(nameLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        addressLabel.text = "Address"
+        addressLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(nameField.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        addressField.placeholderText = "host or IP"
+        addressField.keyboardType = .URL
+        addressField.snp.makeConstraints { (make) in
+            make.top.equalTo(addressLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        portLabel.text = "Port"
+        portLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(addressField.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        portField.placeholderText = "8456"
+        portField.keyboardType = .numberPad
+        portField.snp.makeConstraints { (make) in
+            make.top.equalTo(portLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        usernameLabel.text = "Username"
+        usernameLabel.snp.makeConstraints { (make) in
+            // pimp
+            self.pimpConstraint = make.top.equalTo(portField.snp.bottom).offset(8).constraint
+            // cloud
+            self.cloudConstraint = make.top.equalTo(cloudIDField.snp.bottom).offset(8).constraint
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        usernameField.placeholderText = "admin"
+        usernameField.snp.makeConstraints { (make) in
+            make.top.equalTo(usernameLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        passwordLabel.text = "Password"
+        passwordLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(usernameField.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        passwordField.isSecureTextEntry = true
+        passwordField.keyboardAppearance = .dark
+        passwordField.snp.makeConstraints { (make) in
+            make.top.equalTo(passwordLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        protocolControl.selectedSegmentIndex = 0
+        protocolControl.snp.makeConstraints { (make) in
+            make.top.equalTo(passwordField.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        activateLabel.text = "Set as active music source"
+        activateLabel.snp.makeConstraints { (make) in
+            make.leading.equalTo(content).inset(8)
+            make.centerY.equalTo(activateSwitch)
+        }
+        activateSwitch.snp.makeConstraints { (make) in
+            make.top.equalTo(protocolControl.snp.bottom).offset(8)
+            make.trailing.equalTo(content).inset(8)
+            make.leading.equalTo(activateLabel.snp.trailing).offset(8)
+        }
+        testButton.setTitle("Test Connectivity", for: .normal)
+        testButton.setTitleColor(PimpColors.tintColor, for: UIControlState.normal)
+        testButton.snp.makeConstraints { (make) in
+            make.top.equalTo(activateSwitch.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+        }
+        feedbackText.backgroundColor = PimpColors.background
+        feedbackText.snp.makeConstraints { (make) in
+            make.top.equalTo(testButton.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(content).inset(8)
+            make.height.equalTo(60)
+            make.bottom.equalTo(content).inset(8)
         }
         typeControl.addTarget(self, action: .serverTypeChanged, for: .valueChanged)
+        testButton.addTarget(self, action: .testClicked, for: .touchUpInside)
     }
     
-    func stack(views: [UIView]) {
-        if let first = views.get(0), let second = views.get(1) {
-            stackTwo(top: first, bottom: second)
-            stack(views: views.tail())
-        } else {
-            return
-        }
-    }
-    
-    func stackTwo(top: UIView, bottom: UIView) {
-        bottom.snp.makeConstraints { (make) in
-            make.top.equalTo(top.snp.bottom).offset(8)
-        }
-    }
-    
-    func leadingTrailingToSuper(target: UIView) {
-        target.snp.makeConstraints { (make) in
-            make.trailing.leading.equalToSuperview()
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let sender = sender as? UIBarButtonItem, saveButton === sender {
-            saveChanges()
-        }
+    func onSave(_ item: UIBarButtonItem) {
+        saveChanges()
+        goBack()
     }
     
     func saveChanges() {
@@ -122,6 +193,14 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
                 LibraryManager.sharedInstance.saveActive(endpoint)
             }
         }
+    }
+    
+    func onCancel(_ item: UIBarButtonItem) {
+        goBack()
+    }
+    
+    func goBack() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func serverTypeChanged(_ sender: UISegmentedControl) {
@@ -153,6 +232,13 @@ class EditEndpointController: PimpViewController, UITextFieldDelegate {
         let cloudViews: [UIView] = [cloudIDLabel, cloudIDField]
         let nonCloudViews: [UIView] = [nameLabel, nameField, addressLabel, addressField, portLabel, portField, protocolControl]
         let cloudVisible = serverType.name == ServerTypes.Cloud.name
+        if cloudVisible {
+            pimpConstraint?.deactivate()
+            cloudConstraint?.activate()
+        } else {
+            pimpConstraint?.activate()
+            cloudConstraint?.deactivate()
+        }
         for cloudView in cloudViews {
             cloudView.isHidden = !cloudVisible
         }
