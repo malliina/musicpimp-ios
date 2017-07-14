@@ -25,7 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+        let fontAwesomeExists = UIFont.familyNames.exists { (name) -> Bool in
+            name == "FontAwesome"
+        }
+        assert(fontAwesomeExists)
         window?.makeKeyAndVisible()
         window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
 //        window?.rootViewController = UINavigationController(rootViewController: SettingsController())

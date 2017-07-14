@@ -61,8 +61,6 @@
 		7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */; };
 		7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557A1D1EC95300F6141D /* RecentEntry.swift */; };
 		7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557C1D1EC96100F6141D /* PopularEntry.swift */; };
-		7D4655841D3BF72F00F6141D /* MainAndSubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655821D3BF72F00F6141D /* MainAndSubtitleCell.swift */; };
-		7D4655851D3BF72F00F6141D /* MainAndSubtitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */; };
 		7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */; };
 		7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DC1B40412200C2D634 /* CoverService.swift */; };
 		7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */; };
@@ -147,8 +145,6 @@
 		7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */; };
 		7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359751B3EEB52003B01B6 /* Duration.swift */; };
 		7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359771B3F0A51003B01B6 /* Volume.swift */; };
-		7DC891431D5A737A00331A4D /* MainSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891421D5A737A00331A4D /* MainSubCell.xib */; };
-		7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891441D5A73C100331A4D /* MainSubCell.swift */; };
 		7DC891471D5F4C0100331A4D /* ContainerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891461D5F4C0000331A4D /* ContainerParent.swift */; };
 		7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */; };
 		7DC891511D623E8100331A4D /* pimp-4096.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891501D623E8100331A4D /* pimp-4096.png */; };
@@ -160,8 +156,6 @@
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
 		7DDE24701B656DD5007D810E /* PimpUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246F1B656DD5007D810E /* PimpUtils.swift */; };
-		7DDE24721B6E896B007D810E /* PimpMusicItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */; };
-		7DDE24741B6E8ABC007D810E /* PimpMusicItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */; };
 		7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */; };
 		7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24781B7E5B78007D810E /* Throttler.swift */; };
 		7DDE247B1B7E6139007D810E /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE247A1B7E6139007D810E /* CacheManager.swift */; };
@@ -250,8 +244,6 @@
 		7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		7D46557A1D1EC95300F6141D /* RecentEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentEntry.swift; sourceTree = "<group>"; };
 		7D46557C1D1EC96100F6141D /* PopularEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularEntry.swift; sourceTree = "<group>"; };
-		7D4655821D3BF72F00F6141D /* MainAndSubtitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAndSubtitleCell.swift; sourceTree = "<group>"; };
-		7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainAndSubtitleCell.xib; sourceTree = "<group>"; };
 		7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAccessoryCell.swift; sourceTree = "<group>"; };
 		7D4FF8DC1B40412200C2D634 /* CoverService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverService.swift; sourceTree = "<group>"; };
 		7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPExtensions.swift; sourceTree = "<group>"; };
@@ -343,8 +335,6 @@
 		7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FontAwesome.m"; path = "FontAwesome/NSString+FontAwesome.m"; sourceTree = "<group>"; };
 		7DC359751B3EEB52003B01B6 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
 		7DC359771B3F0A51003B01B6 /* Volume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Volume.swift; sourceTree = "<group>"; };
-		7DC891421D5A737A00331A4D /* MainSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainSubCell.xib; sourceTree = "<group>"; };
-		7DC891441D5A73C100331A4D /* MainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSubCell.swift; sourceTree = "<group>"; };
 		7DC891461D5F4C0000331A4D /* ContainerParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerParent.swift; sourceTree = "<group>"; };
 		7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpBarButton.swift; sourceTree = "<group>"; };
 		7DC891501D623E8100331A4D /* pimp-4096.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-4096.png"; path = "MusicPimp/Assets/pimp-4096.png"; sourceTree = "<group>"; };
@@ -357,8 +347,6 @@
 		7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPimp.entitlements; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
 		7DDE246F1B656DD5007D810E /* PimpUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpUtils.swift; sourceTree = "<group>"; };
-		7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PimpMusicItemCell.xib; sourceTree = "<group>"; };
-		7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpMusicItemCell.swift; sourceTree = "<group>"; };
 		7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundDownloader.swift; sourceTree = "<group>"; };
 		7DDE24781B7E5B78007D810E /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		7DDE247A1B7E6139007D810E /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
@@ -438,16 +426,10 @@
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
-				7D4655821D3BF72F00F6141D /* MainAndSubtitleCell.swift */,
-				7D4655831D3BF72F00F6141D /* MainAndSubtitleCell.xib */,
-				7DC891441D5A73C100331A4D /* MainSubCell.swift */,
-				7DC891421D5A737A00331A4D /* MainSubCell.xib */,
 				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
 				7D62879D1D7C37190053BF52 /* PimpButton.swift */,
 				7D62879B1D7C36930053BF52 /* PimpCell.swift */,
 				7D6287991D7C36850053BF52 /* PimpLabel.swift */,
-				7DDE24731B6E8ABC007D810E /* PimpMusicItemCell.swift */,
-				7DDE24711B6E896B007D810E /* PimpMusicItemCell.xib */,
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
 				7D62879F1D7C372D0053BF52 /* PimpSlider.swift */,
 				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
@@ -873,12 +855,9 @@
 				7DC891511D623E8100331A4D /* pimp-4096.png in Resources */,
 				7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */,
 				7D2C779D1B933C5E0066A7B5 /* more_filled-100.png in Resources */,
-				7DDE24721B6E896B007D810E /* PimpMusicItemCell.xib in Resources */,
 				7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */,
 				7DC891531D623FB600331A4D /* pimp-512.png in Resources */,
-				7D4655851D3BF72F00F6141D /* MainAndSubtitleCell.xib in Resources */,
 				7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */,
-				7DC891431D5A737A00331A4D /* MainSubCell.xib in Resources */,
 				7D74F3581BF902DA0004506B /* Media.xcassets in Resources */,
 				7D2C77971B933A810066A7B5 /* guitar.png in Resources */,
 			);
@@ -1045,7 +1024,6 @@
 				7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,
 				7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */,
-				7D4655841D3BF72F00F6141D /* MainAndSubtitleCell.swift in Sources */,
 				7DB1B3B61B11D0590012B8AE /* PimpEndpoint.swift in Sources */,
 				7D0CA9841AF505E3008F72EC /* PlaybackState.swift in Sources */,
 				7D1608BB1BE7BD730007B943 /* MusicFolder.swift in Sources */,
@@ -1128,8 +1106,6 @@
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,
 				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
-				7DDE24741B6E8ABC007D810E /* PimpMusicItemCell.swift in Sources */,
-				7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,
 				33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */,
