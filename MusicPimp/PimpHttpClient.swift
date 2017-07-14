@@ -67,7 +67,7 @@ class PimpHttpClient: HttpClient {
     
     func pimpGet(_ resource: String, f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
         let url = URL(string: resource, relativeTo: baseURL)!
-        log(url.absoluteString)
+//        log(url.absoluteString)
         self.get(
             url,
             headers: defaultHeaders,

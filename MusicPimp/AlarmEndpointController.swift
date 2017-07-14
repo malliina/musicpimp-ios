@@ -8,15 +8,20 @@
 
 import Foundation
 
+protocol AlarmEndpointDelegate {
+    func endpointChanged(newEndpoint: Endpoint)
+}
+
 class AlarmEndpointController: BaseTableController {
-    
     let endpointIdentifier = "EndpointCell"
     
-    var endpoints: [Endpoint] = []
+    private var endpoints: [Endpoint] = []
     var selectedId: String? = nil
+    var delegate: AlarmEndpointDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView!.register(PimpCell.self, forCellReuseIdentifier: endpointIdentifier)
         endpoints = settings.endpoints().filter { $0.supportsAlarms }
         selectedId = settings.defaultNotificationEndpoint()?.id
     }
@@ -41,5 +46,6 @@ class AlarmEndpointController: BaseTableController {
         selectedId = endpoint.id
         settings.saveDefaultNotificationsEndpoint(endpoint)
         renderTable()
+        delegate?.endpointChanged(newEndpoint: endpoint)
     }
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498C6C27044382E317113E /* SnapMusicCell.swift */; };
 		33498E03D12D1B46D6E4B9BA /* LibraryContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334982F712798EFB9B7735E0 /* LibraryContainer.swift */; };
-		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
 		610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */; };
 		6103504B1EACC73D00F85F04 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504A1EACC73D00F85F04 /* Credits.swift */; };
 		612731731EB8F9FE0032788A /* SnapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612731721EB8F9FE0032788A /* SnapCell.swift */; };
@@ -185,7 +184,6 @@
 		334982F712798EFB9B7735E0 /* LibraryContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryContainer.swift; sourceTree = "<group>"; };
 		33498C6C27044382E317113E /* SnapMusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMusicCell.swift; sourceTree = "<group>"; };
 		411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
-		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
 		610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackDelegate.swift; sourceTree = "<group>"; };
 		6103504A1EACC73D00F85F04 /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		612731721EB8F9FE0032788A /* SnapCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapCell.swift; sourceTree = "<group>"; };
@@ -324,7 +322,7 @@
 		7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistParent.swift; sourceTree = "<group>"; };
 		7DC2FB711D56104A00A6FADD /* ListeningController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListeningController.swift; sourceTree = "<group>"; };
 		7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintToggle.swift; sourceTree = "<group>"; };
-		7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = ../FontAwesome.ttf; sourceTree = "<group>"; };
 		7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+FontAwesome.swift"; path = "FontAwesome/String+FontAwesome.swift"; sourceTree = "<group>"; };
 		7DC3595F1B35C8AD003B01B6 /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FontAwesome.h"; path = "FontAwesome/NSString+FontAwesome.h"; sourceTree = "<group>"; };
 		7DC359601B35E73A003B01B6 /* UIFont+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIFont+FontAwesome.h"; path = "FontAwesome/UIFont+FontAwesome.h"; sourceTree = "<group>"; };
@@ -437,7 +435,6 @@
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
 				610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */,
-				610350461EAB9ED700F85F04 /* PlaybackFooter.xib */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
 				33498C6C27044382E317113E /* SnapMusicCell.swift */,
@@ -586,7 +583,6 @@
 			children = (
 				1A6A61E06A765CCD8765B423 /* .gitignore */,
 				7DC359551B35BDD8003B01B6 /* Assets */,
-				7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */,
 				0CD472E30B85058D8F8A8666 /* Frameworks */,
 				7D74F3571BF902DA0004506B /* Media.xcassets */,
 				7DC206A31A1547370032C01D /* MusicPimp */,
@@ -667,6 +663,7 @@
 		7DC206A41A1547370032C01D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7DC359561B35BE3B003B01B6 /* FontAwesome.ttf */,
 				7DC206A51A1547370032C01D /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -846,7 +843,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DC206AE1A1547370032C01D /* Main.storyboard in Resources */,
-				610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */,
 				7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */,
 				7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */,
 				7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */,

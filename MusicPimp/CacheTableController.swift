@@ -116,20 +116,14 @@ class CacheTableController: CacheInfoController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        if section > 0 {
-            if let v = view as? UITableViewHeaderFooterView {
-                v.tintColor = PimpColors.background
-            }
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let v = view as? UITableViewHeaderFooterView {
+            v.tintColor = PimpColors.background
         }
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 || section == 1 {
-            return 44
-        } else {
-            return 0
-        }
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 22
     }
     
     func didToggleCache(_ uiSwitch: UISwitch) {

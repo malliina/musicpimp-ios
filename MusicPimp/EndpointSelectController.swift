@@ -25,7 +25,6 @@ class EndpointSelectController: BaseTableController {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: .addClicked)
         self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: endpointIdentifier)
-//        endpoints = settings.endpoints()
     }
     
     override func viewWillAppear(_ animated: Bool) {

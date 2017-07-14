@@ -10,7 +10,5 @@ import Foundation
 import UIKit
 
 class PlayerSettingController: EndpointSelectController {
-    
     override var manager: EndpointManager { get { return PlayerManager.sharedInstance } }
-//    override var segueID: String { get { return "PlaybackDevice" } }
 }

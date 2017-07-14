@@ -12,7 +12,7 @@ fileprivate extension Selector {
     static let addClicked = #selector(AlarmsController.onAddNew(_:))
 }
 
-class AlarmsController : PimpTableController {
+class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
     let endpointFooter = "MusicPimp servers support scheduled playback of music."
     let notificationFooter = "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
     let noAlarmsMessage = "No saved alarms"
@@ -57,6 +57,7 @@ class AlarmsController : PimpTableController {
     func onAddNew(_ sender: UIBarButtonItem) {
         if let endpoint = endpoint {
             let dest = EditAlarmTableViewController()
+            dest.delegate = self
             dest.initNewAlarm(endpoint)
             self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
         }
@@ -124,6 +125,18 @@ class AlarmsController : PimpTableController {
         alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
     }
     
+    func alarmUpdated(a: Alarm) {
+        reloadAlarms()
+    }
+    
+    func alarmDeleted() {
+        reloadAlarms()
+    }
+    
+    func endpointChanged(newEndpoint: Endpoint) {
+        reloadAlarms()
+    }
+    
     func reloadAlarms() {
         feedbackMessage = "Loading alarms..."
         endpoint = settings.defaultNotificationEndpoint()
@@ -133,7 +146,7 @@ class AlarmsController : PimpTableController {
             feedbackMessage = "Please configure a MusicPimp endpoint to continue."
         }
     }
-    
+        
     func loadAlarms(_ endpoint: Endpoint) {
         loadAlarms(Libraries.fromEndpoint(endpoint))
     }
@@ -245,14 +258,24 @@ class AlarmsController : PimpTableController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        if indexPath.section == alarmsSection {
+        switch indexPath.section {
+        case endpointSection:
+            let dest = AlarmEndpointController()
+            dest.delegate = self
+            navigationController?.pushViewController(dest, animated: true)
+            break
+        case alarmsSection:
             if let alarm = alarms.get(row), let endpoint = endpoint {
                 let dest = EditAlarmTableViewController()
                 dest.initEditAlarm(alarm, endpoint: endpoint)
-                self.navigationController?.pushViewController(dest, animated: true)
+                dest.delegate = self
+                navigationController?.pushViewController(dest, animated: true)
             } else {
                 Log.error("No alarm or endpoint")
             }
+            break
+        default:
+            break
         }
     }
     

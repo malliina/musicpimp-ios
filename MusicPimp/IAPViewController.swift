@@ -29,6 +29,7 @@ class IAPViewController: PimpViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "MUSICPIMP PREMIUM"
         purchaseButton.addTarget(self, action: .purchaseClicked, for: .touchUpInside)
         restoreButton.addTarget(self, action: .restoreClicked, for: .touchUpInside)
         togglePurchaseViews(true)

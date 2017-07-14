@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     
-//    var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
     var window: UIWindow?
     
     let audioSession = AVAudioSession.sharedInstance()
@@ -25,24 +24,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let fontAwesomeExists = UIFont.familyNames.exists { (name) -> Bool in
-            name == "FontAwesome"
-        }
-        assert(fontAwesomeExists)
         window?.makeKeyAndVisible()
-        window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
-//        window?.rootViewController = UINavigationController(rootViewController: SettingsController())
+        window?.rootViewController = PimpTabBarController()
         
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         connectToPlayer()
-//        notifications.initNotifications(application)
+
         if let launchOptions = launchOptions {
             notifications.handleNotification(application, data: launchOptions)
         }
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
-//        Log.info("didFinishLaunchingWithOptions")
+
         initTheme(application)
 //        test()
         return true

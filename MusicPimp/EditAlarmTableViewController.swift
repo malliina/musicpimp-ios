@@ -13,6 +13,11 @@ fileprivate extension Selector {
     static let cancelClicked = #selector(EditAlarmTableViewController.onCancel(_:))
 }
 
+protocol EditAlarmDelegate {
+    func alarmUpdated(a: Alarm)
+    func alarmDeleted()
+}
+
 class EditAlarmTableViewController: BaseTableController {
     let timePickerIdentifier = "TimePickerCell"
     let repeatIdentifier = "RepeatCell"
@@ -25,6 +30,7 @@ class EditAlarmTableViewController: BaseTableController {
     
     var mutableAlarm: MutableAlarm? = nil
     var endpoint: Endpoint? = nil
+    var delegate: EditAlarmDelegate? = nil
     
     let datePicker = UIDatePicker()
     
@@ -96,6 +102,8 @@ class EditAlarmTableViewController: BaseTableController {
             let when = mutableAlarm.when
             when.hour = time.hour
             when.minute = time.minute
+        } else {
+            Log.error("Unable to save alarm - no alarm available")
         }
     }
     
@@ -109,6 +117,12 @@ class EditAlarmTableViewController: BaseTableController {
     
     func onSave(_ sender: UIBarButtonItem) {
         updateDate()
+        if let endpoint = endpoint, let alarm = mutableAlarm?.toImmutable() {
+            let library = Libraries.fromEndpoint(endpoint)
+            library.saveAlarm(alarm, onError: onError) {
+                self.delegate?.alarmUpdated(a: alarm)
+            }
+        }
         goBack()
     }
     
@@ -144,7 +158,6 @@ class EditAlarmTableViewController: BaseTableController {
             case repeatIdentifier:
                 if let label = cell.textLabel {
                     label.text = "Repeat"
-                    label.textColor = PimpColors.titles
                 }
                 let emptyDays = Set<Day>()
                 let activeDays = mutableAlarm?.when.days ?? emptyDays
@@ -153,16 +166,15 @@ class EditAlarmTableViewController: BaseTableController {
             case trackIdentifier:
                 if let label = cell.textLabel {
                     label.text = "Track"
-                    label.textColor = PimpColors.titles
                 }
                 cell.detailTextLabel?.text = mutableAlarm?.track?.title ?? "No track"
                 break
             case playIdentifier:
                 if let label = cell.textLabel {
                     label.text = "Play Now"
-                    label.textColor = PimpColors.titles
                     label.isEnabled = mutableAlarm?.track != nil
                     label.textAlignment = .center
+                    label.textColor = PimpColors.titles
                 }
                 break
             case deleteAlarmIdentifier:
@@ -198,8 +210,9 @@ class EditAlarmTableViewController: BaseTableController {
                 if let alarmId = mutableAlarm?.id, let endpoint = endpoint {
                     tableView.deselectRow(at: indexPath, animated: false)
                     Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId, onError: onError) {
+                        self.delegate?.alarmDeleted()
                         Util.onUiThread {
-                            self.goBack(true)
+                            self.goBack()
                         }
                     }
                 }
@@ -243,18 +256,12 @@ class EditAlarmTableViewController: BaseTableController {
         
     }
     
-    func goBack(_ didDelete: Bool = false) {
+    func goBack() {
         let isAddMode = presentingViewController != nil
         if isAddMode {
             dismiss(animated: true, completion: nil)
         } else {
             navigationController?.popViewController(animated: true)
-            if didDelete {
-                if let alarmsController = navigationController!.viewControllers.last as? AlarmsController {
-                    // reloads so that the deleted alarm entry disappears from the table we now return to
-                    alarmsController.reloadAlarms()
-                }
-            }
         }
     }
 }
