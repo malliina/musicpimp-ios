@@ -129,7 +129,6 @@
 		7DB430E11C42B77800CF22DC /* VolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430E01C42B77800CF22DC /* VolumeViewController.swift */; };
 		7DB430E31C42BEC400CF22DC /* VolumeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB430E21C42BEC400CF22DC /* VolumeValue.swift */; };
 		7DC206A71A1547370032C01D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206A61A1547370032C01D /* AppDelegate.swift */; };
-		7DC206AE1A1547370032C01D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AC1A1547370032C01D /* Main.storyboard */; };
 		7DC206B01A1547370032C01D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206AF1A1547370032C01D /* Images.xcassets */; };
 		7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC206B11A1547370032C01D /* LaunchScreen.xib */; };
 		7DC206BF1A1547380032C01D /* MusicPimpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC206BE1A1547380032C01D /* MusicPimpTests.swift */; };
@@ -313,7 +312,6 @@
 		7DC206A11A1547370032C01D /* MusicPimp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPimp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DC206A51A1547370032C01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DC206A61A1547370032C01D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7DC206AD1A1547370032C01D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7DC206AF1A1547370032C01D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7DC206B21A1547370032C01D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7DC206B81A1547380032C01D /* MusicPimpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicPimpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -633,7 +631,6 @@
 				7D6756CC1B08B25400BC0CA9 /* LibraryManager.swift */,
 				7DB1B3AA1B10CC790012B8AE /* Local */,
 				7D9E48A61AD972A800D5CDDF /* Log.swift */,
-				7DC206AC1A1547370032C01D /* Main.storyboard */,
 				7DE944D11BE67B5A00CD441B /* Models */,
 				7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */,
 				7D0CA9931AF699C6008F72EC /* Network */,
@@ -842,7 +839,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DC206AE1A1547370032C01D /* Main.storyboard in Resources */,
 				7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */,
 				7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */,
 				7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */,
@@ -1128,14 +1124,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		7DC206AC1A1547370032C01D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7DC206AD1A1547370032C01D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7DC206B11A1547370032C01D /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
