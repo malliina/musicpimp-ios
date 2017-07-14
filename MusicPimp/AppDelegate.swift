@@ -27,8 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         window?.makeKeyAndVisible()
-//        window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
-        window?.rootViewController = UINavigationController(rootViewController: CacheTableController())
+        window?.rootViewController = PimpTabBarController() // UINavigationController(rootViewController: SnapLibrary())
+//        window?.rootViewController = UINavigationController(rootViewController: SettingsController())
         
         // Override point for customization after application launch.
         initAudio()
@@ -175,6 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settings.trackHistory = Limiter.sharedInstance.history
         Log.info("Terminating")
     }
+    
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {
     //        switch event.subtype {
     //        case UIEventSubtype.RemoteControlPlay:
@@ -201,6 +202,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //            Log.error("Unknown remote control event: \(event.subtype)")
     //        }
     //    }
-
-
 }

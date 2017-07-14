@@ -11,6 +11,7 @@ import UIKit
 
 fileprivate extension Selector {
     static let volumeClicked = #selector(PlayerController.onVolumeBarButtonClicked)
+    static let seekChanged = #selector(PlayerController.sliderChanged(_:))
 }
 
 class PlayerController: ListeningController, PlaybackDelegate {
@@ -20,8 +21,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let defaultDuration = 60.seconds
     
     let playbackFooter = SnapPlaybackFooter()
-    //let labelContainer = UIView()
-    let volumeBarButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24), style: .plain, target: self, action: .volumeClicked)
     let titleLabel = UILabel()
     let albumLabel = UILabel()
     let artistLabel = UILabel()
@@ -37,9 +36,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
         super.viewDidLoad()
         edgesForExtendedLayout = []
         navigationItem.title = "PLAYER"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24), style: .plain, target: self, action: .volumeClicked)
         initUI()
         listenWhenLoaded(player)
-        //self.labelContainer.backgroundColor = PimpColors.background
         albumLabel.textColor = PimpColors.subtitles
         positionLabel.textColor = PimpColors.subtitles
         durationLabel.textColor = PimpColors.subtitles
@@ -51,9 +50,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     func onVolumeBarButtonClicked() {
-        // present volume viewcontroller modally
+        // presents volume viewcontroller modally
         let dest = VolumeViewController()
-        self.present(dest, animated: true, completion: nil)
+        self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
     }
     
     func initUI() {
@@ -76,6 +75,10 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     func initSeek() {
+        // only triggers valueChanged when dragging has ended
+        seek.isContinuous = false
+        seek.addTarget(self, action: .seekChanged, for: .valueChanged)
+//        seek.addTarget(self, action: .seekChanged, for: .begi)
         seek.snp.makeConstraints { make in
             make.top.equalTo(positionLabel.snp.bottom).offset(2)
             make.top.equalTo(durationLabel.snp.bottom).offset(2)
@@ -85,7 +88,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.top.equalTo(artistLabel.snp.bottom).offset(8)
             make.trailing.equalTo(durationLabel.snp.leading)
-            make.width.equalTo(durationLabel.snp.width)
+            make.width.equalTo(durationLabel)
         }
         durationLabel.textAlignment = .right
         durationLabel.snp.makeConstraints { make in
@@ -96,17 +99,27 @@ class PlayerController: ListeningController, PlaybackDelegate {
     
     func initLabels() {
         centered(labels: [titleLabel, albumLabel, artistLabel])
+        titleLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         titleLabel.font = UIFont.systemFont(ofSize: 28)
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(coverImage.snp.bottom).offset(16)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.height.greaterThanOrEqualTo(10)
         }
+        albumLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         albumLabel.font = UIFont.systemFont(ofSize: 17)
         albumLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
         }
         artistLabel.font = UIFont.systemFont(ofSize: 17)
+        artistLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         artistLabel.snp.makeConstraints { make in
             make.top.equalTo(albumLabel.snp.bottom).offset(8)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
         }
     }
     
@@ -114,19 +127,15 @@ class PlayerController: ListeningController, PlaybackDelegate {
         coverImage.image = CoverService.defaultCover
         coverImage.snp.makeConstraints { make in
             make.top.equalTo(self.view.snp.topMargin).offset(8)
+            make.bottom.equalTo(titleLabel.snp.top).offset(-16)
         }
-        //coverImage.contentMode = .scaleAspectFit
-        coverImage.clipsToBounds = true
-        //coverImage.backgroundColor = UIColor.yellow
+        coverImage.contentMode = .scaleAspectFit
     }
     
     func centered(labels: [UILabel]) {
         labels.forEach { label in
             label.textAlignment = .center
-            //label.adjustsFontSizeToFitWidth = true
-            //label.lineBreakMode = .byTruncatingTail
             label.numberOfLines = 0
-            //label.minimumScaleFactor = 1
         }
     }
     
@@ -207,7 +216,10 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     fileprivate func updatePosition(_ position: Duration) {
-        seek.value = position.secondsFloat
+        let isUserDragging = seek.isHighlighted
+        if !isUserDragging {
+            seek.value = position.secondsFloat
+        }
         positionLabel.text = position.description
     }
     
@@ -245,7 +257,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         }
     }
     
-    @IBAction func sliderChanged(_ sender: AnyObject) {
+    func sliderChanged(_ sender: AnyObject) {
         let seekValue = seek.value
         // TODO throttle
         if let pos = seekValue.seconds {

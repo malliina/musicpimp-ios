@@ -13,12 +13,21 @@ class RepeatDaysController: BaseTableController {
     
     var alarm: MutableAlarm? = nil
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationItem.title = "REPEAT"
+        registerCell(reuseIdentifier: cellIdentifier)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let row = (indexPath as NSIndexPath).row
+        let row = indexPath.row
         let dayName = weekDayName(row)
         let accessory = isChecked(row) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
-        cell.textLabel?.text = "Every \(dayName)"
+        if let label = cell.textLabel {
+            label.text = "Every \(dayName)"
+            label.textColor = PimpColors.titles
+        }
         cell.accessoryType = accessory
         return cell
     }
@@ -26,10 +35,10 @@ class RepeatDaysController: BaseTableController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let cell = tableView.cellForRow(at: indexPath) {
-            let wasChecked = cell.accessoryType == UITableViewCellAccessoryType.checkmark
+            let wasChecked = cell.accessoryType == .checkmark
             let newAccessory = wasChecked ? UITableViewCellAccessoryType.none : UITableViewCellAccessoryType.checkmark
             let willBeEnabled = !wasChecked
-            if let day = dayForIndex((indexPath as NSIndexPath).row), let alarm = alarm {
+            if let day = dayForIndex(indexPath.row), let alarm = alarm {
                 if willBeEnabled {
                     alarm.when.days.insert(day)
                 } else {

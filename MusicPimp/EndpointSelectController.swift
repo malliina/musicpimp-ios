@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+fileprivate extension Selector {
+    static let addClicked = #selector(EndpointSelectController.onAddNew(_:))
+}
+
 class EndpointSelectController: BaseTableController {
     let endpointIdentifier = "EndpointCell"
     var endpoints: [Endpoint] = []
@@ -19,8 +23,17 @@ class EndpointSelectController: BaseTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: .addClicked)
         self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: endpointIdentifier)
 //        endpoints = settings.endpoints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        Log.info("Will app")
+        endpoints = settings.endpoints()
+        updateSelected(manager.loadActive())
+        renderTable()
     }
     
     func updateSelected(_ selected: Endpoint) {
@@ -34,12 +47,9 @@ class EndpointSelectController: BaseTableController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        Log.info("Will app")
-        endpoints = settings.endpoints()
-        updateSelected(manager.loadActive())
-        renderTable()
+    func onAddNew(_ sender: UIBarButtonItem) {
+        let dest = EditEndpointController()
+        self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

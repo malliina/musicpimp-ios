@@ -21,12 +21,11 @@ class FeedbackTable: BaseTableController {
     func feedbackCellWithText(_ tableView: UITableView, indexPath: IndexPath, text: String) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedbackTable.feedbackIdentifier, for: indexPath)
         if let label = cell.textLabel {
-            label.lineBreakMode = NSLineBreakMode.byWordWrapping
+            label.lineBreakMode = .byWordWrapping
             label.numberOfLines = 0
             label.text = text
             label.textColor = PimpColors.titles
         }
         return cell
     }
-
 }

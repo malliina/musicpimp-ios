@@ -20,8 +20,8 @@ class CustomAccessoryCell: PimpCell {
         .withSize(scaledToSize: accessoryImageSize)
     var accessoryDelegate: AccessoryDelegate? = nil
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    // call from layoutSubviews if necessary
+    func removeAccessoryMargin() {
         // Removes right-side accessory view margin
         // http://stackoverflow.com/questions/20534075/get-rid-of-padding-for-uitableviewcell-custom-accessoryview
         if let accessoryView = self.accessoryView {
@@ -32,6 +32,8 @@ class CustomAccessoryCell: PimpCell {
     func installTrackAccessoryView(height: CGFloat = CustomAccessoryCell.defaultCellHeight) {
         if let accessory = createTrackAccessory(height: height) {
             self.accessoryView = accessory
+        } else {
+            Log.error("No accessory available")
         }
     }
     
@@ -40,7 +42,7 @@ class CustomAccessoryCell: PimpCell {
             //let accessoryHeight = cellHeight()
             //let accessoryWidth = accessoryHeight
             let accessoryWidth: CGFloat = CustomAccessoryCell.defaultCellHeight
-            let button = UIButton(type: UIButtonType.custom)
+            let button = UIButton(type: .custom)
             let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
             button.frame = frame
             button.setImage(image, for: UIControlState())
@@ -53,7 +55,11 @@ class CustomAccessoryCell: PimpCell {
     }
     
     func accessoryClicked(_ sender: AnyObject, event: AnyObject) {
-        accessoryDelegate?.accessoryTapped(sender, event: event)
+        if let accessoryDelegate = accessoryDelegate {
+            accessoryDelegate.accessoryTapped(sender, event: event)
+        } else {
+            Log.error("No accessory delegate")
+        }
     }
 
 }

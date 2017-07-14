@@ -16,9 +16,9 @@ class PimpTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewControllers = [
-                attachTab(vc: SnapContainer(), title: "Music", fontAwesomeName: "music"),
+                attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music"),
                 attachTab(vc: PlayerController(), title: "Player", fontAwesomeName: "play-circle"),
-                attachTab(vc: UIViewController(), title: "Playlist", fontAwesomeName: "list"),
+                attachTab(vc: PlaylistParent(), title: "Playlist", fontAwesomeName: "list"),
                 attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog")
         ].map { vc in UINavigationController(rootViewController: vc) }
     }
@@ -46,8 +46,8 @@ class PimpTabBarController: UITabBarController {
     
     func icon(_ name: String, selected: Bool) -> UIImage {
         let iconColor = selected ? PimpColors.tintColor : UIColor.gray
-        let image = UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: iconColor, fontSize: tabIconFontSize)
-        return image!.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        let image = UIImage(icon: name, backgroundColor: .clear, iconColor: iconColor, fontSize: tabIconFontSize)
+        return image!.withRenderingMode(.alwaysOriginal)
     }
 
 }

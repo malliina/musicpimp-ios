@@ -8,12 +8,16 @@
 
 import Foundation
 
+fileprivate extension Selector {
+    static let volumeChanged = #selector(VolumeViewController.userDidChangeVolume(_:))
+    static let cancelClicked = #selector(VolumeViewController.backClicked(_:))
+}
+
 class VolumeViewController: PimpViewController {
+    let lowVolumeButton = UIButton()
+    let highVolumeButton = UIButton()
     
-    @IBOutlet var lowVolumeButton: UIButton!
-    @IBOutlet var highVolumeButton: UIButton!
-    
-    @IBOutlet var volumeSlider: UISlider!
+    let volumeSlider = UISlider()
     
     fileprivate var appearedListeners: [Disposable] = []
     
@@ -21,8 +25,9 @@ class VolumeViewController: PimpViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        installFaImage("fa-volume-down", button: lowVolumeButton)
-        installFaImage("fa-volume-up", button: highVolumeButton)
+        navigationItem.title = "SET VOLUME"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: .cancelClicked)
+        initUI()
         updateVolume()
     }
     
@@ -30,6 +35,26 @@ class VolumeViewController: PimpViewController {
         super.viewDidAppear(animated)
         updateVolume()
         listenWhenAppeared(player)
+    }
+    
+    func initUI() {
+        addSubviews(views: [lowVolumeButton, volumeSlider, highVolumeButton])
+        installFaImage("fa-volume-down", button: lowVolumeButton)
+        lowVolumeButton.snp.makeConstraints { (make) in
+            make.leading.equalToSuperview().offset(8)
+            make.centerY.equalToSuperview()
+        }
+        volumeSlider.addTarget(self, action: .volumeChanged, for: .valueChanged)
+        volumeSlider.snp.makeConstraints { (make) in
+            make.leading.equalTo(lowVolumeButton.snp.trailing).offset(8)
+            make.trailing.equalTo(highVolumeButton.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+        }
+        installFaImage("fa-volume-up", button: highVolumeButton)
+        highVolumeButton.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+        }
     }
     
     func updateVolume() {
@@ -43,21 +68,20 @@ class VolumeViewController: PimpViewController {
     
     func installFaImage(_ name: String, button: UIButton) {
         button.setTitle("", for: UIControlState())
-//        button.titleLabel?.text = ""
         button.setImage(faImage(name), for: UIControlState())
     }
     
     func faImage(_ name: String) -> UIImage {
-        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 28)
+        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.tintColor, fontSize: 28)
     }
     
-    @IBAction func userDidChangeVolume(_ sender: UISlider) {
+    func userDidChangeVolume(_ sender: UISlider) {
         let percent = sender.value / (sender.maximumValue - sender.minimumValue)
         let volume = VolumeValue(volume: Int(100.0 * percent))
         _ = player.volume(volume)
     }
     
-    @IBAction func backClicked(_ sender: UIBarButtonItem) {
+    func backClicked(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
     

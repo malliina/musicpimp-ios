@@ -13,6 +13,9 @@ class SnapMainSubCell: SnapCell {
     let sub = UILabel()
     
     override func configureView() {
+        installTrackAccessoryView()
+        main.textColor = PimpColors.titles
+        sub.textColor = PimpColors.titles
         addSubview(main)
         main.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -25,7 +28,12 @@ class SnapMainSubCell: SnapCell {
             make.top.equalTo(main.snp.bottom)
             make.leading.equalTo(self.snp.leadingMargin)
             make.trailing.equalTo(self.snp.trailingMargin)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().inset(8)
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        super.removeAccessoryMargin()
     }
 }

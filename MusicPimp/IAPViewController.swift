@@ -16,18 +16,16 @@ fileprivate extension Selector {
 }
 
 class IAPViewController: PimpViewController {
-    static let StoryboardId = "IAPViewController"
-    
-    var products: [SKProduct] = []
-    var premiumProduct: SKProduct? = nil
-    var invalidIdentifiers: [String] = []
-    var request: SKProductsRequest? = nil
-    
     let statusLabel = UILabel()
     let purchaseButton = UIButton()
     let alreadyPurchasedLabel = UILabel()
     let restoreButton = UIButton()
     var disposable: Disposable? = nil
+
+    var products: [SKProduct] = []
+    var premiumProduct: SKProduct? = nil
+    var invalidIdentifiers: [String] = []
+    var request: SKProductsRequest? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -8,12 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498C6C27044382E317113E /* SnapMusicCell.swift */; };
-		33498D172ED1004161A84549 /* SnapLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */; };
-		33498E03D12D1B46D6E4B9BA /* SnapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334982F712798EFB9B7735E0 /* SnapContainer.swift */; };
+		33498E03D12D1B46D6E4B9BA /* LibraryContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334982F712798EFB9B7735E0 /* LibraryContainer.swift */; };
 		610350471EAB9ED700F85F04 /* PlaybackFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610350461EAB9ED700F85F04 /* PlaybackFooter.xib */; };
-		610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */; };
+		610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */; };
 		6103504B1EACC73D00F85F04 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504A1EACC73D00F85F04 /* Credits.swift */; };
-		6103504D1EAD01FD00F85F04 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */; };
 		612731731EB8F9FE0032788A /* SnapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612731721EB8F9FE0032788A /* SnapCell.swift */; };
 		616DB9A81EC8718900B23BE9 /* DetailedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616DB9A71EC8718900B23BE9 /* DetailedCell.swift */; };
 		618ECD3B1EB7522C0018B309 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3A1EB7522C0018B309 /* BaseView.swift */; };
@@ -29,7 +27,6 @@
 		7D0CA9841AF505E3008F72EC /* PlaybackState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9831AF505E3008F72EC /* PlaybackState.swift */; };
 		7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9851AF50F15008F72EC /* PlayerInfo.swift */; };
 		7D0CA9881AF68EC6008F72EC /* EditEndpointController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */; };
-		7D0CA98A1AF68EE7008F72EC /* EndpointsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9891AF68EE7008F72EC /* EndpointsController.swift */; };
 		7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA98B1AF6940B008F72EC /* SettingsController.swift */; };
 		7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA98F1AF69950008F72EC /* Endpoint.swift */; };
 		7D0CA9921AF6999E008F72EC /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9911AF6999E008F72EC /* Protocol.swift */; };
@@ -146,25 +143,18 @@
 		7DC3595E1B35C7B3003B01B6 /* String+FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */; };
 		7DC359641B35E853003B01B6 /* UIFont+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */; };
 		7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */; };
-		7DC359671B35EE3E003B01B6 /* PlayerNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359661B35EE3E003B01B6 /* PlayerNavController.swift */; };
 		7DC359691B35F196003B01B6 /* PimpTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359681B35F196003B01B6 /* PimpTabBarController.swift */; };
 		7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */; };
-		7DC3596D1B371212003B01B6 /* LibraryNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3596C1B371212003B01B6 /* LibraryNavController.swift */; };
-		7DC3596F1B37121F003B01B6 /* PlaylistNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC3596E1B37121F003B01B6 /* PlaylistNavController.swift */; };
-		7DC359711B37122A003B01B6 /* SettingsNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359701B37122A003B01B6 /* SettingsNavController.swift */; };
-		7DC359731B371426003B01B6 /* TabNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359721B371426003B01B6 /* TabNavController.swift */; };
 		7DC359761B3EEB52003B01B6 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359751B3EEB52003B01B6 /* Duration.swift */; };
 		7DC359781B3F0A51003B01B6 /* Volume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC359771B3F0A51003B01B6 /* Volume.swift */; };
 		7DC891431D5A737A00331A4D /* MainSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891421D5A737A00331A4D /* MainSubCell.xib */; };
 		7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891441D5A73C100331A4D /* MainSubCell.swift */; };
 		7DC891471D5F4C0100331A4D /* ContainerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891461D5F4C0000331A4D /* ContainerParent.swift */; };
-		7DC891491D5F775800331A4D /* LibraryParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891481D5F775800331A4D /* LibraryParent.swift */; };
 		7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */; };
 		7DC891511D623E8100331A4D /* pimp-4096.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891501D623E8100331A4D /* pimp-4096.png */; };
 		7DC891531D623FB600331A4D /* pimp-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DC891521D623FB600331A4D /* pimp-512.png */; };
 		7DC891551D71B75800331A4D /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891541D71B75800331A4D /* Colors.swift */; };
 		7DC891571D71B8C400331A4D /* PimpColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891561D71B8C400331A4D /* PimpColors.swift */; };
-		7DC891591D78AC8A00331A4D /* PimpNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC891581D78AC8A00331A4D /* PimpNavController.swift */; };
 		7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8915A1D78AD0600331A4D /* PimpViewController.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
@@ -198,14 +188,12 @@
 /* Begin PBXFileReference section */
 		1A6A61E06A765CCD8765B423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		2851BF835BE065061CE12054 /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
-		334982F712798EFB9B7735E0 /* SnapContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapContainer.swift; sourceTree = "<group>"; };
-		33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLibrary.swift; sourceTree = "<group>"; };
+		334982F712798EFB9B7735E0 /* LibraryContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryContainer.swift; sourceTree = "<group>"; };
 		33498C6C27044382E317113E /* SnapMusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMusicCell.swift; sourceTree = "<group>"; };
 		411EC1FF4155ECA9EC722E6E /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
 		610350461EAB9ED700F85F04 /* PlaybackFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaybackFooter.xib; sourceTree = "<group>"; };
-		610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
+		610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackDelegate.swift; sourceTree = "<group>"; };
 		6103504A1EACC73D00F85F04 /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
-		6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
 		612731721EB8F9FE0032788A /* SnapCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapCell.swift; sourceTree = "<group>"; };
 		616DB9A71EC8718900B23BE9 /* DetailedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedCell.swift; sourceTree = "<group>"; };
 		618ECD3A1EB7522C0018B309 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
@@ -226,7 +214,6 @@
 		7D0CA9831AF505E3008F72EC /* PlaybackState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackState.swift; sourceTree = "<group>"; };
 		7D0CA9851AF50F15008F72EC /* PlayerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerInfo.swift; sourceTree = "<group>"; };
 		7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEndpointController.swift; sourceTree = "<group>"; };
-		7D0CA9891AF68EE7008F72EC /* EndpointsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointsController.swift; sourceTree = "<group>"; };
 		7D0CA98B1AF6940B008F72EC /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		7D0CA98F1AF69950008F72EC /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		7D0CA9911AF6999E008F72EC /* Protocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
@@ -352,25 +339,18 @@
 		7DC359611B35E73A003B01B6 /* UIImage+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+FontAwesome.h"; path = "FontAwesome/UIImage+FontAwesome.h"; sourceTree = "<group>"; };
 		7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIFont+FontAwesome.m"; path = "FontAwesome/UIFont+FontAwesome.m"; sourceTree = SOURCE_ROOT; };
 		7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+FontAwesome.m"; path = "FontAwesome/UIImage+FontAwesome.m"; sourceTree = SOURCE_ROOT; };
-		7DC359661B35EE3E003B01B6 /* PlayerNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerNavController.swift; sourceTree = "<group>"; };
 		7DC359681B35F196003B01B6 /* PimpTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpTabBarController.swift; sourceTree = "<group>"; };
 		7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FontAwesome.m"; path = "FontAwesome/NSString+FontAwesome.m"; sourceTree = "<group>"; };
-		7DC3596C1B371212003B01B6 /* LibraryNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryNavController.swift; sourceTree = "<group>"; };
-		7DC3596E1B37121F003B01B6 /* PlaylistNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistNavController.swift; sourceTree = "<group>"; };
-		7DC359701B37122A003B01B6 /* SettingsNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsNavController.swift; sourceTree = "<group>"; };
-		7DC359721B371426003B01B6 /* TabNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabNavController.swift; sourceTree = "<group>"; };
 		7DC359751B3EEB52003B01B6 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
 		7DC359771B3F0A51003B01B6 /* Volume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Volume.swift; sourceTree = "<group>"; };
 		7DC891421D5A737A00331A4D /* MainSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainSubCell.xib; sourceTree = "<group>"; };
 		7DC891441D5A73C100331A4D /* MainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSubCell.swift; sourceTree = "<group>"; };
 		7DC891461D5F4C0000331A4D /* ContainerParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerParent.swift; sourceTree = "<group>"; };
-		7DC891481D5F775800331A4D /* LibraryParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryParent.swift; sourceTree = "<group>"; };
 		7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpBarButton.swift; sourceTree = "<group>"; };
 		7DC891501D623E8100331A4D /* pimp-4096.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-4096.png"; path = "MusicPimp/Assets/pimp-4096.png"; sourceTree = "<group>"; };
 		7DC891521D623FB600331A4D /* pimp-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-512.png"; path = "MusicPimp/Assets/pimp-512.png"; sourceTree = "<group>"; };
 		7DC891541D71B75800331A4D /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		7DC891561D71B8C400331A4D /* PimpColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpColors.swift; sourceTree = "<group>"; };
-		7DC891581D78AC8A00331A4D /* PimpNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpNavController.swift; sourceTree = "<group>"; };
 		7DC8915A1D78AD0600331A4D /* PimpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpViewController.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
@@ -474,7 +454,7 @@
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
-				610350481EAB9F1C00F85F04 /* PlaybackFooter.swift */,
+				610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */,
 				610350461EAB9ED700F85F04 /* PlaybackFooter.xib */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
@@ -587,44 +567,34 @@
 				7D4FF8E31B48637D00C2D634 /* CacheTableController.swift */,
 				7DC891461D5F4C0000331A4D /* ContainerParent.swift */,
 				6103504A1EACC73D00F85F04 /* Credits.swift */,
-				6103504C1EAD01FD00F85F04 /* CreditsViewController.swift */,
+				619B7B7C1F058415001CF11A /* DemoView.swift */,
 				7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */,
 				7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */,
 				7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */,
-				7D0CA9891AF68EE7008F72EC /* EndpointsController.swift */,
 				7D6756D01B08E5ED00BC0CA9 /* EndpointSelectController.swift */,
 				7D288ED11C4435FF00A08109 /* FeedbackTable.swift */,
 				7D288ECF1C44346E00A08109 /* IAPViewController.swift */,
+				334982F712798EFB9B7735E0 /* LibraryContainer.swift */,
 				7D61A7001AA4E14F00F21622 /* LibraryController.swift */,
-				7DC3596C1B371212003B01B6 /* LibraryNavController.swift */,
-				7DC891481D5F775800331A4D /* LibraryParent.swift */,
 				7DC2FB711D56104A00A6FADD /* ListeningController.swift */,
-				7DC891581D78AC8A00331A4D /* PimpNavController.swift */,
 				7DC359681B35F196003B01B6 /* PimpTabBarController.swift */,
 				7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */,
 				7DC8915A1D78AD0600331A4D /* PimpViewController.swift */,
 				7D9E48AF1ADAE8CB00D5CDDF /* PlayerController.swift */,
-				7DC359661B35EE3E003B01B6 /* PlayerNavController.swift */,
 				7D6756C81B07CDD500BC0CA9 /* PlayerSettingController.swift */,
 				7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */,
-				7DC3596E1B37121F003B01B6 /* PlaylistNavController.swift */,
 				7DC2FB6D1D526DB300A6FADD /* PlaylistParent.swift */,
-				7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */,
 				7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */,
+				7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */,
 				7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */,
 				7D28D4241C2D8BDC00B3F62F /* SearchableMusicController.swift */,
 				7D28D4261C2D8D5200B3F62F /* SearchAlarmTrackController.swift */,
 				7D31C14D1BC9A63500189687 /* SearchResultsController.swift */,
 				7D0CA98B1AF6940B008F72EC /* SettingsController.swift */,
-				7DC359701B37122A003B01B6 /* SettingsNavController.swift */,
-				334982F712798EFB9B7735E0 /* SnapContainer.swift */,
-				33498A7781F51D7D4CA7C69B /* SnapLibrary.swift */,
 				7D6756C61B07CDCA00BC0CA9 /* SourceSettingController.swift */,
-				7DC359721B371426003B01B6 /* TabNavController.swift */,
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
-				619B7B7C1F058415001CF11A /* DemoView.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1022,8 +992,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D61A7011AA4E14F00F21622 /* LibraryController.swift in Sources */,
-				610350491EAB9F1C00F85F04 /* PlaybackFooter.swift in Sources */,
-				7DC3596F1B37121F003B01B6 /* PlaylistNavController.swift in Sources */,
+				610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */,
 				7DB1B3B21B1102270012B8AE /* PimpPlaylist.swift in Sources */,
 				7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */,
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
@@ -1061,7 +1030,6 @@
 				7DC891471D5F4C0100331A4D /* ContainerParent.swift in Sources */,
 				7DB1B3A41B0E44BE0012B8AE /* Downloader.swift in Sources */,
 				7D31C14C1BC81D4500189687 /* UIImage+Color.m in Sources */,
-				7DC359731B371426003B01B6 /* TabNavController.swift in Sources */,
 				7D0CA9901AF69950008F72EC /* Endpoint.swift in Sources */,
 				7D62879E1D7C37190053BF52 /* PimpButton.swift in Sources */,
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
@@ -1075,7 +1043,6 @@
 				7DC3596B1B35F649003B01B6 /* NSString+FontAwesome.m in Sources */,
 				7DC8914D1D607D7F00331A4D /* PimpBarButton.swift in Sources */,
 				7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */,
-				7DC891491D5F775800331A4D /* LibraryParent.swift in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,
 				7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */,
 				7D4655841D3BF72F00F6141D /* MainAndSubtitleCell.swift in Sources */,
@@ -1089,10 +1056,7 @@
 				7D1608C31BE7E3030007B943 /* PlaylistID.swift in Sources */,
 				7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */,
 				7DE944D51BE67C2900CD441B /* Track.swift in Sources */,
-				7DC891591D78AC8A00331A4D /* PimpNavController.swift in Sources */,
 				7D6756CB1B08B24A00BC0CA9 /* PlayerManager.swift in Sources */,
-				6103504D1EAD01FD00F85F04 /* CreditsViewController.swift in Sources */,
-				7D0CA98A1AF68EE7008F72EC /* EndpointsController.swift in Sources */,
 				7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */,
 				7DB430E31C42BEC400CF22DC /* VolumeValue.swift in Sources */,
 				7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */,
@@ -1122,20 +1086,17 @@
 				7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */,
 				7D0CA9881AF68EC6008F72EC /* EditEndpointController.swift in Sources */,
 				7DB430DD1C417DAC00CF22DC /* Limiter.swift in Sources */,
-				7DC359671B35EE3E003B01B6 /* PlayerNavController.swift in Sources */,
 				7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */,
 				7D28D4271C2D8D5200B3F62F /* SearchAlarmTrackController.swift in Sources */,
 				7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */,
 				7D6756BF1B012B9600BC0CA9 /* Json.swift in Sources */,
 				616DB9A81EC8718900B23BE9 /* DetailedCell.swift in Sources */,
 				7D6756CD1B08B25400BC0CA9 /* LibraryManager.swift in Sources */,
-				7DC3596D1B371212003B01B6 /* LibraryNavController.swift in Sources */,
 				7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */,
 				7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,
 				7D6756B31AF94BE100BC0CA9 /* ServerType.swift in Sources */,
-				7DC359711B37122A003B01B6 /* SettingsNavController.swift in Sources */,
 				7DB1B3BA1B12013A0012B8AE /* BaseLibrary.swift in Sources */,
 				7D6756B51AFD4D8A00BC0CA9 /* FilePersistence.swift in Sources */,
 				7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */,
@@ -1171,9 +1132,8 @@
 				7DC891451D5A73C100331A4D /* MainSubCell.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,
-				33498D172ED1004161A84549 /* SnapLibrary.swift in Sources */,
 				33498C3F23EB1089BEEAB8CC /* SnapMusicCell.swift in Sources */,
-				33498E03D12D1B46D6E4B9BA /* SnapContainer.swift in Sources */,
+				33498E03D12D1B46D6E4B9BA /* LibraryContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

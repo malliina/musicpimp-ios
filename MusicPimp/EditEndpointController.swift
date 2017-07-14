@@ -39,7 +39,6 @@ class EditEndpointController: PimpViewController {
     let testButton = UIButton()
     let feedbackText = UITextView()
     
-    var segueID: String? = nil
     var editedItem: Endpoint? = nil
     
     var pimpConstraint: Constraint? = nil
@@ -200,7 +199,12 @@ class EditEndpointController: PimpViewController {
     }
     
     func goBack() {
-        self.navigationController?.popViewController(animated: true)
+        let isAddMode = presentingViewController != nil
+        if isAddMode {
+            dismiss(animated: true, completion: nil)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     func serverTypeChanged(_ sender: UISegmentedControl) {

@@ -16,8 +16,11 @@ class CacheTableController: CacheInfoController {
     let currentLimitLabel = UILabel()
     let currentCacheSizeLabel = UILabel()
     
+    let footerText = "Deletes locally cached tracks when the specified cache size limit is exceeded."
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "OFFLINE STORAGE"
         [CacheEnabledCell, CacheSizeCell, CurrentUsageCell, DeleteCacheCell].forEach { id in
             self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
         }
@@ -28,7 +31,6 @@ class CacheTableController: CacheInfoController {
         onOffSwitch.isOn = settings.cacheEnabled
         currentLimitLabel.text = currentLimitDescription
         updateCacheUsageLabel()
-        Log.info("Loaded")
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -65,7 +67,6 @@ class CacheTableController: CacheInfoController {
             break
         case DeleteCustom:
             cell.textLabel?.textColor = PimpColors.deletion
-//            cell.textLabel?.tintColor = PimpColors.deletion
             cell.textLabel?.textAlignment = .center
             break
         default:
@@ -84,8 +85,8 @@ class CacheTableController: CacheInfoController {
             }
         case 1:
             switch row {
-            case 1: return RowSpec(reuseIdentifier: CacheSizeCell, text: "Size Limit")
-            case 2: return RowSpec(reuseIdentifier: CurrentUsageCell, text: "Current Usage")
+            case 0: return RowSpec(reuseIdentifier: CacheSizeCell, text: "Size Limit")
+            case 1: return RowSpec(reuseIdentifier: CurrentUsageCell, text: "Current Usage")
             default: return nil
             }
         case 2:
@@ -101,17 +102,33 @@ class CacheTableController: CacheInfoController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return 4
+        case 1: return 2
         case 2: return 1
         default: return 0
         }
     }
     
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 {
-            return "Deletes locally cached tracks when the specified cache size limit is exceeded."
+            return customFooter(footerText)
         } else {
-            return nil
+            return super.tableView(tableView, viewForFooterInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        if section > 0 {
+            if let v = view as? UITableViewHeaderFooterView {
+                v.tintColor = PimpColors.background
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 || section == 1 {
+            return 44
+        } else {
+            return 0
         }
     }
     
@@ -135,6 +152,7 @@ class CacheTableController: CacheInfoController {
             }
         }
     }
+    
     fileprivate func deleteCache() {
         let _ = LocalLibrary.sharedInstance.deleteContents()
         updateCacheUsageLabel()

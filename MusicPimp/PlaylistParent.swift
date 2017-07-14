@@ -15,35 +15,55 @@ fileprivate extension Selector {
     static let scopeChanged = #selector(PlaylistParent.scopeChanged(_:))
 }
 
-class PlaylistParent: ContainerParent {
-    let scopeSegment = UISegmentedControl()
-    let dragButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: .dragClicked)
-    let saveButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: .savePlaylist)
-    let loadButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: .loadPlaylist)
+class PlaylistParent: ContainerParent, SavePlaylistDelegate {
+    let scopeSegment = UISegmentedControl(items: ["Current", "Popular", "Recent"])
+    let table = PlaylistController()
     // non-nil if the playlist is server-loaded
     var savedPlaylist: SavedPlaylist? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItems = [ loadButton, dragButton ]
+        edgesForExtendedLayout = []
+        self.navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: .loadPlaylist),
+            UIBarButtonItem(title: "Edit", style: .plain, target: self, action: .dragClicked)
+        ]
         // the first element in the array is right-most
-        self.navigationItem.rightBarButtonItems = [ saveButton ]
+        self.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .savePlaylist)
+        ]
+        initUI()
+    }
+    
+    func initUI() {
         initScope(scopeSegment)
+        addSubviews(views: [scopeSegment])
+        scopeSegment.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(8)
+            make.leading.trailing.equalToSuperview().inset(8)
+        }
+        initChild(table)
+        table.view.snp.makeConstraints { make in
+            make.top.equalTo(scopeSegment.snp.bottom).offset(8)
+            make.leading.trailing.equalTo(view)
+            make.bottom.equalTo(playbackFooter.snp.top)
+        }
+    }
+    
+    fileprivate func initScope(_ ctrl: UISegmentedControl) {
+        ctrl.selectedSegmentIndex = 0
+        ctrl.addTarget(self, action: .scopeChanged, for: .valueChanged)
+        ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: .normal)
     }
     
     override func onLibraryChanged(_ newLibrary: LibraryType) {
         scopeChanged(scopeSegment)
     }
     
-    fileprivate func initScope(_ ctrl: UISegmentedControl) {
-        ctrl.addTarget(self, action: .scopeChanged, for: UIControlEvents.valueChanged)
-        ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: UIControlState.normal)
-    }
-    
     func scopeChanged(_ ctrl: UISegmentedControl) {
         if let pc = findPlaylist() {
             let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .playlist
-            dragButton.isEnabled = mode == .playlist
+//            dragButton.isEnabled = mode == .playlist
             pc.maybeRefresh(mode)
         } else {
             Log.info("Unable to find embedded PlaylistController")
@@ -83,16 +103,15 @@ class PlaylistParent: ContainerParent {
     }
     
     func displayActionsForPlaylist(_ playlist: SavedPlaylist) {
-        let title = "Save Playlist"
         let message = playlist.name
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
-        let saveAction = UIAlertAction(title: "Save Current", style: UIAlertActionStyle.default) { (a) -> Void in
+        let sheet = UIAlertController(title: "Save Playlist", message: message, preferredStyle: .actionSheet)
+        let saveAction = UIAlertAction(title: "Save Current", style: .default) { (a) -> Void in
             self.savePlaylist(playlist)
         }
-        let newAction = UIAlertAction(title: "Create New", style: UIAlertActionStyle.default) { (a) -> Void in
+        let newAction = UIAlertAction(title: "Create New", style: .default) { (a) -> Void in
             self.newPlaylistAction()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (a) -> Void in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (a) -> Void in
             
         }
         sheet.addAction(saveAction)
@@ -102,33 +121,24 @@ class PlaylistParent: ContainerParent {
     }
     
     func newPlaylistAction() {
-        if let storyboard = self.storyboard {
-            let vc = storyboard.instantiateViewController(withIdentifier: "SavePlaylist")
-            vc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
-            if let spvc = vc as? SavePlaylistViewController, let playlist = savedPlaylist {
-                spvc.name = playlist.name
-            }
-            let navController = UINavigationController(rootViewController: vc)
-            self.present(navController, animated: true, completion: nil)
-        } else {
-            Log.error("No storyboard, cannot open save playlist ViewController")
+        let vc = SavePlaylistViewController()
+        vc.modalTransitionStyle = .coverVertical
+        if let playlist = savedPlaylist {
+            vc.name = playlist.name
         }
+        vc.tracks = table.tracks
+        vc.delegate = self
+        let navController = UINavigationController(rootViewController: vc)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    func onPlaylistSaved(saved: SavedPlaylist) {
+        self.savedPlaylist = saved
     }
     
     fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
-        library.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
-            self.savedPlaylist = SavedPlaylist(id: id, name: playlist.name, tracks: playlist.tracks)
+        LibraryManager.sharedInstance.active.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
             Log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
-        }
-    }
-    
-    @IBAction func unwindToPlaylist(_ sender: UIStoryboardSegue) {
-        // returns from a "new playlist" screen
-        if let source = sender.source as? SavePlaylistViewController, let name = source.name, let playlist = findPlaylist() {
-            let playlist = SavedPlaylist(id: nil, name: name, tracks: playlist.tracks)
-            savePlaylist(playlist)
-        } else {
-            Log.error("Unable to save playlist")
         }
     }
 }

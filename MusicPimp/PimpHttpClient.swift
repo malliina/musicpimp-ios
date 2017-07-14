@@ -80,8 +80,9 @@ class PimpHttpClient: HttpClient {
     }
     
     func pimpPost(_ resource: String, payload: [String: AnyObject], f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
+        let url = URL(string: resource, relativeTo: baseURL)!
         self.postJSON(
-            URL(string: resource, relativeTo: baseURL)!,
+            url,
             headers: postHeaders,
             payload: payload,
             onResponse: { (data, response) -> Void in

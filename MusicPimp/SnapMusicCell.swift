@@ -14,6 +14,11 @@ class SnapMusicCell: SnapCell {
         initTitle()
         initProgress()
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        super.removeAccessoryMargin()
+    }
 
     func initTitle() {
         addSubview(title)
@@ -21,7 +26,12 @@ class SnapMusicCell: SnapCell {
         title.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(self.snp.leadingMargin)
-            make.trailing.equalTo(self.snp.trailingMargin)
+            if let accessoryView = accessoryView {
+                // snapping to accessoryView.leading didn't work, view hierarchy error
+                make.trailing.equalTo(self.snp.trailing).inset(accessoryView.frame.width)
+            } else {
+                make.trailing.equalTo(self.snp.trailingMargin)
+            }
         }
     }
 

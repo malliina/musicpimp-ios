@@ -22,7 +22,6 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         super.viewDidLoad()
         self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: trackReuseIdentifier)
         registerCell(reuseIdentifier: FolderCellId)
-//        registerNib(trackReuseIdentifier)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,7 +39,6 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         }
         listeners = []
     }
-
     
     func cellHeight() -> CGFloat {
         return defaultCellHeight
@@ -49,7 +47,6 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     func trackCell(_ item: Track, index: IndexPath) -> SnapMusicCell? {
         if let pimpCell: SnapMusicCell = findCell(trackReuseIdentifier, index: index) {
             pimpCell.title.text = item.title
-            //pimpCell.installTrackAccessoryView(height: cellHeight())
             pimpCell.accessoryDelegate = self
             return pimpCell
         } else {
