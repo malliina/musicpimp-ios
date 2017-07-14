@@ -24,7 +24,7 @@ class SearchResultsController: BaseMusicController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let track = results[(indexPath as NSIndexPath).row]
         let cell = trackCell(track, index: indexPath)
-        cell?.progressView.isHidden = true
+        cell?.progress.isHidden = true
         return cell!
     }
     
@@ -34,10 +34,10 @@ class SearchResultsController: BaseMusicController {
         if characters >= 2 {
             latestSearchTerm = term
             let message = "Searching for \(term)..."
-            info(message)
+//            info(message)
             self.renderTable(message)
             library.search(term, onError: { self.onSearchFailure(term, error: $0) }) { (results) -> Void in
-                Log.info("Got \(results.count) results for \(term)")
+//                Log.info("Got \(results.count) results for \(term)")
                 // only updates the UI if the response represents the latest search
                 if self.latestSearchTerm == term {
                     let message: String? = results.isEmpty ? "No results for \(term)" : nil

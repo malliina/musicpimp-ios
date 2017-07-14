@@ -54,11 +54,9 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
         searchBar.sizeToFit()
 //        searchBar.searchBarStyle = UISearchBarStyle.minimal
         searchBar.barStyle = UIBarStyle.default
-//        searchBar.barTintColor = UIColor.clear
+        searchBar.barTintColor = UIColor.clear
         searchBar.isTranslucent = true
         searchBar.placeholder = "Search track or artist"
-//        tableView.tableHeaderView = searchController.searchBar
-//        tableView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.size.height)
         searchController.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         searchBar.delegate = self

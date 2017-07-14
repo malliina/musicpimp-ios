@@ -27,8 +27,20 @@ class BaseTableController: UITableViewController {
         ]
     }
     
-    func registerNib(_ nameAndIdentifier: String) {
-        self.tableView.register(UINib(nibName: nameAndIdentifier, bundle: nil), forCellReuseIdentifier: nameAndIdentifier)
+    func registerCell(reuseIdentifier: String) {
+        self.tableView?.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+    }
+    
+    func loadCell<T>(_ name: String, index: IndexPath) -> T {
+        return findCell(name, index: index)!
+    }
+    
+    func findCell<T>(_ name: String, index: IndexPath) -> T? {
+        return identifiedCell(name, index: index) as? T
+    }
+    
+    func identifiedCell(_ name: String, index: IndexPath) -> UITableViewCell {
+        return self.tableView.dequeueReusableCell(withIdentifier: name, for: index)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -68,6 +80,16 @@ class BaseTableController: UITableViewController {
     func configureTable(background: UIView?, separatorStyle: UITableViewCellSeparatorStyle) {
         self.tableView.backgroundView = background
         self.tableView.separatorStyle = separatorStyle
+    }
+    
+    func customFooter(_ text: String) -> UIView {
+        let content = UIView()
+        let label = PimpLabel.footerLabel(text)
+        content.addSubview(label)
+        label.snp.makeConstraints{ make in
+            make.leading.trailing.equalToSuperview().inset(16)
+        }
+        return content
     }
     
     func feedbackLabel(_ text: String) -> UILabel {
@@ -116,12 +138,7 @@ extension UIViewController {
         let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertControllerStyle.alert)
         let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertActionStyle.default) { a -> Void in
             Log.info("Purchase premium")
-            if let storyboard = self.storyboard {
-                let destination = storyboard.instantiateViewController(withIdentifier: IAPViewController.StoryboardId)
-//                let navigationController = UINavigationController(rootViewController: destination)
-//                self.presentViewController(navigationController, animated: true, completion: nil)
-                self.navigationController?.pushViewController(destination, animated: true)
-            }
+            self.navigationController?.pushViewController(IAPViewController(), animated: true)
         }
         let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertActionStyle.cancel) { a -> Void in
             Log.info("Not interested")

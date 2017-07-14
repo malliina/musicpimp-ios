@@ -7,15 +7,16 @@
 //
 
 import Foundation
+import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
+    let playbackFooter = SnapPlaybackFooter()
     let playbackFooterHeightValue: CGFloat = 44
-    
-    @IBOutlet var playbackFooter: PlaybackFooter!
-    @IBOutlet var playbackFooterHeight: NSLayoutConstraint!
+    private var currentFooterHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initPlaybackFooter()
         playbackFooter.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
     }
@@ -25,17 +26,44 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         initFooter()
     }
     
+    func initChild(_ child: UIViewController) {
+        addChildViewController(child)
+        child.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(child.view)
+        child.didMove(toParentViewController: self)
+    }
+    
     fileprivate func initFooter() {
         onStateChanged(player.current().state)
     }
+    
+    func initPlaybackFooter() {
+        view.addSubview(playbackFooter)
+        playbackFooter.snp.makeConstraints { make in
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.bottom.equalToSuperview()
+            // hidden by default
+            make.height.equalTo(currentFooterHeight)
+        }
+    }
 
     override func onStateChanged(_ state: PlaybackState) {
+        self.view.setNeedsUpdateConstraints()
         let isVisible = state == .Playing
         Util.onUiThread {
             self.playbackFooter.updatePlayPause(isPlaying: isVisible)
-            self.playbackFooter.isHidden = !isVisible
-            self.playbackFooterHeight.constant = isVisible ? self.playbackFooterHeightValue : 0
         }
+    }
+    
+    override func updateViewConstraints() {
+        let footerHeight = player.current().state == .Playing ? playbackFooterHeightValue : 0
+        if footerHeight != currentFooterHeight {
+            self.playbackFooter.snp.updateConstraints { make in
+                currentFooterHeight = make.height.equalTo(footerHeight).constraint.layoutConstraints[0].constant
+            }
+        }
+        super.updateViewConstraints()
     }
     
     func onPrev() {

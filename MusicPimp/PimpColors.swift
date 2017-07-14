@@ -9,9 +9,11 @@
 import Foundation
 
 class PimpColors {
+    static let white = Colors.rgb(244, green: 244, blue: 244)
+    static let text = white
     static let background = Colors.rgb(2, green: 23, blue: 42)
     static let lighterBackground = Colors.rgb(3, green: 32, blue: 52)
-    static let titles = Colors.rgb(244, green: 244, blue: 244)
+    static let titles = white
     static let separator = Colors.rgb(255, green: 255, blue: 255, alpha: 0.2)
     static let notSelected = Colors.rgb(161, green: 161, blue: 161)
     static let subtitles = PimpColors.notSelected

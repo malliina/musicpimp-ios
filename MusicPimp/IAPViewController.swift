@@ -10,26 +10,72 @@ import Foundation
 import StoreKit
 import QuartzCore
 
+fileprivate extension Selector {
+    static let purchaseClicked = #selector(IAPViewController.purchase)
+    static let restoreClicked = #selector(IAPViewController.restore)
+}
+
 class IAPViewController: PimpViewController {
-    static let StoryboardId = "IAPViewController"
-    
+    let statusLabel = UILabel()
+    let purchaseButton = UIButton()
+    let alreadyPurchasedLabel = UILabel()
+    let restoreButton = UIButton()
+    var disposable: Disposable? = nil
+
     var products: [SKProduct] = []
     var premiumProduct: SKProduct? = nil
     var invalidIdentifiers: [String] = []
     var request: SKProductsRequest? = nil
     
-    @IBOutlet var statusLabel: UILabel!
-    @IBOutlet var purchaseButton: UIButton!
-    @IBOutlet var alreadyPurchasedLabel: UILabel!
-    @IBOutlet var restoreButton: UIButton!
-    var disposable: Disposable? = nil
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "MUSICPIMP PREMIUM"
+        purchaseButton.addTarget(self, action: .purchaseClicked, for: .touchUpInside)
+        restoreButton.addTarget(self, action: .restoreClicked, for: .touchUpInside)
         togglePurchaseViews(true)
         disposable = TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> (SKPaymentTransaction) -> () in
             iap.onTransactionUpdate
         }
+        initLabel(label: statusLabel, text: "Loading products...")
+        initLabel(label: alreadyPurchasedLabel, text: "Already purchased?")
+        purchaseButton.setTitle("Purchase MusicPimp Premium", for: .normal)
+        restoreButton.setTitle("Restore MusicPimp Premium", for: .normal)
+        [purchaseButton, restoreButton].forEach { button in
+            button.setTitleColor(PimpColors.tintColor, for: UIControlState.normal)
+        }
+        initUI()
+    }
+    
+    func initUI() {
+        addSubviews(views: [statusLabel, purchaseButton, alreadyPurchasedLabel, restoreButton])
+        statusLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.view.snp.topMargin).offset(8)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+        }
+        purchaseButton.snp.makeConstraints { make in
+            make.top.equalTo(statusLabel.snp.bottom).offset(32)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+        }
+        alreadyPurchasedLabel.snp.makeConstraints { make in
+            make.top.equalTo(purchaseButton.snp.bottom).offset(32)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+        }
+        restoreButton.snp.makeConstraints { make in
+            make.top.equalTo(alreadyPurchasedLabel.snp.bottom).offset(32)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+        }
+    }
+    
+    func initLabel(label: UILabel, text: String) {
+        label.textColor = PimpColors.titles
+        label.text = text
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        //label.textAlignment = .center
     }
     
     func onTransactionUpdate(_ transaction: SKPaymentTransaction) {
@@ -82,15 +128,6 @@ class IAPViewController: PimpViewController {
         super.viewWillAppear(animated)
         request?.cancel()
         request = nil
-    }
-    
-    // Profit!
-    @IBAction func purchaseClicked(_ sender: UIButton) {
-        purchase()
-    }
-    
-    @IBAction func restoreClicked(_ sender: UIButton) {
-        restore()
     }
     
     func purchase() {

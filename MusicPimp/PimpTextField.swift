@@ -8,33 +8,33 @@
 
 import Foundation
 
-class PimpTextField: UITextField {
+class PimpTextField: UITextField, UITextFieldDelegate {
+    var placeholderText: String? {
+        get { return placeholder }
+        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSForegroundColorAttributeName: PimpColors.placeholder]) }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         pimpInit()
     }
     
     required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
         super.init(coder: aDecoder)
         pimpInit()
     }
     
     fileprivate func pimpInit() {
-        super.autocorrectionType = UITextAutocorrectionType.no
+        delegate = self
+        autocorrectionType = .no
         backgroundColor = PimpColors.lighterBackground
         textColor = PimpColors.titles
+        borderStyle = .roundedRect
+        autocapitalizationType = .none
     }
     
-    override func drawPlaceholder(in rect: CGRect) {
-        if let p: NSString = placeholder as NSString?, let font = self.font {
-            let attributes = defaultTextAttributes.addAll([
-                NSForegroundColorAttributeName : PimpColors.placeholder,
-                NSFontAttributeName: font
-            ])
-            let boundingRect = p.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-            let point = CGPoint(x: 0, y: (rect.size.height/2)-boundingRect.size.height/2)
-            p.draw(at: point, withAttributes: attributes)
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

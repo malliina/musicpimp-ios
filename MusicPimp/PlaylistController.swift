@@ -48,7 +48,8 @@ class PlaylistController: BaseMusicController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerNib(PlaylistController.mainAndSubtitleCellKey)
+        self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
+        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,21 +77,24 @@ class PlaylistController: BaseMusicController {
     }
         
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         switch mode {
         case .playlist:
-            let cell: PimpMusicItemCell = loadCell(defaultCellKey, index: indexPath)
+            let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
+            cell.accessoryDelegate = self
             let track = tracks[index]
-            cell.titleLabel?.text = track.title
+            cell.title.text = track.title
             paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: DownloadUpdater.instance.progressFor(track: track))
             return cell
         case .popular:
-            let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
+            let cell: SnapMainSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
             decoratePopularCell(cell, track: popular[index])
+            cell.accessoryDelegate = self
             return cell
         case .recent:
-            let cell: MainAndSubtitleCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
+            let cell: SnapMainSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
             decorateRecentCell(cell, track: recent[index])
+            cell.accessoryDelegate = self
             return cell
         }
     }
@@ -100,7 +104,7 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        maybeLoadMore((indexPath as NSIndexPath).row)
+        maybeLoadMore(indexPath.row)
     }
     
     fileprivate func maybeLoadMore(_ currentRow: Int) {
@@ -139,7 +143,7 @@ class PlaylistController: BaseMusicController {
         let isEditing = self.tableView.isEditing
         self.tableView.setEditing(!isEditing, animated: true)
         let title = isEditing ? "Edit" : "Done"
-        dragButton.style = isEditing ? UIBarButtonItemStyle.plain : UIBarButtonItemStyle.done
+        dragButton.style = isEditing ? .plain : .done
         dragButton.title = title
     }
     
@@ -161,28 +165,28 @@ class PlaylistController: BaseMusicController {
         }
     }
     
-    func decorateRecentCell(_ cell: MainAndSubtitleCell, track: RecentEntry) {
+    func decorateRecentCell(_ cell: SnapMainSubCell, track: RecentEntry) {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
         let formattedDate = formatter.string(from: track.when)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
-        installTrackAccessoryView(cell, true)
+        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
-    func decoratePopularCell(_ cell: MainAndSubtitleCell, track: PopularEntry) {
+    func decoratePopularCell(_ cell: SnapMainSubCell, track: PopularEntry) {
         decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
-        installTrackAccessoryView(cell, true)
+        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
-    func decorateTwoLines(_ cell: MainAndSubtitleCell, first: String, second: String) {
-        cell.mainTitle?.text = first
-        cell.subtitle?.text = second
+    func decorateTwoLines(_ cell: SnapMainSubCell, first: String, second: String) {
+        cell.main.text = first
+        cell.sub.text = second
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         limitChecked {
             switch self.mode {
             case .playlist:
@@ -201,8 +205,8 @@ class PlaylistController: BaseMusicController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if mode == .playlist {
-            let index = (indexPath as NSIndexPath).row
-            tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+            let index = indexPath.row
+            tableView.reloadRows(at: [indexPath], with: .none)
             _ = limitChecked {
                 self.player.playlist.removeIndex(index)
             }
@@ -220,8 +224,8 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let sourceRow = (sourceIndexPath as NSIndexPath).row
-        let destinationRow = (destinationIndexPath as NSIndexPath).row
+        let sourceRow = sourceIndexPath.row
+        let destinationRow = destinationIndexPath.row
         let newTracks = Arrays.move(sourceRow, destIndex: destinationRow, xs: current.tracks)
         let newIndex = computeNewIndex(sourceRow, dest: destinationRow)
         current = Playlist(tracks: newTracks, index: newIndex)
@@ -334,7 +338,7 @@ extension PlaylistController {
             // The app crashed if reloading a row while concurrently dragging and dropping rows.
             // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
             if !self.tableView.isEditing && row < self.tracks.count && self.mode == .playlist {
-                self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+                self.tableView.reloadRows(at: [itemIndexPath], with: .none)
             }
         }
     }

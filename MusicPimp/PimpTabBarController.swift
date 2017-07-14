@@ -14,13 +14,20 @@ class PimpTabBarController: UITabBarController {
     let tabItemTitleVerticalOffset: CGFloat = -3
     
     override func viewDidLoad() {
-        let tabs = tabBar.items
-        if let tabs = tabs {
-            decorate(tabs[0], title: "Music", fontAwesomeName: "music")
-            decorate(tabs[1], title: "Player", fontAwesomeName: "play-circle")
-            decorate(tabs[2], title: "Playlist", fontAwesomeName: "list")
-            decorate(tabs[3], title: "Settings", fontAwesomeName: "cog")
-        }
+        super.viewDidLoad()
+        viewControllers = [
+                attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music"),
+                attachTab(vc: PlayerController(), title: "Player", fontAwesomeName: "play-circle"),
+                attachTab(vc: PlaylistParent(), title: "Playlist", fontAwesomeName: "list"),
+                attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog")
+        ].map { vc in UINavigationController(rootViewController: vc) }
+    }
+
+    func attachTab(vc: UIViewController, title: String, fontAwesomeName: String) -> UIViewController {
+        let item = UITabBarItem()
+        decorate(item, title: title, fontAwesomeName: fontAwesomeName)
+        vc.tabBarItem = item
+        return vc
     }
     
     func decorate(_ tabItem: UITabBarItem, title: String, fontAwesomeName: String) {
@@ -39,8 +46,8 @@ class PimpTabBarController: UITabBarController {
     
     func icon(_ name: String, selected: Bool) -> UIImage {
         let iconColor = selected ? PimpColors.tintColor : UIColor.gray
-        let image = UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: iconColor, fontSize: tabIconFontSize)
-        return image!.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        let image = UIImage(icon: name, backgroundColor: .clear, iconColor: iconColor, fontSize: tabIconFontSize)
+        return image!.withRenderingMode(.alwaysOriginal)
     }
 
 }

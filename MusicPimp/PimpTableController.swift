@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 
 class PimpTableController: FeedbackTable {
-    
-    let maxNewDownloads = 2000
+    let maxNewDownloads = 300
     
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }

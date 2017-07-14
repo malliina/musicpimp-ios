@@ -8,12 +8,11 @@
 
 import Foundation
 
-class BaseMusicController : PimpTableController {
+class BaseMusicController : PimpTableController, AccessoryDelegate {
+    let FolderCellId = "FolderCell"
     let trackReuseIdentifier = "PimpMusicItemCell"
     let defaultCellHeight: CGFloat = 44
     static let accessoryRightPadding: CGFloat = 14
-    static let accessoryImageSize = CGSize(width: 16, height: 16)
-    static let accessoryImage: UIImage? = UIImage(named: "more_filled_grey-100.png")?.withSize(scaledToSize: accessoryImageSize)
     
     var musicItems: [MusicItem] { return [] }
     
@@ -21,7 +20,8 @@ class BaseMusicController : PimpTableController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerNib(trackReuseIdentifier)
+        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: trackReuseIdentifier)
+        registerCell(reuseIdentifier: FolderCellId)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -39,16 +39,15 @@ class BaseMusicController : PimpTableController {
         }
         listeners = []
     }
-
     
     func cellHeight() -> CGFloat {
         return defaultCellHeight
     }
     
-    func trackCell(_ item: Track, index: IndexPath) -> PimpMusicItemCell? {
-        if let pimpCell: PimpMusicItemCell = findCell(trackReuseIdentifier, index: index) {
-            pimpCell.titleLabel?.text = item.title
-            installTrackAccessoryView(pimpCell)
+    func trackCell(_ item: Track, index: IndexPath) -> SnapMusicCell? {
+        if let pimpCell: SnapMusicCell = findCell(trackReuseIdentifier, index: index) {
+            pimpCell.title.text = item.title
+            pimpCell.accessoryDelegate = self
             return pimpCell
         } else {
             Log.error("Unable to find track cell for track \(item.title)")
@@ -56,49 +55,19 @@ class BaseMusicController : PimpTableController {
         }
     }
     
-    func paintTrackCell(cell: PimpMusicItemCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
+    func paintTrackCell(cell: SnapMusicCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
-            cell.progressView.progress = downloadProgress.progress
-            cell.progressView.isHidden = false
+            cell.progress.progress = downloadProgress.progress
+            cell.progress.isHidden = false
         } else {
-            cell.progressView.isHidden = true
+            cell.progress.isHidden = true
         }
         let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
-        cell.titleLabel?.textColor = titleColor
+        cell.title.textColor = titleColor
         cell.selectionStyle = selectionStyle
     }
     
-    func installTrackAccessoryView(_ cell: UITableViewCell, _ isLarge: Bool = false) {
-        // TODO move the below code to PimpMusicItemCell, then provide observable of accessoryClicked:event
-        if let accessory = createTrackAccessory(isLarge: isLarge) {
-            cell.accessoryView = accessory
-        }
-    }
-    
-    func createTrackAccessory(isLarge: Bool) -> UIButton? {
-        if let image = BaseMusicController.accessoryImage {
-            let accessoryHeight = cellHeight()
-            //let accessoryWidth = accessoryHeight
-            let accessoryWidth: CGFloat = defaultCellHeight
-            let button = UIButton(type: UIButtonType.custom)
-            let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: accessoryHeight)
-            button.frame = frame
-            button.setImage(image, for: UIControlState())
-            button.backgroundColor = UIColor.clear
-            button.contentMode = UIViewContentMode.scaleAspectFit
-            // - 15 because otherwise the accessory didn't look good on all cell sizes
-            // TODO fix properly once I know how to
-            //let maxInset = max(0, accessoryWidth - BaseMusicController.accessoryImageSize.width - 15)
-            //let leftInset = min(30, maxInset)
-            //button.imageEdgeInsets = UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: 15)
-            //button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
-            return button
-        }
-        return nil
-    }
-    
-    func accessoryClicked(_ sender: AnyObject, event: AnyObject) {
+    func accessoryTapped(_ sender: AnyObject, event: AnyObject) {
         if let row = clickedRow(event) {
             let item = musicItems[row]
             if let track = item as? Track {
@@ -117,7 +86,7 @@ class BaseMusicController : PimpTableController {
         if let touch = touchEvent.allTouches??.first {
             let point = touch.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: point) {
-                return (indexPath as NSIndexPath).row
+                return indexPath.row
             }
         }
         return nil
@@ -144,12 +113,7 @@ class BaseMusicController : PimpTableController {
         sheet.addAction(cancelAction)
         if let popover = sheet.popoverPresentationController {
             popover.sourceView = self.view
-//            popover.sourceRect = self.view.frame
         }
-        //sheet.view.tintColor = UIColor.greenColor()
-        //let sheetView = sheet.view.subviews.headOption()?.subviews.headOption()
-        //sheetView?.backgroundColor = UIColor.greenColor()
-        //sheetView?.layer.cornerRadius = 15
         self.present(sheet, animated: true, completion: nil)
     }
     

@@ -24,16 +24,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = PimpTabBarController()
+        
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         connectToPlayer()
-//        notifications.initNotifications(application)
+
         if let launchOptions = launchOptions {
             notifications.handleNotification(application, data: launchOptions)
         }
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
-//        Log.info("didFinishLaunchingWithOptions")
+
         initTheme(application)
 //        test()
         return true
@@ -169,6 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settings.trackHistory = Limiter.sharedInstance.history
         Log.info("Terminating")
     }
+    
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {
     //        switch event.subtype {
     //        case UIEventSubtype.RemoteControlPlay:
@@ -195,6 +200,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //            Log.error("Unknown remote control event: \(event.subtype)")
     //        }
     //    }
-
-
 }

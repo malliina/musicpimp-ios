@@ -11,11 +11,8 @@ import UIKit
 
 class LibraryController: SearchableMusicController {
     static let LIBRARY = "library", PLAYER = "player"
-    static let TABLE_CELL_HEIGHT_PLAIN = 44
-    let halfCellHeight = LibraryController.TABLE_CELL_HEIGHT_PLAIN / 2
     let loadingMessage = "Loading..."
     let noTracksMessage = "No tracks."
-    let FolderCellId = "FolderCell"
     
     var folder: MusicFolder = MusicFolder.empty
     override var musicItems: [MusicItem] { return folder.items }
@@ -28,6 +25,9 @@ class LibraryController: SearchableMusicController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.tableHeaderView = self.searchController.searchBar
+        self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
+        edgesForExtendedLayout = []
         setFeedback(loadingMessage)
         if let folder = selected {
             loadFolder(folder.id)
@@ -55,14 +55,10 @@ class LibraryController: SearchableMusicController {
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-    }
-    
     func onTrackChanged(track: Track?) {
         // updates any highlighted row
         renderTable()
+        self.view.setNeedsUpdateConstraints()
     }
     
     fileprivate func resetLibrary() {
@@ -79,10 +75,7 @@ class LibraryController: SearchableMusicController {
     
     func onFolder(_ f: MusicFolder) {
         folder = f
-        self.renderTable(computeMessage(folder)) {
-            self.tableView.tableHeaderView = self.searchController.searchBar
-            self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-        }
+        self.renderTable(computeMessage(folder))
     }
     
     func computeMessage(_ folder: MusicFolder) -> String? {
@@ -103,22 +96,18 @@ class LibraryController: SearchableMusicController {
         }
     }
     
-    override func clearItems() {
-        // TODO keep folder path, but don't show items
-        //folder = MusicFolder.empty
-    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return libraryCell(tableView, indexPath: indexPath)
     }
     
     fileprivate func libraryCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let item = musicItems[(indexPath as NSIndexPath).row]
+        let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
         if isFolder {
             let folderCell = identifiedCell(FolderCellId, index: indexPath)
             folderCell.textLabel?.text = item.title
-            folderCell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+            folderCell.textLabel?.textColor = PimpColors.titles
+            folderCell.accessoryType = .disclosureIndicator
             return folderCell
         } else {
             if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {
@@ -132,7 +121,7 @@ class LibraryController: SearchableMusicController {
     }
     
     func sheetAction(_ title: String, item: MusicItem, onTrack: @escaping (Track) -> Void, onFolder: @escaping (Folder) -> Void) -> UIAlertAction {
-        return UIAlertAction(title: title, style: UIAlertActionStyle.default) { (a) -> Void in
+        return UIAlertAction(title: title, style: .default) { (a) -> Void in
             if let track = item as? Track {
                 onTrack(track)
             }
@@ -163,7 +152,7 @@ class LibraryController: SearchableMusicController {
     }
     
     func musicItemAction(_ tableView: UITableView, title: String, onTrack: @escaping (Track) -> Void, onFolder: @escaping (Folder) -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: UITableViewRowActionStyle.default, title: title) {
+        return UITableViewRowAction(style: .default, title: title) {
             (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             if let tappedItem = self.itemAt(tableView, indexPath: indexPath) {
                 if let track = tappedItem as? Track {
@@ -179,52 +168,18 @@ class LibraryController: SearchableMusicController {
     
     // Used when the user clicks a track or otherwise modifies the player
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let item = itemAt(tableView, indexPath: indexPath), let track = item as? Track {
-            _ = playAndDownload(track)
+        if let item = itemAt(tableView, indexPath: indexPath) {
+            if let folder = item as? Folder {
+                let destination = LibraryContainer()
+                destination.folder = folder
+                navigationController?.pushViewController(destination, animated: true)
+            }
+            if let track = item as? Track {
+                _ = playAndDownload(track)
+            }
         }
         tableView.deselectRow(at: indexPath, animated: false)
-        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
-    }
-    
-    // Performs segue if the user clicked a folder
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == LibraryController.LIBRARY {
-            if let row = self.tableView.indexPathForSelectedRow {
-                let index = (row as NSIndexPath).item
-                return musicItems.count > index && musicItems[index] is Folder
-            } else {
-                info("Cannot navigate to item at row \(index)")
-                return false
-            }
-        }
-        if identifier == "Test" {
-            return true
-        }
-        info("Unknown identifier: \(identifier)")
-        return false
-    }
-    
-    // Used when the user taps a folder, initiating a navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let dest = segue.destination
-        if let destination = dest as? LibraryParent {
-            if let row = self.tableView.indexPathForSelectedRow {
-                destination.folder = musicItems[row.item]
-            } else {
-                error("No index, destination \(dest)")
-            }
-        } else {
-            error("Unknown destination controller \(dest)")
-        }
-    }
-    
-    @IBAction func unwindToItems(_ segue: UIStoryboardSegue) {
-        let src = segue.source as? LibraryController
-        if let id = src?.selected?.id {
-            loadFolder(id)
-        } else {
-            loadRoot()
-        }
+//        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
 
@@ -239,7 +194,7 @@ extension LibraryController {
     private func updateRows(row: Int) {
         let itemIndexPath = IndexPath(row: row, section: 0)
         Util.onUiThread {
-            self.tableView.reloadRows(at: [itemIndexPath], with: UITableViewRowAnimation.none)
+            self.tableView.reloadRows(at: [itemIndexPath], with: .none)
         }
     }
 }
