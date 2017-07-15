@@ -39,8 +39,6 @@ class CustomAccessoryCell: PimpCell {
     
     private func createTrackAccessory(height: CGFloat) -> UIButton? {
         if let image = CustomAccessoryCell.accessoryImage {
-            //let accessoryHeight = cellHeight()
-            //let accessoryWidth = accessoryHeight
             let accessoryWidth: CGFloat = CustomAccessoryCell.defaultCellHeight
             let button = UIButton(type: .custom)
             let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)

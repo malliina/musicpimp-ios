@@ -30,7 +30,6 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        Log.info("Will app")
         endpoints = settings.endpoints()
         updateSelected(manager.loadActive())
         renderTable()

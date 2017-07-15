@@ -16,18 +16,18 @@ class SnapMainSubCell: SnapCell {
         installTrackAccessoryView()
         main.textColor = PimpColors.titles
         sub.textColor = PimpColors.titles
-        addSubview(main)
+        contentView.addSubview(main)
         main.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalTo(self.snp.leadingMargin)
-            make.trailing.equalTo(self.snp.trailingMargin)
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
         }
         
-        addSubview(sub)
+        contentView.addSubview(sub)
         sub.snp.makeConstraints { make in
             make.top.equalTo(main.snp.bottom)
-            make.leading.equalTo(self.snp.leadingMargin)
-            make.trailing.equalTo(self.snp.trailingMargin)
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
             make.bottom.equalToSuperview().inset(8)
         }
     }

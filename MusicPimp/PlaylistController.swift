@@ -99,6 +99,10 @@ class PlaylistController: BaseMusicController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight()
     }
@@ -267,7 +271,7 @@ class PlaylistController: BaseMusicController {
         popular = populars
         reRenderTable()
     }
-    
+
     func onMoreRecents(_ from: Int, recents: [RecentEntry]) {
         recent = appendConditionally(recent, from: from, newContent: recents)
         onMore(from, newRows: recents.count, expectedSize: recent.count, expectedMode: .recent)

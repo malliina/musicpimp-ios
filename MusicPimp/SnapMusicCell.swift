@@ -21,25 +21,20 @@ class SnapMusicCell: SnapCell {
     }
 
     func initTitle() {
-        addSubview(title)
         title.textColor = PimpColors.titles
+        contentView.addSubview(title)
         title.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalTo(self.snp.leadingMargin)
-            if let accessoryView = accessoryView {
-                // snapping to accessoryView.leading didn't work, view hierarchy error
-                make.trailing.equalTo(self.snp.trailing).inset(accessoryView.frame.width)
-            } else {
-                make.trailing.equalTo(self.snp.trailingMargin)
-            }
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
         }
     }
 
     func initProgress() {
-        addSubview(progress)
+        contentView.addSubview(progress)
         progress.snp.makeConstraints { make in
-            make.leading.equalTo(self.snp.leadingMargin)
-            make.trailing.equalTo(self.snp.trailingMargin)
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
             make.top.equalTo(title.snp.bottom)
             make.bottom.equalToSuperview()
         }
