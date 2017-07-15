@@ -17,6 +17,10 @@ fileprivate extension Selector {
     static let testClicked = #selector(EditEndpointController.testClicked(_:))
 }
 
+protocol EditEndpointDelegate {
+    func endpointUpdated(_ endpoint: Endpoint)
+}
+
 class EditEndpointController: PimpViewController {
     let scrollView = UIScrollView()
     let content = UIView()
@@ -40,6 +44,7 @@ class EditEndpointController: PimpViewController {
     let feedbackText = UITextView()
     
     var editedItem: Endpoint? = nil
+    var delegate: EditEndpointDelegate? = nil
     
     var pimpConstraint: Constraint? = nil
     var cloudConstraint: Constraint? = nil
@@ -191,6 +196,7 @@ class EditEndpointController: PimpViewController {
                 Log.info("Activating \(endpoint.name)")
                 LibraryManager.sharedInstance.saveActive(endpoint)
             }
+            delegate?.endpointUpdated(endpoint)
         }
     }
     

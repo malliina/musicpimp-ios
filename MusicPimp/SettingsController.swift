@@ -20,7 +20,7 @@ class RowSpec {
     }
 }
 
-class SettingsController: CacheInfoController {
+class SettingsController: CacheInfoController, EditEndpointDelegate {
     let detailId = "DetailedCell"
     let sectionHeaderHeight: CGFloat = 44
     let playbackDeviceId = "PlaybackDevice"
@@ -61,6 +61,10 @@ class SettingsController: CacheInfoController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSFontAttributeName: PimpColors.titleFont
         ]
+    }
+    
+    func endpointUpdated(_ endpoint: Endpoint) {
+        renderTable()
     }
     
     fileprivate func onLibraryChanged(_ newLibrary: Endpoint) {
@@ -168,9 +172,13 @@ class SettingsController: CacheInfoController {
         if let id = id {
             switch id {
             case musicSourceId:
-                return SourceSettingController()
+                let dest = SourceSettingController()
+                dest.delegate = self
+                return dest
             case playbackDeviceId:
-                return PlayerSettingController()
+                let dest = PlayerSettingController()
+                dest.delegate = self
+                return dest
             case cacheId:
                 return CacheTableController()
             case alarmId:

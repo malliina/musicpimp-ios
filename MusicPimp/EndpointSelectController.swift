@@ -13,13 +13,14 @@ fileprivate extension Selector {
     static let addClicked = #selector(EndpointSelectController.onAddNew(_:))
 }
 
-class EndpointSelectController: BaseTableController {
+class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     let endpointIdentifier = "EndpointCell"
     var endpoints: [Endpoint] = []
     
     var selectedIndex: Int? = nil
     // override this shit. thanks for abstract classes, Apple
     var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
+    var delegate: EditEndpointDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +34,11 @@ class EndpointSelectController: BaseTableController {
         endpoints = settings.endpoints()
         updateSelected(manager.loadActive())
         renderTable()
+    }
+    
+    func endpointUpdated(_ endpoint: Endpoint) {
+        renderTable()
+        delegate?.endpointUpdated(endpoint)
     }
     
     func updateSelected(_ selected: Endpoint) {
@@ -99,6 +105,7 @@ class EndpointSelectController: BaseTableController {
                 (index: Int) -> Void in
                 if let endpoint = self.endpoints.get(index) {
                     let dest = EditEndpointController()
+                    dest.delegate = self
                     dest.editedItem = endpoint
                     self.navigationController?.pushViewController(dest, animated: true)
                 } else {
