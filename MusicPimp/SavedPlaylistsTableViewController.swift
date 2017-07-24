@@ -8,12 +8,17 @@
 
 import Foundation
 
+protocol PlaylistSelectDelegate {
+    func playlistActivated(_ playlist: SavedPlaylist)
+}
+
 class SavedPlaylistsTableViewController: PimpTableController {
     let emptyMessage = "No saved playlists."
     let loadingMessage = "Loading playlists..."
     let playlistCell = "PlaylistCell"
     
     var playlists: [SavedPlaylist] = []
+    var delegate: PlaylistSelectDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,10 +53,11 @@ class SavedPlaylistsTableViewController: PimpTableController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = (indexPath as NSIndexPath).row
+        let row = indexPath.row
         if playlists.count > 0 && playlists.count > row {
             let item = playlists[row]
             _ = playTracks(item.tracks)
+            delegate?.playlistActivated(item)
         }
         tableView.deselectRow(at: indexPath, animated: false)
         goBack()

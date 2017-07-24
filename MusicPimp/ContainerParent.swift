@@ -88,10 +88,10 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         }
     }
     
-    func findChild<T>() -> T? {
-        let pcs = childViewControllers.flatMapOpt { (vc) -> T? in
-            return vc as? T
-        }
-        return pcs.headOption()
-    }
+//    func findChild<T>() -> T? {
+//        let pcs = childViewControllers.flatMapOpt { (vc) -> T? in
+//            return vc as? T
+//        }
+//        return pcs.headOption()
+//    }
 }

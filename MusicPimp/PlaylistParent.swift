@@ -15,7 +15,7 @@ fileprivate extension Selector {
     static let scopeChanged = #selector(PlaylistParent.scopeChanged(_:))
 }
 
-class PlaylistParent: ContainerParent, SavePlaylistDelegate {
+class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDelegate {
     let scopeSegment = UISegmentedControl(items: ["Current", "Popular", "Recent"])
     let table = PlaylistController()
     // non-nil if the playlist is server-loaded
@@ -61,41 +61,27 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate {
     }
     
     func scopeChanged(_ ctrl: UISegmentedControl) {
-        if let pc = findPlaylist() {
-            let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .playlist
-//            dragButton.isEnabled = mode == .playlist
-            pc.maybeRefresh(mode)
-        } else {
-            Log.info("Unable to find embedded PlaylistController")
-        }
+        let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .playlist
+        table.maybeRefresh(mode)
     }
     
     func dragButtonClicked(_ button: UIBarButtonItem) {
-        if let pc = findPlaylist() {
-            pc.dragClicked(button)
-        } else {
-            Log.info("Cannot drag unable to find playlist table")
-        }
+        table.dragClicked(button)
     }
     
     func loadPlaylistClicked(_ button: UIBarButtonItem) {
         let dest = SavedPlaylistsTableViewController()
+        dest.delegate = self
         dest.modalPresentationStyle = .fullScreen
         dest.modalTransitionStyle = .coverVertical
         let nav = UINavigationController(rootViewController: dest)
         self.present(nav, animated: true, completion: nil)
-        //self.showViewController(dest, sender: self)
-        //self.navigationController?.pushViewController(dest, animated: true)
-    }
-    
-    func findPlaylist() -> PlaylistController? {
-        return findChild()
     }
     
     func savePlaylistAction(_ item: UIBarButtonItem) {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?
-            displayActionsForPlaylist(playlist)
+            displayActionsForPlaylist(SavedPlaylist(id: playlist.id, name: playlist.name, tracks: table.tracks))
         } else {
             // goes directly to the "new playlist" view controller
             newPlaylistAction()
@@ -136,9 +122,14 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate {
         self.savedPlaylist = saved
     }
     
+    func playlistActivated(_ playlist: SavedPlaylist) {
+        self.savedPlaylist = playlist
+    }
+    
     fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
         LibraryManager.sharedInstance.active.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
-            Log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
+            Log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
+            self.savedPlaylist = playlist
         }
     }
 }

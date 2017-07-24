@@ -42,8 +42,6 @@ class PlaylistController: BaseMusicController {
     override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
     
-    var searchController: UISearchController!
-    
     private var reloadOnDidAppear = false
         
     override func viewDidLoad() {
