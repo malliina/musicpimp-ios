@@ -49,24 +49,28 @@ class IAPViewController: PimpViewController {
     func initUI() {
         addSubviews(views: [statusLabel, purchaseButton, alreadyPurchasedLabel, restoreButton])
         statusLabel.snp.makeConstraints { make in
-            make.top.equalTo(self.view.snp.topMargin).offset(8)
+            make.top.greaterThanOrEqualTo(self.view.snp.topMargin).offset(16)
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.centerX.equalToSuperview()
         }
         purchaseButton.snp.makeConstraints { make in
             make.top.equalTo(statusLabel.snp.bottom).offset(32)
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.centerY.equalToSuperview().priority(600)
         }
         alreadyPurchasedLabel.snp.makeConstraints { make in
-            make.top.equalTo(purchaseButton.snp.bottom).offset(32)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.top.greaterThanOrEqualTo(purchaseButton.snp.bottom).offset(32)
+            make.leading.greaterThanOrEqualTo(self.view.snp.leadingMargin)
+            make.trailing.lessThanOrEqualTo(self.view.snp.trailingMargin)
+            make.centerX.equalToSuperview()
         }
         restoreButton.snp.makeConstraints { make in
             make.top.equalTo(alreadyPurchasedLabel.snp.bottom).offset(32)
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-16)
         }
     }
     
@@ -75,7 +79,7 @@ class IAPViewController: PimpViewController {
         label.text = text
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        //label.textAlignment = .center
+        label.textAlignment = .center
     }
     
     func onTransactionUpdate(_ transaction: SKPaymentTransaction) {
