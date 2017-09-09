@@ -36,6 +36,21 @@ class LibraryController: SearchableMusicController {
         }
     }
     
+    func suggestAddMusicSource() {
+        let sheet = UIAlertController(title: "Connect to MusicPimp", message: "To obtain music, connect to a MusicPimp server. Download the server from musicpimp.org.", preferredStyle: .alert)
+        let musicSourceAction = UIAlertAction(title: "Add server", style: .default) { _ in
+            //self.navigationController?.pushViewController(EditEndpointController(), animated: true)
+            self.present(UINavigationController(rootViewController: EditEndpointController()), animated: true, completion: nil)
+        }
+        let notNowAction = UIAlertAction(title: "Not now", style: .cancel, handler: nil)
+        sheet.addAction(musicSourceAction)
+        sheet.addAction(notNowAction)
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = self.view
+        }
+        self.present(sheet, animated: true, completion: nil)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let trackListener = player.trackEvent.addHandler(self) { (me) -> (Track?) -> () in
@@ -70,7 +85,17 @@ class LibraryController: SearchableMusicController {
     }
     
     func loadRoot() {
-        library.rootFolder(onLoadError, f: onFolder)
+        library.rootFolder(onLoadError) { (folder) in
+            if folder.items.isEmpty {
+                let hasRemoteSources = self.libraryManager.endpoints().exists { (e) -> Bool in
+                    e.id != Endpoint.Local.id
+                }
+                if !hasRemoteSources {
+                    self.suggestAddMusicSource()
+                }
+            }
+            self.onFolder(folder)
+        }
     }
     
     func onFolder(_ f: MusicFolder) {

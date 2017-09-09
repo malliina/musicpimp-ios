@@ -14,7 +14,7 @@ class LibraryManager: EndpointManager {
     fileprivate var activeLibrary: LibraryType
     var active: LibraryType { get { return activeLibrary } }
     let libraryChanged = Event<LibraryType>()
-    var subscription: Disposable? = nil
+    private var subscription: Disposable? = nil
     
     init() {
         let settings = PimpSettings.sharedInstance
@@ -23,6 +23,10 @@ class LibraryManager: EndpointManager {
         subscription = changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
             lm.onNewLibraryEndpoint
         })
+    }
+    
+    func endpoints() -> [Endpoint] {
+        return settings.endpoints()
     }
     
     fileprivate func onNewLibraryEndpoint(_ endpoint: Endpoint) {
