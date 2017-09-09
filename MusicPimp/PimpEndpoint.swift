@@ -52,15 +52,15 @@ class PimpEndpoint: PimpUtils {
         ]
     }
     
-    static func parseTrack(_ obj: NSDictionary, urlMaker: (String) -> URL) -> Track? {
-        if let id = obj[JsonKeys.ID] as? String,
-            let title = obj[JsonKeys.TITLE] as? String,
-            let artist = obj[JsonKeys.ARTIST] as? String,
-            let album = obj[JsonKeys.ALBUM] as? String,
-            let sizeRaw = obj[JsonKeys.SIZE] as? Int,
-            let size = StorageSize.fromBytes(sizeRaw),
-            let duration = obj[JsonKeys.DURATION] as? Int {
-                return Track(
+    static func parseTrack(_ obj: NSDictionary, urlMaker: (String) -> URL) throws -> Track {
+        let id = try Json.readString(obj, JsonKeys.ID)
+        let title = try Json.readString(obj, JsonKeys.TITLE)
+        let artist = try Json.readString(obj, JsonKeys.ARTIST)
+        let album = try Json.readString(obj, JsonKeys.ALBUM)
+        let sizeRaw = try Json.readInt(obj, JsonKeys.SIZE)
+        guard let size = StorageSize.fromBytes(sizeRaw) else { throw JsonError.invalid(JsonKeys.SIZE, sizeRaw) }
+        let duration = try Json.readInt(obj, JsonKeys.DURATION)
+        return Track(
                     id: id,
                     title: title,
                     album: album,
@@ -68,30 +68,25 @@ class PimpEndpoint: PimpUtils {
                     duration: duration.seconds,
                     path: Util.urlDecodeWithPlus(id),
                     size: size,
-                    url: urlMaker(id))
-        }
-        return nil
+                    url: urlMaker(id)
+        )
+    }
+
+    func parseTrack(_ obj: NSDictionary) throws -> Track {
+        return try PimpEndpoint.parseTrack(obj, urlMaker: { (id) -> URL in self.urlFor(id) } )
     }
     
-    func parseTrack(_ obj: NSDictionary) -> Track? {
-        return PimpEndpoint.parseTrack(obj, urlMaker: { (id) -> URL in self.urlFor(id) })
+    func parseStatus(_ dict: NSDictionary) throws -> PlayerState {
+        let trackDict: NSDictionary = try Json.readOrFail(dict, JsonKeys.TRACK)
+        let track = try parseTrack(trackDict)
+        let stateName = try Json.readString(dict, JsonKeys.STATE)
+        guard let state = PlaybackState.fromName(stateName) else { throw JsonError.invalid(JsonKeys.STATE, stateName) }
+        let position = try Json.readInt(dict, JsonKeys.POSITION)
+        let mute: Bool = try Json.readOrFail(dict, JsonKeys.MUTE)
+        let volume = try Json.readInt(dict, JsonKeys.VOLUME)
+        let playlist: [NSDictionary] = try Json.readOrFail(dict, JsonKeys.PLAYLIST)
+        let tracks = try playlist.flatMap(parseTrack)
+        let playlistIndex = try Json.readInt(dict, JsonKeys.INDEX)
+        return PlayerState(track: track, state: state, position: position.seconds, volume: VolumeValue(volume: volume), mute: mute, playlist: tracks, playlistIndex: playlistIndex)
     }
-    
-    func parseStatus(_ dict: NSDictionary) -> PlayerState? {
-        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
-            let stateName = dict[JsonKeys.STATE] as? String,
-            let state = PlaybackState.fromName(stateName),
-            let position = dict[JsonKeys.POSITION] as? Int,
-            //posDuration = position.seconds,
-            let mute = dict[JsonKeys.MUTE] as? Bool,
-            let volume = dict[JsonKeys.VOLUME] as? Int,
-            let playlist = dict[JsonKeys.PLAYLIST] as? [NSDictionary],
-            let playlistIndex = dict[JsonKeys.INDEX] as? Int {
-            let trackOpt = parseTrack(trackDict)
-            let tracks = playlist.flatMapOpt(parseTrack)
-                return PlayerState(track: trackOpt, state: state, position: position.seconds, volume: VolumeValue(volume: volume), mute: mute, playlist: tracks, playlistIndex: playlistIndex)
-        }
-        return nil
-    }
-    
 }

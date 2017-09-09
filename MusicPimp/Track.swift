@@ -9,6 +9,8 @@
 import Foundation
 
 open class Track: MusicItem, Hashable {
+    static let empty = Track(id: "", title: "", album: "", artist: "", duration: Duration.Zero, path: "", size: StorageSize.Zero, url: URL(string: "https://www.musicpimp.org")!)
+    
     let album: String
     let artist: String
     let duration: Duration

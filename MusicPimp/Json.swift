@@ -35,4 +35,25 @@ open class Json {
         }
         return nil
     }
+    
+    static func readString(_ obj: NSDictionary, _ key: String) throws -> String {
+        return try readOrFail(obj, key)
+    }
+    
+    static func readInt(_ obj: NSDictionary, _ key: String) throws -> Int {
+        return try readOrFail(obj, key)
+    }
+    
+    static func readOrFail<T>(_ obj: NSDictionary, _ key: String) throws -> T {
+        let raw = obj[key]
+        if let t = raw as? T {
+            return t
+        } else {
+            if let any = raw {
+                throw JsonError.invalid(key, any)
+            } else {
+                throw JsonError.missing(key)
+            }
+        }
+    }
 }

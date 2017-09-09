@@ -9,7 +9,7 @@
 import Foundation
 
 enum PimpError {
-    case parseError
+    case parseError(JsonError)
     case responseFailure(ResponseDetails)
     case networkFailure(RequestFailure)
     case simpleError(ErrorMessage)
@@ -26,8 +26,15 @@ enum PimpError {
 class PimpErrorUtil {
     static func stringify(_ error: PimpError) -> String {
         switch error {
-        case .parseError:
-            return "Parse error."
+        case .parseError(let json):
+            switch json {
+            case .missing(let key):
+                return "Key not found: '\(key)'."
+            case .invalid(let key, let actual):
+                return "Invalid '\(key)' value: '\(actual)'."
+            case .notJson( _):
+                return "Invalid response format. Expected JSON."
+            }
         case .responseFailure(let details):
             let code = details.code
             switch code {

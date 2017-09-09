@@ -46,7 +46,11 @@ class PimpSocket: PlayerSocket {
                         break
                     case JsonKeys.TRACK_CHANGED:
                         if let track = dict[JsonKeys.TRACK] as? NSDictionary {
-                            delegate.onTrackChanged(delegate.parseTrack(track))
+                            if let track = try? delegate.parseTrack(track) {
+                                delegate.onTrackChanged(track)
+                            } else {
+                                Log.error("Unable to parse track: \(message)")
+                            }
                         }
                         break
                     case JsonKeys.MUTE_TOGGLED:
@@ -76,12 +80,15 @@ class PimpSocket: PlayerSocket {
                         break
                     case JsonKeys.PLAYLIST_MODIFIED:
                         if let list = dict[JsonKeys.PLAYLIST] as? [NSDictionary] {
-                            let tracks = list.flatMapOpt({ self.delegate.parseTrack($0) })
-                            delegate.onPlaylistModified(tracks)
+                            if let tracks = try? list.map(self.delegate.parseTrack) {
+                                delegate.onPlaylistModified(tracks)
+                            } else {
+                                Log.error("Unable to parse tracks: \(message)")
+                            }
                         }
                         break
                     case JsonKeys.STATUS:
-                        if let state = delegate.parseStatus(dict) {
+                        if let state = try? delegate.parseStatus(dict) {
                             delegate.onState(state)
                         } else {
                             Log.error("Unable to parse status: \(message)")

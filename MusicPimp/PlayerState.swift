@@ -9,7 +9,6 @@
 import Foundation
 
 class PlayerStateClass {
-    
     static let empty = PlayerStateClass(track: nil, state: .NoMedia, position: 0, volume: 40, mute: false, playlist: [], playlistIndex: nil)
     
     let track: Track?

@@ -48,19 +48,22 @@ class PimpHttpClient: HttpClient {
         pimpGetParsed(Endpoints.PING_AUTH, parse: parseVersion, f: f, onError: onError)
     }
     
-    func pimpGetParsed<T>(_ resource: String, parse: @escaping (AnyObject) -> T?, f: @escaping (T) -> Void, onError: @escaping (PimpError) -> Void) {
+    func pimpGetParsed<T>(_ resource: String, parse: @escaping (AnyObject) throws -> T, f: @escaping (T) -> Void, onError: @escaping (PimpError) -> Void) {
         pimpGet(resource, f: {
-            data -> Void in
+            (data: Data) -> Void in
             if let obj: AnyObject = Json.asJson(data) {
-                if let parsed: T = parse(obj) {
+                do {
+                    let parsed = try parse(obj)
                     f(parsed)
-                } else {
-                    onError(.parseError)
+                } catch let error as JsonError {
                     self.log("Parse error.")
+                    onError(.parseError(error))
+                } catch _ {
+                    onError(.simple("Unknown parse error."))
                 }
             } else {
-                onError(.parseError)
                 self.log("Not JSON: \(data)")
+                onError(PimpError.parseError(JsonError.notJson(data)))
             }
         }, onError: onError)
     }
@@ -115,14 +118,14 @@ class PimpHttpClient: HttpClient {
         log("Tracks: \(f.tracks.count)")
     }
     
-    func parseVersion(_ obj: AnyObject) -> Version? {
+    func parseVersion(_ obj: AnyObject) throws -> Version {
         if let dict = obj as? NSDictionary {
             if let version = dict[JsonKeys.VERSION] as? String {
                 return Version(version: version)
           }
         }
         log("Unable to get status")
-        return nil
+        throw JsonError.missing(JsonKeys.VERSION)
     }
     
     func log(_ s: String) {

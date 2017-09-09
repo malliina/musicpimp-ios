@@ -8,9 +8,9 @@
 
 import Foundation
 protocol PlayerEventDelegate {
-    func parseStatus(_ json: NSDictionary) -> PlayerState?
+    func parseStatus(_ json: NSDictionary) throws -> PlayerState
     
-    func parseTrack(_ json: NSDictionary) -> Track?
+    func parseTrack(_ json: NSDictionary) throws -> Track
     
     func onTimeUpdated(_ pos: Duration)
     
@@ -30,12 +30,12 @@ protocol PlayerEventDelegate {
 }
 
 class LoggingDelegate : PlayerEventDelegate {
-    func parseStatus(_ json: NSDictionary) -> PlayerState? {
-        return nil
+    func parseStatus(_ json: NSDictionary) throws -> PlayerState {
+        return PlayerState.empty
     }
     
-    func parseTrack(_ json: NSDictionary) -> Track? {
-        return nil
+    func parseTrack(_ json: NSDictionary) throws -> Track {
+        return Track.empty
     }
     
     func onTimeUpdated(_ pos: Duration) {

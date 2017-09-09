@@ -56,10 +56,17 @@ open class PimpLibrary: BaseLibrary {
             JsonKeys.PLAYLIST: SavedPlaylist.toJson(sp) as AnyObject
         ]
         client.pimpPost("\(Endpoints.PLAYLISTS)", payload: json, f: { (data) -> Void in
-            if let jsonObj = Json.asJson(data), let id = self.parsePlaylistID(jsonObj) {
-                onSuccess(id)
+            if let json = Json.asJson(data) {
+                do {
+                    let id = try self.parsePlaylistID(json)
+                    onSuccess(id)
+                } catch let error as JsonError {
+                    onError(.parseError(error))
+                } catch _ {
+                    onError(.simple("Unknown parse error."))
+                }
             } else {
-                onError(PimpError.simpleError(ErrorMessage(message: "Response parsing failed, got \(data)")))
+                onError(.parseError(JsonError.notJson(data)))
             }
             }, onError: onError)
     }
@@ -145,150 +152,135 @@ open class PimpLibrary: BaseLibrary {
         }
     }
     
-    func parseFolder(_ obj: NSDictionary) -> Folder? {
-        if let id = obj[JsonKeys.ID] as? String,
-            let title = obj[JsonKeys.TITLE] as? String,
-            let path = obj[JsonKeys.PATH] as? String {
-                return Folder(
-                    id: id,
-                    title: title,
-                    path: path)
-        }
-        return nil
+    func parseFolder(_ obj: NSDictionary) throws -> Folder {
+        let id = try readString(obj, JsonKeys.ID)
+        let title = try readString(obj, JsonKeys.TITLE)
+        let path = try readString(obj, JsonKeys.PATH)
+        return Folder(id: id, title: title, path: path)
     }
     
-    func parseTrack(_ dict: NSDictionary) -> Track? {
-        return PimpEndpoint.parseTrack(dict, urlMaker: { (id) -> URL in self.helper.urlFor(id) })
+    func parseTrack(_ dict: NSDictionary) throws -> Track {
+        return try PimpEndpoint.parseTrack(dict, urlMaker: { (id) -> URL in self.helper.urlFor(id) })
     }
 
-    func parseMusicFolder(_ obj: AnyObject) -> MusicFolder? {
-        if let dict = obj as? NSDictionary,
-            let folderJSON = dict[JsonKeys.FOLDER] as? NSDictionary,
-            let foldersJSON = dict[JsonKeys.FOLDERS] as? NSArray,
-            let tracksJSON = dict[JsonKeys.TRACKS] as? NSArray,
-            let root = parseFolder(folderJSON) {
-                if let foldObjects = foldersJSON as? [NSDictionary] {
-                    let folders: [Folder] = foldObjects.flatMapOpt(parseFolder)
-                    if let trackObjects = tracksJSON as? [NSDictionary] {
-                        let tracks: [Track] = trackObjects.flatMapOpt(parseTrack)
-                        return MusicFolder(folder: root, folders: folders, tracks: tracks)
-                    }
-                }
+    func parseMusicFolder(_ obj: AnyObject) throws -> MusicFolder {
+        let dict = try readObject(obj)
+        let folderJSON: NSDictionary = try readOrFail(dict, JsonKeys.FOLDER)
+        let foldersJSON: [NSDictionary] = try readOrFail(dict, JsonKeys.FOLDERS)
+        let tracksJSON: [NSDictionary] = try readOrFail(dict, JsonKeys.TRACKS)
+        let root = try parseFolder(folderJSON)
+        let folders = try foldersJSON.map(parseFolder)
+        let tracks = try tracksJSON.map(parseTrack)
+        return MusicFolder(folder: root, folders: folders, tracks: tracks)
+    }
+    
+    func parsePlaylists(_ obj: AnyObject) throws -> [SavedPlaylist] {
+        let dict = try readObject(obj)
+        let playlists: [NSDictionary] = try readOrFail(dict, JsonKeys.PLAYLISTS)
+        return try playlists.map(parsePlaylist)
+    }
+    
+    func parseGetPlaylistResponse(_ obj: AnyObject) throws -> SavedPlaylist {
+        let dict = try readObject(obj)
+        let playlist: NSDictionary = try readOrFail(dict, JsonKeys.PLAYLIST)
+        return try parsePlaylist(playlist)
+    }
+    
+    func parsePopulars(_ obj: AnyObject) throws -> [PopularEntry] {
+        return try parseArray(obj, key: JsonKeys.Populars, single: parsePopular)
+    }
+    
+    func parsePopular(_ dict: NSDictionary) throws -> PopularEntry {
+        let trackDict: NSDictionary = try readOrFail(dict, JsonKeys.TRACK)
+        let track = try parseTrack(trackDict)
+        let count = try readInt(dict, JsonKeys.PlaybackCount)
+        return PopularEntry(track: track, playbackCount: count)
+    }
+    
+    func parseRecents(_ obj: AnyObject) throws -> [RecentEntry] {
+        return try parseArray(obj, key: JsonKeys.Recents, single: parseRecent)
+    }
+    
+    func parseRecent(_ dict: NSDictionary) throws -> RecentEntry {
+        let trackDict: NSDictionary = try readOrFail(dict, JsonKeys.TRACK)
+        let track = try parseTrack(trackDict)
+        let when = try readInt(dict, RecentEntry.When)
+        let whenSeconds: Double = Double(when / 1000)
+        return RecentEntry(track: track, when: Date(timeIntervalSince1970: whenSeconds))
+    }
+    
+    func parseArray<T>(_ obj: AnyObject, key: String, single: (NSDictionary) throws -> T) throws -> [T] {
+        let obj = try readObject(obj)
+        let entries: [NSDictionary] = try readOrFail(obj, key)
+        return try entries.map(single)
+    }
+    
+    func parsePlaylist(_ obj: AnyObject) throws -> SavedPlaylist {
+        let obj = try readObject(obj)
+        let id = try readInt(obj, JsonKeys.ID)
+        let name = try readString(obj, JsonKeys.NAME)
+        let tracksArr: [NSDictionary] = try readOrFail(obj, JsonKeys.TRACKS)
+        let tracks = try tracksArr.map(parseTrack)
+        return SavedPlaylist(id: PlaylistID(id: id), name: name, tracks: tracks)
+    }
+    
+    func parsePlaylistID(_ obj: AnyObject) throws -> PlaylistID {
+        let obj = try readObject(obj)
+        let asInt = try readInt(obj, JsonKeys.ID)
+        return PlaylistID(id: asInt)
+    }
+    
+    func parseTracks(_ obj: AnyObject) throws -> [Track] {
+        let arr = try readArray(obj)
+        return try arr.map(parseTrack)
+    }
+    
+    func parseAlarms(_ obj: AnyObject) throws -> [Alarm] {
+        let arr = try readArray(obj)
+        return try arr.map(parseAlarm)
+    }
+    
+    func parseAlarm(_ dict: NSDictionary) throws -> Alarm {
+        let id = try readString(dict, JsonKeys.ID)
+        let job: NSDictionary = try readOrFail(dict, JsonKeys.JOB)
+        let trackDict: NSDictionary = try readOrFail(dict, JsonKeys.TRACK)
+        let track = try parseTrack(trackDict)
+        let when: NSDictionary = try readOrFail(dict, JsonKeys.WHEN)
+        let hour = try readInt(dict, JsonKeys.Hour)
+        let minute = try readInt(dict, JsonKeys.Minute)
+        let daysNames: [String] = try readOrFail(dict, JsonKeys.Days)
+        let enabled: Bool = try readOrFail(dict, JsonKeys.Enabled)
+        let days = daysNames.flatMapOpt(Day.fromName)
+        if days.count != daysNames.count {
+            throw JsonError.invalid(JsonKeys.Days, daysNames)
         }
-        Log.info("Unable to parse \(obj) as music folder")
-        return nil
+        return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: Set(days)), enabled: enabled)
     }
     
-    func parsePlaylists(_ obj: AnyObject) -> [SavedPlaylist] {
-        if let obj = obj as? NSDictionary,
-            let playlistsArr = obj[JsonKeys.PLAYLISTS] as? [NSDictionary] {
-            return playlistsArr.flatMapOpt(parsePlaylist)
-        } else {
-            return []
-        }
-    }
-    
-    func parseGetPlaylistResponse(_ obj: AnyObject) -> SavedPlaylist? {
-        if let obj = obj as? NSDictionary, let playlistObj = obj[JsonKeys.PLAYLIST] as? NSDictionary {
-            return parsePlaylist(playlistObj)
-        } else {
-            return nil
-        }
-    }
-    
-    func parsePopulars(_ obj: AnyObject) -> [PopularEntry]? {
-        return parseArray(obj, key: JsonKeys.Populars, single: parsePopular)
-    }
-    
-    func parsePopular(_ dict: NSDictionary) -> PopularEntry? {
-        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
-            let count = dict[JsonKeys.PlaybackCount] as? Int,
-            let track = parseTrack(trackDict) {
-            return PopularEntry(track: track, playbackCount: count)
-        } else {
-            return nil
-        }
-    }
-    
-    func parseRecents(_ obj: AnyObject) -> [RecentEntry]? {
-        return parseArray(obj, key: JsonKeys.Recents, single: parseRecent)
-    }
-    
-    func parseRecent(_ dict: NSDictionary) -> RecentEntry? {
-        if let trackDict = dict[JsonKeys.TRACK] as? NSDictionary,
-            let when = dict[JsonKeys.WHEN] as? UInt,
-            let track = parseTrack(trackDict) {
-            let whenSeconds: Double = Double(when / 1000)
-            return RecentEntry(track: track, when: Date(timeIntervalSince1970: whenSeconds))
-        } else {
-            Log.error("Unable to parse track from dictionary \(dict)")
-            return nil
-        }
-    }
-    
-    func parseArray<T>(_ obj: AnyObject, key: String, single: (NSDictionary) -> T?) -> [T]? {
-        if let obj = obj as? NSDictionary, let entriesArr = obj[key] as? [NSDictionary] {
-            return entriesArr.flatMapOpt(single)
-        } else {
-            return nil
-        }
-    }
-    
-    func parsePlaylist(_ obj: AnyObject) -> SavedPlaylist? {
-        if let obj = obj as? NSDictionary,
-            let id = obj[JsonKeys.ID] as? Int,
-            let name = obj[JsonKeys.NAME] as? String,
-            let tracksArr = obj[JsonKeys.TRACKS] as? [NSDictionary] {
-            let tracks = tracksArr.flatMapOpt(parseTrack)
-                return SavedPlaylist(id: PlaylistID(id: id), name: name, tracks: tracks)
-        } else {
-            return nil
-        }
-    }
-    
-    func parsePlaylistID(_ obj: AnyObject) -> PlaylistID? {
-        if let obj = obj as? NSDictionary, let id = obj[JsonKeys.ID] as? Int {
-            return PlaylistID(id: id)
-        } else {
-            return nil
-        }
-    }
-    
-    func parseTracks(_ obj: AnyObject) -> [Track]? {
+    func readArray(_ obj: AnyObject) throws -> [NSDictionary] {
         if let arr = obj as? [NSDictionary] {
-            let tracks = arr.flatMapOpt(parseTrack)
-            return tracks
+            return arr
         }
-        Log.info("Unable to parse tracks from \(obj)")
-        return nil
+        throw JsonError.invalid("object", obj)
     }
     
-    func parseAlarms(_ obj: AnyObject) -> [Alarm] {
-        if let arr = obj as? [NSDictionary] {
-            return arr.flatMapOpt(parseAlarm)
-        } else {
-            return []
+    func readObject(_ obj: AnyObject) throws -> NSDictionary {
+        if let obj = obj as? NSDictionary {
+            return obj
         }
+        throw JsonError.invalid("object", obj)
+
     }
     
-    func parseAlarm(_ dict: NSDictionary) -> Alarm? {
-        if let id = dict[JsonKeys.ID] as? String,
-            let job = dict[JsonKeys.JOB] as? NSDictionary,
-            let trackDict = job[JsonKeys.TRACK] as? NSDictionary,
-            let track = parseTrack(trackDict),
-            let when = dict[JsonKeys.WHEN] as? NSDictionary,
-            let hour = when[JsonKeys.Hour] as? Int,
-            let minute = when[JsonKeys.Minute] as? Int,
-            let dayNames = when[JsonKeys.Days] as? [String],
-            let enabled = dict[JsonKeys.Enabled] as? Bool {
-            let days = dayNames.flatMapOpt(Day.fromName)
-                if days.count == dayNames.count {
-                    let daysSet = Set(days)
-                    return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: daysSet), enabled: enabled)
-                }
-                
-        }
-        Log.info("Unable to parse alarm. \(dict)")
-        return nil
+    func readString(_ obj: NSDictionary, _ key: String) throws -> String {
+        return try Json.readOrFail(obj, key)
+    }
+    
+    func readInt(_ obj: NSDictionary, _ key: String) throws -> Int {
+        return try Json.readOrFail(obj, key)
+    }
+    
+    func readOrFail<T>(_ obj: NSDictionary, _ key: String) throws -> T {
+        return try Json.readOrFail(obj, key)
     }
 }

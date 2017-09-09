@@ -9,6 +9,8 @@
 import Foundation
 
 open class RecentEntry {
+    static let When = "when"
+    
     let track: Track
     let when: Date
     
