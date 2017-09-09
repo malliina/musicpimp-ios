@@ -28,6 +28,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let positionLabel = UILabel()
     let durationLabel = UILabel()
     
+    let coverContainer = UIView()
     let coverImage: UIImageView = UIImageView()
     
     let minHeightForNav: CGFloat = 450
@@ -56,8 +57,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     func initUI() {
-        addSubviews(views: [playbackFooter, seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverImage])
-        baseConstraints(views: [playbackFooter, seek, artistLabel, albumLabel, titleLabel, coverImage])
+        addSubviews(views: [playbackFooter, seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverContainer])
+        baseConstraints(views: [playbackFooter, seek, artistLabel, albumLabel, titleLabel, coverContainer])
         initPlaybackFooter()
         initSeek()
         initLabels()
@@ -78,7 +79,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
         // only triggers valueChanged when dragging has ended
         seek.isContinuous = false
         seek.addTarget(self, action: .seekChanged, for: .valueChanged)
-//        seek.addTarget(self, action: .seekChanged, for: .begi)
         seek.snp.makeConstraints { make in
             make.top.equalTo(positionLabel.snp.bottom).offset(2)
             make.top.equalTo(durationLabel.snp.bottom).offset(2)
@@ -102,32 +102,34 @@ class PlayerController: ListeningController, PlaybackDelegate {
         titleLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         titleLabel.font = UIFont.systemFont(ofSize: 28)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(coverImage.snp.bottom).offset(16)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
-            make.height.greaterThanOrEqualTo(10)
+            make.top.equalTo(coverContainer.snp.bottom).offset(16)
         }
         albumLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         albumLabel.font = UIFont.systemFont(ofSize: 17)
         albumLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
         }
         artistLabel.font = UIFont.systemFont(ofSize: 17)
         artistLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
         artistLabel.snp.makeConstraints { make in
             make.top.equalTo(albumLabel.snp.bottom).offset(8)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
         }
     }
     
     func initCover() {
-        coverImage.image = CoverService.defaultCover
-        coverImage.snp.makeConstraints { make in
+        coverContainer.snp.makeConstraints { make in
             make.top.equalTo(self.view.snp.topMargin).offset(8)
             make.bottom.equalTo(titleLabel.snp.top).offset(-16)
+            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.trailing.equalTo(self.view.snp.trailingMargin)
+        }
+        coverContainer.addSubview(coverImage)
+        coverImage.image = CoverService.defaultCover
+        coverImage.snp.makeConstraints { make in
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
+            make.centerY.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
         coverImage.contentMode = .scaleAspectFit
     }
