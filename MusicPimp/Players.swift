@@ -12,6 +12,9 @@ import AVFoundation
 class Players {
     static let sharedInstance = Players()
     let log = LoggerFactory.pimp("Audio.Players", category: "Audio")
+    let suggestAtMostEvery = 15.minutes
+    private var lastLocalSuggestion: DispatchTime? = nil
+    private var lastRemoteSuggestion: DispatchTime? = nil
     
     let audioPortTypes = [
         AVAudioSessionPortBluetoothHFP,
@@ -20,6 +23,15 @@ class Players {
         AVAudioSessionPortHeadphones,
         AVAudioSessionPortAirPlay
     ]
+    
+    func hasTimePassed(time: Duration, now: DispatchTime, since: DispatchTime?) -> Bool {
+        if let since = since {
+            let elapsedMillis = (now.uptimeNanoseconds - since.uptimeNanoseconds) / 1000000
+            return elapsedMillis > UInt64(time.millis)
+        } else {
+            return true
+        }
+    }
     
     func fromEndpoint(_ e: Endpoint) -> PlayerType {
         let serverType = e.serverType
@@ -33,29 +45,37 @@ class Players {
         }
     }
     
-    func suggestHandoverIfNecessary(view: UIViewController) {
+    /// Shows a playback device selection dialog to the user if suitable conditions are met.
+    ///
+    /// Asks whether the user wants to start listening on:
+    /// - this device, if connected to headphones or bluetooth
+    /// - the server, if connected to neither headphones nor bluetooth
+    ///
+    func suggestPlayerChangeIfNecessary(view: UIViewController) {
+        let isLocal = PlayerManager.sharedInstance.active.isLocal
         let localOutputs = describeLocalOutput()
-        let suggestLocal = localOutputs.count > 0 && !isLocal()
-        let suggestRemote = localOutputs.count == 0 && isLocal()
+        let suggestLocal = localOutputs.count > 0 && !isLocal && hasTimePassed(time: suggestAtMostEvery, now: DispatchTime.now(), since: lastLocalSuggestion)
+        let suggestRemote = localOutputs.count == 0 && isLocal && hasTimePassed(time: suggestAtMostEvery, now: DispatchTime.now(), since: lastRemoteSuggestion)
         if suggestLocal {
-            suggestHandover(to: Endpoint.Local, suggestedName: localOutputs[0], view: view)
+            lastLocalSuggestion = DispatchTime.now()
+            suggestPlayerChange(to: Endpoint.Local, suggestedName: localOutputs[0], isHandoverOptional: false, view: view)
         }
         if suggestRemote {
+            lastRemoteSuggestion = DispatchTime.now()
             let to = PimpSettings.sharedInstance.activeLibrary()
-            suggestHandover(to: to, suggestedName: to.name, view: view)
+            suggestPlayerChange(to: to, suggestedName: to.name, isHandoverOptional: true, view: view)
         }
     }
     
-    func suggestHandover(to: Endpoint, suggestedName: String, view: UIViewController) {
-        let isToLocal = to.id == Endpoint.Local.id
+    func suggestPlayerChange(to: Endpoint, suggestedName: String, isHandoverOptional: Bool, view: UIViewController) {
         let player = PimpSettings.sharedInstance.activePlayer()
         let sheet = UIAlertController(title: "Listening on \(player.name)", message: "Change to \(suggestedName)?", preferredStyle: .alert)
-        let handoverChoice = isToLocal ? "Change to \(suggestedName)" : "Change to \(suggestedName) with handover"
+        let handoverChoice = isHandoverOptional ? "Change to \(suggestedName) with handover" : "Change to \(suggestedName)"
         let handoverAction = UIAlertAction(title: handoverChoice, style: .default) { a in
             self.performHandover(to: to)
         }
         sheet.addAction(handoverAction)
-        if !isToLocal {
+        if isHandoverOptional {
             let changeAction = UIAlertAction(title: "Change to \(suggestedName)", style: .default) { a in
                 self.changePlayer(to: to)
             }
@@ -97,9 +117,5 @@ class Players {
             default: return nil
             }
         }
-    }
-    
-    func isLocal() -> Bool {
-        return PlayerManager.sharedInstance.active.isLocal
     }
 }
