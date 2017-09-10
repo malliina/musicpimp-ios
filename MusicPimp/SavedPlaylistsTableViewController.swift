@@ -13,6 +13,7 @@ protocol PlaylistSelectDelegate {
 }
 
 class SavedPlaylistsTableViewController: PimpTableController {
+    let log = LoggerFactory.vc("SavedPlaylistsTableViewController")
     let emptyMessage = "No saved playlists."
     let loadingMessage = "Loading playlists..."
     let playlistCell = "PlaylistCell"
@@ -68,7 +69,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let playlist = playlists[index]
         if let id = playlist.id {
             library.deletePlaylist(id, onError: onError) {
-                Log.info("Deleted playlist with ID \(id)")
+                self.log.info("Deleted playlist with ID \(id)")
                 self.playlists.remove(at: index)
                 self.renderTable()
             }

@@ -19,6 +19,7 @@ protocol EditAlarmDelegate {
 }
 
 class EditAlarmTableViewController: BaseTableController {
+    let log = LoggerFactory.vc("EditAlarmTableViewController")
     let timePickerIdentifier = "TimePickerCell"
     let repeatIdentifier = "RepeatCell"
     let trackIdentifier = "TrackCell"
@@ -103,7 +104,7 @@ class EditAlarmTableViewController: BaseTableController {
             when.hour = time.hour
             when.minute = time.minute
         } else {
-            Log.error("Unable to save alarm - no alarm available")
+            log.error("Unable to save alarm - no alarm available")
         }
     }
     
@@ -223,12 +224,12 @@ class EditAlarmTableViewController: BaseTableController {
                     let player = Players.fromEndpoint(endpoint)
                     player.open({ () -> Void in
                         let success = player.resetAndPlay(track)?.message ?? "success"
-                        Log.info("Playing \(track.title): \(success)")
+                        self.log.info("Playing \(track.title): \(success)")
                         player.close()
                         }, onError: onConnectError)
                 } else {
                     let desc = mutableAlarm?.track?.title ?? "no alarm or track"
-                    Log.error("Cannot play track, \(desc)")
+                    log.error("Cannot play track, \(desc)")
                 }
                 break
             default:

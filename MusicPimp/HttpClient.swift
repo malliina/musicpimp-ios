@@ -6,6 +6,7 @@
 import Foundation
 
 class HttpClient {
+    private let log = LoggerFactory.network("HttpClient")
     static let JSON = "application/json", CONTENT_TYPE = "Content-Type", ACCEPT = "Accept", GET = "GET", POST = "POST", AUTHORIZATION = "Authorization", BASIC = "Basic"
 
     static func basicAuthValue(_ username: String, password: String) -> String {
@@ -30,7 +31,7 @@ class HttpClient {
             } else if let httpResponse = response as? HTTPURLResponse, let data = data {
                 onResponse(data, httpResponse)
             } else {
-                Log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
+                self.log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
             }
         }
     }
@@ -48,7 +49,7 @@ class HttpClient {
             } else if let httpResponse = response as? HTTPURLResponse, let data = data {
                 onResponse(data, httpResponse)
             } else {
-                Log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
+                self.log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
             }
         }
     }

@@ -9,6 +9,7 @@
 import Foundation
 
 open class PimpNotifications {
+    let log = LoggerFactory.pimp("PimpNotifications", category: "System")
     open static let sharedInstance = PimpNotifications()
     
     let settings = PimpSettings.sharedInstance
@@ -18,7 +19,7 @@ open class PimpNotifications {
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         // the playback notification is displayed as an alert to the user, so we must call this
         application.registerUserNotificationSettings(notificationSettings)
-        Log.info("Registering with APNs...")
+        log.info("Registering with APNs...")
         // registers with APNs
         application.registerForRemoteNotifications()
     }
@@ -26,18 +27,18 @@ open class PimpNotifications {
     func didRegister(_ deviceToken: Data) {
         let hexToken = deviceToken.hexString()
         let token = PushToken(token: hexToken)
-        Log.info("Got device token \(hexToken)")
+        log.info("Got device token \(hexToken)")
         settings.pushToken = token
         settings.notificationsAllowed = true
     }
     
     func didFailToRegister(_ error: Error) {
-        Log.error("Remote notifications registration failure")
+        log.error("Remote notifications registration failure")
         disableNotifications()
     }
     
     func didNotGetPermission() {
-        Log.info("The user did not grant permission to send notifications")
+        log.info("The user did not grant permission to send notifications")
         disableNotifications()
     }
     
@@ -47,14 +48,14 @@ open class PimpNotifications {
     }
     
     func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
-        Log.info("Handling notification")
+        log.info("Handling notification")
         if let tag = data["tag"] as? String,
             let cmd = data["cmd"] as? String,
             let endpoint = settings.endpoints().find({ $0.id == tag }) {
             if cmd == "stop" {
                 let library = Libraries.fromEndpoint(endpoint)
                 library.stopAlarm(onAlarmError) {
-                    Log.info("Stopped alarm playback")
+                    self.log.info("Stopped alarm playback")
                 }
                 app.applicationIconBadgeNumber = 0
             }
@@ -62,6 +63,6 @@ open class PimpNotifications {
     }
     
     func onAlarmError(_ error: PimpError) {
-        Log.error("Alarm error")
+        log.error("Alarm error")
     }
 }

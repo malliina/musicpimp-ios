@@ -15,6 +15,7 @@ fileprivate extension Selector {
 }
 
 class PlayerController: ListeningController, PlaybackDelegate {
+    private let log = LoggerFactory.pimp("ViewControllers.PlayerController", category: "ViewControllers")
     static let seekThumbImage = UIImage(named: "oval-32.png")
     
     let defaultPosition = Duration.Zero
@@ -37,7 +38,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
         super.viewDidLoad()
         edgesForExtendedLayout = []
         navigationItem.title = "PLAYER"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24), style: .plain, target: self, action: .volumeClicked)
+        let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked)
         initUI()
         listenWhenLoaded(player)
         albumLabel.textColor = PimpColors.subtitles
@@ -267,12 +269,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
                 self.player.seek(pos)
             }
         } else {
-            Log.info("Unable to convert value to Duration: \(seekValue)")
+            log.info("Unable to convert value to Duration: \(seekValue)")
         }
-    }
-    
-    func info(_ s: String) {
-        Log.info(s)
     }
 }
 

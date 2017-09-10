@@ -13,6 +13,7 @@ fileprivate extension Selector {
 }
 
 class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
+    let log = LoggerFactory.vc("AlarmsController")
     let endpointFooter = "MusicPimp servers support scheduled playback of music."
     let notificationFooter = "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
     let noAlarmsMessage = "No saved alarms"
@@ -79,17 +80,17 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     func registerNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
         if let token = settings.pushToken {
-            Log.info("Registering with previously saved push token...")
+            log.info("Registering with previously saved push token...")
             registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
         } else {
-            Log.info("No saved push token. Asking for permission...")
+            log.info("No saved push token. Asking for permission...")
             askUserForPermission { (accessGranted) in
                 if accessGranted {
                     if let token = self.settings.pushToken {
-                        Log.info("Permission granted, registering with \(endpoint.address)")
+                        self.log.info("Permission granted, registering with \(endpoint.address)")
                         self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
                     } else {
-                        Log.info("Access granted, but no token available.")
+                        self.log.info("Access granted, but no token available.")
                     }
                 } else {
                     self.onUiThread {
@@ -116,11 +117,11 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func onRegisterError(error: PimpError, endpoint: Endpoint) {
-        Log.error(PimpError.stringify(error))
+        log.error(PimpError.stringify(error))
     }
     
     func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
-        Log.info("Unregistering from \(endpoint.address)...")
+        log.info("Unregistering from \(endpoint.address)...")
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
         alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
     }
@@ -271,7 +272,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
                 dest.delegate = self
                 navigationController?.pushViewController(dest, animated: true)
             } else {
-                Log.error("No alarm or endpoint")
+                log.error("No alarm or endpoint")
             }
             break
         default:
@@ -296,7 +297,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         
     func onAlarmOnOffToggled(_ alarm: Alarm, uiSwitch: UISwitch) {
         let isEnabled = uiSwitch.isOn
-        info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
+        log.info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
         let mutable = MutableAlarm(a: alarm)
         mutable.enabled = isEnabled
         if let updated = mutable.toImmutable() {

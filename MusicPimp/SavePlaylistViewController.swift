@@ -19,6 +19,7 @@ protocol SavePlaylistDelegate {
 }
 
 class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
+    let log = LoggerFactory.vc("SavePlaylistViewController")
     let nameLabel = UILabel()
     let nameText = PimpTextField()
     var saveButton: UIBarButtonItem? = nil
@@ -89,7 +90,7 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         let playlist = SavedPlaylist(id: nil, name: name, tracks: tracks)
         LibraryManager.sharedInstance.active.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
             self.delegate?.onPlaylistSaved(saved: SavedPlaylist(id: id, name: playlist.name, tracks: playlist.tracks))
-            Log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
+            self.log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
         }
     }
     

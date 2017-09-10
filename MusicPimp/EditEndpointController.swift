@@ -22,6 +22,7 @@ protocol EditEndpointDelegate {
 }
 
 class EditEndpointController: PimpViewController {
+    let log = LoggerFactory.vc("EditEndpointController")
     let scrollView = UIScrollView()
     let content = UIView()
     let nameLabel = UILabel()
@@ -193,7 +194,7 @@ class EditEndpointController: PimpViewController {
         if let endpoint = parseEndpoint() {
             PimpSettings.sharedInstance.save(endpoint)
             if activateSwitch.isOn {
-                Log.info("Activating \(endpoint.name)")
+                log.info("Activating \(endpoint.name)")
                 LibraryManager.sharedInstance.saveActive(endpoint)
             }
             delegate?.endpointUpdated(endpoint)
@@ -221,13 +222,13 @@ class EditEndpointController: PimpViewController {
         if let serverType = readServerType(segment) {
             adjustVisibility(serverType)
         } else {
-            Log.error("Unable to determine server type.")
+            log.error("Unable to determine server type.")
         }
     }
     
     func testClicked(_ sender: AnyObject) {
         if let endpoint = parseEndpoint() {
-            info("Testing \(endpoint.httpBaseUrl)")
+            log.info("Testing \(endpoint.httpBaseUrl)")
             feedback("Connecting...")
             let client = Libraries.fromEndpoint(endpoint)
             client.pingAuth(
@@ -264,7 +265,7 @@ class EditEndpointController: PimpViewController {
     
     func onTestFailure(_ e: Endpoint, error: PimpError) {
         let msg = errorMessage(e, error: error)
-        Log.info("Test failed: \(msg)")
+        log.info("Test failed: \(msg)")
         feedback(msg)
     }
     
@@ -337,9 +338,4 @@ class EditEndpointController: PimpViewController {
         }
         return nil
     }
-    
-    func info(_ s: String) {
-        Log.info(s)
-    }
-
 }

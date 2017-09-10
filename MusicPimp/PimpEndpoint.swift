@@ -9,6 +9,7 @@
 import Foundation
 
 class PimpEndpoint: PimpUtils {
+    let log = LoggerFactory.pimp("Pimp.PimpEndpoint", category: "Pimp")
     let client: PimpHttpClient
     
     init(endpoint: Endpoint, client: PimpHttpClient) {
@@ -36,7 +37,7 @@ class PimpEndpoint: PimpUtils {
     
     func onError(_ error: PimpError) {
         let str = PimpErrorUtil.stringify(error)
-        Log.info("Player error: \(str)")
+        log.info("Player error: \(str)")
     }
     
     static func simpleCommand(_ cmd: String) -> [String: String] {

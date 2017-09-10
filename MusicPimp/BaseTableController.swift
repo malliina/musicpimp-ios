@@ -103,14 +103,6 @@ class BaseTableController: UITableViewController {
         return label
     }
     
-    func info(_ s: String) {
-        Log.info(s)
-    }
-    
-    func error(_ e: String) {
-        Log.error(e)
-    }
-    
     func onError(_ pimpError: PimpError) {
         Util.onError(pimpError)
     }
@@ -137,11 +129,9 @@ extension UIViewController {
     func suggestPremium() {
         let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertControllerStyle.alert)
         let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertActionStyle.default) { a -> Void in
-            Log.info("Purchase premium")
             self.navigationController?.pushViewController(IAPViewController(), animated: true)
         }
         let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertActionStyle.cancel) { a -> Void in
-            Log.info("Not interested")
         }
         sheet.addAction(premiumAction)
         sheet.addAction(notInterestedAction)

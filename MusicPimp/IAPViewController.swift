@@ -16,6 +16,7 @@ fileprivate extension Selector {
 }
 
 class IAPViewController: PimpViewController {
+    let log = LoggerFactory.vc("IAPViewController")
     let statusLabel = UILabel()
     let purchaseButton = UIButton()
     let alreadyPurchasedLabel = UILabel()
@@ -96,7 +97,7 @@ class IAPViewController: PimpViewController {
             break
         case SKPaymentTransactionState.failed:
             let domain = transaction.error?._domain ?? "unknown domain"
-            Log.info("Purchase failed. Domain: \(domain)")
+            log.info("Purchase failed. Domain: \(domain)")
             setStatus("Purchase failed.")
             break
         case SKPaymentTransactionState.restored:
@@ -135,7 +136,7 @@ class IAPViewController: PimpViewController {
     }
     
     func purchase() {
-        Log.info("Starting purchase procedure...")
+        log.info("Starting purchase procedure...")
         if let premiumProduct = premiumProduct {
             let paymentRequest = SKMutablePayment(product: premiumProduct)
             SKPaymentQueue.default().add(paymentRequest)
@@ -168,11 +169,11 @@ extension IAPViewController: SKProductsRequestDelegate {
             products = response.products
             let premiumId = PurchaseHelper.PremiumId
             for product in products {
-                Log.info("Got product ID \(product.productIdentifier)")
+                log.info("Got product ID \(product.productIdentifier)")
             }
             let invalidIdentifiers = response.invalidProductIdentifiers
             for invalidIdentifier in invalidIdentifiers {
-                Log.error("Invalid product ID \(invalidIdentifier)")
+                log.error("Invalid product ID \(invalidIdentifier)")
             }
 //            if invalidIdentifiers.contains(premiumId) {
 //                let msg = "MusicPimp Premium is not available. Try again later."
@@ -186,7 +187,7 @@ extension IAPViewController: SKProductsRequestDelegate {
                 togglePurchaseViews(false)
             } else {
                 let msg = "MusicPimp Premium is not available. Try again later."
-                Log.error(msg)
+                log.error(msg)
                 setStatus(msg)
             }
         }

@@ -9,6 +9,7 @@
 import Foundation
 
 class SearchResultsController: BaseMusicController {
+    let log = LoggerFactory.vc("SearchResultsController")
     var results: [Track] = []
     
     override var musicItems: [MusicItem] { return results }
@@ -53,7 +54,7 @@ class SearchResultsController: BaseMusicController {
     
     func onSearchFailure(_ term: String, error: PimpError) {
         let message = PimpErrorUtil.stringify(error)
-        info("Search for \(term) failed. \(message)")
+        log.info("Search for \(term) failed. \(message)")
         if term == latestSearchTerm {
             self.renderTable("Search of \(term) failed")
         }

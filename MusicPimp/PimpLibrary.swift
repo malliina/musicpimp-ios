@@ -242,10 +242,10 @@ open class PimpLibrary: BaseLibrary {
     
     func parseAlarm(_ dict: NSDictionary) throws -> Alarm {
         let id = try readString(dict, JsonKeys.ID)
-        let job: NSDictionary = try readOrFail(dict, JsonKeys.JOB)
+        let _: NSDictionary = try readOrFail(dict, JsonKeys.JOB)
         let trackDict: NSDictionary = try readOrFail(dict, JsonKeys.TRACK)
         let track = try parseTrack(trackDict)
-        let when: NSDictionary = try readOrFail(dict, JsonKeys.WHEN)
+        let _: NSDictionary = try readOrFail(dict, JsonKeys.WHEN)
         let hour = try readInt(dict, JsonKeys.Hour)
         let minute = try readInt(dict, JsonKeys.Minute)
         let daysNames: [String] = try readOrFail(dict, JsonKeys.Days)

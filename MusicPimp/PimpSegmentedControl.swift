@@ -9,11 +9,12 @@
 import Foundation
 
 class PimpSegmentedControl: UISegmentedControl {
+    let log = LoggerFactory.view("PimpSegmentedControl")
     let answer: Int
     var valueChanged: ((PimpSegmentedControl) -> Void)? = nil
     
     init(itemz: [String], valueChanged: @escaping (PimpSegmentedControl) -> Void) {
-        Log.info("Going along")
+        log.info("Going along")
         answer = 42
         self.valueChanged = valueChanged
         super.init(items: itemz)
@@ -24,18 +25,18 @@ class PimpSegmentedControl: UISegmentedControl {
         answer = 43
         //self.valueChanged = { _ in () }
         super.init(frame: frame)
-        Log.info("Dummy segment")
+        log.info("Dummy segment")
     }
     
     required init?(coder aDecoder: NSCoder) {
         answer = 44
         //self.valueChanged = { _ in () }
         super.init(coder: aDecoder)
-        Log.info("Dummy segment2")
+        log.info("Dummy segment2")
     }
     
     func onSegmentChanged(_ ctrl: PimpSegmentedControl) {
-        Log.info("Answer: \(answer)")
+        log.info("Answer: \(answer)")
         if let cb = valueChanged {
             cb(ctrl)
         }

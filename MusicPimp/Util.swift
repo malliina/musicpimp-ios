@@ -9,6 +9,7 @@
 import Foundation
 
 class Util {
+    static let log = LoggerFactory.pimp("Util", category: "Util")
     fileprivate static var GlobalMainQueue: DispatchQueue {
         return DispatchQueue.main
     }
@@ -50,7 +51,7 @@ class Util {
         
     static func onError(_ pimpError: PimpError) {
         let message = PimpErrorUtil.stringifyDetailed(pimpError)
-        Log.error(message)
+        log.error(message)
     }
     
     // TODO source? SO?

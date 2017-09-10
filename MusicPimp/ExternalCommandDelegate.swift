@@ -10,6 +10,7 @@ import Foundation
 import MediaPlayer
 
 class ExternalCommandDelegate: NSObject {
+    let log = LoggerFactory.pimp("Local.ExternalCommandDelegate", category: "Local")
     static let sharedInstance = ExternalCommandDelegate()
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
@@ -108,6 +109,6 @@ class ExternalCommandDelegate: NSObject {
     }
     
     func info(_ s: String) {
-        Log.info(s)
+        log.info(s)
     }
 }

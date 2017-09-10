@@ -9,6 +9,7 @@
 import Foundation
 
 open class PimpSettings {
+    let log = LoggerFactory.system("PimpSettings")
     static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory", IsPremium = "isPremium"
     
     open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
@@ -190,10 +191,10 @@ open class PimpSettings {
         if let stringified = serialize(es) {
             let _ = impl.save(stringified, key: PimpSettings.ENDPOINTS)
             let esAfter = endpoints()
-            Log.info("Endpoints now: \(esAfter.count)")
+            log.info("Endpoints now: \(esAfter.count)")
             endpointsEvent.raise(esAfter)
         } else {
-            Log.error("Unable to save endpoints")
+            log.error("Unable to save endpoints")
         }
     }
     
@@ -219,7 +220,7 @@ open class PimpSettings {
             return impl.save(stringified, key: taskKey(sid))
         } else {
             let msg = "Unable to serialize tasks"
-            Log.error(msg)
+            log.error(msg)
             return ErrorMessage(message: msg)
         }
     }

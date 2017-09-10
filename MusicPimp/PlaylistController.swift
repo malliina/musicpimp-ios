@@ -14,6 +14,7 @@ enum ListMode: Int {
 }
 
 class PlaylistController: BaseMusicController {
+    private let log = LoggerFactory.vc("PlaylistController")
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
     let minItemsRemainingBeforeLoadMore = 20
@@ -130,7 +131,7 @@ class PlaylistController: BaseMusicController {
                 self.onMoreRecents(oldSize, recents: content)
             }
         default:
-            Log.info("Lazy not implemented for \(mode)")
+            log.info("Lazy not implemented for \(mode)")
         }
     }
     
@@ -151,7 +152,7 @@ class PlaylistController: BaseMusicController {
     
     // parent calls this one
     func maybeRefresh(_ targetMode: ListMode) {
-        Log.info("Refreshing with mode \(targetMode)")
+        log.info("Refreshing with mode \(targetMode)")
         mode = targetMode
         switch targetMode {
         case .playlist:
@@ -286,7 +287,7 @@ class PlaylistController: BaseMusicController {
         onUiThread {
             if self.mode == expectedMode && (from+newRows) == expectedSize {
                 self.tableView.insertRows(at: indexPaths, with: .bottom)
-                Log.info("Updated table with \(indexPaths.count) more items")
+                self.log.info("Updated table with \(indexPaths.count) more items")
             }
         }
     }
@@ -297,7 +298,7 @@ class PlaylistController: BaseMusicController {
             return src + newContent
             //src.appendContentsOf(newContent)
         } else {
-            Log.info("Not appending because of list size mismatch. Was: \(oldSize), expected \(from)")
+            log.info("Not appending because of list size mismatch. Was: \(oldSize), expected \(from)")
             return src
         }
     }

@@ -10,6 +10,7 @@ import Foundation
 
 // see https://github.com/malliina/util-android/blob/master/src/main/scala/com/mle/file/DiskHelpers.scala
 class CacheManager {
+    let log = LoggerFactory.pimp("Local.CacheManager", category: "Local")
     let folder: Directory
     //let maxSize: StorageSize
     let throttler: Throttler
@@ -42,13 +43,13 @@ class CacheManager {
         let sizeDiff = currentSize - maxSize
         let needsCleanup = sizeDiff.bytes > 0
         if needsCleanup {
-            Log.info("Local cache size \(currentSize) exceeds the maximum limit of \(maxSize) by \(sizeDiff), deleting tracks...")
+            log.info("Local cache size \(currentSize) exceeds the maximum limit of \(maxSize) by \(sizeDiff), deleting tracks...")
             var shovel = shovelSize
             if sizeDiff > shovel {
                 shovel = sizeDiff
             }
             let amountDeleted = free(dir, amount: shovel)
-            Log.info("Deleted \(amountDeleted) of cached tracks")
+            log.info("Deleted \(amountDeleted) of cached tracks")
             return amountDeleted
         } else {
             return StorageSize.Zero

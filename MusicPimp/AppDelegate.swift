@@ -14,6 +14,7 @@ import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    let log = LoggerFactory.pimp("AppDelegate", category: "App")
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     
@@ -47,15 +48,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let rootDir = LocalLibrary.sharedInstance.musicRootURL
         let contents = Files.sharedInstance.listContents(rootDir)
         for dir in contents.folders {
-            Log.info("\(dir.name), last modified: \(dir.lastModified?.description ?? "never"), accessed: \(dir.lastAccessed?.description ?? "never")")
+            log.info("\(dir.name), last modified: \(dir.lastModified?.description ?? "never"), accessed: \(dir.lastAccessed?.description ?? "never")")
         }
         for file in contents.files {
-            Log.info("\(file.name), size: \(file.size), last modified: \(file.lastModified?.description ?? "never")")
+            log.info("\(file.name), size: \(file.size), last modified: \(file.lastModified?.description ?? "never")")
         }
         let dirs = contents.folders.count
         let files = contents.files.count
         let size = Files.sharedInstance.folderSize(rootDir)
-        Log.info("Dirs: \(dirs) files: \(files) size: \(size)")
+        log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
     
     func initTheme(_ app: UIApplication) {
@@ -92,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if categorySuccess {
             ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
         } else {
-            Log.info("Failed to initialize audio category")
+            log.info("Failed to initialize audio category")
             return
         }
         let activationSuccess: Bool
@@ -103,9 +104,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             activationSuccess = false
         }
         if !activationSuccess {
-            Log.info("Failed to activate audio session")
+            log.error("Failed to activate audio session")
+        } else {
+            log.info("Audio session initialized")
         }
-        Log.info("Audio session initialized")
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -128,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-        Log.info("Complete: \(identifier)")
+        log.info("Complete: \(identifier)")
         downloadCompletionHandlers[identifier] = completionHandler
     }
     
@@ -142,14 +144,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         PlayerManager.sharedInstance.active.close()
         settings.trackHistory = Limiter.sharedInstance.history
-        Log.info("Entered background")
+        log.info("Entered background")
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         // However, this is not called when the app is first launched.
         connectToPlayer()
-        Log.info("Entering foreground")
+        log.info("Entering foreground")
     }
     
     func connectToPlayer() {
@@ -157,10 +159,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func onConnectionOpened() {
-        Log.info("Connected")
+        log.info("Connected")
     }
     func onConnectionFailure(_ error: Error) {
-        Log.error("Unable to connect")
+        log.error("Unable to connect")
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -171,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         settings.trackHistory = Limiter.sharedInstance.history
-        Log.info("Terminating")
+        log.info("Terminating")
     }
     
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {

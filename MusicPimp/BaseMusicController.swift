@@ -9,6 +9,7 @@
 import Foundation
 
 class BaseMusicController : PimpTableController, AccessoryDelegate {
+    private let log = LoggerFactory.vc("BaseMusicController")
     let FolderCellId = "FolderCell"
     let trackReuseIdentifier = "PimpMusicItemCell"
     let defaultCellHeight: CGFloat = 44
@@ -50,7 +51,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
             pimpCell.accessoryDelegate = self
             return pimpCell
         } else {
-            Log.error("Unable to find track cell for track \(item.title)")
+            log.error("Unable to find track cell for track \(item.title)")
             return nil
         }
     }
@@ -77,7 +78,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
                 displayActionsForFolder(folder, row: row)
             }
         } else {
-            Log.error("Unable to determine touched row")
+            log.error("Unable to determine touched row")
         }
     }
     

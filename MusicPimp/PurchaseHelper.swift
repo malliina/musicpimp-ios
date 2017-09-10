@@ -10,6 +10,7 @@ import Foundation
 import StoreKit
 
 class PurchaseHelper: NSObject {
+    let log = LoggerFactory.pimp("Iap.PurchaseHelper", category: "Iap")
     static let sharedInstance = PurchaseHelper()
     static let PremiumId = "org.musicpimp.premium"
 
@@ -28,16 +29,16 @@ extension PurchaseHelper: SKProductsRequestDelegate {
         let premiumId = PurchaseHelper.PremiumId
         let products = response.products
         for product in products {
-            Log.info("Got product ID \(product.productIdentifier)")
+            log.info("Got product ID \(product.productIdentifier)")
         }
         let invalidIdentifiers = response.invalidProductIdentifiers
         for invalidIdentifier in invalidIdentifiers {
-            Log.error("Invalid product ID \(invalidIdentifier)")
+            log.error("Invalid product ID \(invalidIdentifier)")
         }
         if invalidIdentifiers.contains(premiumId) {
-            Log.error("MusicPimp Premium is not available")
+            log.error("MusicPimp Premium is not available")
         } else {
-            Log.info("App Store has MusicPimp Premium")
+            log.info("App Store has MusicPimp Premium")
         }
     }
 }

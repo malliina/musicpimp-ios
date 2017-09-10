@@ -9,6 +9,8 @@
 import Foundation
 
 class PlayerManager: EndpointManager {
+    let log = LoggerFactory.pimp("PlayerManager", category: "Pimp")
+    
     static let sharedInstance = PlayerManager()
     
     fileprivate var activePlayer: PlayerType
@@ -31,7 +33,7 @@ class PlayerManager: EndpointManager {
         activePlayer.close()
         let p = Players.fromEndpoint(endpoint)
         activePlayer = p
-        Log.info("Set player to \(endpoint.name) \(p.isLocal)")
+        log.info("Set player to \(endpoint.name) \(p.isLocal)")
         activePlayer.open(onOpened, onError: onError) // async
         playerChanged.raise(p)
     }

@@ -11,6 +11,7 @@ import AudioToolbox
 import AVFoundation
 
 class LocalPlayer: NSObject, PlayerType {
+    let log = LoggerFactory.pimp("Local.LocalPlayer", category: "Local")
     static let sharedInstance = LocalPlayer()
     static let statusKeyPath = "status"
     
@@ -156,7 +157,7 @@ class LocalPlayer: NSObject, PlayerType {
             initAndPlay(track)
             return track
         } else {
-            Log.info("Unable to find track from playlist")
+            log.info("Unable to find track from playlist")
             return nil
         }
     }
@@ -176,7 +177,7 @@ class LocalPlayer: NSObject, PlayerType {
     
     fileprivate func initAndPlay(_ track: Track) {
         limiter.increment()
-        info("Playing \(track.title)")
+        log.info("Playing \(track.title)")
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
         let playerItem = AVPlayerItem(url: preferredUrl)
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &itemStatusContext)
@@ -197,19 +198,19 @@ class LocalPlayer: NSObject, PlayerType {
             if let duration = secs.seconds {
                 self.timeEvent.raise(duration)
             } else {
-                Log.error("Unable to convert time to Duration: \(secs)")
+                self.log.error("Unable to convert time to Duration: \(secs)")
             }
         } as AnyObject?
         _ = play()
     }
     
     @objc func playedToEnd(_ notification: Notification) {
-        info("Playback ended.")
+        log.info("Playback ended.")
         _ = next()
     }
     
     @objc func failedToPlayToEnd(_ notification: Notification) {
-        info("Failed to play to end.")
+        log.info("Failed to play to end.")
         _ = next()
     }
     
@@ -218,24 +219,24 @@ class LocalPlayer: NSObject, PlayerType {
             if let item = object as? AVPlayerItem {
                 switch(item.status) {
                 case AVPlayerItemStatus.failed:
-                    info("AVPlayerItemStatus.Failed")
+                    self.log.info("AVPlayerItemStatus.Failed")
                     closePlayer()
                 default:
                     break
                 }
             } else {
-                Log.info("Non-item object")
+                log.info("Non-item object")
             }
         } else if context == &playerStatusContext {
             if let p = object as? AVPlayer {
                 switch(p.status) {
                 case AVPlayerStatus.failed:
-                    info("Player failed")
+                    self.log.error("Player failed")
                 default:
                     break
                 }
             } else {
-                info("Non-player object")
+                self.log.info("Non-player object")
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -256,9 +257,5 @@ class LocalPlayer: NSObject, PlayerType {
             timeObserver = nil
         }
         playerInfo = nil
-    }
-    
-    func info(_ s: String) {
-        Log.info(s)
     }
 }

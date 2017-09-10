@@ -10,6 +10,7 @@ import Foundation
 
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
+    private let log = LoggerFactory.pimp("Network.PlayerSocket", category: "Network")
     var socket: SRWebSocket? = nil
     let baseURL: URL
     fileprivate let request: URLRequest
@@ -36,14 +37,14 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         self.onOpenCallback = onOpen
         self.onOpenErrorCallback = onError
         webSocket?.open()
-        info("Connecting to \(baseURL)...")
+        log.info("Connecting to \(baseURL)...")
     }
     
     public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         if let message = message as? String {
-            info("Got message \(message)")
+            log.info("Got message \(message)")
         } else {
-            info("Got data \(message)")
+            log.info("Got data \(message)")
         }
     }
     
@@ -52,7 +53,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
             return
         }
         isConnected = true
-        info("Socket opened to \(baseURL)")
+        log.info("Socket opened to \(baseURL)")
         if let onOpen = onOpenCallback {
             onOpen(())
             onOpenCallback = nil
@@ -62,21 +63,17 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
     
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         isConnected = false
-        info("Error for connection to \(baseURL)")
+        log.info("Error for connection to \(baseURL)")
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         isConnected = false
-        info("Connection failed to \(baseURL)")
+        log.info("Connection failed to \(baseURL)")
         if let onError = onOpenErrorCallback {
             onError(error)
             onOpenCallback = nil
             onOpenErrorCallback = nil
         }
-    }
-    
-    func info(_ s: String) {
-        Log.info(s)
     }
     
     func close() {
@@ -91,6 +88,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
 }
 
 class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
+    let log = LoggerFactory.pimp("Network.LoggingSRSocketDelegate", category: "Network")
     let baseURL: URL
     
     init(baseURL: URL) {
@@ -98,7 +96,7 @@ class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-        Log.info("Closed socket to \(baseURL), code: \(code)")
+        info("Closed socket to \(baseURL), code: \(code)")
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
@@ -114,6 +112,6 @@ class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
     }
     
     func info(_ s: String) {
-        Log.info(s)
+        log.info(s)
     }
 }

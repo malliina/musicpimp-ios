@@ -9,6 +9,8 @@
 import Foundation
 
 class PimpSocket: PlayerSocket {
+    private let log = LoggerFactory.pimp("Pimp.PimpSocket", category: "Pimp")
+    
     let limiter = Limiter.sharedInstance
     
     var delegate: PlayerEventDelegate = LoggingDelegate()
@@ -28,7 +30,7 @@ class PimpSocket: PlayerSocket {
             return nil
         } else {
             let msg = "Unable to send payload over socket"
-            Log.error(msg)
+            log.error(msg)
             return ErrorMessage(message: msg)
         }
     }
@@ -49,7 +51,7 @@ class PimpSocket: PlayerSocket {
                             if let track = try? delegate.parseTrack(track) {
                                 delegate.onTrackChanged(track)
                             } else {
-                                Log.error("Unable to parse track: \(message)")
+                                log.error("Unable to parse track: \(message)")
                             }
                         }
                         break
@@ -68,7 +70,7 @@ class PimpSocket: PlayerSocket {
                             if let state = PlaybackState.fromName(stateName) {
                                 delegate.onStateChanged(state)
                             } else {
-                                Log.error("Unknown playback state name: \(stateName)")
+                                log.error("Unknown playback state name: \(stateName)")
                             }
                         }
                         break
@@ -83,7 +85,7 @@ class PimpSocket: PlayerSocket {
                             if let tracks = try? list.map(self.delegate.parseTrack) {
                                 delegate.onPlaylistModified(tracks)
                             } else {
-                                Log.error("Unable to parse tracks: \(message)")
+                                log.error("Unable to parse tracks: \(message)")
                             }
                         }
                         break
@@ -91,7 +93,7 @@ class PimpSocket: PlayerSocket {
                         if let state = try? delegate.parseStatus(dict) {
                             delegate.onState(state)
                         } else {
-                            Log.error("Unable to parse status: \(message)")
+                            log.error("Unable to parse status: \(message)")
                         }
                         break
                     case JsonKeys.WELCOME:
@@ -100,14 +102,14 @@ class PimpSocket: PlayerSocket {
                     case JsonKeys.PING:
                         break
                     default:
-                        Log.error("Unknown event: \(event)")
+                        log.error("Unknown event: \(event)")
                     }
                 }
             } else {
-                Log.error("Message is not a JSON object: \(message)")
+                log.error("Message is not a JSON object: \(message)")
             }
         } else {
-            Log.error("WebSocket message is not a string: \(message)")
+            log.error("WebSocket message is not a string: \(message)")
         }
     }
 }

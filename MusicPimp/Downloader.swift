@@ -9,6 +9,7 @@
 import Foundation
 
 class Downloader {
+    let log = LoggerFactory.network("Downloader")
 
     typealias RelativePath = String
     
@@ -27,11 +28,9 @@ class Downloader {
             replace: replace,
             onError: { (err: PimpError) -> Void in
                 let msg = PimpErrorUtil.stringify(err)
-                Log.error(msg)
+                self.log.error(msg)
             },
             onSuccess: { (destPath: String) -> Void in
-                
-                
             }
         )
     }
@@ -39,7 +38,7 @@ class Downloader {
     func download(_ url: URL, relativePath: RelativePath, replace: Bool = false, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (String) -> Void) {
         let destPath = pathTo(relativePath)
         if replace || !Files.exists(destPath) {
-            Log.info("Downloading \(url)")
+            log.info("Downloading \(url)")
             let request = URLRequest(url: url)
             NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.current!) { (response, data, err) -> Void in
                 if let err = err {
@@ -58,9 +57,9 @@ class Downloader {
                                 }
                                 if(dirSuccess) {
                                     let fileSuccess = (try? data.write(to: URL(fileURLWithPath: destPath), options: [.atomic])) != nil
-                                    if(fileSuccess) {
+                                    if fileSuccess {
                                         //let size = Files.sharedInstance.fileSize(destPath) crashes
-                                        Log.info("Downloaded \(destPath)")
+                                        self.log.info("Downloaded \(destPath)")
                                         onSuccess(destPath)
                                     } else {
                                         onError(self.simpleError("Unable to write \(destPath)"))
@@ -78,7 +77,7 @@ class Downloader {
             }
         } else {
             onSuccess(destPath)
-            Log.info("Already exists, not downloading \(relativePath)")
+            log.info("Already exists, not downloading \(relativePath)")
         }
     }
     
@@ -102,9 +101,4 @@ class Downloader {
     func simpleError(_ message: String) -> PimpError {
         return PimpError.simpleError(ErrorMessage(message: message))
     }
-    
-    func info(_ s: String) {
-        Log.info(s)
-    }
-
 }

@@ -26,6 +26,7 @@ class Endpoints {
 }
 
 class PimpHttpClient: HttpClient {
+    private let log = LoggerFactory.pimp("Pimp.PimpHttpClient", category: "Pimp")
     let baseURL: URL
     let defaultHeaders: [String: String]
     let postHeaders: [String: String]
@@ -56,13 +57,13 @@ class PimpHttpClient: HttpClient {
                     let parsed = try parse(obj)
                     f(parsed)
                 } catch let error as JsonError {
-                    self.log("Parse error.")
+                    self.log.error("Parse error.")
                     onError(.parseError(error))
                 } catch _ {
                     onError(.simple("Unknown parse error."))
                 }
             } else {
-                self.log("Not JSON: \(data)")
+                self.log.error("Not JSON: \(data)")
                 onError(PimpError.parseError(JsonError.notJson(data)))
             }
         }, onError: onError)
@@ -111,11 +112,11 @@ class PimpHttpClient: HttpClient {
     }
     
     func onRequestError(_ data: Data, error: NSError) -> Void {
-        log("Error: \(data)")
+        log.error("Error: \(data)")
     }
     
     func onMusicFolder(_ f: MusicFolder) -> Void {
-        log("Tracks: \(f.tracks.count)")
+        log.info("Tracks: \(f.tracks.count)")
     }
     
     func parseVersion(_ obj: AnyObject) throws -> Version {
@@ -124,11 +125,7 @@ class PimpHttpClient: HttpClient {
                 return Version(version: version)
           }
         }
-        log("Unable to get status")
+        log.error("Unable to get status")
         throw JsonError.missing(JsonKeys.VERSION)
-    }
-    
-    func log(_ s: String) {
-        Log.info(s)
     }
 }

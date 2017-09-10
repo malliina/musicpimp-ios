@@ -30,6 +30,8 @@ protocol PlayerEventDelegate {
 }
 
 class LoggingDelegate : PlayerEventDelegate {
+    let log = LoggerFactory.pimp("Audio.PlayerEventDelegate", category: "Audio")
+    
     func parseStatus(_ json: NSDictionary) throws -> PlayerState {
         return PlayerState.empty
     }
@@ -71,6 +73,6 @@ class LoggingDelegate : PlayerEventDelegate {
     }
     
     func log(_ s: String) {
-        Log.info(s)
+        log.info(s)
     }
 }

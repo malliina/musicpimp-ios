@@ -14,6 +14,7 @@ fileprivate extension Selector {
 }
 
 class EndpointSelectController: BaseTableController, EditEndpointDelegate {
+    let log = LoggerFactory.vc("EndpointSelectController")
     let endpointIdentifier = "EndpointCell"
     var endpoints: [Endpoint] = []
     
@@ -108,7 +109,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
                     dest.editedItem = endpoint
                     self.navigationController?.pushViewController(dest, animated: true)
                 } else {
-                    Log.error("No endpoint at index \(index)")
+                    self.log.error("No endpoint at index \(index)")
                 }
             }
             let remove = endpointRowAction(tableView, title: "Remove") {

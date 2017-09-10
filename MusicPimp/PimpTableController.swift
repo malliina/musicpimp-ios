@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class PimpTableController: FeedbackTable {
+    private let log = LoggerFactory.vc("PimpTableController")
     let maxNewDownloads = 300
     
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
@@ -55,7 +56,7 @@ class PimpTableController: FeedbackTable {
     
     fileprivate func addTracks2(_ tracks: [Track]) -> [ErrorMessage] {
         if !tracks.isEmpty {
-            info("Adding \(tracks.count) tracks")
+            log.info("Adding \(tracks.count) tracks")
             let errors = player.playlist.add(tracks)
             if errors.isEmpty {
                 return downloadIfNeeded(tracks)
@@ -87,7 +88,7 @@ class PimpTableController: FeedbackTable {
         if !library.isLocal && player.isLocal && settings.cacheEnabled {
             let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
             let tracksToDownload = newTracks.take(maxNewDownloads)
-            Log.info("Downloading \(tracksToDownload.count) tracks")
+            log.info("Downloading \(tracksToDownload.count) tracks")
             return tracksToDownload.flatMapOpt({ (track) -> ErrorMessage? in
                 startDownload(track)
             })

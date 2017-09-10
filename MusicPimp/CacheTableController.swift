@@ -9,6 +9,7 @@
 import Foundation
 
 class CacheTableController: CacheInfoController {
+    private let log = LoggerFactory.pimp("ViewControllers.CacheTableController", category: "ViewControllers")
     
     let CacheEnabledCell = "CacheEnabledCell", CacheSizeCell = "CacheSizeCell", CurrentUsageCell = "CurrentUsageCell", DeleteCacheCell = "DeleteCacheCell", DeleteCustom = "DeleteCustom", EmptyCell = "EmptyCell"
     
@@ -45,7 +46,7 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func updateCacheUsageLabel() {
-        Log.info("Current usage: \(LocalLibrary.sharedInstance.size.shortDescription)")
+        log.info("Current usage: \(LocalLibrary.sharedInstance.size.shortDescription)")
         currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.shortDescription
     }
     

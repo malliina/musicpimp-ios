@@ -16,6 +16,7 @@ fileprivate extension Selector {
 }
 
 class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDelegate {
+    private let log = LoggerFactory.vc("PlaylistParent")
     let scopeSegment = UISegmentedControl(items: ["Current", "Popular", "Recent"])
     let table = PlaylistController()
     // non-nil if the playlist is server-loaded
@@ -128,7 +129,7 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
     
     fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
         LibraryManager.sharedInstance.active.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
-            Log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
+            self.log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
             self.savedPlaylist = playlist
         }
     }

@@ -75,6 +75,7 @@ extension URL {
 }
 
 class Files {
+    static let log = LoggerFactory.pimp("Files.Files", category: "Files")
     static let sharedInstance = Files()
     
     static let manager = FileManager.default
@@ -154,7 +155,7 @@ class Files {
             }
             return acc
         } else {
-            Log.info("Unable to determine size of directory at URL \(dir)")
+            Files.log.info("Unable to determine size of directory at URL \(dir)")
             return StorageSize.Zero
         }
     }

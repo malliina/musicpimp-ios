@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class CoverResult {
     let artist: String
     let album: String
@@ -35,6 +36,7 @@ protocol CoverServiceType {
 }
 
 class CoverService {
+    let log = LoggerFactory.network("CoverService")
     static let sharedInstance = CoverService()
     static let coversDir = Files.documentsPath + "/covers"
     static let defaultCover = UIImage(named: "pimp-512.png")
@@ -55,7 +57,7 @@ class CoverService {
     }
     
     fileprivate func onError(_ msg: PimpError) -> Void {
-        Log.error(PimpError.stringify(msg))
+        log.error(PimpError.stringify(msg))
     }
     
     fileprivate func coverURL(_ artist: String, album: String) -> URL? {

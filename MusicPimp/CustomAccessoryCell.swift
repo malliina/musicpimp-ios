@@ -13,6 +13,7 @@ protocol AccessoryDelegate {
 }
 
 class CustomAccessoryCell: PimpCell {
+    let log = LoggerFactory.view("CustomAccessoryCell")
     static let defaultCellHeight: CGFloat = 44
     
     static let accessoryImageSize = CGSize(width: 16, height: 16)
@@ -33,7 +34,7 @@ class CustomAccessoryCell: PimpCell {
         if let accessory = createTrackAccessory(height: height) {
             self.accessoryView = accessory
         } else {
-            Log.error("No accessory available")
+            log.error("No accessory available")
         }
     }
     
@@ -56,7 +57,7 @@ class CustomAccessoryCell: PimpCell {
         if let accessoryDelegate = accessoryDelegate {
             accessoryDelegate.accessoryTapped(sender, event: event)
         } else {
-            Log.error("No accessory delegate")
+            log.error("No accessory delegate")
         }
     }
 

@@ -11,6 +11,8 @@ import AudioToolbox
 import AVFoundation
 
 class LocalLibrary: BaseLibrary {
+    let log = Logger("org.musicpimp.MusicPimp.Local", category: "Library")
+    
     static let sharedInstance = LocalLibrary()
     static let currentVersion = Version(version: "1.0.0")
     static let documentsPath = Files.documentsPath
@@ -42,16 +44,16 @@ class LocalLibrary: BaseLibrary {
                 let localStorageSize = StorageSize.fromBytes(size.int64Value) {
                 let trackSize = track.size
                 if trackSize == localStorageSize {
-                    Log.info("Found local track at \(path)")
+                    log.info("Found local track at \(path)")
                     return URL(fileURLWithPath: absolutePath)
                 } else {
-                    Log.info("Local size of \(localStorageSize) does not match track size of \(trackSize), ignoring local")
+                    log.info("Local size of \(localStorageSize) does not match track size of \(trackSize), ignoring local")
                 }
             } else {
-                Log.error("Unable to get file size for \(path)")
+                log.error("Unable to get file size for \(path)")
             }
         } else {
-            Log.info("Local track not found for \(path)")
+            log.info("Local track not found for \(path)")
         }
         return nil
     }
@@ -119,11 +121,11 @@ class LocalLibrary: BaseLibrary {
             if let dur = duration(asset) {
                 return Track(id: Util.urlEncodePathWithPlus(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
             } else {
-                Log.error("Unable to parse duration and URL of \(absolutePath)")
+                log.error("Unable to parse duration and URL of \(absolutePath)")
             }
             
         } else {
-            Log.error("Unable to determine file size of \(absolutePath)")
+            log.error("Unable to determine file size of \(absolutePath)")
         }
         return nil
     }

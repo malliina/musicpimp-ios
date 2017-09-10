@@ -50,7 +50,7 @@ open class DownloadInfo {
 }
 
 class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate, URLSessionDelegate {
-    
+    let log = LoggerFactory.network("BackgroundDownloader")
     typealias TaskID = Int
     
     static let musicDownloader = BackgroundDownloader(basePath: LocalLibrary.sharedInstance.musicRootPath, sessionID: "org.musicpimp.downloads.tracks")
@@ -75,7 +75,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     
     func setup() {
         let desc = session.sessionDescription ?? "session"
-        info("Initialized \(desc)")
+        log.info("Initialized \(desc)")
     }
     
     fileprivate func stringify(_ state: URLSessionTask.State) -> String {
@@ -105,7 +105,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
                     })
                 })
                 if !taskIDs.isEmpty {
-                    self.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
+                    self.log.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
                 }
                 self.tasks = actualTasks
             }
@@ -120,15 +120,15 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     }
     
     func download(_ url: URL, relativePath: RelativePath) -> DownloadInfo? {
-        info("Preparing download of \(relativePath) from \(url)")
+        log.info("Preparing download of \(relativePath) from \(url)")
         if let destPath = prepareDestination(relativePath) {
             let destURL = URL(fileURLWithPath: destPath)
             let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
-            self.info("Download \(url) to dest path \(destPath) with url \(destURL)")
+            self.log.info("Download \(url) to dest path \(destPath) with url \(destURL)")
             download(url, info: info)
             return info
         } else {
-            Log.error("Unable to prepare destination URL \(relativePath)")
+            log.error("Unable to prepare destination URL \(relativePath)")
             return nil
         }
     }
@@ -194,22 +194,22 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
             // Attempt to remove any previous file
             do {
                 try fileManager.removeItem(at: destURL)
-                Log.info("Removed previous version of \(destURL).")
+                log.info("Removed previous version of \(destURL).")
             } catch {
             }
             let relPath = downloadInfo.relativePath
             do {
                 try fileManager.moveItem(at: location, to: destURL)
-                info("Completed download of \(relPath).")
+                log.info("Completed download of \(relPath).")
             } catch let err {
-                Log.error("Copy failed \(err)")
-                info("File copy of \(relPath) failed to \(destURL).")
+                log.error("Copy failed \(err)")
+                log.info("File copy of \(relPath) failed to \(destURL).")
             }
         }
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-        info("Resumed at \(fileOffset)")
+        log.info("Resumed at \(fileOffset)")
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
@@ -225,7 +225,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
             if taskOpt == nil {
                 //info("Download task not found: \(taskID)")
             } else {
-                info("Unable to parse bytes of download progress: \(bytesWritten), \(totalBytesWritten)")
+                log.info("Unable to parse bytes of download progress: \(bytesWritten), \(totalBytesWritten)")
             }
         }
     }
@@ -234,23 +234,19 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         let taskID = task.taskIdentifier
         if let error = error {
             let desc = error.localizedDescription
-            info("Download error for \(taskID): \(desc)")
+            log.info("Download error for \(taskID): \(desc)")
         } else {
-            info("Task \(taskID) complete.")
+            log.info("Task \(taskID) complete.")
         }
         removeTask(taskID)
     }
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         let sid = session.configuration.identifier
-        info("All complete for session \(sid ?? "unknown")")
+        log.info("All complete for session \(sid ?? "unknown")")
         if let sid = sid, let app = UIApplication.shared.delegate as? AppDelegate,
             let handler = app.downloadCompletionHandlers.removeValue(forKey: sid) {
                 handler()
         }
-    }
-    
-    func info(_ s: String) {
-        Log.info(s)
     }
 }
