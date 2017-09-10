@@ -19,9 +19,14 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     var endpoints: [Endpoint] = []
     
     var selectedIndex: Int? = nil
-    // override this shit. thanks for abstract classes, Apple
-    var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
     var delegate: EditEndpointDelegate? = nil
+    
+    func use(endpoint: Endpoint) -> Void {
+    }
+    
+    func loadActive() -> Endpoint {
+        return Endpoint.Local
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +37,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         endpoints = settings.endpoints()
-        updateSelected(manager.loadActive())
+        updateSelected(loadActive())
         renderTable()
     }
     
@@ -75,7 +80,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
             return
         }
         let endpoint = endpointForIndex(index)
-        manager.saveActive(endpoint)
+        use(endpoint: endpoint)
         
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = UITableViewCellAccessoryType.checkmark
@@ -115,11 +120,11 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
             let remove = endpointRowAction(tableView, title: "Remove") {
                 (index: Int) -> Void in
                 // TODO make EndpointsService with operations on endpoints, then listen for endpointsChanged events and react instead
-                let active = self.manager.loadActive()
+                let active = self.loadActive()
                 let removed = self.endpoints.remove(at: index)
                 self.settings.saveAll(self.endpoints)
                 if active.id == removed.id {
-                    self.manager.saveActive(Endpoint.Local)
+                    let _ = self.use(endpoint: Endpoint.Local)
                 }
                 let visualIndex = IndexPath(row: index + 1, section: 0)
                 tableView.deleteRows(at: [visualIndex], with: UITableViewRowAnimation.fade)

@@ -10,5 +10,13 @@ import Foundation
 import UIKit
 
 class PlayerSettingController: EndpointSelectController {
-    override var manager: EndpointManager { get { return PlayerManager.sharedInstance } }
+    let manager = PlayerManager.sharedInstance
+    
+    override func use(endpoint: Endpoint) {
+        let _ = manager.use(endpoint: endpoint)
+    }
+    
+    override func loadActive() -> Endpoint {
+        return manager.loadActive()
+    }
 }

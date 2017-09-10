@@ -7,12 +7,19 @@
 //
 
 import Foundation
+
 protocol PlaylistType {
     var indexEvent: Event<Int?> { get }
     var playlistEvent: Event<Playlist> { get }
     var trackAdded: Event<Track> { get }
+    
     func add(_ track: Track) -> ErrorMessage?
+    
     func add(_ tracks: [Track]) -> [ErrorMessage]
+    
     func removeIndex(_ index: Int) -> ErrorMessage?
+    
     func move(_ src: Int, dest: Int) -> ErrorMessage?
+    
+    func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage?
 }

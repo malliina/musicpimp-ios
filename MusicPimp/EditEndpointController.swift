@@ -195,7 +195,7 @@ class EditEndpointController: PimpViewController {
             PimpSettings.sharedInstance.save(endpoint)
             if activateSwitch.isOn {
                 log.info("Activating \(endpoint.name)")
-                LibraryManager.sharedInstance.saveActive(endpoint)
+                let _ = LibraryManager.sharedInstance.use(endpoint: endpoint)
             }
             delegate?.endpointUpdated(endpoint)
         }

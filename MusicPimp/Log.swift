@@ -9,28 +9,6 @@
 import Foundation
 import os.log
 
-open class Log {
-    @available(iOS 10.0, *)
-    static let log = OSLog(subsystem: "org.musicpimp", category: "general")
-    
-//    static func info<T>(_ msg: T) -> Void {
-//        if #available(iOS 10.0, *) {
-//            os_log("%@", log: log, type: .info, "\(msg)")
-//        } else {
-//            print(msg)
-//        }
-//        
-//    }
-//    
-//    static func error<T>(_ msg: T) -> Void {
-//        if #available(iOS 10.0, *) {
-//            os_log("%@", log: log, type: .error, "\(msg)")
-//        } else {
-//            print(msg)
-//        }
-//    }
-}
-
 class Logger {
     private let osLog: OSLog?
     
@@ -44,7 +22,15 @@ class Logger {
     
     func info(_ message: String) {
         if #available(iOS 10.0, *) {
-            os_log("%@", log: osLog ?? .default, type: .info, message)
+            write(message, .info)
+        } else {
+            print(message)
+        }
+    }
+    
+    func warn(_ message: String) {
+        if #available(iOS 10.0, *) {
+            write(message, .default)
         } else {
             print(message)
         }
@@ -52,7 +38,15 @@ class Logger {
     
     func error(_ message: String) {
         if #available(iOS 10.0, *) {
-            os_log("%@", log: osLog ?? .default, type: .error, message)
+            write(message, .error)
+        } else {
+            print(message)
+        }
+    }
+    
+    func write(_ message: String, _ level: OSLogType) {
+        if #available(iOS 10.0, *) {
+            os_log("%@", log: osLog ?? .default, type: level, message)
         } else {
             print(message)
         }

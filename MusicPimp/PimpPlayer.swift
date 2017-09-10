@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     var isLocal: Bool { get { return false } }
     let stateEvent = Event<PlaybackState>()

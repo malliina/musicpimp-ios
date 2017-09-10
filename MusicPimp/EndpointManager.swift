@@ -18,9 +18,10 @@ class EndpointManager {
         self.settings = settings
     }
     
-    func saveActive(_ e: Endpoint) {
-        let _ = settings.impl.save(e.id, key: key)
+    func saveActive(_ e: Endpoint) -> ErrorMessage? {
+        let err =  settings.impl.save(e.id, key: key)
         changed.raise(e)
+        return err
     }
     
     func loadActive() -> Endpoint {

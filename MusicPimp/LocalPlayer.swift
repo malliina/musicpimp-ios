@@ -168,7 +168,7 @@ class LocalPlayer: NSObject, PlayerType {
     
     func resetAndPlay(_ tracks: [Track]) -> [ErrorMessage] {
         closePlayer()
-        localPlaylist.reset(tracks)
+        let _ = localPlaylist.reset(tracks)
         if let first = tracks.first {
             initAndPlay(first)
         }

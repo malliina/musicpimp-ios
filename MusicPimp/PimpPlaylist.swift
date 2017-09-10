@@ -9,11 +9,13 @@
 import Foundation
 
 class PimpPlaylist: BasePlaylist, PlaylistType {
+    let ResetPlaylist = "reset_playlist"
     let socket: PimpSocket
     
     init(socket: PimpSocket) {
         self.socket = socket
     }
+    
     func skip(_ index: Int) -> ErrorMessage? {
         return socket.send(PimpEndpoint.valuedCommand(JsonKeys.SKIP, value: index as AnyObject))
     }
@@ -42,6 +44,15 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
             JsonKeys.CMD: JsonKeys.Move as AnyObject,
             JsonKeys.From: src as AnyObject,
             JsonKeys.To: dest as AnyObject
+        ]
+        return socket.send(payload)
+    }
+    
+    func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage? {
+        let payload: [String: AnyObject] = [
+            JsonKeys.CMD: ResetPlaylist as AnyObject,
+            JsonKeys.INDEX: (index ?? -1) as AnyObject,
+            JsonKeys.TRACKS: tracks as AnyObject
         ]
         return socket.send(payload)
     }

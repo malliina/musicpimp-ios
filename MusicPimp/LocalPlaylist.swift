@@ -12,7 +12,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     static let sharedInstance = LocalPlaylist()
     
     fileprivate var ts: [Track] = []
-    fileprivate var p: Int? = nil
+    fileprivate var index: Int? = nil
     
     static func newPlaylistIndex(_ current: Int, src: Int, dest: Int) -> Int {
         if src == current {
@@ -27,11 +27,11 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     }
 
     func current() -> Playlist {
-        return Playlist(tracks: ts, index: p)
+        return Playlist(tracks: ts, index: index)
     }
     
     func position() -> Int? {
-        return p
+        return index
     }
     
     func currentTrack() -> Track? {
@@ -57,16 +57,21 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         return ts
     }
     
-    func reset(_ track: Track) {
-        reset([track])
+    func reset(_ track: Track) -> ErrorMessage? {
+        return reset([track])
     }
     
-    func reset(_ tracks: [Track]) {
+    func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage? {
         ts = tracks
-        p = ts.count > 0 ? 0 : nil
+        self.index = index
         playlistUpdated()
-        indexEvent.raise(p)
+        indexEvent.raise(index)
         onTracksAdded(tracks)
+        return nil
+    }
+    
+    func reset(_ tracks: [Track]) -> ErrorMessage? {
+        return reset(tracks.count > 0 ? 0 : nil, tracks: tracks)
     }
     
     func add(_ track: Track) -> ErrorMessage? {
@@ -84,8 +89,8 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         if src != dest {
             //let newTracks = Arrays.move(src, destIndex: dest, xs: ts)
             ts = Arrays.move(src, destIndex: dest, xs: ts)
-            if let p = p {
-                self.p = LocalPlaylist.newPlaylistIndex(p, src: src, dest: dest)
+            if let index = index {
+                self.index = LocalPlaylist.newPlaylistIndex(index, src: src, dest: dest)
             }
             playlistUpdated()
         }
@@ -102,9 +107,9 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         ts.remove(at: index)
         if let position = position() {
             if position == index {
-                p = nil
+                self.index = nil
             } else if position > index {
-                p = position - 1
+                self.index = position - 1
             }
         }
         playlistUpdated()
@@ -112,17 +117,17 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     }
     
     fileprivate func playlistUpdated() {
-        playlistEvent.raise(Playlist(tracks: ts, index: p))
+        playlistEvent.raise(Playlist(tracks: ts, index: index))
     }
     
     fileprivate func positionTransform(_ f: (Int) -> Int) -> Track? {
         var nextPos = 0
-        if let currentPos = p {
+        if let currentPos = index {
             nextPos = f(currentPos)
         }
         if let track = trackAt(nextPos) {
-            p = nextPos
-            indexEvent.raise(p)
+            index = nextPos
+            indexEvent.raise(index)
             return track
         }
         return nil

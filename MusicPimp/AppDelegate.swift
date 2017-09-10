@@ -41,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         initTheme(application)
 //        test()
+        log.info("App init complete")
         return true
     }
     
@@ -167,7 +168,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        //Log.info("Became active")
+        log.info("Became active")
+        if let viewController = window?.rootViewController {
+            Players.sharedInstance.suggestHandoverIfNecessary(view: viewController)
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -175,6 +179,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settings.trackHistory = Limiter.sharedInstance.history
         log.info("Terminating")
     }
+    
     
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {
     //        switch event.subtype {

@@ -43,3 +43,27 @@ protocol PlayerType {
     
     func volume(_ newVolume: VolumeValue) -> ErrorMessage?
 }
+
+extension PlayerType {
+    /// Restores this player with the given state. Used to switch from one listening device to another (e.g. remote to local),
+    /// maintaining the state of the previous player.
+    ///
+    /// - parameter state: player state to restore, including the track and any playlist
+    func handover(state: PlayerState) -> [ErrorMessage] {
+        let pauseResult = pause()
+        let resetResult = playlist.reset(state.playlistIndex, tracks: state.playlist)
+        let skipResult = restoreIndex(idx: state.playlistIndex)
+        let seekResult = seek(state.position)
+        let playResult = state.isPlaying ? play() : pause()
+        return [pauseResult, resetResult, skipResult, seekResult, playResult].flatMapOpt { $0 }
+    }
+    
+    private func restoreIndex(idx: Int?) -> ErrorMessage? {
+        if let idx = idx {
+            return skip(idx)
+        } else {
+            return nil
+        }
+    }
+
+}

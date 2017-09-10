@@ -9,29 +9,39 @@
 import Foundation
 
 class LibraryManager: EndpointManager {
+    let log = LoggerFactory.pimp("LibraryManager", category: "Pimp")
     static let sharedInstance = LibraryManager()
     
     fileprivate var activeLibrary: LibraryType
     var active: LibraryType { get { return activeLibrary } }
     let libraryChanged = Event<LibraryType>()
-    private var subscription: Disposable? = nil
+//    private var subscription: Disposable? = nil
     
     init() {
         let settings = PimpSettings.sharedInstance
         activeLibrary = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
         super.init(key: PimpSettings.LIBRARY, settings: settings)
-        subscription = changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
-            lm.onNewLibraryEndpoint
-        })
+//        subscription = changed.addHandler(self, handler: { (lm) -> (Endpoint) -> () in
+//            lm.onNewLibraryEndpoint
+//        })
     }
     
     func endpoints() -> [Endpoint] {
         return settings.endpoints()
     }
     
-    fileprivate func onNewLibraryEndpoint(_ endpoint: Endpoint) {
+    func use(endpoint: Endpoint) -> LibraryType {
+        let _ = saveActive(endpoint)
         let client = Libraries.fromEndpoint(endpoint)
         activeLibrary = client
+        log.info("Library set to \(endpoint.name)")
         libraryChanged.raise(client)
+        return client
     }
+    
+//    fileprivate func onNewLibraryEndpoint(_ endpoint: Endpoint) {
+//        let client = Libraries.fromEndpoint(endpoint)
+//        activeLibrary = client
+//        libraryChanged.raise(client)
+//    }
 }

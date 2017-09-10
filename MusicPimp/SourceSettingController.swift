@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 
 class SourceSettingController: EndpointSelectController {
-    override var manager: EndpointManager { get { return LibraryManager.sharedInstance } }
     var subscription: Disposable? = nil
+    
+    let manager = LibraryManager.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,5 +24,13 @@ class SourceSettingController: EndpointSelectController {
     func libraryChanged(_ e: Endpoint) {
         updateSelected(e)
         renderTable()
+    }
+    
+    override func use(endpoint: Endpoint) {
+        let _ = manager.use(endpoint: endpoint)
+    }
+    
+    override func loadActive() -> Endpoint {
+        return manager.loadActive()
     }
 }
