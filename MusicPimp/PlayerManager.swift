@@ -24,22 +24,28 @@ class PlayerManager: EndpointManager {
         super.init(key: PimpSettings.PLAYER, settings: settings)
     }
     
-    func use(endpoint: Endpoint) -> PlayerType {
+    func use(endpoint: Endpoint) {
+        use(endpoint: endpoint) { _ in () }
+    }
+    
+    func use(endpoint: Endpoint, onOpen: @escaping (PlayerType) -> Void) {
         activePlayer.close()
         let _ = saveActive(endpoint)
         let p = players.fromEndpoint(endpoint)
         activePlayer = p
         log.info("Player set to \(endpoint.name)")
-        activePlayer.open(onOpened, onError: onError) // async
+        activePlayer.open(onError: onError) { _ in
+            self.onOpened(p)
+            onOpen(p)
+        } // async
         playerChanged.raise(p)
-        return p
     }
-        
-    func onOpened() {
+
+    func onOpened(_ player: PlayerType) {
         
     }
     
     func onError(_ error: Error) {
-        
+        log.error("Player error \(error)")
     }
 }

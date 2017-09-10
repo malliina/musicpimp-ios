@@ -16,7 +16,7 @@ protocol PlayerType {
     var trackEvent: Event<Track?> { get }
     var playlist: PlaylistType { get }
     
-    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void)
+    func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void)
     
     func close()
     

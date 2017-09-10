@@ -156,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func connectToPlayer() {
-        PlayerManager.sharedInstance.active.open(onConnectionOpened, onError: onConnectionFailure)
+        PlayerManager.sharedInstance.active.open(onError: onConnectionFailure, onConnectionOpened)
     }
     
     func onConnectionOpened() {

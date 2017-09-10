@@ -28,7 +28,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         super.init(endpoint: e, client: client)
     }
     
-    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
+    func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void) {
         self.socket.delegate = self
         self.socket.open(onOpen, onError: onError)
     }

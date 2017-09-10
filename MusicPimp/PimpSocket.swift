@@ -24,15 +24,23 @@ class PimpSocket: PlayerSocket {
     }
     
     func send(_ dict: [String: AnyObject]) -> ErrorMessage? {
-        if let payload = Json.stringifyObject(dict, prettyPrinted: false), let socket = socket {
-            socket.send(payload)
-            //Log.info("Sent \(payload) to \(baseURL))")
-            return nil
+        if let socket = socket {
+            if let payload = Json.stringifyObject(dict, prettyPrinted: false) {
+                socket.send(payload)
+                //Log.info("Sent \(payload) to \(baseURL))")
+                return nil
+            } else {
+                return failWith("Unable to send payload, encountered non-JSON payload: \(dict)")
+            }
         } else {
-            let msg = "Unable to send payload over socket"
-            log.error(msg)
-            return ErrorMessage(message: msg)
+            return failWith("Unable to send payload, socket not available.")
         }
+        
+    }
+    
+    func failWith(_ message: String) -> ErrorMessage {
+        log.error(message)
+        return ErrorMessage(message: message)
     }
     
     override func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {

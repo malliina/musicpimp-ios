@@ -52,7 +52,7 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
         let payload: [String: AnyObject] = [
             JsonKeys.CMD: ResetPlaylist as AnyObject,
             JsonKeys.INDEX: (index ?? -1) as AnyObject,
-            JsonKeys.TRACKS: tracks as AnyObject
+            JsonKeys.TRACKS: tracks.map { $0.id } as AnyObject
         ]
         return socket.send(payload)
     }

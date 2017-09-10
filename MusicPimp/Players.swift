@@ -35,32 +35,55 @@ class Players {
     
     func suggestHandoverIfNecessary(view: UIViewController) {
         let localOutputs = describeLocalOutput()
-        let suggestLocal = localOutputs.count > 0 && isNotLocal()
+        let suggestLocal = localOutputs.count > 0 && !isLocal()
+        let suggestRemote = localOutputs.count == 0 && isLocal()
         if suggestLocal {
-            let suggestedName = localOutputs[0]
-            let player = PimpSettings.sharedInstance.activePlayer()
-            let sheet = UIAlertController(title: "Listening on \(player.name)", message: "Change to \(suggestedName)?", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: suggestedName, style: .default) { a in
-                self.performHandover(from: PlayerManager.sharedInstance.active, to: Endpoint.Local)
-            }
-            let cancelAction = UIAlertAction(title: player.name, style: .cancel) { a in
-            }
-            sheet.addAction(okAction)
-            sheet.addAction(cancelAction)
-            if let popover = sheet.popoverPresentationController {
-                popover.sourceView = view.view
-            }
-            view.present(sheet, animated: true, completion: nil)
+            suggestHandover(to: Endpoint.Local, suggestedName: localOutputs[0], view: view)
+        }
+        if suggestRemote {
+            let to = PimpSettings.sharedInstance.activeLibrary()
+            suggestHandover(to: to, suggestedName: to.name, view: view)
         }
     }
     
-    func performHandover(from: PlayerType, to: Endpoint) {
-        let currentState = from.current()
-        if let error = from.pause() {
+    func suggestHandover(to: Endpoint, suggestedName: String, view: UIViewController) {
+        let isToLocal = to.id == Endpoint.Local.id
+        let player = PimpSettings.sharedInstance.activePlayer()
+        let sheet = UIAlertController(title: "Listening on \(player.name)", message: "Change to \(suggestedName)?", preferredStyle: .alert)
+        let handoverChoice = isToLocal ? "Change to \(suggestedName)" : "Change to \(suggestedName) with handover"
+        let handoverAction = UIAlertAction(title: handoverChoice, style: .default) { a in
+            self.performHandover(to: to)
+        }
+        sheet.addAction(handoverAction)
+        if !isToLocal {
+            let changeAction = UIAlertAction(title: "Change to \(suggestedName)", style: .default) { a in
+                self.changePlayer(to: to)
+            }
+            sheet.addAction(changeAction)
+        }
+        let cancelAction = UIAlertAction(title: "Continue on \(player.name)", style: .cancel, handler: nil)
+        sheet.addAction(cancelAction)
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = view.view
+        }
+        view.present(sheet, animated: true, completion: nil)
+    }
+    
+    func changePlayer(to: Endpoint) {
+        pauseCurrent()
+        PlayerManager.sharedInstance.use(endpoint: to)
+    }
+    
+    func performHandover(to: Endpoint) {
+        let currentState = PlayerManager.sharedInstance.active.current()
+        pauseCurrent()
+        PlayerManager.sharedInstance.use(endpoint: to) { p in let _ = p.handover(state: currentState) }
+    }
+    
+    func pauseCurrent() {
+        if let error = PlayerManager.sharedInstance.active.pause() {
             self.log.warn("Unable to pause player: \(error)")
         }
-        let newPlayer = PlayerManager.sharedInstance.use(endpoint: to)
-        let _ = newPlayer.handover(state: currentState)
     }
     
     func describeLocalOutput() -> [String] {
@@ -76,7 +99,7 @@ class Players {
         }
     }
     
-    func isNotLocal() -> Bool {
-        return !PlayerManager.sharedInstance.active.isLocal
+    func isLocal() -> Bool {
+        return PlayerManager.sharedInstance.active.isLocal
     }
 }

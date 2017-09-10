@@ -173,6 +173,10 @@ open class PimpSettings {
         return activeEndpoint(PimpSettings.PLAYER)
     }
     
+    func activeLibrary() -> Endpoint {
+        return activeEndpoint(PimpSettings.LIBRARY)
+    }
+    
     func activeEndpoint(_ key: String) -> Endpoint {
         if let id = impl.load(key) {
             return endpoints().find({ $0.id == id }) ?? Endpoint.Local

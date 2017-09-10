@@ -222,11 +222,11 @@ class EditAlarmTableViewController: BaseTableController {
                 tableView.deselectRow(at: indexPath, animated: false)
                 if let track = mutableAlarm?.track, let endpoint = endpoint {
                     let player = Players.sharedInstance.fromEndpoint(endpoint)
-                    player.open({ () -> Void in
+                    player.open(onError: onConnectError) { () -> Void in
                         let success = player.resetAndPlay(track)?.message ?? "success"
                         self.log.info("Playing \(track.title): \(success)")
                         player.close()
-                        }, onError: onConnectError)
+                    }
                 } else {
                     let desc = mutableAlarm?.track?.title ?? "no alarm or track"
                     log.error("Cannot play track, \(desc)")
