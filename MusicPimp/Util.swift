@@ -23,6 +23,15 @@ class Util {
         DispatchQueue.main.async(execute: f)
     }
     
+    class func hasTimePassed(time: Duration, now: DispatchTime, since: DispatchTime?) -> Bool {
+        if let since = since {
+            let elapsedMillis = (now.uptimeNanoseconds - since.uptimeNanoseconds) / 1000000
+            return elapsedMillis > UInt64(time.millis)
+        } else {
+            return true
+        }
+    }
+    
     class func urlDecodeWithPlus(_ s: String) -> String {
         let unplussed = s.replacingOccurrences(of: "+", with: " ")
         return unplussed.removingPercentEncoding ?? unplussed

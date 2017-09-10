@@ -24,15 +24,6 @@ class Players {
         AVAudioSessionPortAirPlay
     ]
     
-    func hasTimePassed(time: Duration, now: DispatchTime, since: DispatchTime?) -> Bool {
-        if let since = since {
-            let elapsedMillis = (now.uptimeNanoseconds - since.uptimeNanoseconds) / 1000000
-            return elapsedMillis > UInt64(time.millis)
-        } else {
-            return true
-        }
-    }
-    
     func fromEndpoint(_ e: Endpoint) -> PlayerType {
         let serverType = e.serverType
         switch serverType.name {
@@ -54,14 +45,15 @@ class Players {
     func suggestPlayerChangeIfNecessary(view: UIViewController) {
         let isLocal = PlayerManager.sharedInstance.active.isLocal
         let localOutputs = describeLocalOutput()
-        let suggestLocal = localOutputs.count > 0 && !isLocal && hasTimePassed(time: suggestAtMostEvery, now: DispatchTime.now(), since: lastLocalSuggestion)
-        let suggestRemote = localOutputs.count == 0 && isLocal && hasTimePassed(time: suggestAtMostEvery, now: DispatchTime.now(), since: lastRemoteSuggestion)
+        let now = DispatchTime.now()
+        let suggestLocal = localOutputs.count > 0 && !isLocal && Util.hasTimePassed(time: suggestAtMostEvery, now: now, since: lastLocalSuggestion)
+        let suggestRemote = localOutputs.count == 0 && isLocal && Util.hasTimePassed(time: suggestAtMostEvery, now: now, since: lastRemoteSuggestion)
         if suggestLocal {
-            lastLocalSuggestion = DispatchTime.now()
+            lastLocalSuggestion = now
             suggestPlayerChange(to: Endpoint.Local, suggestedName: localOutputs[0], isHandoverOptional: false, view: view)
         }
         if suggestRemote {
-            lastRemoteSuggestion = DispatchTime.now()
+            lastRemoteSuggestion = now
             let to = PimpSettings.sharedInstance.activeLibrary()
             suggestPlayerChange(to: to, suggestedName: to.name, isHandoverOptional: true, view: view)
         }
