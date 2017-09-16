@@ -10,46 +10,26 @@ import Foundation
 import os.log
 
 class Logger {
-    private let osLog: OSLog?
+    private let osLog: OSLog
     
     init(_ subsystem: String, category: String) {
-        if #available(iOS 10.0, *) {
-            osLog = OSLog(subsystem: subsystem, category: category)
-        } else {
-            osLog = nil
-        }
+        osLog = OSLog(subsystem: subsystem, category: category)
     }
     
     func info(_ message: String) {
-        if #available(iOS 10.0, *) {
-            write(message, .info)
-        } else {
-            print(message)
-        }
+        write(message, .info)
     }
     
     func warn(_ message: String) {
-        if #available(iOS 10.0, *) {
-            write(message, .default)
-        } else {
-            print(message)
-        }
+        write(message, .default)
     }
     
     func error(_ message: String) {
-        if #available(iOS 10.0, *) {
-            write(message, .error)
-        } else {
-            print(message)
-        }
+        write(message, .error)
     }
     
     func write(_ message: String, _ level: OSLogType) {
-        if #available(iOS 10.0, *) {
-            os_log("%@", log: osLog ?? .default, type: level, message)
-        } else {
-            print(message)
-        }
+        os_log("%@", log: osLog, type: level, message)
     }
 }
 

@@ -6,7 +6,7 @@
 import Foundation
 
 class SnapMusicCell: SnapCell {
-    let title = UILabel()
+    let title = PimpLabel.create()
     let progress = UIProgressView(progressViewStyle: .default)
 
     override func configureView() {
@@ -21,7 +21,6 @@ class SnapMusicCell: SnapCell {
     }
 
     func initTitle() {
-        title.textColor = PimpColors.titles
         contentView.addSubview(title)
         title.snp.makeConstraints { make in
             make.top.equalToSuperview()

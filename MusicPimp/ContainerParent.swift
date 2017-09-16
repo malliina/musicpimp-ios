@@ -28,6 +28,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     
     func initChild(_ child: UIViewController) {
         addChildViewController(child)
+        // ?
         child.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(child.view)
         child.didMove(toParentViewController: self)
@@ -87,11 +88,4 @@ class ContainerParent: ListeningController, PlaybackDelegate {
             }
         }
     }
-    
-//    func findChild<T>() -> T? {
-//        let pcs = childViewControllers.flatMapOpt { (vc) -> T? in
-//            return vc as? T
-//        }
-//        return pcs.headOption()
-//    }
 }

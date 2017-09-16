@@ -130,9 +130,12 @@ class LibraryController: SearchableMusicController {
         let isFolder = item as? Folder != nil
         if isFolder {
             let folderCell = identifiedCell(FolderCellId, index: indexPath)
+//            folderCell.separatorInset = .zero
             folderCell.textLabel?.text = item.title
             folderCell.textLabel?.textColor = PimpColors.titles
             folderCell.accessoryType = .disclosureIndicator
+            folderCell.layoutMargins = .zero
+            folderCell.separatorInset = .zero
             return folderCell
         } else {
             if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {

@@ -119,13 +119,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         notifications.didFailToRegister(error)
     }
     
-    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        let allowed = notificationSettings.types != .none
-        if !allowed {
-            notifications.didNotGetPermission()
-        }
-    }
-    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         notifications.handleNotification(application, data: userInfo)
     }

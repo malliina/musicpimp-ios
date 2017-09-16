@@ -10,13 +10,18 @@ import Foundation
 
 class PimpLabel: UILabel {
     static func footerLabel(_ text: String) -> UILabel {
-        let label = UILabel()
+        let label = create()
         label.text = text
-        label.textColor = PimpColors.titles
-        label.font = label.font.withSize(12)
+        label.font = label.font.withSize(16)
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
         label.sizeToFit()
+        return label
+    }
+    
+    static func create() -> UILabel {
+        let label = UILabel()
+        label.textColor = PimpColors.titles
         return label
     }
 }

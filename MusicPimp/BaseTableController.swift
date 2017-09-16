@@ -25,6 +25,8 @@ class BaseTableController: UITableViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSFontAttributeName: PimpColors.titleFont
         ]
+        // Does not add margins to table cells on iPad Pro+
+        self.tableView.cellLayoutMarginsFollowReadableWidth = false
     }
     
     func registerCell(reuseIdentifier: String) {

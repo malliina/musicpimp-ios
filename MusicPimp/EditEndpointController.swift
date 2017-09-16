@@ -181,6 +181,10 @@ class EditEndpointController: PimpViewController {
             make.height.equalTo(60)
             make.bottom.equalTo(content).inset(8)
         }
+        // Removes space between text view border and text
+        feedbackText.textContainerInset = .zero
+        feedbackText.textContainer.lineFragmentPadding = 0
+        feedbackText.isEditable = false
         typeControl.addTarget(self, action: .serverTypeChanged, for: .valueChanged)
         testButton.addTarget(self, action: .testClicked, for: .touchUpInside)
     }

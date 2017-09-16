@@ -14,8 +14,8 @@ fileprivate extension Selector {
 
 class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
     let log = LoggerFactory.vc("AlarmsController")
-    let endpointFooter = "MusicPimp servers support scheduled playback of music."
-    let notificationFooter = "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
+    static let endpointFooter = "MusicPimp servers support scheduled playback of music."
+    static let notificationFooter = "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
     let noAlarmsMessage = "No saved alarms"
     
     let endpointSection = 0
@@ -26,6 +26,10 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     let pushEnabledIdentifier = "PushEnabledCell"
     let alarmIdentifier = "AlarmCell"
     let alarmCellKey = "MainSubCell"
+    let endpointFooterIdentifier = "EndpointFooter"
+    let notificationFooterIdentifier = "NotificationFooter"
+    let endpointLabel = PimpLabel.footerLabel(AlarmsController.endpointFooter)
+    let notificationLabel = PimpLabel.footerLabel(AlarmsController.notificationFooter)
     
     var endpoint: Endpoint? = nil
     var pushEnabled: Bool = false
@@ -35,15 +39,20 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     var pushSwitch: UISwitch? = nil
     
     var isEndpointValid: Bool { return endpoint != nil }
+    var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "ALARMS"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: .addClicked)
-        self.tableView!.register(DetailedCell.self, forCellReuseIdentifier: endpointIdentifier)
-        self.tableView!.register(PimpCell.self, forCellReuseIdentifier: pushEnabledIdentifier)
-        self.tableView!.register(SnapMainSubCell.self, forCellReuseIdentifier: alarmIdentifier)
-        self.tableView!.register(SnapMainSubCell.self, forCellReuseIdentifier: alarmCellKey)
+        if let tableView = self.tableView {
+            tableView.register(DetailedCell.self, forCellReuseIdentifier: endpointIdentifier)
+            tableView.register(PimpCell.self, forCellReuseIdentifier: pushEnabledIdentifier)
+            tableView.register(SnapMainSubCell.self, forCellReuseIdentifier: alarmIdentifier)
+            tableView.register(MainSubCell.self, forCellReuseIdentifier: alarmCellKey)
+            tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: endpointFooterIdentifier)
+            tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: notificationFooterIdentifier)
+        }
         reloadAlarms()
         // TODO create custom UISwitch with toggle handler
         let onOff = PimpSwitch { (uiSwitch) in
@@ -216,7 +225,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
                 return feedbackCellWithText(tableView, indexPath: indexPath, text: feedbackMessage ?? noAlarmsMessage)
             } else {
                 let item = alarms[indexPath.row]
-                let alarmCell: SnapMainSubCell = loadCell(alarmCellKey, index: indexPath)
+                let alarmCell: MainSubCell = loadCell(alarmCellKey, index: indexPath)
                 let when = item.when
                 alarmCell.main.text = item.track.title + " at " + when.time.formatted()
                 alarmCell.sub.text = Day.describeDays(when.days)
@@ -243,17 +252,41 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         switch section {
-        case 0: return customFooter(endpointFooter)
-        case 1: return customFooter(notificationFooter)
+        case 0: return footerView(identifier: endpointFooterIdentifier, content: endpointLabel)
+        case 1: return footerView(identifier: notificationFooterIdentifier, content: notificationLabel)
         default: return nil
         }
     }
     
+    func footerView(identifier: String, content: UILabel) -> UITableViewHeaderFooterView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
+        view?.contentView.addSubview(content)
+        content.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(footerInset)
+        }
+        view?.contentView.backgroundColor = PimpColors.background
+        return view
+    }
+    
+    /// Keeps the header margins synced with the cells' margins.
+    /// The cell margin seems to depend on orientation / screen size.
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in
+            self.endpointLabel.snp.remakeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(self.footerInset)
+            }
+            self.notificationLabel.snp.remakeConstraints { (make) in
+                make.leading.trailing.equalToSuperview().inset(self.footerInset)
+            }
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section <= 1 {
-            return 44
-        } else {
-            return 0
+        switch section {
+        case 0: return endpointLabel.frame.height + 10
+        case 1: return notificationLabel.frame.height + 10
+        default: return 0
         }
     }
     

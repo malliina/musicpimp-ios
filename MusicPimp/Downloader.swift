@@ -40,7 +40,8 @@ class Downloader {
         if replace || !Files.exists(destPath) {
             log.info("Downloading \(url)")
             let request = URLRequest(url: url)
-            NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.current!) { (response, data, err) -> Void in
+            let session = URLSession.shared
+            session.dataTask(with: request) { (data, response, err) in
                 if let err = err {
                     onError(self.simpleError("Error \(err)"))
                 } else {
@@ -67,7 +68,7 @@ class Downloader {
                                 } else {
                                     onError(self.simpleError("Unable to create directory: \(dir)"))
                                 }
-
+                                
                             }
                         } else {
                             onError(.responseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))

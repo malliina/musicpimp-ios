@@ -24,9 +24,10 @@ class CustomAccessoryCell: PimpCell {
     // call from layoutSubviews if necessary
     func removeAccessoryMargin() {
         // Removes right-side accessory view margin
+        // Try to find another solution; this does not respect UITableView.cellLayoutMarginsFollowReadableWidth
         // http://stackoverflow.com/questions/20534075/get-rid-of-padding-for-uitableviewcell-custom-accessoryview
         if let accessoryView = self.accessoryView {
-            accessoryView.frame.origin.x = self.bounds.width - accessoryView.frame.width
+            accessoryView.frame.origin.x = frame.width - accessoryView.frame.width
         }
     }
     
@@ -45,7 +46,6 @@ class CustomAccessoryCell: PimpCell {
             let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
             button.frame = frame
             button.setImage(image, for: UIControlState())
-            button.backgroundColor = UIColor.clear
             button.contentMode = UIViewContentMode.scaleAspectFit
             button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
             return button

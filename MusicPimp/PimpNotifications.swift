@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UserNotifications
 
 open class PimpNotifications {
     let log = LoggerFactory.pimp("PimpNotifications", category: "System")
@@ -15,10 +16,15 @@ open class PimpNotifications {
     let settings = PimpSettings.sharedInstance
     
     func initNotifications(_ application: UIApplication) {
-        // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/IPhoneOSClientImp.html#//apple_ref/doc/uid/TP40008194-CH103-SW1
-        let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         // the playback notification is displayed as an alert to the user, so we must call this
-        application.registerUserNotificationSettings(notificationSettings)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
+            (granted, error) in
+            if !granted {
+                self.log.info("The user did not grant permission to send notifications")
+                self.disableNotifications()
+            } else {
+            }
+        }
         log.info("Registering with APNs...")
         // registers with APNs
         application.registerForRemoteNotifications()
@@ -34,11 +40,6 @@ open class PimpNotifications {
     
     func didFailToRegister(_ error: Error) {
         log.error("Remote notifications registration failure")
-        disableNotifications()
-    }
-    
-    func didNotGetPermission() {
-        log.info("The user did not grant permission to send notifications")
         disableNotifications()
     }
     

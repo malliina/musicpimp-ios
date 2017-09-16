@@ -96,15 +96,14 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     func displayActionsForTrack(_ track: Track, row: Int, sender: UIButton) {
         let title = track.title
         let message = track.artist
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         sheet.view.window?.backgroundColor = PimpColors.background
         let playAction = playTrackAccessoryAction(track, row: row)
         let addAction = addTrackAccessoryAction(track, row: row)
         let downloadAction = accessoryAction("Download") { _ in
             _ = self.downloadIfNeeded([track])
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
-            
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
         sheet.addAction(playAction)
         sheet.addAction(addAction)
