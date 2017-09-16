@@ -9,7 +9,7 @@
 import Foundation
 
 protocol AccessoryDelegate {
-    func accessoryTapped(_ sender: AnyObject, event: AnyObject)
+    func accessoryTapped(_ sender: UIButton, event: AnyObject)
 }
 
 class CustomAccessoryCell: PimpCell {
@@ -53,7 +53,7 @@ class CustomAccessoryCell: PimpCell {
         return nil
     }
     
-    func accessoryClicked(_ sender: AnyObject, event: AnyObject) {
+    func accessoryClicked(_ sender: UIButton, event: AnyObject) {
         if let accessoryDelegate = accessoryDelegate {
             accessoryDelegate.accessoryTapped(sender, event: event)
         } else {

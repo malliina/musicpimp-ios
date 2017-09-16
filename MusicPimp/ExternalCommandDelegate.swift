@@ -14,7 +14,7 @@ class ExternalCommandDelegate: NSObject {
     static let sharedInstance = ExternalCommandDelegate()
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
-    var disposable: Disposable? = nil
+    private var disposable: Disposable? = nil
     
     func initialize(_ commandCenter: MPRemoteCommandCenter) {
         commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
@@ -23,7 +23,7 @@ class ExternalCommandDelegate: NSObject {
         commandCenter.stopCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onStop))
         commandCenter.nextTrackCommand.addTarget(self, action: #selector(ExternalCommandDelegate.next))
         commandCenter.previousTrackCommand.addTarget(self, action: #selector(ExternalCommandDelegate.prev))
-        // these two will visually replace the "prev" and "next" buttons, which I don't want, so we exclude them
+        // these two will visually replace the "prev" and "next" buttons, which I don't want, so I exclude them
 //        commandCenter.skipForwardCommand.addTarget(self, action: "skipForward:")
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))

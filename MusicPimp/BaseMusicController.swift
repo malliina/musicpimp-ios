@@ -68,11 +68,11 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         cell.selectionStyle = selectionStyle
     }
     
-    func accessoryTapped(_ sender: AnyObject, event: AnyObject) {
+    func accessoryTapped(_ sender: UIButton, event: AnyObject) {
         if let row = clickedRow(event) {
             let item = musicItems[row]
             if let track = item as? Track {
-                displayActionsForTrack(track, row: row)
+                displayActionsForTrack(track, row: row, sender: sender)
             }
             if let folder = item as? Folder {
                 displayActionsForFolder(folder, row: row)
@@ -93,7 +93,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         return nil
     }
     
-    func displayActionsForTrack(_ track: Track, row: Int) {
+    func displayActionsForTrack(_ track: Track, row: Int, sender: UIButton) {
         let title = track.title
         let message = track.artist
         let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
@@ -112,8 +112,9 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
             sheet.addAction(downloadAction)
         }
         sheet.addAction(cancelAction)
+        // For iPad: Positions the action sheet next to the tapped element, in this case the accessory view
         if let popover = sheet.popoverPresentationController {
-            popover.sourceView = self.view
+            popover.sourceView = sender
         }
         self.present(sheet, animated: true, completion: nil)
     }
