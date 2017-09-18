@@ -34,10 +34,11 @@ class PlayerManager: EndpointManager {
         let p = players.fromEndpoint(endpoint)
         activePlayer = p
         log.info("Player set to \(endpoint.name)")
+        // async
         activePlayer.open(onError: onError) { _ in
             self.onOpened(p)
             onOpen(p)
-        } // async
+        }
         playerChanged.raise(p)
     }
 

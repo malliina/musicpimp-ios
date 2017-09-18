@@ -16,7 +16,7 @@ open class UserPrefs: Persistence {
     
     func save(_ contents: String, key: String) -> ErrorMessage? {
         prefs.set(contents, forKey: key)
-        log.info("Saved \(contents) to \(key)")
+//        log.info("Saved \(contents) to \(key)")
         changes.raise(Setting(key: key, contents: contents))
         return nil
     }

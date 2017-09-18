@@ -84,26 +84,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initAudio() {
-        let categorySuccess: Bool
-        do {
-            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
-            categorySuccess = true
-        } catch _ {
-            categorySuccess = false
-        }
+        let categorySuccess: Bool = (try? audioSession.setCategory(AVAudioSessionCategoryPlayback)) != nil
         if categorySuccess {
             ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
         } else {
             log.info("Failed to initialize audio category")
             return
         }
-        let activationSuccess: Bool
-        do {
-            try audioSession.setActive(true)
-            activationSuccess = true
-        } catch _ {
-            activationSuccess = false
-        }
+        let activationSuccess = (try? audioSession.setActive(true)) != nil
         if !activationSuccess {
             log.error("Failed to activate audio session")
         } else {

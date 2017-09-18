@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 protocol PlayerEventDelegate {
     func parseStatus(_ json: NSDictionary) throws -> PlayerState
     

@@ -10,9 +10,9 @@ import Foundation
 import MediaPlayer
 
 class ExternalCommandDelegate: NSObject {
-    let log = LoggerFactory.pimp("Local.ExternalCommandDelegate", category: "Local")
     static let sharedInstance = ExternalCommandDelegate()
     
+    let log = LoggerFactory.pimp("Local.ExternalCommandDelegate", category: "Local")
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     private var disposable: Disposable? = nil
     
@@ -28,12 +28,16 @@ class ExternalCommandDelegate: NSObject {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
         commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
-        disposable = LocalPlayer.sharedInstance.trackEvent.addHandler(self, handler: { (ecd) -> (Track?) -> () in
-            ecd.onLocalTrackChanged
-        })
+        let events = PlaybackListener(autoSubscribe: true)
+        let trackListener = TrackListener { (t) in
+            self.onLocalTrackChanged(t)
+        }
+        events.delegate = trackListener
+        disposable = events
     }
     
-    func onLocalTrackChanged(_ track: Track?) {
+    func onLocalTrackChanged(_ track: Track?) -> Void {
+//        log.info("Using \(track?.title ?? "none")")
         let center = MPNowPlayingInfoCenter.default()
         if let track = track {
             var info: [String: AnyObject] = [
@@ -49,63 +53,75 @@ class ExternalCommandDelegate: NSObject {
                 if let image = result.imageOrDefault {
                     info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in image.withSize(scaledToSize: size) })
                 }
+//                self.log.info("Installing info")
                 center.nowPlayingInfo = info
             }
         } else {
+//            log.info("Nilling info")
             center.nowPlayingInfo = nil
         }
     }
     
-    func onPlay() {
+    func onPlay() -> MPRemoteCommandHandlerStatus {
         _ = player.play()
         info("onPlay")
+        return .success
     }
     
-    func onPause() {
+    func onPause() -> MPRemoteCommandHandlerStatus {
         _ = player.pause()
         info("onPause")
+        return .success
     }
     
-    func onTogglePlayPause() {
+    func onTogglePlayPause() -> MPRemoteCommandHandlerStatus {
         if player.current().isPlaying {
             _ = player.pause()
         } else {
             _ = player.play()
         }
         info("onTogglePlayPause")
+        return .success
     }
     
-    func onStop() {
+    func onStop() -> MPRemoteCommandHandlerStatus {
         _ = player.pause()
         info("onStop")
+        return .success
     }
     
-    func next() {
+    func next() -> MPRemoteCommandHandlerStatus {
         _ = player.next()
         info("next")
+        return .success
     }
     
-    func prev() {
+    func prev() -> MPRemoteCommandHandlerStatus {
         _ = player.prev()
         info("prev")
+        return .success
     }
     
-    func skipForward(_ skipEvent: MPSkipIntervalCommandEvent) {
+    func skipForward(_ skipEvent: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
         let interval = skipEvent.interval
         info("skipForward \(interval)")
+        return .success
     }
     
-    func skipBackward(_ skipEvent: MPSkipIntervalCommandEvent) {
+    func skipBackward(_ skipEvent: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
         info("skipBackward")
+        return .success
     }
     
-    func seekForward(_ seekEvent: MPSeekCommandEvent) {
+    func seekForward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         let t = seekEvent.type
         info("seekForward \(t)")
+        return .success
     }
     
-    func seekBackward(_ seekEvent: MPSeekCommandEvent) {
+    func seekBackward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         info("seekBackward")
+        return .success
     }
     
     func info(_ s: String) {

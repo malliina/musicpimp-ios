@@ -199,7 +199,6 @@ open class PimpSettings {
         if let stringified = serialize(es) {
             let _ = impl.save(stringified, key: PimpSettings.ENDPOINTS)
             let esAfter = endpoints()
-            log.info("Endpoints now: \(esAfter.count)")
             endpointsEvent.raise(esAfter)
         } else {
             log.error("Unable to save endpoints")
