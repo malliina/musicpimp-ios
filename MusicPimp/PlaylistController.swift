@@ -13,7 +13,7 @@ enum ListMode: Int {
     case playlist = 0, popular, recent
 }
 
-class PlaylistController: BaseMusicController {
+class PlaylistController: BaseMusicController, PlaylistEventDelegate {
     private let log = LoggerFactory.vc("PlaylistController")
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
@@ -44,22 +44,20 @@ class PlaylistController: BaseMusicController {
     var selected: MusicItem? = nil
     
     private var reloadOnDidAppear = false
+    
+    let listener = PlaybackListener()
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        listener.playlists = self
         self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
         self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let playlistDisposable = player.playlist.playlistEvent.addHandler(self) { (plc: PlaylistController) -> (Playlist) -> () in
-            plc.onNewPlaylist
-        }
-        let indexDisposable = player.playlist.indexEvent.addHandler(self) { (plc: PlaylistController) -> (Int?) -> () in
-            plc.onIndexChanged
-        }
+        listener.subscribe()
         let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
-        listeners = [playlistDisposable, indexDisposable, downloadDisposable]
+        listeners = [downloadDisposable]
         let state = player.current()
         let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
         onNewPlaylist(currentPlaylist)
@@ -70,6 +68,7 @@ class PlaylistController: BaseMusicController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        listener.unsubscribe()
         if !DownloadUpdater.instance.isEmpty {
             reloadOnDidAppear = true
         }
@@ -322,7 +321,7 @@ class PlaylistController: BaseMusicController {
         renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
     }
     
-    func onIndexChanged(_ index: Int?) {
+    func onIndexChanged(to index: Int?) {
         self.current = Playlist(tracks: current.tracks, index: index)
         renderTable()
     }

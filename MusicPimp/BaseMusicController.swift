@@ -17,6 +17,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     
     var musicItems: [MusicItem] { return [] }
     
+    // generic listeners
     var listeners: [Disposable] = []
     
     override func viewDidLoad() {

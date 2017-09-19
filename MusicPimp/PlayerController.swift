@@ -41,7 +41,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
         let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked)
         initUI()
-        listenWhenLoaded(player)
         albumLabel.textColor = PimpColors.subtitles
         positionLabel.textColor = PimpColors.subtitles
         durationLabel.textColor = PimpColors.subtitles
@@ -169,11 +168,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
         super.viewWillAppear(animated)
         let current = player.current()
         updatePlayPause(current.isPlaying)
-        if let track = current.track {
-            updateTrack(track)
+        onTrackChanged(current.track)
+        if current.track != nil {
             updatePosition(current.position)
-        } else {
-            updateNoMedia()
         }
     }
     

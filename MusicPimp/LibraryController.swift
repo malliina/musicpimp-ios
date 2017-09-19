@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class LibraryController: SearchableMusicController {
+class LibraryController: SearchableMusicController, TrackEventDelegate {
     static let LIBRARY = "library", PLAYER = "player"
     let loadingMessage = "Loading..."
     let noTracksMessage = "No tracks."
@@ -23,12 +23,15 @@ class LibraryController: SearchableMusicController {
     fileprivate var downloadUpdates: Disposable? = nil
     private var reloadOnDidAppear = false
     
+    let listener = PlaybackListener()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
         edgesForExtendedLayout = []
         setFeedback(loadingMessage)
+        listener.tracks = self
         if let folder = selected {
             loadFolder(folder.id)
         } else {
@@ -38,24 +41,23 @@ class LibraryController: SearchableMusicController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let trackListener = player.trackEvent.addHandler(self) { (me) -> (Track?) -> () in
-            me.onTrackChanged
-        }
         let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
-        listeners = [trackListener, downloadDisposable]
+        listeners = [downloadDisposable]
         if reloadOnDidAppear {
             renderTable(computeMessage(folder))
         }
+        listener.subscribe()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        listener.unsubscribe()
         if !DownloadUpdater.instance.isEmpty {
             reloadOnDidAppear = true
         }
     }
     
-    func onTrackChanged(track: Track?) {
+    func onTrackChanged(_ track: Track?) {
         // updates any highlighted row
         renderTable()
         self.view.setNeedsUpdateConstraints()

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ListeningController: PimpViewController {
+class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDelegate {
     var loadedListeners: [Disposable] = []
     var appearedListeners: [Disposable] = []
     
@@ -18,11 +18,13 @@ class ListeningController: PimpViewController {
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
     var library: LibraryType { return libraryManager.active }
     
+    let listener = PlaybackListener()
+    let libraryListener = LibraryListener()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let _ = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
-            pc.onNewPlayer
-        }
+        listener.playbacks = self
+        libraryListener.delegate = self
         let _ = libraryManager.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
             ivc.onLibraryChanged
         }
@@ -30,15 +32,15 @@ class ListeningController: PimpViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        listenWhenAppeared(player)
+        listener.subscribe()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        unlistenWhenAppeared()
+        listener.unsubscribe()
     }
     
-    func updateTrack(_ track: Track?) {
+    func onTrackChanged(_ track: Track?) {
         if let track = track {
             updateMedia(track)
         } else {
@@ -62,53 +64,7 @@ class ListeningController: PimpViewController {
         
     }
     
-    func onNewPlayer(_ newPlayer: PlayerType) {
-        reinstallListeners(newPlayer)
-    }
-    
-    func onLibraryChanged(_ newLibrary: LibraryType) {
+    func onLibraryChanged(to newLibrary: LibraryType) {
         
     }
-    
-    func listenWhenLoaded(_ targetPlayer: PlayerType) {
-        let trackListener = targetPlayer.trackEvent.addHandler(self) { (pc) -> (Track?) -> () in
-            pc.updateTrack
-        }
-        loadedListeners = [trackListener]
-    }
-    
-    func unlistenWhenLoaded() {
-        for listener in loadedListeners {
-            listener.dispose()
-        }
-        loadedListeners = []
-    }
-    
-    func listenWhenAppeared(_ targetPlayer: PlayerType) {
-        unlistenWhenAppeared()
-        let listener = targetPlayer.timeEvent.addHandler(self) { (pc) -> (Duration) -> () in
-            pc.onTimeUpdated
-        }
-        let stateListener = targetPlayer.stateEvent.addHandler(self) { (pc) -> (PlaybackState) -> () in
-            pc.onStateChanged
-        }
-        appearedListeners = [listener, stateListener]
-//        Log.info("Installed state listener")
-    }
-    
-    func unlistenWhenAppeared() {
-        for listener in appearedListeners {
-            listener.dispose()
-        }
-        appearedListeners = []
-//        Log.info("Uninstalled state listeners")
-    }
-    
-    fileprivate func reinstallListeners(_ targetPlayer: PlayerType) {
-        unlistenWhenAppeared()
-        unlistenWhenLoaded()
-        listenWhenLoaded(targetPlayer)
-        listenWhenAppeared(targetPlayer)
-    }
-
 }

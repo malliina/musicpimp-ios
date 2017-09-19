@@ -25,8 +25,8 @@ class LibraryContainer: ContainerParent {
         }
     }
     
-    override func onLibraryChanged(_ newLibrary: LibraryType) {
-        super.onLibraryChanged(newLibrary)
+    override func onLibraryChanged(to newLibrary: LibraryType) {
+        super.onLibraryChanged(to: newLibrary)
         pop()
     }
     

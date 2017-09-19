@@ -8,103 +8,109 @@
 
 import Foundation
 
-protocol PlaybackEventDelegate {
+class BaseListener: Disposable {
+    var subscriptions: [Disposable] = []
+    
+    func unsubscribe() {
+        subscriptions.forEach { $0.dispose() }
+        subscriptions = []
+    }
+    
+    func dispose() {
+        unsubscribe()
+    }
+}
+
+protocol LibraryDelegate {
+    func onLibraryChanged(to newLibrary: LibraryType)
+}
+
+class LibraryListener: BaseListener {
+    var delegate: LibraryDelegate? = nil
+    
+    func subscribe() {
+        subscriptions = [
+            LibraryManager.sharedInstance.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
+                ivc.onLibraryChanged
+            }
+        ]
+    }
+    
+    func onLibraryChanged(_ newLibrary: LibraryType) {
+        delegate?.onLibraryChanged(to: newLibrary)
+    }
+}
+
+protocol LibraryEndpointDelegate {
+    func onLibraryChanged(to newLibrary: Endpoint)
+}
+
+protocol PlayerEndpointDelegate {
+    func onPlayerChanged(to newPlayer: Endpoint)
+}
+
+class EndpointsListener: BaseListener {
+    var libraries: LibraryEndpointDelegate? = nil
+    var players: PlayerEndpointDelegate? = nil
+    
+    func subscribe() {
+        let libraryListener = LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
+            ssc.libraryChanged
+        }
+        let playerListener = PlayerManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
+            ssc.playerChanged
+        }
+
+        subscriptions = [libraryListener, playerListener]
+    }
+    
+    private func libraryChanged(_ newLibrary: Endpoint) {
+        libraries?.onLibraryChanged(to: newLibrary)
+    }
+    
+    private func playerChanged(_ newPlayer: Endpoint) {
+        players?.onPlayerChanged(to: newPlayer)
+    }
+}
+
+protocol PlayersDelegate {
+    func onPlayerChanged(to newPlayer: PlayerType)
+}
+protocol TrackEventDelegate {
     func onTrackChanged(_ track: Track?)
+}
+protocol PlaybackEventDelegate: TrackEventDelegate {
     func onTimeUpdated(_ position: Duration)
     func onStateChanged(_ state: PlaybackState)
 }
-
-class TrackListener: PlaybackEventDelegate {
-    let onTrack: (Track?) -> Void
-    
-    init(onTrack: @escaping (Track?) -> Void) {
-        self.onTrack = onTrack
-    }
-    
-    func onTrackChanged(_ track: Track?) {
-        self.onTrack(track)
-    }
-    
-    func onTimeUpdated(_ position: Duration) {}
-    
-    func onStateChanged(_ state: PlaybackState) {}
+protocol PlaylistEventDelegate {
+    func onIndexChanged(to index: Int?)
+    func onNewPlaylist(_ playlist: Playlist)
 }
 
-class PlaybackListener: Disposable {
+class PlaybackListener: BaseListener {
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }
     var player: PlayerType { return playerManager.active }
-    var playerSubscription: Disposable? = nil
-    var playerSubscriptions: [Disposable] = []
-    var delegate: PlaybackEventDelegate? = nil
-
-    convenience init() {
-        self.init(autoSubscribe: false)
-    }
+    var players: PlayersDelegate? = nil
+    var tracks: TrackEventDelegate? = nil
+    var playbacks: PlaybackEventDelegate? = nil
+    var playlists: PlaylistEventDelegate? = nil
     
-    init(autoSubscribe: Bool) {
-        subscribePlayer()
-        if autoSubscribe {
-            subscribe(to: player)
-        }
-    }
-    
-    func onNewPlayer(_ newPlayer: PlayerType) {
-        subscribe(to: newPlayer)
-    }
-    
-    func updateTrack(_ track: Track?) {
-        delegate?.onTrackChanged(track)
-        if let track = track {
-            updateMedia(track)
-        } else {
-            updateNoMedia()
-        }
-    }
-    
-    func updateMedia(_ track: Track) {
-        
-    }
-    
-    func updateNoMedia() {
-        
-    }
-    
-    func onTimeUpdated(_ position: Duration) {
-        delegate?.onTimeUpdated(position)
-    }
-    
-    func onStateChanged(_ state: PlaybackState) {
-        delegate?.onStateChanged(state)
-    }
-    
-    func subscribePlayer() {
-        playerSubscription?.dispose()
-        playerSubscription = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
-            pc.onNewPlayer
-        }
-    }
-    
-    func resubscribe() {
-        unsubscribe()
-        subscribePlayer()
+    func subscribe() {
         subscribe(to: player)
-    }
-    
-    func unsubscribe() {
-        playerSubscription?.dispose()
-        unsubscribeCurrent()
-    }
-    
-    func resubscribeCurrent() {
-        subscribe(to: player)
-    }
-    
-    func unsubscribeCurrent() {
-        playerSubscriptions.forEach { $0.dispose() }
     }
     
     private func subscribe(to newPlayer: PlayerType) {
-        unsubscribeCurrent()
+        unsubscribe()
+        let playerListener = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
+            pc.onNewPlayer
+        }
+        let playlistListener = player.playlist.playlistEvent.addHandler(self) { (pc) -> (Playlist) -> () in
+            pc.onNewPlaylist
+        }
+        let indexListener = player.playlist.indexEvent.addHandler(self) { (pc) -> (Int?) -> () in
+            pc.onIndexChanged
+        }
         let trackListener = newPlayer.trackEvent.addHandler(self) { (pc) -> (Track?) -> () in
             pc.updateTrack
         }
@@ -114,10 +120,38 @@ class PlaybackListener: Disposable {
         let stateListener = newPlayer.stateEvent.addHandler(self) { (pc) -> (PlaybackState) -> () in
             pc.onStateChanged
         }
-        playerSubscriptions = [trackListener, timeListener, stateListener]
+        subscriptions = [playerListener, playlistListener, indexListener, trackListener, timeListener, stateListener]
     }
     
-    func dispose() {
-        unsubscribe()
+    private func onNewPlayer(_ newPlayer: PlayerType) {
+        moveSubscriptions(to: newPlayer)
+        players?.onPlayerChanged(to: newPlayer)
+    }
+    
+    private func moveSubscriptions(to newPlayer: PlayerType) {
+        if !subscriptions.isEmpty {
+            subscribe(to: newPlayer)
+        }
+    }
+    
+    private func onNewPlaylist(_ playlist: Playlist) {
+        playlists?.onNewPlaylist(playlist)
+    }
+    
+    private func onIndexChanged(_ to: Int?) {
+        playlists?.onIndexChanged(to: to)
+    }
+    
+    private func updateTrack(_ track: Track?) {
+        tracks?.onTrackChanged(track)
+        playbacks?.onTrackChanged(track)
+    }
+    
+    private func onTimeUpdated(_ position: Duration) {
+        playbacks?.onTimeUpdated(position)
+    }
+    
+    private func onStateChanged(_ state: PlaybackState) {
+        playbacks?.onStateChanged(state)
     }
 }

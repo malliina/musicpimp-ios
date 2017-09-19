@@ -57,7 +57,7 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
         ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: .normal)
     }
     
-    override func onLibraryChanged(_ newLibrary: LibraryType) {
+    override func onLibraryChanged(to newLibrary: LibraryType) {
         scopeChanged(scopeSegment)
     }
     

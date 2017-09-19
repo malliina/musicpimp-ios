@@ -28,16 +28,12 @@ class ExternalCommandDelegate: NSObject {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
         commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
-        let events = PlaybackListener(autoSubscribe: true)
-        let trackListener = TrackListener { (t) in
-            self.onLocalTrackChanged(t)
+        let _ = LocalPlayer.sharedInstance.trackEvent.addHandler(self) { (ecd) -> (Track?) -> () in
+            ecd.onLocalTrackChanged
         }
-        events.delegate = trackListener
-        disposable = events
     }
     
     func onLocalTrackChanged(_ track: Track?) -> Void {
-//        log.info("Using \(track?.title ?? "none")")
         let center = MPNowPlayingInfoCenter.default()
         if let track = track {
             var info: [String: AnyObject] = [
@@ -53,11 +49,9 @@ class ExternalCommandDelegate: NSObject {
                 if let image = result.imageOrDefault {
                     info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in image.withSize(scaledToSize: size) })
                 }
-//                self.log.info("Installing info")
                 center.nowPlayingInfo = info
             }
         } else {
-//            log.info("Nilling info")
             center.nowPlayingInfo = nil
         }
     }

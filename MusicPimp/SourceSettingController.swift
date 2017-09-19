@@ -9,20 +9,30 @@
 import Foundation
 import UIKit
 
-class SourceSettingController: EndpointSelectController {
+class SourceSettingController: EndpointSelectController, LibraryEndpointDelegate {
     var subscription: Disposable? = nil
     
     let manager = LibraryManager.sharedInstance
     
+    let listener = EndpointsListener()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        subscription = LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
-            ssc.libraryChanged
-        }
+        listener.libraries = self
     }
     
-    func libraryChanged(_ e: Endpoint) {
-        updateSelected(e)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        listener.subscribe()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        listener.unsubscribe()
+    }
+    
+    func onLibraryChanged(to newLibrary: Endpoint) {
+        updateSelected(newLibrary)
         renderTable()
     }
     

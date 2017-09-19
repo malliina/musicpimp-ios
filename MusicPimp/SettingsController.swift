@@ -20,7 +20,7 @@ class RowSpec {
     }
 }
 
-class SettingsController: CacheInfoController, EditEndpointDelegate {
+class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpointDelegate, LibraryEndpointDelegate {
     let detailId = "DetailedCell"
     let sectionHeaderHeight: CGFloat = 44
     let playbackDeviceId = "PlaybackDevice"
@@ -42,36 +42,43 @@ class SettingsController: CacheInfoController, EditEndpointDelegate {
     
     let cacheDetail = UILabel()
     let creditsCell = PimpCell()
+    let listener = EndpointsListener()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         [playbackDeviceId, musicSourceId, cacheId, alarmId, aboutId, creditsId].forEach { id in
             self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
         }
-        let _ = libraryManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
-            sc.onLibraryChanged
-        }
-        let _ = playerManager.changed.addHandler(self) { (sc) -> (Endpoint) -> () in
-            sc.onPlayerChanged
-        }
         let _ = settings.cacheEnabledChanged.addHandler(self) { (sc) -> (Bool) -> () in
             sc.onCacheEnabledChanged
         }
+        listener.players = self
+        listener.libraries = self
         navigationItem.title = "SETTINGS"
         navigationController?.navigationBar.titleTextAttributes = [
             NSFontAttributeName: PimpColors.titleFont
         ]
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        listener.subscribe()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        listener.unsubscribe()
+    }
+    
     func endpointUpdated(_ endpoint: Endpoint) {
         renderTable()
     }
     
-    fileprivate func onLibraryChanged(_ newLibrary: Endpoint) {
+    func onLibraryChanged(to newLibrary: Endpoint) {
         renderTable()
     }
     
-    fileprivate func onPlayerChanged(_ newPlayer: Endpoint) {
+    func onPlayerChanged(to newPlayer: Endpoint) {
         renderTable()
     }
     
