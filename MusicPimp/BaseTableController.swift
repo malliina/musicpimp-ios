@@ -25,7 +25,7 @@ class BaseTableController: UITableViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: PimpColors.titleFont
         ]
-        // Does not add margins to table cells on iPad Pro+
+        // Does not add left-right margins to table cells on iPad Pro+
         self.tableView.cellLayoutMarginsFollowReadableWidth = false
     }
     

@@ -10,14 +10,13 @@ import Foundation
 import UIKit
 
 class SourceSettingController: EndpointSelectController, LibraryEndpointDelegate {
-    var subscription: Disposable? = nil
-    
     let manager = LibraryManager.sharedInstance
     
     let listener = EndpointsListener()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "SOURCES"
         listener.libraries = self
     }
     

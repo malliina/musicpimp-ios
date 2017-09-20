@@ -58,7 +58,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: PimpColors.titleFont
         ]
-        edgesForExtendedLayout = []
+//        edgesForExtendedLayout = []
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -24,7 +24,7 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        edgesForExtendedLayout = []
+//        edgesForExtendedLayout = []
         navigationItem.leftBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: .loadPlaylist),
             UIBarButtonItem(title: "Edit", style: .plain, target: self, action: .dragClicked)
