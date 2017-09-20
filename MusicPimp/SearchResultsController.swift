@@ -31,7 +31,7 @@ class SearchResultsController: BaseMusicController {
     
     func search(_ term: String) {
         results = []
-        let characters = term.characters.count
+        let characters = term.count
         if characters >= 2 {
             latestSearchTerm = term
             let message = "Searching for \(term)..."

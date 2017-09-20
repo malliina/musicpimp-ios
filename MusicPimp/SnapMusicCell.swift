@@ -23,7 +23,7 @@ class SnapMusicCell: SnapCell {
     func initTitle() {
         contentView.addSubview(title)
         title.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(12)
             make.leading.equalTo(contentView.snp.leadingMargin)
             make.trailing.equalTo(contentView.snp.trailingMargin)
         }
@@ -34,7 +34,7 @@ class SnapMusicCell: SnapCell {
         progress.snp.makeConstraints { make in
             make.leading.equalTo(contentView.snp.leadingMargin)
             make.trailing.equalTo(contentView.snp.trailingMargin)
-            make.top.equalTo(title.snp.bottom)
+            make.top.equalTo(title.snp.bottom).offset(12)
             make.bottom.equalToSuperview()
         }
     }

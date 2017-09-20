@@ -17,7 +17,11 @@ class CacheTableController: CacheInfoController {
     let currentLimitLabel = UILabel()
     let currentCacheSizeLabel = UILabel()
     
-    let footerText = "Deletes locally cached tracks when the specified cache size limit is exceeded."
+    let sectionFooterIdentifier = "SectionFooter"
+    static let footerText = "Deletes locally cached tracks when the specified cache size limit is exceeded."
+    let footerLabel = PimpLabel.footerLabel(CacheTableController.footerText)
+    
+    var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +32,7 @@ class CacheTableController: CacheInfoController {
         [DeleteCustom, EmptyCell].forEach { (id) in
             registerCell(reuseIdentifier: id)
         }
+        tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: sectionFooterIdentifier)
         onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControlEvents.valueChanged)
         onOffSwitch.isOn = settings.cacheEnabled
         currentLimitLabel.text = currentLimitDescription
@@ -111,20 +116,40 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 {
-            return customFooter(footerText)
+            return footerView(identifier: sectionFooterIdentifier, content: footerLabel)
         } else {
             return super.tableView(tableView, viewForFooterInSection: section)
         }
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+//    func footerView(identifier: String, content: UILabel) -> UITableViewHeaderFooterView? {
+//        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
+//        view?.contentView.addSubview(content)
+//        content.snp.makeConstraints { make in
+//            make.leading.trailing.equalToSuperview().inset(footerInset)
+//        }
+//        view?.contentView.backgroundColor = PimpColors.background
+//        return view
+//    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in
+            self.footerLabel.snp.remakeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(self.footerInset)
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         if let v = view as? UITableViewHeaderFooterView {
             v.tintColor = PimpColors.background
         }
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 22
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        // TODO fix
+        return 66
     }
     
     @objc func didToggleCache(_ uiSwitch: UISwitch) {
@@ -151,5 +176,17 @@ class CacheTableController: CacheInfoController {
     fileprivate func deleteCache() {
         let _ = LocalLibrary.sharedInstance.deleteContents()
         updateCacheUsageLabel()
+    }
+}
+
+extension UITableViewController {
+    func footerView(identifier: String, content: UILabel) -> UITableViewHeaderFooterView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
+        view?.contentView.addSubview(content)
+        content.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(tableView.layoutMargins.left)
+        }
+        view?.contentView.backgroundColor = PimpColors.background
+        return view
     }
 }

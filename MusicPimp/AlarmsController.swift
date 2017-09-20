@@ -258,16 +258,6 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         }
     }
     
-    func footerView(identifier: String, content: UILabel) -> UITableViewHeaderFooterView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
-        view?.contentView.addSubview(content)
-        content.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(footerInset)
-        }
-        view?.contentView.backgroundColor = PimpColors.background
-        return view
-    }
-    
     /// Keeps the header margins synced with the cells' margins.
     /// The cell margin seems to depend on orientation / screen size.
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

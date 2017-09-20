@@ -80,8 +80,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
         seek.isContinuous = false
         seek.addTarget(self, action: .seekChanged, for: .valueChanged)
         seek.snp.makeConstraints { make in
-            make.top.equalTo(positionLabel.snp.bottom).offset(2)
-            make.top.equalTo(durationLabel.snp.bottom).offset(2)
+            make.top.equalTo(positionLabel.snp.bottom).offset(3)
+            make.top.equalTo(durationLabel.snp.bottom).offset(3)
         }
         positionLabel.textAlignment = .left
         positionLabel.snp.makeConstraints { make in
