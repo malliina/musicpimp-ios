@@ -63,7 +63,7 @@ class LocalPlayer: NSObject, PlayerType {
     func playbackState() -> PlaybackState {
         if let p = playerInfo?.player {
             if (p.error != nil) {
-                return PlaybackState.Unknown
+                return .Unknown
             }
             return p.rate > 0 ? .Playing : .Paused
         } else {
@@ -140,7 +140,7 @@ class LocalPlayer: NSObject, PlayerType {
     }
     
     func skip(_ index: Int) -> ErrorMessage? {
-        return withPlaylist({ $0.skip(index) })
+        return withPlaylist { $0.skip(index) }
     }
     
     func withPlaylist(_ f: (LocalPlaylist) -> Track?) -> ErrorMessage? {
@@ -177,7 +177,6 @@ class LocalPlayer: NSObject, PlayerType {
     
     fileprivate func initAndPlay(_ track: Track) {
         limiter.increment()
-        log.info("Playing \(track.title)")
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
         let playerItem = AVPlayerItem(url: preferredUrl)
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &itemStatusContext)
@@ -212,35 +211,6 @@ class LocalPlayer: NSObject, PlayerType {
     @objc func failedToPlayToEnd(_ notification: Notification) {
         log.info("Failed to play to end.")
         _ = next()
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        if context == &itemStatusContext {
-            if let item = object as? AVPlayerItem {
-                switch(item.status) {
-                case AVPlayerItemStatus.failed:
-                    self.log.info("AVPlayerItemStatus.Failed")
-                    closePlayer()
-                default:
-                    break
-                }
-            } else {
-                log.info("Non-item object")
-            }
-        } else if context == &playerStatusContext {
-            if let p = object as? AVPlayer {
-                switch(p.status) {
-                case AVPlayerStatus.failed:
-                    self.log.error("Player failed")
-                default:
-                    break
-                }
-            } else {
-                self.log.info("Non-player object")
-            }
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     func closePlayer() {

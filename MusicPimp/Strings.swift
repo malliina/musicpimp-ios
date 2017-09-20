@@ -26,12 +26,7 @@ extension String {
     }
     
     func tail() -> String {
-        return self.substring(from: self.characters.index(self.startIndex, offsetBy: 1))
-    }
-    
-    func dropLast() -> String {
-        let endIndex = self.characters.index(self.endIndex, offsetBy: -1)
-        return self.substring(to: endIndex)
+        return String(self.dropFirst())
     }
     
     func lastPathComponent() -> String {
