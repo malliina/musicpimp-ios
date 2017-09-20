@@ -76,7 +76,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         }
     }
     
-    func goBack() {
+    @objc func goBack() {
         dismiss(animated: true, completion: nil)
     }
 }

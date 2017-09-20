@@ -69,15 +69,15 @@ class SnapPlaybackFooter: BaseView {
         }
     }
     
-    func onPrevClicked(_ button: UIButton) {
+    @objc func onPrevClicked(_ button: UIButton) {
         delegate?.onPrev()
     }
     
-    func onPlayPauseClicked(_ button: UIButton) {
+    @objc func onPlayPauseClicked(_ button: UIButton) {
         delegate?.onPlayPause()
     }
     
-    func onNextClicked(_ button: UIButton) {
+    @objc func onNextClicked(_ button: UIButton) {
         delegate?.onNext()
     }
     

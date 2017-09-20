@@ -35,7 +35,7 @@ class PimpSegmentedControl: UISegmentedControl {
         log.info("Dummy segment2")
     }
     
-    func onSegmentChanged(_ ctrl: PimpSegmentedControl) {
+    @objc func onSegmentChanged(_ ctrl: PimpSegmentedControl) {
         log.info("Answer: \(answer)")
         if let cb = valueChanged {
             cb(ctrl)

@@ -54,23 +54,23 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: .scopeChanged, for: .valueChanged)
-        ctrl.setTitleTextAttributes([NSForegroundColorAttributeName: PimpColors.tintColor], for: .normal)
+        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.tintColor], for: .normal)
     }
     
     override func onLibraryChanged(to newLibrary: LibraryType) {
         scopeChanged(scopeSegment)
     }
     
-    func scopeChanged(_ ctrl: UISegmentedControl) {
+    @objc func scopeChanged(_ ctrl: UISegmentedControl) {
         let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .playlist
         table.maybeRefresh(mode)
     }
     
-    func dragButtonClicked(_ button: UIBarButtonItem) {
+    @objc func dragButtonClicked(_ button: UIBarButtonItem) {
         table.dragClicked(button)
     }
     
-    func loadPlaylistClicked(_ button: UIBarButtonItem) {
+    @objc func loadPlaylistClicked(_ button: UIBarButtonItem) {
         let dest = SavedPlaylistsTableViewController()
         dest.delegate = self
         dest.modalPresentationStyle = .fullScreen
@@ -79,7 +79,7 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
         self.present(nav, animated: true, completion: nil)
     }
     
-    func savePlaylistAction(_ item: UIBarButtonItem) {
+    @objc func savePlaylistAction(_ item: UIBarButtonItem) {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?
             displayActionsForPlaylist(SavedPlaylist(id: playlist.id, name: playlist.name, tracks: table.tracks))

@@ -64,7 +64,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         }
     }
     
-    func onAddNew(_ sender: UIBarButtonItem) {
+    @objc func onAddNew(_ sender: UIBarButtonItem) {
         if let endpoint = endpoint {
             let dest = EditAlarmTableViewController()
             dest.delegate = self

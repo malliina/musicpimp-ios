@@ -52,7 +52,7 @@ open class BaseLibrary: LibraryType {
     }
     
     func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     func search(_ term: String, onError: @escaping (PimpError) -> Void, ts: @escaping ([Track]) -> Void) {
@@ -64,23 +64,23 @@ open class BaseLibrary: LibraryType {
     }
     
     func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess(())
+        onSuccess()
     }
     
     fileprivate func tracksInner(_ id: String, others: [String], acc: [Track], f: @escaping ([Track]) -> Void, onError: @escaping (PimpError) -> Void){

@@ -23,7 +23,7 @@ class PimpBarButton: UIBarButtonItem {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func runOnClick(_ item: UIBarButtonItem) {
+    @objc func runOnClick(_ item: UIBarButtonItem) {
         onClick(item)
     }
     

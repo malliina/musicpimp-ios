@@ -55,7 +55,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         isConnected = true
         log.info("Socket opened to \(baseURL)")
         if let onOpen = onOpenCallback {
-            onOpen(())
+            onOpen()
             onOpenCallback = nil
             onOpenErrorCallback = nil
         }

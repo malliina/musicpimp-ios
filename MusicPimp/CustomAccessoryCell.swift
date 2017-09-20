@@ -53,7 +53,7 @@ class CustomAccessoryCell: PimpCell {
         return nil
     }
     
-    func accessoryClicked(_ sender: UIButton, event: AnyObject) {
+    @objc func accessoryClicked(_ sender: UIButton, event: AnyObject) {
         if let accessoryDelegate = accessoryDelegate {
             accessoryDelegate.accessoryTapped(sender, event: event)
         } else {

@@ -153,8 +153,8 @@ extension Dictionary {
     }
 
     func filterKeys(_ includeElement: (Element) -> Bool) -> [Key: Value] {
-        let pairs = self.filter(includeElement)
-        return Dictionary<Key, Value>(pairs)
+        return self.filter(includeElement)
+//        return Dictionary<Key, Value>(pairs)
     }
     
     func addAll(_ other: [Key: Value]) -> [Key: Value] {

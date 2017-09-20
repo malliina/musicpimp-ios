@@ -38,7 +38,7 @@ class LocalPlayer: NSObject, PlayerType {
     let noTrackError = ErrorMessage(message: "No track")
     
     func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void) {
-        onOpen(())
+        onOpen()
     }
     
     func close() {

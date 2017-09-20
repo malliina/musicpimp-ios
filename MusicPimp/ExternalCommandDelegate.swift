@@ -56,19 +56,19 @@ class ExternalCommandDelegate: NSObject {
         }
     }
     
-    func onPlay() -> MPRemoteCommandHandlerStatus {
+    @objc func onPlay() -> MPRemoteCommandHandlerStatus {
         _ = player.play()
         info("onPlay")
         return .success
     }
     
-    func onPause() -> MPRemoteCommandHandlerStatus {
+    @objc func onPause() -> MPRemoteCommandHandlerStatus {
         _ = player.pause()
         info("onPause")
         return .success
     }
     
-    func onTogglePlayPause() -> MPRemoteCommandHandlerStatus {
+    @objc func onTogglePlayPause() -> MPRemoteCommandHandlerStatus {
         if player.current().isPlaying {
             _ = player.pause()
         } else {
@@ -78,19 +78,19 @@ class ExternalCommandDelegate: NSObject {
         return .success
     }
     
-    func onStop() -> MPRemoteCommandHandlerStatus {
+    @objc func onStop() -> MPRemoteCommandHandlerStatus {
         _ = player.pause()
         info("onStop")
         return .success
     }
     
-    func next() -> MPRemoteCommandHandlerStatus {
+    @objc func next() -> MPRemoteCommandHandlerStatus {
         _ = player.next()
         info("next")
         return .success
     }
     
-    func prev() -> MPRemoteCommandHandlerStatus {
+    @objc func prev() -> MPRemoteCommandHandlerStatus {
         _ = player.prev()
         info("prev")
         return .success
@@ -107,13 +107,13 @@ class ExternalCommandDelegate: NSObject {
         return .success
     }
     
-    func seekForward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func seekForward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         let t = seekEvent.type
         info("seekForward \(t)")
         return .success
     }
     
-    func seekBackward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func seekBackward(_ seekEvent: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         info("seekBackward")
         return .success
     }

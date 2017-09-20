@@ -56,7 +56,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         listener.libraries = self
         navigationItem.title = "SETTINGS"
         navigationController?.navigationBar.titleTextAttributes = [
-            NSFontAttributeName: PimpColors.titleFont
+            NSAttributedStringKey.font: PimpColors.titleFont
         ]
     }
     

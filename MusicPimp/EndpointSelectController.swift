@@ -57,7 +57,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         }
     }
     
-    func onAddNew(_ sender: UIBarButtonItem) {
+    @objc func onAddNew(_ sender: UIBarButtonItem) {
         let dest = EditEndpointController()
         self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
     }

@@ -73,7 +73,7 @@ open class PimpLibrary: BaseLibrary {
     
     override func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: [:], f: { (data) -> Void in
-            onSuccess(())
+            onSuccess()
             }, onError: onError)
     }
     
@@ -96,7 +96,7 @@ open class PimpLibrary: BaseLibrary {
             JsonKeys.Enabled: alarm.enabled as AnyObject
         ]
         client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            onSuccess(())
+            onSuccess()
             }, onError: onError)
     }
     
@@ -134,7 +134,7 @@ open class PimpLibrary: BaseLibrary {
     
     fileprivate func alarmsPost(_ payload: [String: AnyObject], onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
         client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            onSuccess(())
+            onSuccess()
             }, onError: onError)
     }
     

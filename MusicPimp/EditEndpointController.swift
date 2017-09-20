@@ -189,7 +189,7 @@ class EditEndpointController: PimpViewController {
         testButton.addTarget(self, action: .testClicked, for: .touchUpInside)
     }
     
-    func onSave(_ item: UIBarButtonItem) {
+    @objc func onSave(_ item: UIBarButtonItem) {
         saveChanges()
         goBack()
     }
@@ -205,7 +205,7 @@ class EditEndpointController: PimpViewController {
         }
     }
     
-    func onCancel(_ item: UIBarButtonItem) {
+    @objc func onCancel(_ item: UIBarButtonItem) {
         goBack()
     }
     
@@ -218,7 +218,7 @@ class EditEndpointController: PimpViewController {
         }
     }
     
-    func serverTypeChanged(_ sender: UISegmentedControl) {
+    @objc func serverTypeChanged(_ sender: UISegmentedControl) {
         updateVisibility(segment: sender)
     }
     
@@ -230,7 +230,7 @@ class EditEndpointController: PimpViewController {
         }
     }
     
-    func testClicked(_ sender: AnyObject) {
+    @objc func testClicked(_ sender: AnyObject) {
         if let endpoint = parseEndpoint() {
             log.info("Testing \(endpoint.httpBaseUrl)")
             feedback("Connecting...")

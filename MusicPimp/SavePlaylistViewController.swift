@@ -62,7 +62,7 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         }
     }
     
-    func textFieldDidChange(_ textField: UITextField) {
+    @objc func textFieldDidChange(_ textField: UITextField) {
         checkValidName()
     }
     
@@ -76,11 +76,11 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         return true
     }
     
-    func onCancel(_ sender: UIBarButtonItem) {
+    @objc func onCancel(_ sender: UIBarButtonItem) {
         goBack()
     }
     
-    func onSave(_ sender: UIBarButtonItem) {
+    @objc func onSave(_ sender: UIBarButtonItem) {
         name = nameText.text ?? ""
         savePlaylist(name: name ?? "")
         goBack()

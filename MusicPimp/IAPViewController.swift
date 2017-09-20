@@ -135,7 +135,7 @@ class IAPViewController: PimpViewController {
         request = nil
     }
     
-    func purchase() {
+    @objc func purchase() {
         log.info("Starting purchase procedure...")
         if let premiumProduct = premiumProduct {
             let paymentRequest = SKMutablePayment(product: premiumProduct)
@@ -143,7 +143,7 @@ class IAPViewController: PimpViewController {
         }
     }
     
-    func restore() {
+    @objc func restore() {
 //        statusLabel.text = "Restoring..."
         SKPaymentQueue.default().restoreCompletedTransactions()
     }

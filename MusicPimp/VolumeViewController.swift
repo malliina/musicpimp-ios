@@ -75,13 +75,13 @@ class VolumeViewController: PimpViewController {
         return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.tintColor, fontSize: 28)
     }
     
-    func userDidChangeVolume(_ sender: UISlider) {
+    @objc func userDidChangeVolume(_ sender: UISlider) {
         let percent = sender.value / (sender.maximumValue - sender.minimumValue)
         let volume = VolumeValue(volume: Int(100.0 * percent))
         _ = player.volume(volume)
     }
     
-    func backClicked(_ sender: UIBarButtonItem) {
+    @objc func backClicked(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
     

@@ -11,7 +11,7 @@ import Foundation
 class PimpTextField: UITextField, UITextFieldDelegate {
     var placeholderText: String? {
         get { return placeholder }
-        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSForegroundColorAttributeName: PimpColors.placeholder]) }
+        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSAttributedStringKey.foregroundColor: PimpColors.placeholder]) }
     }
     
     override init(frame: CGRect) {

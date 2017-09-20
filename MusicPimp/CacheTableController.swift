@@ -127,7 +127,7 @@ class CacheTableController: CacheInfoController {
         return 22
     }
     
-    func didToggleCache(_ uiSwitch: UISwitch) {
+    @objc func didToggleCache(_ uiSwitch: UISwitch) {
         let isOn = uiSwitch.isOn
         settings.cacheEnabled = isOn
     }

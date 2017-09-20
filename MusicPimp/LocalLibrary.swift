@@ -140,6 +140,7 @@ class LocalLibrary: BaseLibrary {
         let startIdx = musicRootPath.characters.count + 1
         if(path.characters.count > startIdx) {
             let from = path.characters.index(path.startIndex, offsetBy: startIdx)
+//            return String(path[from<..])
             return path.substring(from: from)
         } else {
             return path

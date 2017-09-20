@@ -116,7 +116,7 @@ class EditAlarmTableViewController: BaseTableController {
         }
     }
     
-    func onSave(_ sender: UIBarButtonItem) {
+    @objc func onSave(_ sender: UIBarButtonItem) {
         updateDate()
         if let endpoint = endpoint, let alarm = mutableAlarm?.toImmutable() {
             let library = Libraries.fromEndpoint(endpoint)
@@ -127,7 +127,7 @@ class EditAlarmTableViewController: BaseTableController {
         goBack()
     }
     
-    func onCancel(_ sender: UIBarButtonItem) {
+    @objc func onCancel(_ sender: UIBarButtonItem) {
         goBack()
     }
     

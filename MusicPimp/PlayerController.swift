@@ -51,7 +51,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         }
     }
     
-    func onVolumeBarButtonClicked() {
+    @objc func onVolumeBarButtonClicked() {
         // presents volume viewcontroller modally
         let dest = VolumeViewController()
         self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
@@ -100,18 +100,18 @@ class PlayerController: ListeningController, PlaybackDelegate {
     
     func initLabels() {
         centered(labels: [titleLabel, albumLabel, artistLabel])
-        titleLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
+        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
         titleLabel.font = UIFont.systemFont(ofSize: 28)
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(coverContainer.snp.bottom).offset(16)
         }
-        albumLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
+        albumLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
         albumLabel.font = UIFont.systemFont(ofSize: 17)
         albumLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
         }
         artistLabel.font = UIFont.systemFont(ofSize: 17)
-        artistLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
+        artistLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
         artistLabel.snp.makeConstraints { make in
             make.top.equalTo(albumLabel.snp.bottom).offset(8)
         }
@@ -258,7 +258,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         }
     }
     
-    func sliderChanged(_ sender: AnyObject) {
+    @objc func sliderChanged(_ sender: AnyObject) {
         let seekValue = seek.value
         // TODO throttle
         if let pos = seekValue.seconds {
@@ -313,8 +313,8 @@ extension UIFont {
 private extension UIFontDescriptor {
     
     var monospacedDigitFontDescriptor: UIFontDescriptor {
-        let fontDescriptorFeatureSettings = [[UIFontFeatureTypeIdentifierKey: kNumberSpacingType, UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]]
-        let fontDescriptorAttributes = [UIFontDescriptorFeatureSettingsAttribute: fontDescriptorFeatureSettings]
+        let fontDescriptorFeatureSettings = [[UIFontDescriptor.FeatureKey.featureIdentifier: kNumberSpacingType, UIFontDescriptor.FeatureKey.typeIdentifier: kMonospacedNumbersSelector]]
+        let fontDescriptorAttributes = [UIFontDescriptor.AttributeName.featureSettings: fontDescriptorFeatureSettings]
         let fontDescriptor = self.addingAttributes(fontDescriptorAttributes)
         return fontDescriptor
     }

@@ -35,7 +35,7 @@ class PlayerManager: EndpointManager {
         activePlayer = p
         log.info("Player set to \(endpoint.name)")
         // async
-        activePlayer.open(onError: onError) { _ in
+        activePlayer.open(onError: onError) { 
             self.onOpened(p)
             onOpen(p)
         }
