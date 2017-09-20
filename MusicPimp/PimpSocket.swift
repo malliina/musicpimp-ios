@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SocketRocket
 
 class PimpSocket: PlayerSocket {
     private let log = LoggerFactory.pimp("Pimp.PimpSocket", category: "Pimp")

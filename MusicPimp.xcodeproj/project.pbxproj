@@ -24,7 +24,6 @@
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
 		7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D072FEE1B12394E000D416D /* PlayerSocket.swift */; };
-		7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0730301B1A0400000D416D /* SRWebSocket.m */; };
 		7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D0730221B123C7D000D416D /* libicucore.dylib */; };
 		7D0CA9841AF505E3008F72EC /* PlaybackState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9831AF505E3008F72EC /* PlaybackState.swift */; };
 		7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0CA9851AF50F15008F72EC /* PlayerInfo.swift */; };
@@ -206,8 +205,6 @@
 		7D0730201B123C6D000D416D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7D0730221B123C7D000D416D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		7D07302D1B1390D8000D416D /* MusicPimp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MusicPimp-Bridging-Header.h"; sourceTree = "<group>"; };
-		7D0730301B1A0400000D416D /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRWebSocket.m; path = SocketRocket/SRWebSocket.m; sourceTree = SOURCE_ROOT; };
-		7D0730321B1A05E6000D416D /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
 		7D0CA9831AF505E3008F72EC /* PlaybackState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackState.swift; sourceTree = "<group>"; };
 		7D0CA9851AF50F15008F72EC /* PlayerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerInfo.swift; sourceTree = "<group>"; };
 		7D0CA9871AF68EC6008F72EC /* EditEndpointController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEndpointController.swift; sourceTree = "<group>"; };
@@ -400,14 +397,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7D07302B1B1390A0000D416D /* SocketRocket */ = {
-			isa = PBXGroup;
-			children = (
-				7D0730321B1A05E6000D416D /* SRWebSocket.h */,
-			);
-			name = SocketRocket;
-			sourceTree = "<group>";
-		};
 		7D0CA9931AF699C6008F72EC /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -597,7 +586,6 @@
 				7DC3595F1B35C8AD003B01B6 /* NSString+FontAwesome.h */,
 				7DC3596A1B35F649003B01B6 /* NSString+FontAwesome.m */,
 				7DC206A21A1547370032C01D /* Products */,
-				7D07302B1B1390A0000D416D /* SocketRocket */,
 				7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */,
 				7DC359601B35E73A003B01B6 /* UIFont+FontAwesome.h */,
 				7DC359611B35E73A003B01B6 /* UIImage+FontAwesome.h */,
@@ -652,7 +640,6 @@
 				7D6756CA1B08B24A00BC0CA9 /* PlayerManager.swift */,
 				7D0CA9911AF6999E008F72EC /* Protocol.swift */,
 				7D6756B21AF94BE100BC0CA9 /* ServerType.swift */,
-				7D0730301B1A0400000D416D /* SRWebSocket.m */,
 				7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */,
 				7DC206A41A1547370032C01D /* Supporting Files */,
 				7DDE24781B7E5B78007D810E /* Throttler.swift */,
@@ -979,7 +966,6 @@
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
 				7D32B8021D4E5F7800869703 /* PimpSegmentedControl.swift in Sources */,
-				7D0730311B1A0400000D416D /* SRWebSocket.m in Sources */,
 				7D288ED01C44346E00A08109 /* IAPViewController.swift in Sources */,
 				7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */,
 				618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */,

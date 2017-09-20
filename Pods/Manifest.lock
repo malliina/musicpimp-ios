@@ -1,12 +1,15 @@
 PODS:
-  - SnapKit (3.2.0)
+  - SnapKit (4.0.0)
+  - SocketRocket (0.5.1)
 
 DEPENDENCIES:
-  - SnapKit (~> 3.2.0)
+  - SnapKit (~> 4.0.0)
+  - SocketRocket
 
 SPEC CHECKSUMS:
-  SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: bb3f9762968dd0e42cf4684a003827eb94cb0686
+PODFILE CHECKSUM: 94fcfa063b9019cb5ec521dbb11bab5b28b6ef0d
 
 COCOAPODS: 1.2.1

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SocketRocket
 
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
