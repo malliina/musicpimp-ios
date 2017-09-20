@@ -16,6 +16,8 @@
 		613761331F7049BE0070C9CA /* PlaybackListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613761321F7049BE0070C9CA /* PlaybackListener.swift */; };
 		6167B1101F6D993200FF002F /* MainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6167B10F1F6D993200FF002F /* MainSubCell.swift */; };
 		616DB9A81EC8718900B23BE9 /* DetailedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616DB9A71EC8718900B23BE9 /* DetailedCell.swift */; };
+		618A5A4B1F73010F00AB45CA /* pimp-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 618A5A4A1F73010F00AB45CA /* pimp-1024.png */; };
+		618A5A4D1F73017500AB45CA /* pimp-20.png in Resources */ = {isa = PBXBuildFile; fileRef = 618A5A4C1F73017500AB45CA /* pimp-20.png */; };
 		618ECD3B1EB7522C0018B309 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3A1EB7522C0018B309 /* BaseView.swift */; };
 		618ECD3D1EB752870018B309 /* SnapPlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */; };
 		618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */; };
@@ -192,6 +194,8 @@
 		613761321F7049BE0070C9CA /* PlaybackListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackListener.swift; sourceTree = "<group>"; };
 		6167B10F1F6D993200FF002F /* MainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSubCell.swift; sourceTree = "<group>"; };
 		616DB9A71EC8718900B23BE9 /* DetailedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedCell.swift; sourceTree = "<group>"; };
+		618A5A4A1F73010F00AB45CA /* pimp-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-1024.png"; path = "MusicPimp/Assets/pimp-1024.png"; sourceTree = "<group>"; };
+		618A5A4C1F73017500AB45CA /* pimp-20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pimp-20.png"; path = "Media.xcassets/AppIcon.appiconset/pimp-20.png"; sourceTree = "<group>"; };
 		618ECD3A1EB7522C0018B309 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapPlaybackFooter.swift; sourceTree = "<group>"; };
 		618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMainSubCell.swift; sourceTree = "<group>"; };
@@ -681,6 +685,8 @@
 		7DC359551B35BDD8003B01B6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				618A5A4C1F73017500AB45CA /* pimp-20.png */,
+				618A5A4A1F73010F00AB45CA /* pimp-1024.png */,
 				7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */,
 				7DC891521D623FB600331A4D /* pimp-512.png */,
 				7DC891501D623E8100331A4D /* pimp-4096.png */,
@@ -839,12 +845,14 @@
 				7DC206B31A1547370032C01D /* LaunchScreen.xib in Resources */,
 				7D2C77A11B9352A20066A7B5 /* more_filled_grey-100.png in Resources */,
 				7DC206B01A1547370032C01D /* Images.xcassets in Resources */,
+				618A5A4B1F73010F00AB45CA /* pimp-1024.png in Resources */,
 				7D2C77991B933A810066A7B5 /* more-50.png in Resources */,
 				7DC891511D623E8100331A4D /* pimp-4096.png in Resources */,
 				7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */,
 				7D2C779D1B933C5E0066A7B5 /* more_filled-100.png in Resources */,
 				7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */,
 				7DC891531D623FB600331A4D /* pimp-512.png in Resources */,
+				618A5A4D1F73017500AB45CA /* pimp-20.png in Resources */,
 				7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */,
 				7D74F3581BF902DA0004506B /* Media.xcassets in Resources */,
 				7D2C77971B933A810066A7B5 /* guitar.png in Resources */,
