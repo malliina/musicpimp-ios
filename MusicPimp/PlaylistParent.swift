@@ -25,14 +25,16 @@ class PlaylistParent: ContainerParent, SavePlaylistDelegate, PlaylistSelectDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         edgesForExtendedLayout = []
-        self.navigationItem.leftBarButtonItems = [
+        navigationItem.leftBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: .loadPlaylist),
             UIBarButtonItem(title: "Edit", style: .plain, target: self, action: .dragClicked)
         ]
         // the first element in the array is right-most
-        self.navigationItem.rightBarButtonItems = [
+        navigationItem.rightBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .savePlaylist)
         ]
+        navigationItem.title = "PLAYLISTS"
+        navigationController?.navigationBar.isTranslucent = true
         initUI()
     }
     

@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initTheme(_ app: UIApplication) {
         app.delegate?.window??.tintColor = PimpColors.tintColor
         UINavigationBar.appearance().barStyle = PimpColors.barStyle
-        UINavigationBar.appearance().tintColor = PimpColors.tintColor
+//        UINavigationBar.appearance().tintColor = PimpColors.tintColor
         UITabBar.appearance().barStyle = PimpColors.barStyle
         UIView.appearance().tintColor = PimpColors.tintColor
         UITableView.appearance().backgroundColor = PimpColors.background

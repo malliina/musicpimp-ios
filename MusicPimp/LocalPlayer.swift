@@ -25,8 +25,8 @@ class LocalPlayer: NSObject, PlayerType {
     var player: AVPlayer? { get { return playerInfo?.player } }
     
     fileprivate var timeObserver: AnyObject? = nil
-    fileprivate var itemStatusContext = 0
-    fileprivate var playerStatusContext = 1
+    fileprivate static var itemStatusContext = 0
+    fileprivate static var playerStatusContext = 1
     fileprivate let notificationCenter = NotificationCenter.default
     
     let stateEvent = Event<PlaybackState>()
@@ -179,7 +179,7 @@ class LocalPlayer: NSObject, PlayerType {
         limiter.increment()
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
         let playerItem = AVPlayerItem(url: preferredUrl)
-        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &itemStatusContext)
+        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &LocalPlayer.itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,
             selector: #selector(LocalPlayer.playedToEnd(_:)),
@@ -189,7 +189,7 @@ class LocalPlayer: NSObject, PlayerType {
             selector: #selector(LocalPlayer.failedToPlayToEnd(_:)),
             name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime,
             object: p.currentItem)
-        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &playerStatusContext)
+        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &LocalPlayer.playerStatusContext)
         playerInfo = PlayerInfo(player: p, track: track)
         trackEvent.raise(track)
         timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: DispatchQueue.main) { (time) -> Void in
@@ -201,6 +201,35 @@ class LocalPlayer: NSObject, PlayerType {
             }
         } as AnyObject?
         _ = play()
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if context == &LocalPlayer.itemStatusContext {
+            if let item = object as? AVPlayerItem {
+                switch(item.status) {
+                case AVPlayerItemStatus.failed:
+                    self.log.info("AVPlayerItemStatus.Failed")
+                    closePlayer()
+                default:
+                    break
+                }
+            } else {
+                log.info("Non-item object")
+            }
+        } else if context == &LocalPlayer.playerStatusContext {
+            if let p = object as? AVPlayer {
+                switch(p.status) {
+                case AVPlayerStatus.failed:
+                    self.log.error("Player failed")
+                default:
+                    break
+                }
+            } else {
+                self.log.info("Non-player object")
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
     
     @objc func playedToEnd(_ notification: Notification) {
@@ -216,9 +245,9 @@ class LocalPlayer: NSObject, PlayerType {
     func closePlayer() {
         if let player = player {
             if let item = player.currentItem {
-                item.removeObserver(self, forKeyPath: LocalPlayer.statusKeyPath, context: &itemStatusContext)
+                item.removeObserver(self, forKeyPath: LocalPlayer.statusKeyPath, context: &LocalPlayer.itemStatusContext)
             }
-            player.removeObserver(self, forKeyPath: LocalPlayer.statusKeyPath, context: &playerStatusContext)
+            player.removeObserver(self, forKeyPath: LocalPlayer.statusKeyPath, context: &LocalPlayer.playerStatusContext)
             if let timeObserver: AnyObject = timeObserver as AnyObject? {
                 player.removeTimeObserver(timeObserver)
             }
