@@ -29,7 +29,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-//        edgesForExtendedLayout = []
         setFeedback(loadingMessage)
         listener.tracks = self
         if let folder = selected {

@@ -11,7 +11,6 @@ class LibraryContainer: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        edgesForExtendedLayout = []
         navigationItem.title = (folder?.title.uppercased() ?? "MUSIC")
         initLibrary()
     }

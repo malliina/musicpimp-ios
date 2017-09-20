@@ -36,7 +36,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        edgesForExtendedLayout = []
         navigationItem.title = "PLAYER"
         let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked)
