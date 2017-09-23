@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 enum ListMode: Int {
-    case playlist = 0, popular, recent
+    case popular = 0, recent
 }
 
-class PlaylistController: BaseMusicController, PlaylistEventDelegate {
+class PlaylistController: BaseMusicController {
     private let log = LoggerFactory.vc("PlaylistController")
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
@@ -21,20 +21,17 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
     var emptyMessage: String {
         get {
             switch mode {
-            case .playlist: return "The playlist is empty."
             case .popular: return "No popular tracks."
             case .recent: return "No recent tracks."
             }
         }
     }
-    var mode: ListMode = .playlist
-    var current: Playlist = Playlist.empty
+    var mode: ListMode = .popular
     var recent: [RecentEntry] = []
     var popular: [PopularEntry] = []
     var tracks: [Track] {
         get {
             switch mode {
-            case .playlist: return current.tracks
             case .popular: return popular.map { $0.track }
             case .recent: return recent.map { $0.track }
             }
@@ -43,24 +40,16 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
     override var musicItems: [MusicItem] { return tracks }
     var selected: MusicItem? = nil
     
-    private var reloadOnDidAppear = false
+    private var reloadOnDidAppear = true
     
-    let listener = PlaybackListener()
-        
     override func viewDidLoad() {
         super.viewDidLoad()
-        listener.playlists = self
         self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
-        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
+        maybeRefresh(mode)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        listener.subscribe()
-        let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
-        listeners = [downloadDisposable]
-        let state = player.current()
-        let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
-        onNewPlaylist(currentPlaylist)
+        super.viewWillAppear(animated)
         if reloadOnDidAppear {
             reRenderTable()
         }
@@ -68,22 +57,12 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        listener.unsubscribe()
-        if !DownloadUpdater.instance.isEmpty {
-            reloadOnDidAppear = true
-        }
+        reloadOnDidAppear = !DownloadUpdater.instance.isEmpty
     }
         
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.row
         switch mode {
-        case .playlist:
-            let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
-            cell.accessoryDelegate = self
-            let track = tracks[index]
-            cell.title.text = track.title
-            paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: DownloadUpdater.instance.progressFor(track: track))
-            return cell
         case .popular:
             let cell: SnapMainSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
             decoratePopularCell(cell, track: popular[index])
@@ -129,33 +108,17 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
             library.recent(oldSize, until: oldSize + itemsPerLoad, onError: onRecentError) { content in
                 self.onMoreRecents(oldSize, recents: content)
             }
-        default:
-            log.info("Lazy not implemented for \(mode)")
         }
     }
     
     override func cellHeight() -> CGFloat {
-        switch mode {
-        case .playlist: return defaultCellHeight
-        default: return PlaylistController.mainAndSubtitleCellHeight
-        }
-    }
-    
-    func dragClicked(_ dragButton: UIBarButtonItem) {
-        let isEditing = self.tableView.isEditing
-        self.tableView.setEditing(!isEditing, animated: true)
-        let title = isEditing ? "Edit" : "Done"
-        dragButton.style = isEditing ? .plain : .done
-        dragButton.title = title
+        return PlaylistController.mainAndSubtitleCellHeight
     }
     
     // parent calls this one
     func maybeRefresh(_ targetMode: ListMode) {
-        log.info("Refreshing with mode \(targetMode)")
         mode = targetMode
         switch targetMode {
-        case .playlist:
-            reRenderTable()
         case .popular:
             popular = []
             renderTable("Loading popular tracks...")
@@ -174,12 +137,10 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
         formatter.doesRelativeDateFormatting = true
         let formattedDate = formatter.string(from: track.when)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
-        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
     func decoratePopularCell(_ cell: SnapMainSubCell, track: PopularEntry) {
         decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
-        //cell.installTrackAccessoryView(height: PlaylistController.mainAndSubtitleCellHeight)
     }
     
     func decorateTwoLines(_ cell: SnapMainSubCell, first: String, second: String) {
@@ -190,73 +151,20 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         limitChecked {
-            switch self.mode {
-            case .playlist:
-                _ = self.player.skip(index)
-            default:
-                let track = self.tracks[index]
-                _ = self.playTrack(track)
-            }
+            let track = self.tracks[index]
+            _ = self.playTrack(track)
         }
         tableView.deselectRow(at: indexPath, animated: false)
-    }
-    
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return mode == .playlist
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if mode == .playlist {
-            let index = indexPath.row
-            tableView.reloadRows(at: [indexPath], with: .none)
-            _ = limitChecked {
-                self.player.playlist.removeIndex(index)
-            }
-        } else {
-            super.tableView(tableView, commit: editingStyle, forRowAt: indexPath)
-        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tracks.count
     }
     
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let sourceRow = sourceIndexPath.row
-        let destinationRow = destinationIndexPath.row
-        let newTracks = Arrays.move(sourceRow, destIndex: destinationRow, xs: current.tracks)
-        let newIndex = computeNewIndex(sourceRow, dest: destinationRow)
-        current = Playlist(tracks: newTracks, index: newIndex)
-        _ = player.playlist.move(sourceRow, dest: destinationRow)
-    }
-    
-    func computeNewIndex(_ src: Int, dest: Int) -> Int? {
-        if let index = current.index {
-            return LocalPlaylist.newPlaylistIndex(index, src: src, dest: dest)
-        }
-        return nil
-    }
-    
     override func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
-        switch mode {
-        case .playlist:
-            return super.playTrackAccessoryAction(track, row: row)
-        default:
-            // starts playback of the selected track, and appends the rest to the playlist
-            return accessoryAction("Start Playback Here") { _ in
-                _ = self.playTracks(self.tracks.drop(row))
-            }
-        }
-    }
-
-    func onNewPlaylist(_ playlist: Playlist) {
-        self.current = playlist
-        if mode == .playlist {
-            reRenderTable()
+        // starts playback of the selected track, and appends the rest to the playlist
+        return accessoryAction("Start Playback Here") { _ in
+            _ = self.playTracks(self.tracks.drop(row))
         }
     }
     
@@ -319,29 +227,5 @@ class PlaylistController: BaseMusicController, PlaylistEventDelegate {
 
     func reRenderTable() {
         renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
-    }
-    
-    func onIndexChanged(to index: Int?) {
-        self.current = Playlist(tracks: current.tracks, index: index)
-        renderTable()
-    }
-}
-
-extension PlaylistController {
-    func onProgress(track: TrackProgress) {
-        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
-            updateRows(row: index)
-        }
-    }
-    
-    private func updateRows(row: Int) {
-        let itemIndexPath = IndexPath(row: row, section: 0)
-        onUiThread {
-            // The app crashed if reloading a row while concurrently dragging and dropping rows.
-            // TODO investigate and fix, but as a workaround, we don't update the download progress when editing.
-            if !self.tableView.isEditing && row < self.tracks.count && self.mode == .playlist {
-                self.tableView.reloadRows(at: [itemIndexPath], with: .none)
-            }
-        }
     }
 }

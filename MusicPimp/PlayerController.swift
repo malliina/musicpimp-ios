@@ -15,16 +15,16 @@ fileprivate extension Selector {
 }
 
 class PlayerController: ListeningController, PlaybackDelegate {
-    private let log = LoggerFactory.pimp("ViewControllers.PlayerController", category: "ViewControllers")
+    private let log = LoggerFactory.vc("PlayerController")
     static let seekThumbImage = UIImage(named: "oval-32.png")
     
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
-    let playbackFooter = SnapPlaybackFooter()
-    let titleLabel = UILabel()
+//    let playbackFooter = SnapPlaybackFooter()
+    let titleLabel = PimpLabel.create()
     let albumLabel = UILabel()
-    let artistLabel = UILabel()
+    let artistLabel = PimpLabel.create()
     let seek = UISlider()
     let positionLabel = UILabel()
     let durationLabel = UILabel()
@@ -36,7 +36,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "PLAYER"
         let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked)
         initUI()
@@ -50,6 +49,16 @@ class PlayerController: ListeningController, PlaybackDelegate {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let current = player.current()
+//        updatePlayPause(current.isPlaying)
+        onTrackChanged(current.track)
+        if current.track != nil {
+            updatePosition(current.position)
+        }
+    }
+    
     @objc func onVolumeBarButtonClicked() {
         // presents volume viewcontroller modally
         let dest = VolumeViewController()
@@ -57,23 +66,23 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     func initUI() {
-        addSubviews(views: [playbackFooter, seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverContainer])
-        baseConstraints(views: [playbackFooter, seek, artistLabel, albumLabel, titleLabel, coverContainer])
-        initPlaybackFooter()
+        addSubviews(views: [seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverContainer])
+        baseConstraints(views: [seek, artistLabel, albumLabel, titleLabel, coverContainer])
+//        initPlaybackFooter()
         initSeek()
         initLabels()
         initCover()
     }
     
-    func initPlaybackFooter() {
-        playbackFooter.delegate = self
-        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
-        playbackFooter.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.height.equalTo(66)
-            make.top.equalTo(seek.snp.bottom).offset(16)
-        }
-    }
+//    func initPlaybackFooter() {
+//        playbackFooter.delegate = self
+//        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
+//        playbackFooter.snp.makeConstraints { make in
+//            make.bottom.equalToSuperview()
+//            make.height.equalTo(66)
+//            make.top.equalTo(seek.snp.bottom).offset(16)
+//        }
+//    }
     
     func initSeek() {
         // only triggers valueChanged when dragging has ended
@@ -82,6 +91,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         seek.snp.makeConstraints { make in
             make.top.equalTo(positionLabel.snp.bottom).offset(3)
             make.top.equalTo(durationLabel.snp.bottom).offset(3)
+            make.bottom.equalToSuperview().inset(16)
         }
         positionLabel.textAlignment = .left
         positionLabel.snp.makeConstraints { make in
@@ -159,23 +169,13 @@ class PlayerController: ListeningController, PlaybackDelegate {
         self.navigationController?.setNavigationBarHidden(isHidden, animated: true)
     }
     
-    func updatePlayPause(_ isPlaying: Bool) {
-        playbackFooter.updatePlayPause(isPlaying: isPlaying)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        let current = player.current()
-        updatePlayPause(current.isPlaying)
-        onTrackChanged(current.track)
-        if current.track != nil {
-            updatePosition(current.position)
-        }
-    }
+//    func updatePlayPause(_ isPlaying: Bool) {
+//        playbackFooter.updatePlayPause(isPlaying: isPlaying)
+//    }
     
     override func updateNoMedia() {
         Util.onUiThread {
-            self.updatePlayPause(false)
+//            self.updatePlayPause(false)
             self.updateDuration(self.defaultDuration)
             self.updatePosition(self.defaultPosition)
             self.titleLabel.text = "No track"
@@ -228,7 +228,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     override func onStateChanged(_ state: PlaybackState) {
-        updatePlayPause(state == .Playing)
+//        updatePlayPause(state == .Playing)
     }
     
     func onPrev() {

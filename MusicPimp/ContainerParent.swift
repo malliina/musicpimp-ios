@@ -10,22 +10,39 @@ import Foundation
 import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
+    let playbackFooterHeightValue: CGFloat
+    
     let playbackFooter = SnapPlaybackFooter()
-    let playbackFooterHeightValue: CGFloat = 44
-    private var currentFooterHeight: CGFloat = 0
+    var currentFooterHeight: CGFloat { get { return 0 } }
+    var preferredPlaybackFooterHeight: CGFloat { get { return player.current().state == .Playing ? playbackFooterHeightValue : 0 } }
+    private var currentHeight: CGFloat = 0
+    
+    convenience init() {
+        self.init(footerHeight: 44)
+    }
+    
+    init(footerHeight: CGFloat) {
+        self.playbackFooterHeightValue = footerHeight
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.playbackFooterHeightValue = 44
+        super.init(coder: aDecoder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initPlaybackFooter()
-        playbackFooter.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        initFooter()
+        updateFooterState()
     }
     
+//    https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html#//apple_ref/doc/uid/TP40007457-CH11-SW12
     func initChild(_ child: UIViewController) {
         addChildViewController(child)
         // ?
@@ -34,11 +51,12 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         child.didMove(toParentViewController: self)
     }
     
-    fileprivate func initFooter() {
+    fileprivate func updateFooterState() {
         onStateChanged(player.current().state)
     }
     
     func initPlaybackFooter() {
+        playbackFooter.delegate = self
         view.addSubview(playbackFooter)
         playbackFooter.snp.makeConstraints { make in
             make.leading.equalTo(self.view.snp.leadingMargin)
@@ -46,6 +64,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
             make.bottom.equalToSuperview()
             // hidden by default
             make.height.equalTo(currentFooterHeight)
+            currentHeight = currentFooterHeight
         }
     }
 
@@ -58,10 +77,11 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     }
     
     override func updateViewConstraints() {
-        let footerHeight = player.current().state == .Playing ? playbackFooterHeightValue : 0
-        if footerHeight != currentFooterHeight {
+        let footerHeight = preferredPlaybackFooterHeight
+        if footerHeight != currentHeight {
+            currentHeight = footerHeight
             self.playbackFooter.snp.updateConstraints { make in
-                currentFooterHeight = make.height.equalTo(footerHeight).constraint.layoutConstraints[0].constant
+                make.height.equalTo(footerHeight)
             }
         }
         super.updateViewConstraints()

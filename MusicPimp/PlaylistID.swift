@@ -8,10 +8,12 @@
 
 import Foundation
 
-open class PlaylistID {
+open class PlaylistID: CustomStringConvertible {
     let id: Int
     
     init(id: Int) {
         self.id = id
     }
+    
+    public var description: String { return "\(id)" }
 }
