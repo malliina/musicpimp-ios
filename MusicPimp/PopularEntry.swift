@@ -8,7 +8,11 @@
 
 import Foundation
 
-open class PopularEntry {
+protocol TopEntry {
+    var track: Track { get }
+}
+
+open class PopularEntry: TopEntry {
     let track: Track
     let playbackCount: Int
     

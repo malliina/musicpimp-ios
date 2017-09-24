@@ -61,7 +61,9 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         // updates any highlighted row
         renderTable()
         // why?
-        self.view.setNeedsUpdateConstraints()
+        onUiThread {
+            self.view.setNeedsUpdateConstraints()
+        }
     }
     
     func loadFolder(_ id: String) {

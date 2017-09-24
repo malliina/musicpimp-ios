@@ -35,19 +35,19 @@ class Logger {
 
 class LoggerFactory {
     static func network(_ className: String) -> Logger {
-        return pimp(className, category: "Network")
+        return pimp("Network", category: className)
     }
     
     static func system(_ className: String) -> Logger {
-        return pimp(className, category: "System")
+        return pimp("System", category: className)
     }
     
     static func view(_ className: String) -> Logger {
-        return pimp("Views.\(className)", category: "Views")
+        return pimp("Views", category: className)
     }
     
     static func vc(_ className: String) -> Logger {
-        return pimp("ViewControllers.\(className)", category: "ViewControllers")
+        return pimp("ViewControllers", category: className)
     }
     
     static func pimp(_ suffix: String, category: String) -> Logger {

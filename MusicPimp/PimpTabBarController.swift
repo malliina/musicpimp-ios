@@ -10,19 +10,60 @@ import Foundation
 import UIKit
 
 class PimpTabBarController: UITabBarController {
-    let tabIconFontSize: Int32 = 24
+    private let log = LoggerFactory.vc("PimpTabBarController")
+    let utils = TabUtils.shared
+    
     let tabItemTitleVerticalOffset: CGFloat = -3
+    
+    let flippablePlayer: UIViewController = TabUtils.shared.attachTab(vc: PlayerParent(), title: "Player", fontAwesomeName: "play-circle")
+    let stackedPlayer: UIViewController = TabUtils.shared.attachTab(vc: SideBySidePlayer(), title: "Player", fontAwesomeName: "play-circle")
+    // most popular and recent
+    let flippableTopList: UIViewController = TabUtils.shared.attachTab(vc: TopFlipController(), title: "Playlists", fontAwesomeName: "list")
+    let sideBySideTopList: UIViewController = TabUtils.shared.attachTab(vc: SideBySideTopList(), title: "Playlists", fontAwesomeName: "list")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let topList = UINavigationController(rootViewController: topListFor(traits: UIScreen.main.traitCollection))
+        topList.setNavigationBarHidden(UIScreen.main.traitCollection.horizontalSizeClass == .regular, animated: false)
         viewControllers = [
-            attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music"),
-            attachTab(vc: PlayerParent(), title: "Player", fontAwesomeName: "play-circle"),
-            attachTab(vc: PlaylistParent(), title: "Playlists", fontAwesomeName: "list"),
-            attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog")
-        ].map { vc in UINavigationController(rootViewController: vc) }
+            UINavigationController(rootViewController: utils.attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music")),
+            UINavigationController(rootViewController: playerFor(traits: UIScreen.main.traitCollection)),
+            topList,
+            UINavigationController(rootViewController: utils.attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog"))
+        ]
     }
+    
+    // swaps between mobile and tablet viewcontrollers, as necessary
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if var vcs = viewControllers, vcs.count > 2 {
+            if let playerNav = vcs[1] as? UINavigationController {
+                playerNav.viewControllers = [ playerFor(traits: newCollection) ]
+            }
+            if let listNav = vcs[2] as? UINavigationController {
+                listNav.viewControllers = [ topListFor(traits: newCollection) ]
+                listNav.setNavigationBarHidden(newCollection.horizontalSizeClass == .regular, animated: true)
+            }
+        }
+        super.willTransition(to: newCollection, with: coordinator)
+    }
+    
+    func playerFor(traits: UITraitCollection) -> UIViewController {
+        let isBig = traits.horizontalSizeClass == .regular && traits.verticalSizeClass == .regular
+        return isBig ? stackedPlayer : flippablePlayer
+    }
+    
+    func topListFor(traits: UITraitCollection) -> UIViewController {
+        let isWide = traits.horizontalSizeClass == .regular
+        return isWide ? sideBySideTopList : flippableTopList
+    }
+}
 
+class TabUtils {
+    static let shared = TabUtils()
+    // WTF?
+//    let tabItemTitleVerticalOffset: CGFloat = -3
+    let tabIconFontSize: Int32 = 24
+    
     func attachTab(vc: UIViewController, title: String, fontAwesomeName: String) -> UIViewController {
         let item = UITabBarItem()
         decorate(item, title: title, fontAwesomeName: fontAwesomeName)
@@ -32,7 +73,7 @@ class PimpTabBarController: UITabBarController {
     
     func decorate(_ tabItem: UITabBarItem, title: String, fontAwesomeName: String) {
         tabItem.title = title
-        tabItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: tabItemTitleVerticalOffset)
+//        tabItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: tabItemTitleVerticalOffset)
         let (selected, notSelected) = iconPair("fa-\(fontAwesomeName)")
         tabItem.image = notSelected
         tabItem.selectedImage = selected

@@ -122,16 +122,6 @@ class CacheTableController: CacheInfoController {
         }
     }
     
-//    func footerView(identifier: String, content: UILabel) -> UITableViewHeaderFooterView? {
-//        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
-//        view?.contentView.addSubview(content)
-//        content.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview().inset(footerInset)
-//        }
-//        view?.contentView.backgroundColor = PimpColors.background
-//        return view
-//    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in

@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class RecentEntry {
+open class RecentEntry: TopEntry {
     static let When = "when"
     
     let track: Track

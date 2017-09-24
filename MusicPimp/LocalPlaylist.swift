@@ -9,6 +9,7 @@
 import Foundation
 
 class LocalPlaylist: BasePlaylist, PlaylistType {
+    private let log = LoggerFactory.pimp("Local", category: "LocalPlaylist")
     static let sharedInstance = LocalPlaylist()
     
     fileprivate var ts: [Track] = []
@@ -42,15 +43,15 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     }
     
     func next() -> Track? {
-        return positionTransform({$0 + 1})
+        return positionTransform({($0 ?? -1) + 1})
     }
     
     func prev() -> Track? {
-        return positionTransform({$0 - 1})
+        return positionTransform({($0 ?? 1) - 1})
     }
     
     func skip(_ index: Int) -> Track? {
-        return positionTransform({ pos in index })
+        return positionTransform({ _ in index })
     }
     
     func tracks() -> [Track] {
@@ -120,17 +121,16 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         playlistEvent.raise(Playlist(tracks: ts, index: index))
     }
     
-    fileprivate func positionTransform(_ f: (Int) -> Int) -> Track? {
-        var nextPos = 0
-        if let currentPos = index {
-            nextPos = f(currentPos)
-        }
+    fileprivate func positionTransform(_ f: (Int?) -> Int) -> Track? {
+        let nextPos = f(index)
         if let track = trackAt(nextPos) {
             index = nextPos
             indexEvent.raise(index)
             return track
+        } else {
+            log.error("Invalid playlist position \(nextPos)")
+            return nil
         }
-        return nil
     }
     
     fileprivate func trackAt(_ pos: Int) -> Track? {

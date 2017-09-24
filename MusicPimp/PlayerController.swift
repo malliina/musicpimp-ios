@@ -157,13 +157,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
         self.navigationController?.setNavigationBarHidden(isHidden, animated: true)
     }
     
-//    func updatePlayPause(_ isPlaying: Bool) {
-//        playbackFooter.updatePlayPause(isPlaying: isPlaying)
-//    }
-    
     override func updateNoMedia() {
         Util.onUiThread {
-//            self.updatePlayPause(false)
             self.updateDuration(self.defaultDuration)
             self.updatePosition(self.defaultPosition)
             self.titleLabel.text = "No track"

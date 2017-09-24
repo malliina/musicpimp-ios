@@ -42,7 +42,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         updateFooterState()
     }
     
-//    https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html#//apple_ref/doc/uid/TP40007457-CH11-SW12
+    /// https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html#//apple_ref/doc/uid/TP40007457-CH11-SW12
     func initChild(_ child: UIViewController) {
         addChildViewController(child)
         // ?
@@ -69,9 +69,9 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     }
 
     override func onStateChanged(_ state: PlaybackState) {
-        self.view.setNeedsUpdateConstraints()
         let isVisible = state == .Playing
         Util.onUiThread {
+            self.view.setNeedsUpdateConstraints()
             self.playbackFooter.updatePlayPause(isPlaying: isVisible)
         }
     }
