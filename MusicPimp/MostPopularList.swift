@@ -23,7 +23,7 @@ class MostPopularList: TopListController<PopularEntry> {
         library.popular(0, until: itemsPerLoad, onError: onTopError, f: onTopLoaded)
     }
     
-    override func onMore(_ from: Int, newRows: Int, expectedSize: Int) {
+    override func loadMore() {
         let oldSize = entries.count
         library.popular(oldSize, until: oldSize + itemsPerLoad, onError: onTopError) { content in
             self.onMoreResults(oldSize, results: content)

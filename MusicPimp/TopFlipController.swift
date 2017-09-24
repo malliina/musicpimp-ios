@@ -17,10 +17,14 @@ class TopFlipController: FlipController {
     override var firstTitle: String { return "Popular" }
     override var secondTitle: String { return "Recent" }
     override func buildFirst() -> UIViewController {
-        return MostPopularList()
+        let list = MostPopularList()
+        list.showHeader = false
+        return list
     }
     
     override func buildSecond() -> UIViewController {
-        return MostRecentList()
+        let list = MostRecentList()
+        list.showHeader = false
+        return list
     }
 }

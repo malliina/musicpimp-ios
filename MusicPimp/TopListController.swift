@@ -19,6 +19,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
     var entries: [T] = []
     var tracks: [Track] { get { return entries.map { $0.track } } }
     override var musicItems: [MusicItem] { return tracks }
+    var showHeader: Bool = false
     
     private var reloadOnDidAppear = true
     
@@ -70,7 +71,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return showHeader ? 30 : 0
     }
     
     fileprivate func maybeLoadMore(_ currentRow: Int) {
@@ -88,8 +89,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
     }
     
     // Override to populate cell
-    func decorate(cell: SnapMainSubCell, track: T) {
-    }
+    func decorate(cell: SnapMainSubCell, track: T) {}
     
     // Override this to load and render data
     func refresh() {}
@@ -118,7 +118,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
         onUiThread {
             if (from+newRows) == expectedSize {
                 self.tableView.insertRows(at: indexPaths, with: .bottom)
-                self.log.info("Updated table with \(indexPaths.count) more items")
+                self.log.info("Updated table with \(indexPaths.count) more items from \(from) to \(from+newRows-1)")
             }
         }
     }

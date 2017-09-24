@@ -14,8 +14,9 @@ class SideBySideTopList: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        popular.showHeader = true
+        recent.showHeader = true
         snapSideBySide()
-//        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     func snapSideBySide() {
@@ -23,14 +24,14 @@ class SideBySideTopList: ContainerParent {
         initChild(recent)
         // side-by-side, equal width
         popular.view.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(8)
+            make.top.equalTo(view.snp.topMargin).offset(8)
             make.bottom.equalTo(playbackFooter.snp.top)
             make.leading.equalTo(view)
             make.trailing.equalTo(recent.view.snp.leading)
             make.width.equalTo(recent.view)
         }
         recent.view.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(8)
+            make.top.equalTo(view.snp.topMargin).offset(8)
             make.bottom.equalTo(playbackFooter.snp.top)
             make.trailing.equalTo(view)
             make.leading.equalTo(popular.view.snp.trailing)

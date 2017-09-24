@@ -28,7 +28,7 @@ class MostRecentList: TopListController<RecentEntry> {
         library.recent(0, until: itemsPerLoad, onError: onTopError, f: onTopLoaded)
     }
     
-    override func onMore(_ from: Int, newRows: Int, expectedSize: Int) {
+    override func loadMore() {
         let oldSize = entries.count
         library.recent(oldSize, until: oldSize + itemsPerLoad, onError: onTopError) { content in
             self.onMoreResults(oldSize, results: content)
