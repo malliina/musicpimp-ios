@@ -94,6 +94,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     }
     
     func initNavbar() {
+        navigationItem.title = "PLAYLIST"
         navigationItem.leftBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(loadPlaylistClicked(_:))),
             UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(dragClicked(_:)))

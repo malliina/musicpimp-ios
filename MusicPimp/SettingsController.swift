@@ -21,6 +21,7 @@ class RowSpec {
 }
 
 class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpointDelegate, LibraryEndpointDelegate {
+    private let log = LoggerFactory.vc("SettingsController")
     let detailId = "DetailedCell"
     let sectionHeaderHeight: CGFloat = 44
     let playbackDeviceId = "PlaybackDevice"
@@ -54,20 +55,11 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         }
         listener.players = self
         listener.libraries = self
+        listener.subscribe()
         navigationItem.title = "SETTINGS"
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: PimpColors.titleFont
         ]
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        listener.subscribe()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        listener.unsubscribe()
     }
     
     func endpointUpdated(_ endpoint: Endpoint) {
@@ -171,12 +163,11 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
             self.navigationController?.pushViewController(dest, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: false)
-        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
     
     func destinationFor(indexPath: IndexPath) -> UIViewController? {
-        let id = tableView.cellForRow(at: indexPath)?.reuseIdentifier
-        if let id = id {
+        if let id = tableView.cellForRow(at: indexPath)?.reuseIdentifier {
             switch id {
             case musicSourceId:
                 let dest = SourceSettingController()

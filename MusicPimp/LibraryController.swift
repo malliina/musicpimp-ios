@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class LibraryController: SearchableMusicController, TrackEventDelegate {
+    private let log = LoggerFactory.vc("LibraryController")
     static let LIBRARY = "library", PLAYER = "player"
     let loadingMessage = "Loading..."
     let noTracksMessage = "No tracks."
@@ -59,11 +60,8 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     func onTrackChanged(_ track: Track?) {
         // updates any highlighted row
         renderTable()
+        // why?
         self.view.setNeedsUpdateConstraints()
-    }
-    
-    fileprivate func resetLibrary() {
-        loadRoot()
     }
     
     func loadFolder(_ id: String) {
@@ -87,7 +85,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     func suggestAddMusicSource() {
         let sheet = UIAlertController(title: "Connect to MusicPimp", message: "To obtain music, connect to a MusicPimp server. Download the server from musicpimp.org.", preferredStyle: .alert)
         let musicSourceAction = UIAlertAction(title: "Add server", style: .default) { _ in
-            //self.navigationController?.pushViewController(EditEndpointController(), animated: true)
             self.present(UINavigationController(rootViewController: EditEndpointController()), animated: true, completion: nil)
         }
         let notNowAction = UIAlertAction(title: "Not now", style: .cancel, handler: nil)

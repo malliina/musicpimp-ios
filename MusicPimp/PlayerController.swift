@@ -21,7 +21,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let defaultPosition = Duration.Zero
     let defaultDuration = 60.seconds
     
-//    let playbackFooter = SnapPlaybackFooter()
     let titleLabel = PimpLabel.create()
     let albumLabel = UILabel()
     let artistLabel = PimpLabel.create()
@@ -37,7 +36,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked)
+        navigationItem.rightBarButtonItems = [ UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked) ]
+        navigationItem.title = "PLAYER"
         initUI()
         albumLabel.textColor = PimpColors.subtitles
         positionLabel.textColor = PimpColors.subtitles
@@ -52,7 +52,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let current = player.current()
-//        updatePlayPause(current.isPlaying)
         onTrackChanged(current.track)
         if current.track != nil {
             updatePosition(current.position)
@@ -68,21 +67,10 @@ class PlayerController: ListeningController, PlaybackDelegate {
     func initUI() {
         addSubviews(views: [seek, positionLabel, durationLabel, artistLabel, albumLabel, titleLabel, coverContainer])
         baseConstraints(views: [seek, artistLabel, albumLabel, titleLabel, coverContainer])
-//        initPlaybackFooter()
         initSeek()
         initLabels()
         initCover()
     }
-    
-//    func initPlaybackFooter() {
-//        playbackFooter.delegate = self
-//        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
-//        playbackFooter.snp.makeConstraints { make in
-//            make.bottom.equalToSuperview()
-//            make.height.equalTo(66)
-//            make.top.equalTo(seek.snp.bottom).offset(16)
-//        }
-//    }
     
     func initSeek() {
         // only triggers valueChanged when dragging has ended

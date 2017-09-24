@@ -14,8 +14,6 @@ class PlayerParent: ContainerParent {
     var current: UIViewController = PlayerController()
     let playerIndex = 0
     let queueIndex = 1
-    let playerTitle = "PLAYER"
-    let queueTitle = "PLAYLIST"
     
     override var currentFooterHeight: CGFloat { get { return 66 } }
     override var preferredPlaybackFooterHeight: CGFloat { get { return 66 } }
@@ -25,58 +23,24 @@ class PlayerParent: ContainerParent {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        playerNavbar()
         initUI()
+        updateNavbar()
     }
     
-    func playerNavbar() {
-        navigationItem.title = playerTitle
-        navigationItem.leftBarButtonItems = []
-        navigationItem.rightBarButtonItems = []
-    }
-    
-    func queueNavbar() {
-        navigationItem.title = queueTitle
-        navigationItem.leftBarButtonItems = [
-            UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(loadPlaylistClicked(_:))),
-            UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(dragClicked(_:)))
-        ]
-        // the first element in the array is right-most
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(savePlaylistClicked(_:)))
-        ]
+    func updateNavbar() {
+        navigationItem.title = current.navigationItem.title
+        navigationItem.leftBarButtonItems = current.navigationItem.leftBarButtonItems
+        navigationItem.rightBarButtonItems = current.navigationItem.rightBarButtonItems
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        setNeedsStatusBarAppearanceUpdate()
     }
     
-    override var childViewControllerForStatusBarStyle: UIViewController? { get { return current } }
-    
-    @objc func dragClicked(_ dragButton: UIBarButtonItem) {
-        if let current = current as? PlayQueueController {
-            current.dragClicked(dragButton)
-        } else {
-            log.warn("Cannot edit non-UITableViewController")
-        }
-    }
-
-    @objc func loadPlaylistClicked(_ button: UIBarButtonItem) {
-        if let current = current as? PlayQueueController {
-            current.loadPlaylistClicked(button)
-        } else {
-            log.warn("Cannot load from non-UITableViewController")
-        }
-    }
-
-    @objc func savePlaylistClicked(_ item: UIBarButtonItem) {
-        if let current = current as? PlayQueueController {
-            current.savePlaylistClicked(item)
-        } else {
-            log.warn("Cannot save from non-UITableViewController")
-        }
-    }
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        log.info("transition to w \(size.width) h \(size.height)")
+//        super.viewWillTransition(to: size, with: coordinator)
+//    }
     
     func initUI() {
         initScope(scopeSegment)
@@ -88,7 +52,6 @@ class PlayerParent: ContainerParent {
         }
         initChild(current)
         snap(child: current)
-        navigationItem.title = playerTitle
         playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
     }
     
@@ -110,10 +73,8 @@ class PlayerParent: ContainerParent {
         switch sender.selectedSegmentIndex {
         case playerIndex:
             swap(oldVc: current, newVc: PlayerController(), options: .transitionFlipFromLeft)
-            playerNavbar()
         case queueIndex:
             swap(oldVc: current, newVc: PlayQueueController(), options: .transitionFlipFromRight)
-            queueNavbar()
         default:
             log.error("Unknown player segment index, must be 0 or 1.")
         }
@@ -127,6 +88,7 @@ class PlayerParent: ContainerParent {
             oldVc.removeFromParentViewController()
             newVc.didMove(toParentViewController: self)
             self.current = newVc
+            self.updateNavbar()
         }
     }
 }
