@@ -20,13 +20,20 @@ class TopListController<T: TopEntry>: BaseMusicController {
     var tracks: [Track] { get { return entries.map { $0.track } } }
     override var musicItems: [MusicItem] { return tracks }
     var showHeader: Bool = false
+    // Unless this is used, the infinite scroll does not maintain proper scroll position when adding items to the bottom
+    let cellHeight: CGFloat = MainSubCell.height
     
     private var reloadOnDidAppear = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.estimatedRowHeight = cellHeight
         self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
         refresh()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return cellHeight
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -9,11 +9,13 @@
 import Foundation
 
 class MainSubCell: SnapCell {
+    // empirical - no clue how
+    static let height: CGFloat = 74
     let main = PimpLabel.create()
     let sub = PimpLabel.create()
     
     override func configureView() {
-        installTrackAccessoryView()
+        installTrackAccessoryView(height: MainSubCell.height)
         contentView.addSubview(main)
         main.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)

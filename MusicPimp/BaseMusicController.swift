@@ -42,10 +42,6 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         listeners = []
     }
     
-    func cellHeight() -> CGFloat {
-        return defaultCellHeight
-    }
-    
     func trackCell(_ item: Track, index: IndexPath) -> SnapMusicCell? {
         if let pimpCell: SnapMusicCell = findCell(trackReuseIdentifier, index: index) {
             pimpCell.title.text = item.title

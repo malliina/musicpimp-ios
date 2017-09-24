@@ -78,9 +78,9 @@ class PlaylistController: BaseMusicController {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return cellHeight()
-    }
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return cellHeight()
+//    }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         maybeLoadMore(indexPath.row)
@@ -109,9 +109,9 @@ class PlaylistController: BaseMusicController {
         }
     }
     
-    override func cellHeight() -> CGFloat {
-        return PlaylistController.mainAndSubtitleCellHeight
-    }
+//    override func cellHeight() -> CGFloat {
+//        return PlaylistController.mainAndSubtitleCellHeight
+//    }
     
     // parent calls this one
     func maybeRefresh(_ targetMode: ListMode) {
