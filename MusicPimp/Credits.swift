@@ -11,8 +11,8 @@ import SnapKit
 
 // https://medium.com/@kenzai/how-to-write-clean-beautiful-storyboard-free-views-in-swift-with-snapkit-443e74fc23b2
 class Credits: PimpViewController {
-    let developedLabel = UILabel()
-    let designedLabel = UILabel()
+    let developedLabel = PimpLabel.create()
+    let designedLabel = PimpLabel.create()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,8 @@ class Credits: PimpViewController {
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-8)
+//            make.top.greaterThanOrEqualTo(self.view.snp.topMargin).offset(16)
         }
         
         designedLabel.snp.makeConstraints { make in
@@ -42,7 +43,6 @@ class Credits: PimpViewController {
     }
     
     func initLabel(label: UILabel, text: String) {
-        label.textColor = PimpColors.titles
         label.text = text
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping

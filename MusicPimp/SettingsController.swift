@@ -37,12 +37,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     var activeLibrary: Endpoint { return libraryManager.loadActive() }
     var activePlayer: Endpoint  { return playerManager.loadActive() }
     
-    let libraryDetail = UILabel()
-    let playerDetail = UILabel()
     let sourcePicker = UIPickerView()
-    
-    let cacheDetail = UILabel()
-    let creditsCell = PimpCell()
     let listener = EndpointsListener()
     
     override func viewDidLoad() {

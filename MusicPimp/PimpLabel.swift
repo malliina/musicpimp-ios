@@ -24,4 +24,13 @@ class PimpLabel: UILabel {
         label.textColor = PimpColors.titles
         return label
     }
+    
+    static func centered(text: String) -> UILabel {
+        let label = create()
+        label.text = text
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
+        return label
+    }
 }

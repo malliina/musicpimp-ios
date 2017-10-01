@@ -15,9 +15,15 @@ class DemoView: UIViewController {
     let label3 = UILabel()
     let scroll = UIScrollView()
     let content = UIView()
+    let button = PimpButton(title: "Jee")
+    
+    func buttonClicked(sender: UIButton) {
+        print("haa")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        button.onTouchUpInside = buttonClicked
         edgesForExtendedLayout = []
         scroll.backgroundColor = .magenta
         label1.text = "text1"
@@ -30,7 +36,7 @@ class DemoView: UIViewController {
         
         scroll.addSubview(content)
         view.addSubview(scroll)
-        [label1, label2, label3, textView].forEach { (label) in
+        [label1, label2, label3, textView, button].forEach { (label) in
             content.addSubview(label)
             label.snp.makeConstraints({ (make) in
                 // The height is not mandatory, but good for demo purposes
@@ -45,8 +51,11 @@ class DemoView: UIViewController {
             make.edges.equalTo(scroll).inset(UIEdgeInsets.zero)
             make.width.equalTo(scroll)
         }
-        label1.snp.makeConstraints { (make) in
+        button.snp.makeConstraints { (make) in
             make.top.equalTo(content).inset(8)
+        }
+        label1.snp.makeConstraints { (make) in
+            make.top.equalTo(button).inset(8)
         }
         textView.snp.makeConstraints { (make) in
             make.top.equalTo(label1.snp.bottom).offset(8)

@@ -20,6 +20,7 @@ class PlaylistParent: ContainerParent {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "PLAYLISTS"
+        // wtf?
         navigationController?.navigationBar.isTranslucent = true
         initUI()
     }

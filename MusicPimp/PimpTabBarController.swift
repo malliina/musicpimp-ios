@@ -29,7 +29,7 @@ class PimpTabBarController: UITabBarController {
             UINavigationController(rootViewController: utils.attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music")),
             UINavigationController(rootViewController: playerFor(traits: UIScreen.main.traitCollection)),
             topList,
-            UINavigationController(rootViewController: utils.attachTab(vc: SettingsController(), title: "Settings", fontAwesomeName: "cog"))
+            UINavigationController(rootViewController: utils.attachTab(vc: PlaybackContainer(title: "SETTINGS", child: SettingsController()), title: "Settings", fontAwesomeName: "cog"))
         ]
     }
     

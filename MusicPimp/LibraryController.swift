@@ -198,8 +198,8 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = itemAt(tableView, indexPath: indexPath) {
             if let folder = item as? Folder {
-                let destination = LibraryContainer()
-                destination.folder = folder
+                let destination = LibraryContainer(folder: folder)
+//                destination.folder = folder
                 navigationController?.pushViewController(destination, animated: true)
             }
             if let track = item as? Track {

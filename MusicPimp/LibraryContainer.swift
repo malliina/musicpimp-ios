@@ -5,23 +5,17 @@
 
 import Foundation
 
-class LibraryContainer: ContainerParent {
-    var folder: Folder? = nil
-    let tableVc = LibraryController()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.title = (folder?.title.uppercased() ?? "MUSIC")
-        initLibrary()
+class LibraryContainer: PlaybackContainer {
+    convenience init() {
+        self.init(folder: nil)
     }
     
-    func initLibrary() {
-        tableVc.selected = folder
-        initChild(tableVc)
-        tableVc.view.snp.makeConstraints { make in
-            make.leading.trailing.top.equalTo(view)
-            make.bottom.equalTo(playbackFooter.snp.top)
+    convenience init(folder: Folder?) {
+        let library = LibraryController()
+        if let folder = folder {
+            library.selected = folder
         }
+        self.init(title: folder?.title.uppercased() ?? "MUSIC", child: library)
     }
     
     override func onLibraryChanged(to newLibrary: LibraryType) {

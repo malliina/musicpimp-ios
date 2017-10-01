@@ -17,10 +17,11 @@ fileprivate extension Selector {
 
 class IAPViewController: PimpViewController {
     let log = LoggerFactory.vc("IAPViewController")
-    let statusLabel = UILabel()
-    let purchaseButton = UIButton()
-    let alreadyPurchasedLabel = UILabel()
-    let restoreButton = UIButton()
+    static let loadingText = "Loading products..."
+    let statusLabel = PimpLabel.centered(text: IAPViewController.loadingText)
+    let purchaseButton = PimpButton.with(title: "Purchase MusicPimp Premium")
+    let alreadyPurchasedLabel = PimpLabel.centered(text: "Already purchased?")
+    let restoreButton = PimpButton.with(title: "Restore MusicPimp Premium")
     var disposable: Disposable? = nil
 
     var products: [SKProduct] = []
@@ -37,13 +38,6 @@ class IAPViewController: PimpViewController {
         disposable = TransactionObserver.sharedInstance.events.addHandler(self) { (iap) -> (SKPaymentTransaction) -> () in
             iap.onTransactionUpdate
         }
-        initLabel(label: statusLabel, text: "Loading products...")
-        initLabel(label: alreadyPurchasedLabel, text: "Already purchased?")
-        purchaseButton.setTitle("Purchase MusicPimp Premium", for: .normal)
-        restoreButton.setTitle("Restore MusicPimp Premium", for: .normal)
-        [purchaseButton, restoreButton].forEach { button in
-            button.setTitleColor(PimpColors.tintColor, for: UIControlState.normal)
-        }
         initUI()
     }
     
@@ -51,36 +45,22 @@ class IAPViewController: PimpViewController {
         addSubviews(views: [statusLabel, purchaseButton, alreadyPurchasedLabel, restoreButton])
         statusLabel.snp.makeConstraints { make in
             make.top.greaterThanOrEqualTo(self.view.snp.topMargin).offset(16)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
-            make.centerX.equalToSuperview()
+            make.leading.trailing.centerX.equalToSuperview()
         }
         purchaseButton.snp.makeConstraints { make in
             make.top.equalTo(statusLabel.snp.bottom).offset(32)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.leading.trailing.equalToSuperview()
             make.centerY.equalToSuperview().priority(600)
         }
         alreadyPurchasedLabel.snp.makeConstraints { make in
             make.top.greaterThanOrEqualTo(purchaseButton.snp.bottom).offset(32)
-            make.leading.greaterThanOrEqualTo(self.view.snp.leadingMargin)
-            make.trailing.lessThanOrEqualTo(self.view.snp.trailingMargin)
-            make.centerX.equalToSuperview()
+            make.leading.trailing.centerX.equalToSuperview()
         }
         restoreButton.snp.makeConstraints { make in
             make.top.equalTo(alreadyPurchasedLabel.snp.bottom).offset(32)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(self.view.snp.bottomMargin).offset(-16)
         }
-    }
-    
-    func initLabel(label: UILabel, text: String) {
-        label.textColor = PimpColors.titles
-        label.text = text
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.textAlignment = .center
     }
     
     func onTransactionUpdate(_ transaction: SKPaymentTransaction) {
@@ -149,7 +129,7 @@ class IAPViewController: PimpViewController {
     }
     
     func loadProductIdentifiers() {
-        statusLabel.text = "Loading products..."
+        statusLabel.text = IAPViewController.loadingText
         let request = SKProductsRequest(productIdentifiers: [ PurchaseHelper.PremiumId ])
         self.request = request
         request.delegate = self

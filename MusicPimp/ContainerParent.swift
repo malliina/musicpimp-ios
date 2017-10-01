@@ -10,15 +10,20 @@ import Foundation
 import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
+    static let defaultFooterHeight: CGFloat = 44
     let playbackFooterHeightValue: CGFloat
     
     let playbackFooter = SnapPlaybackFooter()
     var currentFooterHeight: CGFloat { get { return 0 } }
-    var preferredPlaybackFooterHeight: CGFloat { get { return player.current().state == .Playing ? playbackFooterHeightValue : 0 } }
+    var preferredPlaybackFooterHeight: CGFloat {
+        get {
+            return player.current().state == .Playing ? playbackFooterHeightValue : 0
+        }
+    }
     private var currentHeight: CGFloat = 0
     
     convenience init() {
-        self.init(footerHeight: 44)
+        self.init(footerHeight: ContainerParent.defaultFooterHeight)
     }
     
     init(footerHeight: CGFloat) {
@@ -27,7 +32,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.playbackFooterHeightValue = 44
+        self.playbackFooterHeightValue = ContainerParent.defaultFooterHeight
         super.init(coder: aDecoder)
     }
     
