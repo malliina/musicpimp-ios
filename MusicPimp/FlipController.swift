@@ -19,7 +19,9 @@ class FlipController: ContainerParent {
     var flipAnimationDuration: TimeInterval { return 0.4 }
     
     var scopeSegment: UISegmentedControl? = nil
-    var current: UIViewController = UIViewController()
+    
+    var left: UIViewController? = nil
+    var right: UIViewController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +38,13 @@ class FlipController: ContainerParent {
             make.leading.trailing.equalToSuperview().inset(8)
             make.height.equalTo(32)
         }
-        current = buildFirst()
-        initChild(current)
-        snap(child: current)
-        onSwapped(to: current)
+        left = buildFirst()
+        right = buildSecond()
+        if let left = left {
+            initChild(left)
+            snap(child: left)
+            onSwapped(to: left)
+        }
     }
     
     /// Override: return the first viewcontroller
@@ -72,11 +77,15 @@ class FlipController: ContainerParent {
     @objc func scopeChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-            swap(oldVc: current, newVc: buildFirst(), options: .transitionFlipFromLeft)
+            if let left = left, let right = right {
+                swap(oldVc: right, newVc: left, options: .transitionFlipFromLeft)
+            }
         case 1:
-            swap(oldVc: current, newVc: buildSecond(), options: .transitionFlipFromRight)
+            if let left = left, let right = right {
+                swap(oldVc: left, newVc: right, options: .transitionFlipFromRight)
+            }
         default:
-            log.error("Unknown player segment index, must be 0 or 1.")
+            log.error("Unknown segment index, must be 0 or 1.")
         }
     }
     
@@ -87,7 +96,6 @@ class FlipController: ContainerParent {
         self.transition(from: oldVc, to: newVc, duration: flipAnimationDuration, options: options, animations: { self.snap(child: newVc) }) { _ in
             oldVc.removeFromParentViewController()
             newVc.didMove(toParentViewController: self)
-            self.current = newVc
             self.onSwapped(to: newVc)
         }
     }
