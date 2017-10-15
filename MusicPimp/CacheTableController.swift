@@ -39,6 +39,16 @@ class CacheTableController: CacheInfoController {
         updateCacheUsageLabel()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in
+            self.headerLabel.snp.remakeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(self.footerInset)
+            }
+            self.tableView.reloadData()
+        }
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
@@ -163,9 +173,11 @@ extension UITableViewController {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier)
         content.autoresizingMask = .flexibleHeight
         view?.contentView.addSubview(content)
+//        view?.contentView.preservesSuperviewLayoutMargins = true
+//        content.preservesSuperviewLayoutMargins = true
         content.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(tableView.layoutMargins.left)
-            make.topMargin.equalToSuperview().offset(PimpLabel.headerMargin)
+            make.topMargin.equalToSuperview().offset(PimpLabel.headerTopMargin)
         }
         view?.contentView.backgroundColor = PimpColors.background
         return view

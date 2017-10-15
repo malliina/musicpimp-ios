@@ -66,6 +66,26 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         }
     }
     
+    /// Keeps the header margins synced with the cells' margins.
+    /// The cell margin seems to depend on orientation / screen size.
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in
+            self.snapHeader(header: self.endpointLabel)
+            self.snapHeader(header: self.notificationLabel)
+            self.snapHeader(header: self.schedulesLabel)
+            // recalculates header heights, because margins might change on transition
+            self.tableView.reloadData()
+        }
+    }
+    
+    func snapHeader(header: UIView) {
+        header.snp.remakeConstraints { (make) in
+            make.leading.trailing.equalToSuperview().inset(self.footerInset)
+            make.topMargin.equalToSuperview().offset(PimpLabel.headerTopMargin)
+        }
+    }
+    
     @objc func onAddNew(_ sender: UIBarButtonItem) {
         if let endpoint = endpoint {
             let dest = EditAlarmTableViewController()

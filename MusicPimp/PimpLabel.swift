@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpLabel: UILabel {
-    static let headerMargin: CGFloat = 16
+    static let headerTopMargin: CGFloat = 16
     
     static func footerLabel(_ text: String) -> UILabel {
         let label = create()
@@ -39,6 +39,9 @@ class PimpLabel: UILabel {
 
 extension UILabel {
     func tableHeaderHeight(_ tableView: UITableView) -> CGFloat {
-        return self.sizeThatFits(CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude)).height + PimpLabel.headerMargin
+        // Not sure why * 2 is needed - one for UITableViewHeaderCell, the other for the label?
+        print("calc height with margin \(tableView.layoutMargins.left)")
+        let availableWidth = tableView.frame.width - (tableView.layoutMargins.left) - (tableView.layoutMargins.right)
+        return self.sizeThatFits(CGSize(width: availableWidth, height: CGFloat.greatestFiniteMagnitude)).height + PimpLabel.headerTopMargin
     }
 }
