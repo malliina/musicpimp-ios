@@ -20,7 +20,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     var preferredPlaybackFooterHeight: CGFloat {
         get {
             let state = player.current().state
-            return state == .Playing || ( ContainerParent.isIpad && state != .NoMedia) ? playbackFooterHeightValue : 0
+            return state == .Playing || (ContainerParent.isIpad && state != .NoMedia) ? playbackFooterHeightValue : 0
         }
     }
     private var currentHeight: CGFloat = 0
