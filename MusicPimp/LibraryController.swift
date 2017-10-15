@@ -26,6 +26,8 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     
     let listener = PlaybackListener()
     
+    var isFirstLoad = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
@@ -72,14 +74,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     
     func loadRoot() {
         library.rootFolder(onLoadError) { (folder) in
-            if folder.items.isEmpty {
-                let hasRemoteSources = self.libraryManager.endpoints().exists { (e) -> Bool in
-                    e.id != Endpoint.Local.id
-                }
-                if !hasRemoteSources {
-                    self.suggestAddMusicSource()
-                }
-            }
             self.onFolder(folder)
         }
     }
@@ -101,6 +95,17 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     func onFolder(_ f: MusicFolder) {
         folder = f
         self.renderTable(computeMessage(folder))
+        if folder.items.isEmpty {
+            let hasRemoteSources = self.libraryManager.endpoints().exists { (e) -> Bool in
+                e.id != Endpoint.Local.id
+            }
+            if !hasRemoteSources && isFirstLoad {
+                self.suggestAddMusicSource()
+            } else {
+                self.log.info("Not suggesting music source configuration")
+            }
+        }
+        isFirstLoad = false
     }
     
     func computeMessage(_ folder: MusicFolder) -> String? {

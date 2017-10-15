@@ -25,21 +25,21 @@ class EditEndpointController: PimpViewController {
     let log = LoggerFactory.vc("EditEndpointController")
     let scrollView = UIScrollView()
     let content = UIView()
-    let nameLabel = UILabel()
+    let nameLabel = PimpLabel.create()
     let typeControl = UISegmentedControl(items: ["Cloud", "MusicPimp"])
     let nameField = PimpTextField()
     let portField = PimpTextField()
-    let usernameLabel = UILabel()
+    let usernameLabel = PimpLabel.create()
     let usernameField = PimpTextField()
-    let passwordLabel = UILabel()
+    let passwordLabel = PimpLabel.create()
     let passwordField = PimpTextField()
     let protocolControl = UISegmentedControl(items: ["HTTP", "HTTPS"])
-    let portLabel = UILabel()
-    let addressLabel = UILabel()
+    let portLabel = PimpLabel.create()
+    let addressLabel = PimpLabel.create()
     let addressField = PimpTextField()
-    let cloudIDLabel = UILabel()
+    let cloudIDLabel = PimpLabel.create()
     let cloudIDField = PimpTextField()
-    let activateLabel = UILabel()
+    let activateLabel = PimpLabel.create()
     let activateSwitch = UISwitch()
     let testButton = UIButton()
     let feedbackText = UITextView()
@@ -73,10 +73,6 @@ class EditEndpointController: PimpViewController {
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().priority(.medium)
             make.width.lessThanOrEqualTo(500).priority(.high)
-        }
-        let labels = [nameLabel, portLabel, addressLabel, usernameLabel, passwordLabel, cloudIDLabel, activateLabel]
-        labels.forEach { (label) in
-            label.textColor = PimpColors.titles
         }
         let views: [UIView] = [typeControl, cloudIDLabel, cloudIDField, nameLabel, nameField, addressLabel, addressField, portLabel, portField, usernameLabel, usernameField, passwordLabel, passwordField, protocolControl, activateLabel, activateSwitch, testButton, feedbackText]
         views.forEach { (v) in

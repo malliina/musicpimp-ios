@@ -53,9 +53,11 @@ class Players {
             suggestPlayerChange(to: Endpoint.Local, suggestedName: localOutputs[0], isHandoverOptional: false, view: view)
         }
         if suggestRemote {
-            lastRemoteSuggestion = now
             let to = PimpSettings.sharedInstance.activeLibrary()
-            suggestPlayerChange(to: to, suggestedName: to.name, isHandoverOptional: true, view: view)
+            if to.id != Endpoint.Local.id {
+                lastRemoteSuggestion = now
+                suggestPlayerChange(to: to, suggestedName: to.name, isHandoverOptional: true, view: view)
+            }
         }
     }
     

@@ -25,9 +25,7 @@ class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDel
         super.viewDidLoad()
         listener.playbacks = self
         libraryListener.delegate = self
-        let _ = libraryManager.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
-            ivc.onLibraryChanged
-        }
+        libraryListener.subscribe()
     }
     
     override func viewWillAppear(_ animated: Bool) {

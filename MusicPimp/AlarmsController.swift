@@ -82,7 +82,6 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     func snapHeader(header: UIView) {
         header.snp.remakeConstraints { (make) in
             make.leading.trailing.equalToSuperview().inset(self.footerInset)
-            make.topMargin.equalToSuperview().offset(PimpLabel.headerTopMargin)
         }
     }
     

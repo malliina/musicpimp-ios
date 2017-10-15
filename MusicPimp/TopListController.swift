@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TopListController<T: TopEntry>: BaseMusicController {
+class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     private let log = LoggerFactory.vc("TopListController")
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
@@ -22,6 +22,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
     var showHeader: Bool = false
     // Unless this is used, the infinite scroll does not maintain proper scroll position when adding items to the bottom
     let cellHeight: CGFloat = MainSubCell.height
+    let listener = LibraryListener()
     
     private var reloadOnDidAppear = true
     
@@ -30,6 +31,8 @@ class TopListController<T: TopEntry>: BaseMusicController {
         tableView.estimatedRowHeight = cellHeight
         self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
         refresh()
+        listener.delegate = self
+        listener.subscribe()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -93,6 +96,10 @@ class TopListController<T: TopEntry>: BaseMusicController {
         return accessoryAction("Start Playback Here") { _ in
             _ = self.playTracks(self.tracks.drop(row))
         }
+    }
+    
+    func onLibraryChanged(to newLibrary: LibraryType) {
+        refresh()
     }
     
     // Override to populate cell
