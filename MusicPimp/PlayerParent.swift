@@ -32,6 +32,6 @@ class PlayerParent: FlipController {
     
     override func initUI() {
         super.initUI()
-        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
+        playbackFooter.setBigSize()
     }
 }

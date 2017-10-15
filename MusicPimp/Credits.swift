@@ -11,8 +11,8 @@ import SnapKit
 
 // https://medium.com/@kenzai/how-to-write-clean-beautiful-storyboard-free-views-in-swift-with-snapkit-443e74fc23b2
 class Credits: PimpViewController {
-    let developedLabel = PimpLabel.create()
-    let designedLabel = PimpLabel.create()
+    let developedLabel = PimpLabel.centered(text: "Developed by Michael Skogberg.")
+    let designedLabel = PimpLabel.centered(text: "Design by Alisa.")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,29 +23,18 @@ class Credits: PimpViewController {
     func initUI() {
         addSubviews(views: [developedLabel, designedLabel])
         
-        initLabel(label: developedLabel, text: "Developed by Michael Skogberg.")
-        initLabel(label: designedLabel, text: "Design by Alisa.")
-        
         developedLabel.snp.makeConstraints { make in
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-8)
-//            make.top.greaterThanOrEqualTo(self.view.snp.topMargin).offset(16)
+            make.centerY.equalToSuperview().offset(-16)
         }
         
         designedLabel.snp.makeConstraints { make in
             make.leading.equalTo(self.view.snp.leadingMargin)
             make.trailing.equalTo(self.view.snp.trailingMargin)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-8)
+            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-16)
         }
-    }
-    
-    func initLabel(label: UILabel, text: String) {
-        label.text = text
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.textAlignment = .center
     }
 }

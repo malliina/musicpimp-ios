@@ -35,7 +35,7 @@ class SnapPlaybackFooter: BaseView {
     
     override func configureView() {
         self.backgroundColor = PimpColors.background
-        setSizes(prev: defaultFontSize, playPause: defaultFontSize, next: defaultFontSize)
+        ContainerParent.isIpad ? setBigSize() : setSmallSize()
         prevButton.setFontAwesomeTitle(prevIconName)
         playPauseButton.setFontAwesomeTitle(playIconName)
         nextButton.setFontAwesomeTitle(nextIconName)
@@ -79,6 +79,14 @@ class SnapPlaybackFooter: BaseView {
     
     @objc func onNextClicked(_ button: UIButton) {
         delegate?.onNext()
+    }
+    
+    func setBigSize() {
+        setSizes(prev: 24, playPause: 32, next: 24)
+    }
+    
+    func setSmallSize() {
+        setSizes(prev: defaultFontSize, playPause: defaultFontSize, next: defaultFontSize)
     }
     
     func setSizes(prev: CGFloat, playPause: CGFloat, next: CGFloat) {

@@ -10,14 +10,17 @@ import Foundation
 import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
-    static let defaultFooterHeight: CGFloat = 44
+    static var isIpad: Bool { get { return UIScreen.main.traitCollection.horizontalSizeClass == .regular && UIScreen.main.traitCollection.verticalSizeClass == .regular } }
+    static var defaultFooterHeight: CGFloat { return ContainerParent.isIpad ? 66 : 44 }
     let playbackFooterHeightValue: CGFloat
     
     let playbackFooter = SnapPlaybackFooter()
     var currentFooterHeight: CGFloat { get { return 0 } }
+    
     var preferredPlaybackFooterHeight: CGFloat {
         get {
-            return player.current().state == .Playing ? playbackFooterHeightValue : 0
+            let state = player.current().state
+            return state == .Playing || ( ContainerParent.isIpad && state != .NoMedia) ? playbackFooterHeightValue : 0
         }
     }
     private var currentHeight: CGFloat = 0

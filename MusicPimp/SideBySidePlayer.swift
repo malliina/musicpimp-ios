@@ -41,6 +41,6 @@ class SideBySidePlayer: ContainerParent {
             make.bottom.equalTo(playbackFooter.snp.top)
             make.leading.trailing.equalTo(playerVc.view)
         }
-        playbackFooter.setSizes(prev: 24, playPause: 32, next: 24)
+        playbackFooter.setBigSize()
     }
 }
