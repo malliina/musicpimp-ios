@@ -78,7 +78,7 @@ class TopListController<T: TopEntry>: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showHeader ? 30 : 0
+        return showHeader ? 36 : 0
     }
     
     fileprivate func maybeLoadMore(_ currentRow: Int) {

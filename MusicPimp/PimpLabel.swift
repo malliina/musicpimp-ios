@@ -9,6 +9,8 @@
 import Foundation
 
 class PimpLabel: UILabel {
+    static let headerMargin: CGFloat = 16
+    
     static func footerLabel(_ text: String) -> UILabel {
         let label = create()
         label.text = text
@@ -32,5 +34,11 @@ class PimpLabel: UILabel {
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
         return label
+    }
+}
+
+extension UILabel {
+    func tableHeaderHeight(_ tableView: UITableView) -> CGFloat {
+        return self.sizeThatFits(CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude)).height + PimpLabel.headerMargin
     }
 }

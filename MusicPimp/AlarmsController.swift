@@ -15,7 +15,7 @@ fileprivate extension Selector {
 class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
     let log = LoggerFactory.vc("AlarmsController")
     static let endpointFooter = "MusicPimp servers support scheduled playback of music."
-    static let notificationFooter = "MusicPimp sends a notification to this device when scheduled playback starts, so that you can easily silence it."
+    static let notificationFooter = "Receive a notification when scheduled playback starts, so that you can easily silence it."
     let noAlarmsMessage = "No saved alarms"
     
     let endpointSection = 0
@@ -28,8 +28,10 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     let alarmCellKey = "MainSubCell"
     let endpointFooterIdentifier = "EndpointFooter"
     let notificationFooterIdentifier = "NotificationFooter"
+    let schedulesFooterIdentifier = "SchedulesFooter"
     let endpointLabel = PimpLabel.footerLabel(AlarmsController.endpointFooter)
     let notificationLabel = PimpLabel.footerLabel(AlarmsController.notificationFooter)
+    let schedulesLabel = PimpLabel.footerLabel("Scheduled tracks")
     
     var endpoint: Endpoint? = nil
     var pushEnabled: Bool = false
@@ -47,14 +49,14 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: .addClicked)
         if let tableView = self.tableView {
             tableView.register(DetailedCell.self, forCellReuseIdentifier: endpointIdentifier)
-            tableView.register(PimpCell.self, forCellReuseIdentifier: pushEnabledIdentifier)
+            tableView.register(DetailedCell.self, forCellReuseIdentifier: pushEnabledIdentifier)
             tableView.register(SnapMainSubCell.self, forCellReuseIdentifier: alarmIdentifier)
             tableView.register(MainSubCell.self, forCellReuseIdentifier: alarmCellKey)
             tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: endpointFooterIdentifier)
             tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: notificationFooterIdentifier)
+            tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: schedulesFooterIdentifier)
         }
         reloadAlarms()
-        // TODO create custom UISwitch with toggle handler
         let onOff = PimpSwitch { (uiSwitch) in
             self.didToggleNotifications(uiSwitch)
         }
@@ -203,11 +205,9 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         case endpointSection:
             let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
             cell.textLabel?.text = "Playback Device"
-            cell.textLabel?.textColor = PimpColors.titles
             cell.textLabel?.isEnabled = isEndpointValid
             cell.accessoryType = .disclosureIndicator
             cell.detailTextLabel?.text = endpoint?.name ?? "None"
-            cell.detailTextLabel?.textColor = PimpColors.titles
             return cell
         case notificationSection:
             let cell = tableView.dequeueReusableCell(withIdentifier: pushEnabledIdentifier, for: indexPath)
@@ -216,7 +216,6 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
                 pushSwitch?.isOn = settings.notificationsEnabled(endpoint)
             }
             cell.textLabel?.text = "Notifications"
-            cell.textLabel?.textColor = PimpColors.titles
             cell.textLabel?.isEnabled = isEndpointValid
             pushSwitch?.isEnabled = isEndpointValid
             return cell
@@ -250,34 +249,43 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        /// This method is called before viewForHeaderInSection. So we need to check how much space the label will take,
+        /// then return a height that takes the margin into account as well.
+        switch section {
+        case 0: return endpointLabel.tableHeaderHeight(tableView)
+        case 1: return notificationLabel.tableHeaderHeight(tableView)
+        case 2: return schedulesLabel.tableHeaderHeight(tableView)
+        default: return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
         case 0: return footerView(identifier: endpointFooterIdentifier, content: endpointLabel)
         case 1: return footerView(identifier: notificationFooterIdentifier, content: notificationLabel)
+        case 2: return footerView(identifier: schedulesFooterIdentifier, content: schedulesLabel)
         default: return nil
         }
     }
     
-    /// Keeps the header margins synced with the cells' margins.
-    /// The cell margin seems to depend on orientation / screen size.
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animateAlongsideTransition(in: self.tableView, animation: nil) { _ in
-            self.endpointLabel.snp.remakeConstraints { make in
-                make.leading.trailing.equalToSuperview().inset(self.footerInset)
-            }
-            self.notificationLabel.snp.remakeConstraints { (make) in
-                make.leading.trailing.equalToSuperview().inset(self.footerInset)
-            }
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return ""
+    }
+    
+    /// Overridden, otherwise the footer is not shown
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return super.tableView(tableView, viewForFooterInSection: section)
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        if let view = view as? UITableViewHeaderFooterView {
+            view.contentView.backgroundColor = PimpColors.background
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        switch section {
-        case 0: return endpointLabel.frame.height + 10
-        case 1: return notificationLabel.frame.height + 10
-        default: return 0
-        }
+        return 22
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

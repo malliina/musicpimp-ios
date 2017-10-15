@@ -24,7 +24,7 @@ class PimpTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let topList = UINavigationController(rootViewController: topListFor(traits: UIScreen.main.traitCollection))
-        topList.setNavigationBarHidden(UIScreen.main.traitCollection.horizontalSizeClass == .regular, animated: false)
+//        topList.setNavigationBarHidden(UIScreen.main.traitCollection.horizontalSizeClass == .regular, animated: false)
         viewControllers = [
             UINavigationController(rootViewController: utils.attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music")),
             UINavigationController(rootViewController: playerFor(traits: UIScreen.main.traitCollection)),

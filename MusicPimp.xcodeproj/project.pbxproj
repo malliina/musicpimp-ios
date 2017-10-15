@@ -584,6 +584,7 @@
 				7DC359681B35F196003B01B6 /* PimpTabBarController.swift */,
 				7DB1B3BB1B12056E0012B8AE /* PimpTableController.swift */,
 				7DC8915A1D78AD0600331A4D /* PimpViewController.swift */,
+				619BE4A21F81304A00586A9B /* PlaybackContainer.swift */,
 				7D9E48AF1ADAE8CB00D5CDDF /* PlayerController.swift */,
 				61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */,
 				7D6756C81B07CDD500BC0CA9 /* PlayerSettingController.swift */,
@@ -605,7 +606,6 @@
 				7DC359621B35E852003B01B6 /* UIFont+FontAwesome.m */,
 				7DC359631B35E852003B01B6 /* UIImage+FontAwesome.m */,
 				7DB430E01C42B77800CF22DC /* VolumeViewController.swift */,
-				619BE4A21F81304A00586A9B /* PlaybackContainer.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
