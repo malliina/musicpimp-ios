@@ -39,8 +39,6 @@ class PimpLabel: UILabel {
 
 extension UILabel {
     func tableHeaderHeight(_ tableView: UITableView) -> CGFloat {
-        // Not sure why * 2 is needed - one for UITableViewHeaderCell, the other for the label?
-        print("calc height with margin \(tableView.layoutMargins.left)")
         let availableWidth = tableView.frame.width - (tableView.layoutMargins.left) - (tableView.layoutMargins.right)
         return self.sizeThatFits(CGSize(width: availableWidth, height: CGFloat.greatestFiniteMagnitude)).height + PimpLabel.headerTopMargin
     }
