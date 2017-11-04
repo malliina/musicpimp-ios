@@ -83,14 +83,14 @@ class PlayerController: ListeningController, PlaybackDelegate {
         }
         positionLabel.textAlignment = .left
         positionLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.snp.leadingMargin)
+            make.leadingMargin.equalToSuperview()
             make.top.equalTo(artistLabel.snp.bottom).offset(8)
             make.trailing.equalTo(durationLabel.snp.leading)
             make.width.equalTo(durationLabel)
         }
         durationLabel.textAlignment = .right
         durationLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.trailingMargin.equalToSuperview()
             make.top.equalTo(artistLabel.snp.bottom).offset(8)
         }
     }
