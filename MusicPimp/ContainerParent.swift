@@ -59,28 +59,38 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         child.didMove(toParentViewController: self)
     }
     
-    fileprivate func updateFooterState() {
-        onStateChanged(player.current().state)
-    }
-    
     func initPlaybackFooter() {
         playbackFooter.delegate = self
         view.addSubview(playbackFooter)
         playbackFooter.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
-            make.bottom.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
             // hidden by default
             make.height.equalTo(currentFooterHeight)
             currentHeight = currentFooterHeight
         }
     }
+    
+    fileprivate func updateFooterState() {
+        updateFooter(state: player.current().state, animated: false)
+    }
 
     override func onStateChanged(_ state: PlaybackState) {
+        updateFooter(state: state, animated: true)
+    }
+    
+    func updateFooter(state: PlaybackState, animated: Bool) {
         let isVisible = state == .Playing
         Util.onUiThread {
             self.view.setNeedsUpdateConstraints()
             self.playbackFooter.updatePlayPause(isPlaying: isVisible)
+            // transitions the footer between visible and hidden states depending on whether music is playing
+            if animated {
+                // delays hiding so that it does not flicker between changing tracks, instead remains visible throughout
+                let delay: TimeInterval = isVisible ? 0 : 2
+                UIView.animate(withDuration: 0.25, delay: delay, options: .curveEaseInOut, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
+            }
         }
     }
     

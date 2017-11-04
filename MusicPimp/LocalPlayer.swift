@@ -147,6 +147,7 @@ class LocalPlayer: NSObject, PlayerType {
         if let _ = playFromPlaylist(f) {
             return nil
         } else {
+            stateEvent.raise(.NoMedia)
             return noTrackError
         }
     }
@@ -179,7 +180,7 @@ class LocalPlayer: NSObject, PlayerType {
         limiter.increment()
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
         let playerItem = AVPlayerItem(url: preferredUrl)
-        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &LocalPlayer.itemStatusContext)
+        playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: .initial, context: &LocalPlayer.itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,
             selector: #selector(LocalPlayer.playedToEnd(_:)),
@@ -189,10 +190,10 @@ class LocalPlayer: NSObject, PlayerType {
             selector: #selector(LocalPlayer.failedToPlayToEnd(_:)),
             name: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime,
             object: p.currentItem)
-        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: NSKeyValueObservingOptions.initial, context: &LocalPlayer.playerStatusContext)
+        p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: .initial, context: &LocalPlayer.playerStatusContext)
         playerInfo = PlayerInfo(player: p, track: track)
         trackEvent.raise(track)
-        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: DispatchQueue.main) { (time) -> Void in
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: .main) { (time) -> Void in
             let secs = CMTimeGetSeconds(time)
             if let duration = secs.seconds {
                 self.timeEvent.raise(duration)
