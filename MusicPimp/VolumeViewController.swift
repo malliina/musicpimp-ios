@@ -41,7 +41,7 @@ class VolumeViewController: PimpViewController {
         addSubviews(views: [lowVolumeButton, volumeSlider, highVolumeButton])
         installFaImage("fa-volume-down", button: lowVolumeButton)
         lowVolumeButton.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().offset(8)
+            make.leadingMargin.equalToSuperview()
             make.centerY.equalToSuperview()
         }
         volumeSlider.addTarget(self, action: .volumeChanged, for: .valueChanged)
@@ -52,7 +52,7 @@ class VolumeViewController: PimpViewController {
         }
         installFaImage("fa-volume-up", button: highVolumeButton)
         highVolumeButton.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().inset(8)
+            make.trailingMargin.equalToSuperview()
             make.centerY.equalToSuperview()
         }
     }

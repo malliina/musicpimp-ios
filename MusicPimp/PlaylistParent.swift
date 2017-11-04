@@ -30,7 +30,7 @@ class PlaylistParent: ContainerParent {
         addSubviews(views: [scopeSegment])
         scopeSegment.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.leadingMargin.trailingMargin.equalToSuperview()
         }
         initChild(table)
         table.view.snp.makeConstraints { make in

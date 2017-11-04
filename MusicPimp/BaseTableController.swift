@@ -15,6 +15,14 @@ class BaseTableController: UITableViewController {
     let limiter = Limiter.sharedInstance
     var currentFeedback: String? = nil
     
+    init() {
+        super.init(style: UITableViewStyle.plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // The background color when there are no more rows

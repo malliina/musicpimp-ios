@@ -48,24 +48,18 @@ class SnapPlaybackFooter: BaseView {
         nextButton.addHandler(target: self, selector: .nextClicked)
         
         prevButton.snp.makeConstraints { make in
-            make.leading.equalTo(self.snp.leading)
-            make.top.equalTo(self.snp.top)
-            make.bottom.equalTo(self.snp.bottom)
+            make.leading.top.bottom.equalToSuperview()
         }
         
         playPauseButton.snp.makeConstraints { make in
             make.leading.equalTo(prevButton.snp.trailing)
-            make.width.equalTo(prevButton.snp.width)
-            make.top.equalTo(prevButton.snp.top)
-            make.bottom.equalTo(prevButton.snp.bottom)
+            make.top.bottom.width.equalTo(prevButton)
         }
         
         nextButton.snp.makeConstraints { make in
             make.leading.equalTo(playPauseButton.snp.trailing)
             make.trailing.equalTo(self.snp.trailing)
-            make.width.equalTo(playPauseButton.snp.width)
-            make.top.equalTo(playPauseButton.snp.top)
-            make.bottom.equalTo(playPauseButton.snp.bottom)
+            make.top.bottom.width.equalTo(playPauseButton)
         }
     }
     

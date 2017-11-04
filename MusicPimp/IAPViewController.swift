@@ -44,22 +44,22 @@ class IAPViewController: PimpViewController {
     func initUI() {
         addSubviews(views: [statusLabel, purchaseButton, alreadyPurchasedLabel, restoreButton])
         statusLabel.snp.makeConstraints { make in
-            make.top.greaterThanOrEqualTo(self.view.snp.topMargin).offset(16)
-            make.leading.trailing.centerX.equalToSuperview()
+            make.topMargin.greaterThanOrEqualToSuperview().offset(16)
+            make.leadingMargin.trailingMargin.equalToSuperview()
         }
         purchaseButton.snp.makeConstraints { make in
             make.top.equalTo(statusLabel.snp.bottom).offset(32)
-            make.leading.trailing.equalToSuperview()
+            make.leadingMargin.trailingMargin.equalToSuperview()
             make.centerY.equalToSuperview().priority(600)
         }
         alreadyPurchasedLabel.snp.makeConstraints { make in
             make.top.greaterThanOrEqualTo(purchaseButton.snp.bottom).offset(32)
-            make.leading.trailing.centerX.equalToSuperview()
+            make.leadingMargin.trailingMargin.centerX.equalToSuperview()
         }
         restoreButton.snp.makeConstraints { make in
             make.top.equalTo(alreadyPurchasedLabel.snp.bottom).offset(32)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-16)
+            make.leadingMargin.trailingMargin.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-16)
         }
     }
     

@@ -53,11 +53,11 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
         nameLabel.text = "Playlist Name"
         nameLabel.textColor = PimpColors.titles
         nameLabel.snp.makeConstraints { (make) in
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.leadingMargin.trailingMargin.equalToSuperview()
             make.bottom.equalTo(nameText.snp.top).offset(-8)
         }
         nameText.snp.makeConstraints { (make) in
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.leadingMargin.trailingMargin.equalToSuperview()
             make.centerY.equalToSuperview()
         }
     }

@@ -43,7 +43,7 @@ class MutableAlarm {
         self.init(id: nil, track: nil, when: MutableAlarmTime(), enabled: true)
     }
     
-    convenience init(a: Alarm) {
+    convenience init(_ a: Alarm) {
         self.init(id: a.id, track: a.track, when: MutableAlarmTime(at: a.when), enabled: a.enabled)
     }
     

@@ -118,8 +118,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         coverContainer.snp.makeConstraints { make in
             make.top.equalTo(self.view.snp.topMargin).offset(8)
             make.bottom.equalTo(titleLabel.snp.top).offset(-16)
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
+            make.leadingMargin.trailingMargin.equalToSuperview()
         }
         coverContainer.addSubview(coverImage)
         coverImage.image = CoverService.defaultCover

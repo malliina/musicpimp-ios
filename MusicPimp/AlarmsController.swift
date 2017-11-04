@@ -87,9 +87,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     @objc func onAddNew(_ sender: UIBarButtonItem) {
         if let endpoint = endpoint {
-            let dest = EditAlarmTableViewController()
-            dest.delegate = self
-            dest.initNewAlarm(endpoint)
+            let dest = EditAlarmTableViewController(endpoint: endpoint, delegate: self)
             self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
         }
     }
@@ -311,15 +309,12 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         let row = indexPath.row
         switch indexPath.section {
         case endpointSection:
-            let dest = AlarmEndpointController()
-            dest.delegate = self
+            let dest = AlarmEndpointController(d: self)
             navigationController?.pushViewController(dest, animated: true)
             break
         case alarmsSection:
             if let alarm = alarms.get(row), let endpoint = endpoint {
-                let dest = EditAlarmTableViewController()
-                dest.initEditAlarm(alarm, endpoint: endpoint)
-                dest.delegate = self
+                let dest = EditAlarmTableViewController(editable: alarm, endpoint: endpoint, delegate: self)
                 navigationController?.pushViewController(dest, animated: true)
             } else {
                 log.error("No alarm or endpoint")
@@ -348,7 +343,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     func onAlarmOnOffToggled(_ alarm: Alarm, uiSwitch: UISwitch) {
         let isEnabled = uiSwitch.isOn
         log.info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
-        let mutable = MutableAlarm(a: alarm)
+        let mutable = MutableAlarm(alarm)
         mutable.enabled = isEnabled
         if let updated = mutable.toImmutable() {
             saveAndReload(updated)

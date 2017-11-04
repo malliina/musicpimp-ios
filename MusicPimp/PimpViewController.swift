@@ -27,8 +27,7 @@ class PimpViewController: UIViewController {
     func baseConstraints(views: [UIView]) {
         views.forEach { target in
             target.snp.makeConstraints { make in
-                make.leading.equalTo(self.view.snp.leadingMargin)
-                make.trailing.equalTo(self.view.snp.trailingMargin)
+                make.leadingMargin.trailingMargin.equalToSuperview()
             }
         }
     }

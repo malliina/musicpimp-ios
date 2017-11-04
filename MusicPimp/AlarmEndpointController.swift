@@ -19,6 +19,15 @@ class AlarmEndpointController: BaseTableController {
     var selectedId: String? = nil
     var delegate: AlarmEndpointDelegate? = nil
     
+    init(d: AlarmEndpointDelegate) {
+        super.init()
+        self.delegate = d
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView!.register(PimpCell.self, forCellReuseIdentifier: endpointIdentifier)

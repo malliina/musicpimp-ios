@@ -29,11 +29,28 @@ class EditAlarmTableViewController: BaseTableController {
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }
     
-    var mutableAlarm: MutableAlarm? = nil
-    var endpoint: Endpoint? = nil
-    var delegate: EditAlarmDelegate? = nil
+    private var mutableAlarm: MutableAlarm? = nil
+    private var endpoint: Endpoint? = nil
+    private var delegate: EditAlarmDelegate? = nil
     
     let datePicker = UIDatePicker()
+    
+    init(editable: Alarm, endpoint: Endpoint, delegate: EditAlarmDelegate) {
+        super.init()
+        self.mutableAlarm = MutableAlarm(editable)
+        self.endpoint = endpoint
+        self.delegate = delegate
+    }
+    
+    init(endpoint: Endpoint, delegate: EditAlarmDelegate) {
+        super.init()
+        self.endpoint = endpoint
+        self.delegate = delegate
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +100,7 @@ class EditAlarmTableViewController: BaseTableController {
     }
 
     func initEditAlarm(_ alarm: Alarm, endpoint: Endpoint) {
-        self.mutableAlarm = MutableAlarm(a: alarm)
+        self.mutableAlarm = MutableAlarm(alarm)
         self.endpoint = endpoint
     }
     

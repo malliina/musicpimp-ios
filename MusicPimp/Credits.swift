@@ -24,17 +24,13 @@ class Credits: PimpViewController {
         addSubviews(views: [developedLabel, designedLabel])
         
         developedLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-16)
+            make.leadingMargin.trailingMargin.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-70)
         }
         
         designedLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.snp.leadingMargin)
-            make.trailing.equalTo(self.view.snp.trailingMargin)
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(self.view.snp.bottomMargin).offset(-16)
+            make.leadingMargin.trailingMargin.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(16)
         }
     }
 }

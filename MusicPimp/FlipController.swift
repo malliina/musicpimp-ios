@@ -35,7 +35,7 @@ class FlipController: ContainerParent {
         addSubviews(views: [scope])
         scope.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.leadingMargin.trailingMargin.equalToSuperview()
             make.height.equalTo(32)
         }
         left = buildFirst()
