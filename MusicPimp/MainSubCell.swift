@@ -19,13 +19,15 @@ class MainSubCell: SnapCell {
         contentView.addSubview(main)
         main.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
-            make.leadingMargin.trailingMargin.equalTo(contentView)
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
         }
         
         contentView.addSubview(sub)
         sub.snp.makeConstraints { make in
             make.top.equalTo(main.snp.bottom).offset(8)
-            make.leadingMargin.trailingMargin.equalTo(contentView)
+            make.leading.equalTo(contentView.snp.leadingMargin)
+            make.trailing.equalTo(contentView.snp.trailingMargin)
             make.bottom.equalToSuperview().inset(12)
         }
     }

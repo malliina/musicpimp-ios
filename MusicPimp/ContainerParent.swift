@@ -10,12 +10,20 @@ import Foundation
 import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
-    static var isIpad: Bool { get { return UIScreen.main.traitCollection.horizontalSizeClass == .regular && UIScreen.main.traitCollection.verticalSizeClass == .regular } }
+    private let log = LoggerFactory.vc("ContainerParent")
+    static var isIpad: Bool {
+        get {
+            let traits = UIScreen.main.traitCollection
+            return traits.horizontalSizeClass == .regular && traits.verticalSizeClass == .regular
+        }
+    }
     static var defaultFooterHeight: CGFloat { return ContainerParent.isIpad ? 66 : 44 }
     let playbackFooterHeightValue: CGFloat
     
     let playbackFooter = SnapPlaybackFooter()
     var currentFooterHeight: CGFloat { get { return 0 } }
+    private var initialFooterConstraint: Constraint? = nil
+    private var playingFooterConstraint: Constraint? = nil
     
     var preferredPlaybackFooterHeight: CGFloat {
         get {
@@ -64,7 +72,6 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         view.addSubview(playbackFooter)
         playbackFooter.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            // hidden by default
             make.height.equalTo(currentFooterHeight)
             currentHeight = currentFooterHeight
         }
@@ -79,17 +86,27 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     }
     
     func updateFooter(state: PlaybackState, animated: Bool) {
-        let isVisible = state == .Playing
         Util.onUiThread {
-            self.view.setNeedsUpdateConstraints()
-            self.playbackFooter.updatePlayPause(isPlaying: isVisible)
-            // transitions the footer between visible and hidden states depending on whether music is playing
+            // Uses delays so that the footer does not flicker between transient track changes
+            let buttonDelay: Double = animated ? 0.1 : 0
+            DispatchQueue.main.asyncAfter(deadline: .now() + buttonDelay) {
+                self.playbackFooter.updatePlayPause(isPlaying: self.player.current().state == .Playing)
+            }
+            let footerDelay: Double = animated ? 1.0 : 0
             if animated {
-                // delays hiding so that it does not flicker between changing tracks, instead remains visible throughout
-                let delay: TimeInterval = isVisible ? 0 : 2
-                UIView.animate(withDuration: 0.25, delay: delay, options: .curveEaseInOut, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + footerDelay) {
+                    let isPermanent = state == self.player.current().state
+                    if isPermanent {
+                        self.view.setNeedsUpdateConstraints()
+                        if animated {
+                            UIView.animate(withDuration: 0.25) {
+                                self.view.layoutIfNeeded()
+                            }
+                        }
+                    }
+                }
+            } else {
+                self.view.setNeedsUpdateConstraints()
             }
         }
     }
