@@ -13,6 +13,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
     let minItemsRemainingBeforeLoadMore = 20
+    var loadingMessage: String { get { return "Loading..." } }
     var emptyMessage: String { get { return "No tracks." } }
     var failedToLoadMessage: String { get { return "Failed to load tracks."} }
     var header: String { return "Top Tracks" }
@@ -23,6 +24,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     // Unless this is used, the infinite scroll does not maintain proper scroll position when adding items to the bottom
     let cellHeight: CGFloat = MainSubCell.height
     let listener = LibraryListener()
+    var hasLoaded = false
     
     private var reloadOnDidAppear = true
     
@@ -117,6 +119,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
     
     func onTopLoaded(_ results: [T]) {
+        hasLoaded = true
         entries = results
         reRenderTable()
     }
@@ -142,7 +145,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
         if oldSize == from {
             return src + newContent
         } else {
-            log.info("Not appending because of list size mismatch. Was: \(oldSize), expected \(from)")
+            log.warn("Not appending because of list size mismatch. Was: \(oldSize), expected \(from)")
             return src
         }
     }
@@ -158,6 +161,6 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
     
     func reRenderTable() {
-        renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
+        renderTable(self.tracks.count == 0 ? (hasLoaded ? self.emptyMessage : self.loadingMessage) : nil)
     }
 }
