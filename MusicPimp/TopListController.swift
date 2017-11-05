@@ -31,7 +31,6 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = cellHeight
-        self.tableView?.register(SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
         refresh()
         listener.delegate = self
         listener.subscribe()
@@ -55,10 +54,16 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.row
-        let cell: SnapMainSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
-        decorate(cell: cell, track: entries[index])
-        cell.accessoryDelegate = self
+        let cell = cellFor(track: entries[index], indexPath: indexPath)
+        //let cell: MainTwoSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
+        //log.info("cellForRowAt \(index)")
+        // decorate(cell: cell, track: entries[index])
+        // cell.accessoryDelegate = self
         return cell
+    }
+    
+    func cellFor(track: T, indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -104,18 +109,17 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
         refresh()
     }
     
-    // Override to populate cell
-    func decorate(cell: SnapMainSubCell, track: T) {}
-    
     // Override this to load and render data
     func refresh() {}
     
     // Override to load more for infinite scroll
     func loadMore() { }
     
-    func decorateTwoLines(_ cell: SnapMainSubCell, first: String, second: String) {
-        cell.main.text = first
-        cell.sub.text = second
+    func decorateTwoLines(_ cell: ThreeLabelCell, main: String, subLeft: String, subRight: String) {
+        cell.main.text = main
+        cell.subLeft.text = subLeft
+        cell.subRight.text = subRight
+//        log.info("main: \(cell.main.textColor) sub: \(cell.sub.textColor), desired sub: \(PimpColors.subtitles) main size: \(cell.main.font.pointSize), sub size: \(cell.sub.font.pointSize), sys size: \(UIFont.labelFontSize)")
     }
     
     func onTopLoaded(_ results: [T]) {

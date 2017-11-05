@@ -9,12 +9,21 @@
 import Foundation
 
 class MostPopularList: TopListController<PopularEntry> {
+    let MostPopularCellKey = "MostPopularCell"
     override var header: String { return "Most Popular" }
     override var emptyMessage: String { get { return "No popular tracks." } }
     override var failedToLoadMessage: String { return "Failed to load popular tracks." }
     
-    override func decorate(cell: SnapMainSubCell, track: PopularEntry) {
-        decorateTwoLines(cell, first: track.track.title, second: "\(track.playbackCount) plays")
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView?.register(MostPopularCell.self, forCellReuseIdentifier: MostPopularCellKey)
+    }
+    
+    override func cellFor(track: PopularEntry, indexPath: IndexPath) -> UITableViewCell {
+        let cell: MostPopularCell = loadCell(MostPopularCellKey, index: indexPath)
+        decorateTwoLines(cell, main: track.track.title, subLeft: track.track.artist, subRight: "\(track.playbackCount) plays")
+        cell.accessoryDelegate = self
+        return cell
     }
     
     override func refresh() {

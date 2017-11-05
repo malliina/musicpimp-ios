@@ -12,18 +12,18 @@ class PimpLabel: UILabel {
     static let headerTopMargin: CGFloat = 16
     
     static func footerLabel(_ text: String) -> UILabel {
-        let label = create()
+        let label = create(fontSize: 16)
         label.text = text
-        label.font = label.font.withSize(16)
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
         label.sizeToFit()
         return label
     }
     
-    static func create() -> UILabel {
+    static func create(textColor: UIColor = PimpColors.titles, fontSize: CGFloat = UIFont.labelFontSize) -> UILabel {
         let label = UILabel()
-        label.textColor = PimpColors.titles
+        label.textColor = textColor
+        label.font = label.font.withSize(fontSize)
         return label
     }
     

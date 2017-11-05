@@ -15,6 +15,7 @@ protocol AccessoryDelegate {
 class CustomAccessoryCell: PimpCell {
     let log = LoggerFactory.view("CustomAccessoryCell")
     static let defaultCellHeight: CGFloat = 44
+    let accessoryWidth: CGFloat = 44
     
     static let accessoryImageSize = CGSize(width: 16, height: 16)
     static let accessoryImage: UIImage? = UIImage(named: "more_filled_grey-100.png")?
@@ -41,13 +42,13 @@ class CustomAccessoryCell: PimpCell {
     
     private func createTrackAccessory(height: CGFloat) -> UIButton? {
         if let image = CustomAccessoryCell.accessoryImage {
-            let accessoryWidth: CGFloat = CustomAccessoryCell.defaultCellHeight
             let button = UIButton(type: .custom)
             let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
             button.frame = frame
             button.setImage(image, for: UIControlState())
             button.contentMode = UIViewContentMode.scaleAspectFit
             button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
+            button.contentEdgeInsets = .zero
             return button
         }
         return nil
