@@ -80,12 +80,12 @@ class BaseTableController: UITableViewController {
     
     func setFeedback(_ feedback: String) {
         currentFeedback = feedback
-        configureTable(background: self.feedbackLabel(feedback), separatorStyle: UITableViewCellSeparatorStyle.none)
+        configureTable(background: self.feedbackLabel(feedback), separatorStyle: .none)
     }
     
     func clearFeedback() {
         currentFeedback = nil
-        configureTable(background: nil, separatorStyle: UITableViewCellSeparatorStyle.singleLine)
+        configureTable(background: nil, separatorStyle: .singleLine)
     }
     
     func configureTable(background: UIView?, separatorStyle: UITableViewCellSeparatorStyle) {

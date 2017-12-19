@@ -431,6 +431,7 @@
 				7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */,
 				7D4FF8DC1B40412200C2D634 /* CoverService.swift */,
 				7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */,
+				7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */,
 				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
 				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
 			);
@@ -659,7 +660,6 @@
 				7D78C2901AF3B73D001F0A65 /* Event.swift */,
 				7D6756B41AFD4D8A00BC0CA9 /* FilePersistence.swift */,
 				7D4FF8E01B41AC8700C2D634 /* Files */,
-				7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */,
 				7DB430DB1C417D7D00CF22DC /* Iap */,
 				7DC206AF1A1547370032C01D /* Images.xcassets */,
 				7D6756BE1B012B9600BC0CA9 /* Json.swift */,

@@ -63,10 +63,7 @@ class HttpClient {
     
     func executeRequest(
         _ req: URLRequest,
-        //f: (URLRequest) -> Void,
         completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-        //let req = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 5)
-        //f(req)
         let session = URLSession.shared
         let task = session.dataTask(with: req, completionHandler: completionHandler)
         task.resume()
