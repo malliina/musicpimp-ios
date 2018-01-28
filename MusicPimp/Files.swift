@@ -10,9 +10,11 @@ import Foundation
 
 class Path {
     let url: URL
+    
     init(url: URL) {
         self.url = url
     }
+    
     var isDirectory: Bool { return url.isDirectory }
     var isFile: Bool { return url.isFile }
     var name: String { return url.name }
