@@ -11,6 +11,9 @@ import AudioToolbox
 import AVFoundation
 import MediaPlayer
 import StoreKit
+import AppCenter
+import AppCenterAnalytics
+import AppCenterCrashes
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,6 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        MSAppCenter.start("bfa6d43e-d1f3-42e2-823a-920a16965470", withServices: [
+            MSAnalytics.self,
+            MSCrashes.self
+        ])
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = PimpTabBarController()

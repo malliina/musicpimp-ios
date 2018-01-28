@@ -1,15 +1,25 @@
 PODS:
+  - AppCenter (1.2.0):
+    - AppCenter/Analytics (= 1.2.0)
+    - AppCenter/Crashes (= 1.2.0)
+  - AppCenter/Analytics (1.2.0):
+    - AppCenter/Core
+  - AppCenter/Core (1.2.0)
+  - AppCenter/Crashes (1.2.0):
+    - AppCenter/Core
   - SnapKit (4.0.0)
   - SocketRocket (0.5.1)
 
 DEPENDENCIES:
+  - AppCenter (= 1.2.0)
   - SnapKit (= 4.0.0)
   - SocketRocket (= 0.5.1)
 
 SPEC CHECKSUMS:
+  AppCenter: d0b68b2a7a87ac0aed78e66f36d87fd321d0a29c
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: a4848ef80737d01e0b79fbedc37460cfe57c50ce
+PODFILE CHECKSUM: b5fed2035eaa890175f4e9f6f73374b293713003
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0
