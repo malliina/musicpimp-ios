@@ -50,16 +50,24 @@ open class PimpNotifications {
     
     func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
         log.info("Handling notification")
-        if let tag = data["tag"] as? String,
-            let cmd = data["cmd"] as? String,
-            let endpoint = settings.endpoints().find({ $0.id == tag }) {
+        do {
+            let tag: String = try Json.readMapOrFail(data, "tag")
+            let cmd: String = try Json.readMapOrFail(data, "cmd")
+            guard let endpoint = settings.endpoints().find({ $0.id == tag }) else { throw JsonError.invalid("tag", tag) }
             if cmd == "stop" {
+                log.info("Stopping alarm playback...")
                 let library = Libraries.fromEndpoint(endpoint)
                 library.stopAlarm(onAlarmError) {
                     self.log.info("Stopped alarm playback")
                 }
                 app.applicationIconBadgeNumber = 0
+            } else {
+                log.error("Unknown command in notification: '\(cmd)'.")
             }
+        } catch let json as JsonError {
+            log.error("Failed to validate notification payload. \(json.message)")
+        } catch _ {
+            log.error("Failed to handle notification, unknown error")
         }
     }
     

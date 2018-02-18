@@ -36,8 +36,7 @@ class PimpEndpoint: PimpUtils {
     }
     
     func onError(_ error: PimpError) {
-        let str = PimpErrorUtil.stringify(error)
-        log.info("Player error: \(str)")
+        log.info("Player error: \(error.message)")
     }
     
     static func simpleCommand(_ cmd: String) -> [String: String] {

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+// Move these closer to the metal
 class JsonKeys {
     static let
     TITLE = "title",

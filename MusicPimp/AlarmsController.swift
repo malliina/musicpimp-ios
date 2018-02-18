@@ -145,7 +145,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func onRegisterError(error: PimpError, endpoint: Endpoint) {
-        log.error(PimpError.stringify(error))
+        log.error(error.message)
     }
     
     func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
@@ -200,8 +200,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func onAlarmError(_ error: PimpError) {
-        let message = PimpError.stringify(error)
-        feedbackMessage = message
+        feedbackMessage = error.message
         renderTable()
     }
     

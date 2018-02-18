@@ -56,4 +56,17 @@ open class Json {
             }
         }
     }
+    
+    static func readMapOrFail<T>(_ obj: [AnyHashable: Any], _ key: String) throws -> T {
+        let raw = obj[key]
+        if let t = raw as? T {
+            return t
+        } else {
+            if let any = raw {
+                throw JsonError.invalid(key, any)
+            } else {
+                throw JsonError.missing(key)
+            }
+        }
+    }
 }

@@ -57,7 +57,7 @@ class CoverService {
     }
     
     fileprivate func onError(_ msg: PimpError) -> Void {
-        log.error(PimpError.stringify(msg))
+        log.error(msg.message)
     }
     
     fileprivate func coverURL(_ artist: String, album: String) -> URL? {

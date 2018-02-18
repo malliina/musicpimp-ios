@@ -27,8 +27,7 @@ class Downloader {
             relativePath: relativePath,
             replace: replace,
             onError: { (err: PimpError) -> Void in
-                let msg = PimpErrorUtil.stringify(err)
-                self.log.error(msg)
+                self.log.error(err.message)
             },
             onSuccess: { (destPath: String) -> Void in
             }
@@ -56,7 +55,7 @@ class Downloader {
                                 } catch _ {
                                     dirSuccess = false
                                 }
-                                if(dirSuccess) {
+                                if dirSuccess {
                                     let fileSuccess = (try? data.write(to: URL(fileURLWithPath: destPath), options: [.atomic])) != nil
                                     if fileSuccess {
                                         //let size = Files.sharedInstance.fileSize(destPath) crashes

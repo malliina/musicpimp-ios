@@ -14,27 +14,16 @@ enum PimpError {
     case networkFailure(RequestFailure)
     case simpleError(ErrorMessage)
     
-    static func stringify(_ error: PimpError) -> String {
-        return PimpErrorUtil.stringify(error)
-    }
+    var message: String { return PimpError.stringify(error: self) }
     
     static func simple(_ message: String) -> PimpError {
         return PimpError.simpleError(ErrorMessage(message: message))
     }
-}
-
-class PimpErrorUtil {
-    static func stringify(_ error: PimpError) -> String {
+    
+    static func stringify(error: PimpError) -> String {
         switch error {
         case .parseError(let json):
-            switch json {
-            case .missing(let key):
-                return "Key not found: '\(key)'."
-            case .invalid(let key, let actual):
-                return "Invalid '\(key)' value: '\(actual)'."
-            case .notJson( _):
-                return "Invalid response format. Expected JSON."
-            }
+            return JsonError.stringify(json: json)
         case .responseFailure(let details):
             let code = details.code
             switch code {
@@ -57,13 +46,15 @@ class PimpErrorUtil {
             return message.message
         }
     }
-    
+}
+
+class PimpErrorUtil {
     static func stringifyDetailed(_ error: PimpError) -> String {
         switch error {
         case .networkFailure(let request):
             return "Unable to connect to \(request.url.description), status code \(request.code)."
         default:
-            return stringify(error)
+            return error.message
         }
     }
 }

@@ -53,8 +53,7 @@ class SearchResultsController: BaseMusicController {
     }
     
     func onSearchFailure(_ term: String, error: PimpError) {
-        let message = PimpErrorUtil.stringify(error)
-        log.info("Search for \(term) failed. \(message)")
+        log.info("Search for \(term) failed. \(error.message)")
         if term == latestSearchTerm {
             self.renderTable("Search of \(term) failed")
         }
