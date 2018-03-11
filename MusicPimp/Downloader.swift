@@ -16,6 +16,7 @@ class Downloader {
     let fileManager = FileManager.default
     let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] 
     let basePath: String
+    let session = URLSession.shared
     
     init(basePath: String) {
         self.basePath = basePath
@@ -39,8 +40,7 @@ class Downloader {
         if replace || !Files.exists(destPath) {
             log.info("Downloading \(url)")
             let request = URLRequest(url: url)
-            let session = URLSession.shared
-            session.dataTask(with: request) { (data, response, err) in
+            let task = session.dataTask(with: request) { (data, response, err) in
                 if let err = err {
                     onError(self.simpleError("Error \(err)"))
                 } else {
@@ -67,14 +67,18 @@ class Downloader {
                                 } else {
                                     onError(self.simpleError("Unable to create directory: \(dir)"))
                                 }
-                                
+                            } else {
+                                onError(self.simpleError("No data in response."))
                             }
                         } else {
                             onError(.responseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))
                         }
+                    } else {
+                        onError(self.simpleError("Unknown response."))
                     }
                 }
             }
+            task.resume()
         } else {
             onSuccess(destPath)
             log.info("Already exists, not downloading \(relativePath)")

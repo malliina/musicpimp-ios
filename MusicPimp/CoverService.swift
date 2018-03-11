@@ -48,8 +48,12 @@ class CoverService {
             downloader.download(
                 url,
                 relativePath: relativeCoverFilePath,
-                onError: { (err) -> () in f(CoverResult.noCover(artist, album: album)) },
-                onSuccess: { (path) -> () in f(CoverResult(artist: artist, album: album, coverPath: path)) }
+                onError: { (err) -> () in
+                    f(CoverResult.noCover(artist, album: album))
+                },
+                onSuccess: { (path) -> () in
+                    f(CoverResult(artist: artist, album: album, coverPath: path))
+                }
             )
         } else {
             f(CoverResult.noCover(artist, album: album))
