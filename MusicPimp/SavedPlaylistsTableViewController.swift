@@ -35,9 +35,11 @@ class SavedPlaylistsTableViewController: PimpTableController {
     }
     
     func onPlaylists(_ sps: [SavedPlaylist]) {
-        playlists = sps
-        let feedback: String? = sps.isEmpty ? emptyMessage : nil
-        renderTable(feedback)
+        onUiThread {
+            self.playlists = sps
+            let feedback: String? = sps.isEmpty ? self.emptyMessage : nil
+            self.reloadTable(feedback: feedback)
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,8 +72,10 @@ class SavedPlaylistsTableViewController: PimpTableController {
         if let id = playlist.id {
             library.deletePlaylist(id, onError: onError) {
                 self.log.info("Deleted playlist with ID \(id)")
-                self.playlists.remove(at: index)
-                self.renderTable()
+                self.onUiThread {
+                    self.playlists.remove(at: index)
+                    self.reloadTable(feedback: nil)
+                }
             }
         }
     }

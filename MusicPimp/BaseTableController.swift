@@ -64,14 +64,18 @@ class BaseTableController: UITableViewController {
     
     func renderTable(_ feedback: String?, _ afterData: @escaping () -> Void) {
         onUiThread {
-            if let feedback = feedback {
-                self.setFeedback(feedback)
-            } else {
-                self.clearFeedback()
-            }
-            self.tableView.reloadData()
+            self.reloadTable(feedback: feedback)
             afterData()
         }
+    }
+    
+    func reloadTable(feedback: String?) {
+        if let feedback = feedback {
+            self.setFeedback(feedback)
+        } else {
+            self.clearFeedback()
+        }
+        self.tableView.reloadData()
     }
     
     func onUiThread(_ code: @escaping () -> Void) {

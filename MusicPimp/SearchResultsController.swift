@@ -30,32 +30,31 @@ class SearchResultsController: BaseMusicController {
     }
     
     func search(_ term: String) {
-        results = []
         let characters = term.count
         if characters >= 2 {
             latestSearchTerm = term
-            let message = "Searching for \(term)..."
-//            info(message)
-            self.renderTable(message)
+            withMessage("Searching for \(term)...") {
+                self.results = []
+            }
             library.search(term, onError: { self.onSearchFailure(term, error: $0) }) { (results) -> Void in
-//                Log.info("Got \(results.count) results for \(term)")
                 // only updates the UI if the response represents the latest search
                 if self.latestSearchTerm == term {
-                    let message: String? = results.isEmpty ? "No results for \(term)" : nil
-                    self.results = results
-                    self.renderTable(message)
+                    self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
+                        self.results = results
+                    }
                 }
             }
         } else {
-            let message = characters == 1 ? "Input one more character..." : "Input two or more characters"
-            self.renderTable(message)
+            withMessage(characters == 1 ? "Input one more character..." : "Input two or more characters") {
+                self.results = []
+            }
         }
     }
     
     func onSearchFailure(_ term: String, error: PimpError) {
         log.info("Search for \(term) failed. \(error.message)")
         if term == latestSearchTerm {
-            self.renderTable("Search of \(term) failed")
+            self.withMessage("Search of \(term) failed") { }
         }
     }
 }

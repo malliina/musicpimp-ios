@@ -78,7 +78,7 @@ class EditAlarmTableViewController: BaseTableController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        renderTable()
+        reloadTable(feedback: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

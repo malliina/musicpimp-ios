@@ -12,8 +12,8 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     private let log = LoggerFactory.vc("PlayQueueController")
     let defaultCellKey = "PimpMusicItemCell"
     
-    var current: Playlist = Playlist.empty
-    var tracks: [Track] { get { return current.tracks } }
+    private var current: Playlist = Playlist.empty
+    private var tracks: [Track] { get { return current.tracks } }
     var emptyMessage: String { get { return "The playlist is empty." } }
     override var musicItems: [MusicItem] { return tracks }
     let listener = PlaybackListener()
@@ -24,8 +24,9 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
-        listener.playlists = self
         initNavbar()
+        
+        listener.playlists = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,6 +48,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
         let index = indexPath.row
         let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
         cell.accessoryDelegate = self
+        // crash w/ index out of range - I think this is now fixed
         let track = tracks[index]
         cell.title.text = track.title
         paintTrackCell(cell: cell, track: track, isHighlight: index == current.index, downloadState: DownloadUpdater.instance.progressFor(track: track))
@@ -154,18 +156,26 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
         self.present(navController, animated: true, completion: nil)
     }
     
-    func onNewPlaylist(_ playlist: Playlist) {
-        self.current = playlist
-        reRenderTable()
-    }
-    
     func onIndexChanged(to index: Int?) {
-        self.current = Playlist(tracks: current.tracks, index: index)
-        renderTable()
+        onUiThread {
+            self.current = Playlist(tracks: self.current.tracks, index: index)
+            self.clearFeedback()
+            self.tableView.reloadData()
+        }
     }
     
-    func reRenderTable() {
-        renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
+    func onNewPlaylist(_ playlist: Playlist) {
+        onUiThread {
+            self.current = playlist
+            self.reloadTable(feedback: self.tracks.count == 0 ? self.emptyMessage : nil)
+        }
+    }
+    
+    func withReload(_ code: @escaping () -> Void) {
+        onUiThread {
+            code()
+            self.reloadTable(feedback: self.tracks.count == 0 ? self.emptyMessage : nil)
+        }
     }
     
     @objc func dragClicked(_ dragButton: UIBarButtonItem) {

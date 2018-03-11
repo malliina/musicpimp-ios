@@ -55,7 +55,6 @@ class PimpTableController: FeedbackTable {
     
     fileprivate func addTracks2(_ tracks: [Track]) -> [ErrorMessage] {
         if !tracks.isEmpty {
-            log.info("Adding \(tracks.count) tracks")
             let errors = player.playlist.add(tracks)
             if errors.isEmpty {
                 return downloadIfNeeded(tracks)

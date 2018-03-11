@@ -38,7 +38,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         super.viewWillAppear(animated)
         endpoints = settings.endpoints()
         updateSelected(loadActive())
-        renderTable()
+        reloadTable(feedback: nil)
     }
     
     func endpointUpdated(_ endpoint: Endpoint) {

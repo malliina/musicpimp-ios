@@ -46,7 +46,7 @@ class PimpSocket: PlayerSocket {
     
     override func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         if let message = message as? String {
-            //Log.info("Got message \(message)")
+//            log.info("Got message \(message)")
             if let dict = Json.asJson(message) as? NSDictionary {
                 if let event = dict[JsonKeys.EVENT] as? String {
                     switch event {

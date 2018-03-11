@@ -54,7 +54,7 @@ class AlarmEndpointController: BaseTableController {
         let endpoint = endpoints[indexPath.row]
         selectedId = endpoint.id
         settings.saveDefaultNotificationsEndpoint(endpoint)
-        renderTable()
+        reloadTable(feedback: nil)
         delegate?.endpointChanged(newEndpoint: endpoint)
     }
 }

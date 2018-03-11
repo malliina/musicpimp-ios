@@ -26,6 +26,8 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     let listener = LibraryListener()
     var hasLoaded = false
     
+    var maybeFeedback: String? { return self.tracks.count == 0 ? (hasLoaded ? self.emptyMessage : self.loadingMessage) : nil }
+    
     private var reloadOnDidAppear = true
     
     override func viewDidLoad() {
@@ -43,7 +45,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if reloadOnDidAppear {
-            reRenderTable()
+            reloadTable(feedback: maybeFeedback)
         }
     }
     
@@ -55,10 +57,6 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.row
         let cell = cellFor(track: entries[index], indexPath: indexPath)
-        //let cell: MainTwoSubCell = loadCell(FeedbackTable.mainAndSubtitleCellKey, index: indexPath)
-        //log.info("cellForRowAt \(index)")
-        // decorate(cell: cell, track: entries[index])
-        // cell.accessoryDelegate = self
         return cell
     }
     
@@ -124,23 +122,24 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     
     func onTopLoaded(_ results: [T]) {
         hasLoaded = true
-        entries = results
-        reRenderTable()
+        withMessage(nil) {
+            self.entries = results
+        }
     }
     
     func onMoreResults(_ from: Int, results: [T]) {
-        entries = appendConditionally(entries, from: from, newContent: results)
-        onMore(from, newRows: results.count, expectedSize: entries.count)
+        onUiThread {
+            self.entries = self.appendConditionally(self.entries, from: from, newContent: results)
+            self.onMore(from, newRows: results.count, expectedSize: self.entries.count)
+        }
     }
     
-    func onMore(_ from: Int, newRows: Int, expectedSize: Int) {
+    private func onMore(_ from: Int, newRows: Int, expectedSize: Int) {
         let rows: [Int] = Array(from..<from+newRows)
         let indexPaths = rows.map { row in IndexPath(item: row, section: 0) }
-        onUiThread {
-            if (from+newRows) == expectedSize {
-                self.tableView.insertRows(at: indexPaths, with: .bottom)
-                self.log.info("Updated table with \(indexPaths.count) more items from \(from) to \(from+newRows-1)")
-            }
+        if (from+newRows) == expectedSize {
+            self.tableView.insertRows(at: indexPaths, with: .bottom)
+            self.log.info("Updated table with \(indexPaths.count) more items from \(from) to \(from+newRows-1)")
         }
     }
     
@@ -155,16 +154,9 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
     
     func onTopError(_ e: PimpError) {
-        entries = []
-        onLoadError(e, message: failedToLoadMessage)
-    }
-    
-    func onLoadError(_ e: PimpError, message: String) {
         onError(e)
-        renderTable(message)
-    }
-    
-    func reRenderTable() {
-        renderTable(self.tracks.count == 0 ? (hasLoaded ? self.emptyMessage : self.loadingMessage) : nil)
+        withMessage(failedToLoadMessage) {
+            self.entries = []
+        }
     }
 }

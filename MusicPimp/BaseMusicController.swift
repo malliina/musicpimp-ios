@@ -169,4 +169,22 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     func addTrack(_ track: Track) -> ErrorMessage? {
         return addTracks([track]).headOption()
     }
+    
+    func reload(_ emptyText: String) {
+        withReload(emptyText) { }
+    }
+    
+    func withReload(_ emptyText: String, _ code: @escaping () -> Void) {
+        onUiThread {
+            code()
+            self.reloadTable(feedback: self.musicItems.count == 0 ? emptyText : nil)
+        }
+    }
+    
+    func withMessage(_ message: String?, _ code: @escaping () -> Void) {
+        onUiThread {
+            code()
+            self.reloadTable(feedback: message)
+        }
+    }
 }

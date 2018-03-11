@@ -27,8 +27,9 @@ class MostPopularList: TopListController<PopularEntry> {
     }
     
     override func refresh() {
-        entries = []
-        renderTable("Loading popular tracks...")
+        withMessage("Loading popular tracks...") {
+            self.entries = []
+        }
         library.popular(0, until: itemsPerLoad, onError: onTopError, f: onTopLoaded)
     }
     

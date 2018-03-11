@@ -49,7 +49,7 @@ class PlaylistController: BaseMusicController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if reloadOnDidAppear {
-            reRenderTable()
+            self.reloadTable(feedback: self.tracks.isEmpty ? emptyMessage : nil)
         }
     }
     
@@ -110,12 +110,14 @@ class PlaylistController: BaseMusicController {
         mode = targetMode
         switch targetMode {
         case .popular:
-            popular = []
-            renderTable("Loading popular tracks...")
+            withMessage("Loading popular tracks...") {
+                self.popular = []
+            }
             library.popular(0, until: itemsPerLoad, onError: onPopularError, f: onPopularsLoaded)
         case .recent:
-            recent = []
-            renderTable("Loading recent tracks...")
+            withMessage("Loading recent tracks...") {
+                self.recent = []
+            }
             library.recent(0, until: itemsPerLoad, onError: onRecentError, f: onRecentsLoaded)
         }
     }
@@ -159,33 +161,39 @@ class PlaylistController: BaseMusicController {
     }
     
     func onRecentsLoaded(_ recents: [RecentEntry]) {
-        recent = recents
-        reRenderTable()
+        withReload(emptyMessage) {
+            self.recent = recents
+        }
     }
     
     func onPopularsLoaded(_ populars: [PopularEntry]) {
-        popular = populars
-        reRenderTable()
+        withReload(emptyMessage) {
+            self.popular = populars
+        }
     }
 
     func onMoreRecents(_ from: Int, recents: [RecentEntry]) {
-        recent = appendConditionally(recent, from: from, newContent: recents)
-        onMore(from, newRows: recents.count, expectedSize: recent.count, expectedMode: .recent)
+        onUiThread {
+            self.recent = self.appendConditionally(self.recent, from: from, newContent: recents)
+            self.onMore(from, newRows: recents.count, expectedSize: self.recent.count, expectedMode: .recent)
+        }
+        
     }
     
     func onMorePopulars(_ from: Int, populars: [PopularEntry]) {
-        popular = appendConditionally(popular, from: from, newContent: populars)
-        onMore(from, newRows: populars.count, expectedSize: popular.count, expectedMode: .popular)
+        onUiThread {
+            self.popular = self.appendConditionally(self.popular, from: from, newContent: populars)
+            self.onMore(from, newRows: populars.count, expectedSize: self.popular.count, expectedMode: .popular)
+        }
     }
     
-    func onMore(_ from: Int, newRows: Int, expectedSize: Int, expectedMode: ListMode) {
+    private func onMore(_ from: Int, newRows: Int, expectedSize: Int, expectedMode: ListMode) {
         let rows: [Int] = Array(from..<from+newRows)
         let indexPaths = rows.map { row in IndexPath(item: row, section: 0) }
-        onUiThread {
-            if self.mode == expectedMode && (from+newRows) == expectedSize {
-                self.tableView.insertRows(at: indexPaths, with: .bottom)
-                self.log.info("Updated table with \(indexPaths.count) more items")
-            }
+        
+        if self.mode == expectedMode && (from+newRows) == expectedSize {
+            self.tableView.insertRows(at: indexPaths, with: .bottom)
+            self.log.info("Updated table with \(indexPaths.count) more items")
         }
     }
     
@@ -201,21 +209,16 @@ class PlaylistController: BaseMusicController {
     }
     
     func onPopularError(_ e: PimpError) {
-        popular = []
-        onLoadError(e, message: "Failed to load popular tracks.")
+        onError(e)
+        withMessage("Failed to load popular tracks.") {
+            self.popular = []
+        }
     }
     
     func onRecentError(_ e: PimpError) {
-        recent = []
-        onLoadError(e, message: "Failed to load recent tracks.")
-    }
-    
-    func onLoadError(_ e: PimpError, message: String) {
         onError(e)
-        renderTable(message)
-    }
-
-    func reRenderTable() {
-        renderTable(self.tracks.count == 0 ? self.emptyMessage : nil)
+        withMessage("Failed to load recent tracks.") {
+            self.recent = []
+        }
     }
 }

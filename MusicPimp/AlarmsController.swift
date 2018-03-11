@@ -195,8 +195,10 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     func onAlarms(_ alarms: [Alarm]) {
         feedbackMessage = nil
-        self.alarms = alarms
-        renderTable()
+        onUiThread {
+            self.alarms = alarms
+            self.reloadTable(feedback: nil)
+        }
     }
     
     func onAlarmError(_ error: PimpError) {
