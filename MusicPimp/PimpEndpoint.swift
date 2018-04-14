@@ -82,7 +82,7 @@ class PimpEndpoint: PimpUtils {
         let mute: Bool = try Json.readOrFail(dict, JsonKeys.MUTE)
         let volume = try Json.readInt(dict, JsonKeys.VOLUME)
         let playlist: [NSDictionary] = try Json.readOrFail(dict, JsonKeys.PLAYLIST)
-        let tracks = try playlist.flatMap(parseTrack)
+        let tracks = try playlist.compactMap(parseTrack)
         let playlistIndex = try Json.readInt(dict, JsonKeys.INDEX)
         return PlayerState(track: track, state: state, position: position.seconds, volume: VolumeValue(volume: volume), mute: mute, playlist: tracks, playlistIndex: playlistIndex)
     }
