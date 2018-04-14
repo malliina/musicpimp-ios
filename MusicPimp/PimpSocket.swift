@@ -10,7 +10,7 @@ import Foundation
 import SocketRocket
 
 class PimpSocket: PlayerSocket {
-    private let log = LoggerFactory.pimp("Pimp.PimpSocket", category: "Pimp")
+    private let log = LoggerFactory.shared.pimp(PimpSocket.self)
     
     let limiter = Limiter.sharedInstance
     

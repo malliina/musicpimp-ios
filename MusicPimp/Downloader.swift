@@ -9,7 +9,7 @@
 import Foundation
 
 class Downloader {
-    let log = LoggerFactory.network("Downloader")
+    let log = LoggerFactory.shared.network(Downloader.self)
 
     typealias RelativePath = String
     

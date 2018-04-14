@@ -9,7 +9,8 @@
 import Foundation
 
 class Util {
-    static let log = LoggerFactory.pimp("Util", category: "Util")
+    static let log = LoggerFactory.shared.base("Util", category: Util.self)
+    
     fileprivate static var GlobalMainQueue: DispatchQueue {
         return DispatchQueue.main
     }

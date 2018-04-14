@@ -10,7 +10,7 @@ import Foundation
 import SnapKit
 
 class ContainerParent: ListeningController, PlaybackDelegate {
-    private let log = LoggerFactory.vc("ContainerParent")
+    private let log = LoggerFactory.shared.vc(ContainerParent.self)
     static var isIpad: Bool {
         get {
             let traits = UIScreen.main.traitCollection

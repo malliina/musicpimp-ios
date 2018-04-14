@@ -9,7 +9,7 @@
 import Foundation
 
 class BaseMusicController : PimpTableController, AccessoryDelegate {
-    private let log = LoggerFactory.vc("BaseMusicController")
+    private let log = LoggerFactory.shared.vc(BaseMusicController.self)
     let FolderCellId = "FolderCell"
     let trackReuseIdentifier = "PimpMusicItemCell"
     let defaultCellHeight: CGFloat = 44
@@ -151,15 +151,15 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
 
 
     func playFolder(_ id: String) {
-        withTracks(id: id, f: self.playTracks)
+        withTracks(id: id, f: self.playTracksChecked)
     }
     
     func playTrack(_ track: Track) -> ErrorMessage? {
-        return playTracks([track]).headOption()
+        return playTracksChecked([track]).headOption()
     }
     
     func addFolder(_ id: String) {
-        withTracks(id: id, f: self.addTracks)
+        withTracks(id: id, f: self.addTracksChecked)
     }
     
     func withTracks(id: String, f: @escaping ([Track]) -> [ErrorMessage]) {
@@ -167,7 +167,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
     
     func addTrack(_ track: Track) -> ErrorMessage? {
-        return addTracks([track]).headOption()
+        return addTracksChecked([track]).headOption()
     }
     
     func reload(_ emptyText: String) {

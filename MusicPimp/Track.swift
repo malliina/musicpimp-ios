@@ -37,7 +37,8 @@ open class Track: MusicItem, Hashable {
             JsonKeys.ARTIST: t.artist as AnyObject,
             JsonKeys.ALBUM: t.album as AnyObject,
             JsonKeys.SIZE: NSNumber(value: t.size.toBytes as Int64),
-            JsonKeys.DURATION: NSNumber(value: t.duration.seconds as Int64)
+            JsonKeys.DURATION: NSNumber(value: t.duration.seconds as Int64),
+            JsonKeys.PATH: t.path as AnyObject
         ]
     }
 }

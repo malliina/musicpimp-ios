@@ -13,7 +13,7 @@ fileprivate extension Selector {
 }
 
 class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
-    let log = LoggerFactory.vc("AlarmsController")
+    let log = LoggerFactory.shared.vc(AlarmsController.self)
     static let endpointFooter = "MusicPimp servers support scheduled playback of music."
     static let notificationFooter = "Receive a notification when scheduled playback starts, so that you can easily silence it."
     let noAlarmsMessage = "No saved alarms"

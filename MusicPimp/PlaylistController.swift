@@ -14,7 +14,7 @@ enum ListMode: Int {
 }
 
 class PlaylistController: BaseMusicController {
-    private let log = LoggerFactory.vc("PlaylistController")
+    private let log = LoggerFactory.shared.vc(PlaylistController.self)
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
     let minItemsRemainingBeforeLoadMore = 20
@@ -156,7 +156,7 @@ class PlaylistController: BaseMusicController {
     override func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
         // starts playback of the selected track, and appends the rest to the playlist
         return accessoryAction("Start Playback Here") { _ in
-            _ = self.playTracks(self.tracks.drop(row))
+            _ = self.playTracksChecked(self.tracks.drop(row))
         }
     }
     

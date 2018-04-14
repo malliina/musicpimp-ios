@@ -8,7 +8,7 @@
 import Foundation
 
 open class UserPrefs: Persistence {
-    let log = LoggerFactory.system("UserPrefs")
+    let log = LoggerFactory.shared.system(UserPrefs.self)
     static let sharedInstance = UserPrefs()
     
     let prefs = UserDefaults.standard

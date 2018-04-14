@@ -11,7 +11,7 @@ import AudioToolbox
 import AVFoundation
 
 class LocalPlayer: NSObject, PlayerType {
-    let log = LoggerFactory.pimp("Local.LocalPlayer", category: "Local")
+    let log = LoggerFactory.shared.pimp(LocalPlayer.self)
     static let sharedInstance = LocalPlayer()
     static let statusKeyPath = "status"
     

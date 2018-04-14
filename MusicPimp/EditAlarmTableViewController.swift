@@ -19,7 +19,7 @@ protocol EditAlarmDelegate {
 }
 
 class EditAlarmTableViewController: BaseTableController {
-    let log = LoggerFactory.vc("EditAlarmTableViewController")
+    let log = LoggerFactory.shared.vc(EditAlarmTableViewController.self)
     let timePickerIdentifier = "TimePickerCell"
     let repeatIdentifier = "RepeatCell"
     let trackIdentifier = "TrackCell"

@@ -77,7 +77,7 @@ extension URL {
 }
 
 class Files {
-    static let log = LoggerFactory.pimp("Files.Files", category: "Files")
+    static let log = LoggerFactory.shared.base("Files", category: Files.self)
     static let sharedInstance = Files()
     
     static let manager = FileManager.default

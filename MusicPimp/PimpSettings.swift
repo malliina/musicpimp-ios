@@ -9,7 +9,7 @@
 import Foundation
 
 open class PimpSettings {
-    let log = LoggerFactory.system("PimpSettings")
+    let log = LoggerFactory.shared.system(PimpSettings.self)
     static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory", IsPremium = "isPremium"
     
     open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)

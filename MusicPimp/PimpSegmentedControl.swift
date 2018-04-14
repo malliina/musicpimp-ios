@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpSegmentedControl: UISegmentedControl {
-    let log = LoggerFactory.view("PimpSegmentedControl")
+    let log = LoggerFactory.shared.view(PimpSegmentedControl.self)
     let answer: Int
     var valueChanged: ((PimpSegmentedControl) -> Void)? = nil
     

@@ -22,7 +22,7 @@ protocol EditEndpointDelegate {
 }
 
 class EditEndpointController: PimpViewController {
-    let log = LoggerFactory.vc("EditEndpointController")
+    let log = LoggerFactory.shared.vc(EditEndpointController.self)
     let scrollView = UIScrollView()
     let content = UIView()
     let nameLabel = PimpLabel.create()

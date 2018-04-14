@@ -11,7 +11,7 @@ import SocketRocket
 
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
-    private let log = LoggerFactory.pimp("Network.PlayerSocket", category: "Network")
+    private let log = LoggerFactory.shared.network(PlayerSocket.self)
     var socket: SRWebSocket? = nil
     let baseURL: URL
     fileprivate let request: URLRequest
@@ -89,7 +89,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
 }
 
 class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
-    let log = LoggerFactory.pimp("Network.LoggingSRSocketDelegate", category: "Network")
+    let log = LoggerFactory.shared.network(LoggingSRSocketDelegate.self)
     let baseURL: URL
     
     init(baseURL: URL) {

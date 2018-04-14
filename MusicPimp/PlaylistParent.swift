@@ -13,7 +13,7 @@ fileprivate extension Selector {
 }
 
 class PlaylistParent: ContainerParent {
-    private let log = LoggerFactory.vc("PlaylistParent")
+    private let log = LoggerFactory.shared.vc(PlaylistParent.self)
     let scopeSegment = UISegmentedControl(items: ["Popular", "Recent"])
     let table = PlaylistController()
     

@@ -9,7 +9,7 @@
 import Foundation
 
 class CacheTableController: CacheInfoController {
-    private let log = LoggerFactory.pimp("ViewControllers.CacheTableController", category: "ViewControllers")
+    private let log = LoggerFactory.shared.pimp(CacheTableController.self)
     
     let CacheEnabledCell = "CacheEnabledCell", CacheSizeCell = "CacheSizeCell", CurrentUsageCell = "CurrentUsageCell", DeleteCacheCell = "DeleteCacheCell", DeleteCustom = "DeleteCustom", EmptyCell = "EmptyCell"
     

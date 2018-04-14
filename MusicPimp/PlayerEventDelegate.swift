@@ -31,7 +31,7 @@ protocol PlayerEventDelegate {
 }
 
 class LoggingDelegate : PlayerEventDelegate {
-    let log = LoggerFactory.pimp("Audio.PlayerEventDelegate", category: "Audio")
+    let log = LoggerFactory.shared.pimp(LoggingDelegate.self)
     
     func parseStatus(_ json: NSDictionary) throws -> PlayerState {
         return PlayerState.empty

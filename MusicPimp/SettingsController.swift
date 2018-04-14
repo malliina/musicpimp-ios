@@ -21,7 +21,7 @@ class RowSpec {
 }
 
 class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpointDelegate, LibraryEndpointDelegate {
-    private let log = LoggerFactory.vc("SettingsController")
+    private let log = LoggerFactory.shared.vc(SettingsController.self)
     let detailId = "DetailedCell"
     let sectionHeaderHeight: CGFloat = 44
     let playbackDeviceId = "PlaybackDevice"

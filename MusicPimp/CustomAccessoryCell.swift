@@ -13,7 +13,7 @@ protocol AccessoryDelegate {
 }
 
 class CustomAccessoryCell: PimpCell {
-    let log = LoggerFactory.view("CustomAccessoryCell")
+    let log = LoggerFactory.shared.view(CustomAccessoryCell.self)
     static let defaultCellHeight: CGFloat = 44
     let accessoryWidth: CGFloat = 44
     

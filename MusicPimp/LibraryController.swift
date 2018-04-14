@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class LibraryController: SearchableMusicController, TrackEventDelegate {
-    private let log = LoggerFactory.vc("LibraryController")
+    private let log = LoggerFactory.shared.vc(LibraryController.self)
     static let LIBRARY = "library", PLAYER = "player"
     let loadingMessage = "Loading..."
     let noTracksMessage = "No tracks."
@@ -206,7 +206,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
                 navigationController?.pushViewController(destination, animated: true)
             }
             if let track = item as? Track {
-                _ = playAndDownload(track)
+                _ = playAndDownloadCheckedSingle(track)
             }
         }
         tableView.deselectRow(at: indexPath, animated: false)

@@ -11,7 +11,7 @@ import AVFoundation
 
 class Players {
     static let sharedInstance = Players()
-    let log = LoggerFactory.pimp("Audio.Players", category: "Audio")
+    let log = LoggerFactory.shared.pimp(Players.self)
     let suggestAtMostEvery = 15.minutes
     private var lastLocalSuggestion: DispatchTime? = nil
     private var lastRemoteSuggestion: DispatchTime? = nil

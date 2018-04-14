@@ -16,7 +16,7 @@ fileprivate extension Selector {
 }
 
 class IAPViewController: PimpViewController {
-    let log = LoggerFactory.vc("IAPViewController")
+    let log = LoggerFactory.shared.vc(IAPViewController.self)
     static let loadingText = "Loading products..."
     let statusLabel = PimpLabel.centered(text: IAPViewController.loadingText)
     let purchaseButton = PimpButton.with(title: "Purchase MusicPimp Premium")

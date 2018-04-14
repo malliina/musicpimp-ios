@@ -12,7 +12,7 @@ import MediaPlayer
 class ExternalCommandDelegate: NSObject {
     static let sharedInstance = ExternalCommandDelegate()
     
-    let log = LoggerFactory.pimp("Local.ExternalCommandDelegate", category: "Local")
+    let log = LoggerFactory.shared.pimp(ExternalCommandDelegate.self)
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     private var disposable: Disposable? = nil
     

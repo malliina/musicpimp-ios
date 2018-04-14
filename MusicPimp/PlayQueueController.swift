@@ -9,7 +9,7 @@
 import Foundation
 
 class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlaylistDelegate, PlaylistSelectDelegate {
-    private let log = LoggerFactory.vc("PlayQueueController")
+    private let log = LoggerFactory.shared.vc(PlayQueueController.self)
     let defaultCellKey = "PimpMusicItemCell"
     
     private var current: Playlist = Playlist.empty

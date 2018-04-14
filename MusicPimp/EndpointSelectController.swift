@@ -14,7 +14,7 @@ fileprivate extension Selector {
 }
 
 class EndpointSelectController: BaseTableController, EditEndpointDelegate {
-    let log = LoggerFactory.vc("EndpointSelectController")
+    let log = LoggerFactory.shared.vc(EndpointSelectController.self)
     let endpointIdentifier = "EndpointCell"
     var endpoints: [Endpoint] = []
     

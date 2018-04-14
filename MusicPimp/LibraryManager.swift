@@ -9,7 +9,7 @@
 import Foundation
 
 class LibraryManager: EndpointManager {
-    let log = LoggerFactory.pimp("LibraryManager", category: "Pimp")
+    let log = LoggerFactory.shared.pimp(LibraryManager.self)
     static let sharedInstance = LibraryManager()
     
     fileprivate var activeLibrary: LibraryType

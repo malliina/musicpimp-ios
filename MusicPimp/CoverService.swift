@@ -36,7 +36,7 @@ protocol CoverServiceType {
 }
 
 class CoverService {
-    let log = LoggerFactory.network("CoverService")
+    let log = LoggerFactory.shared.network(CoverService.self)
     static let sharedInstance = CoverService()
     static let coversDir = Files.documentsPath + "/covers"
     static let defaultCover = UIImage(named: "pimp-512.png")

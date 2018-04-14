@@ -10,7 +10,7 @@ import Foundation
 import StoreKit
 
 class PurchaseHelper: NSObject {
-    let log = LoggerFactory.pimp("Iap.PurchaseHelper", category: "Iap")
+    let log = LoggerFactory.shared.pimp(PurchaseHelper.self)
     static let sharedInstance = PurchaseHelper()
     static let PremiumId = "org.musicpimp.premium"
 

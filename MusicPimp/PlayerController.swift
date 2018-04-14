@@ -15,7 +15,7 @@ fileprivate extension Selector {
 }
 
 class PlayerController: ListeningController, PlaybackDelegate {
-    private let log = LoggerFactory.vc("PlayerController")
+    private let log = LoggerFactory.shared.vc(PlayerController.self)
     static let seekThumbImage = UIImage(named: "oval-32.png")
     
     let defaultPosition = Duration.Zero
@@ -256,7 +256,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
 
 extension UIButton {
     func setFontAwesomeTitle(_ fontAwesomeName: String) {
-        let buttonText = String.fontAwesomeIconString(forIconIdentifier: fontAwesomeName)
+        let buttonText = String.fontAwesomeIconStringForIconIdentifier(fontAwesomeName)
         self.setTitle(buttonText, for: UIControlState())
     }
 }

@@ -6,7 +6,7 @@
 import Foundation
 
 class HttpClient {
-    private let log = LoggerFactory.network("HttpClient")
+    private let log = LoggerFactory.shared.network(HttpClient.self)
     static let JSON = "application/json", CONTENT_TYPE = "Content-Type", ACCEPT = "Accept", GET = "GET", POST = "POST", AUTHORIZATION = "Authorization", BASIC = "Basic"
 
     static func basicAuthValue(_ username: String, password: String) -> String {

@@ -9,7 +9,7 @@
 import Foundation
 
 class PimpEndpoint: PimpUtils {
-    let log = LoggerFactory.pimp("Pimp.PimpEndpoint", category: "Pimp")
+    let log = LoggerFactory.shared.pimp(PimpEndpoint.self)
     let client: PimpHttpClient
     
     init(endpoint: Endpoint, client: PimpHttpClient) {
@@ -54,19 +54,16 @@ class PimpEndpoint: PimpUtils {
     
     static func parseTrack(_ obj: NSDictionary, urlMaker: (String) -> URL) throws -> Track {
         let id = try Json.readString(obj, JsonKeys.ID)
-        let title = try Json.readString(obj, JsonKeys.TITLE)
-        let artist = try Json.readString(obj, JsonKeys.ARTIST)
-        let album = try Json.readString(obj, JsonKeys.ALBUM)
         let sizeRaw = try Json.readInt(obj, JsonKeys.SIZE)
         guard let size = StorageSize.fromBytes(sizeRaw) else { throw JsonError.invalid(JsonKeys.SIZE, sizeRaw) }
         let duration = try Json.readInt(obj, JsonKeys.DURATION)
         return Track(
                     id: id,
-                    title: title,
-                    album: album,
-                    artist: artist,
+                    title: try Json.readString(obj, JsonKeys.TITLE),
+                    album: try Json.readString(obj, JsonKeys.ALBUM),
+                    artist: try Json.readString(obj, JsonKeys.ARTIST),
                     duration: duration.seconds,
-                    path: Util.urlDecodeWithPlus(id),
+                    path: try Json.readString(obj, JsonKeys.PATH),
                     size: size,
                     url: urlMaker(id)
         )

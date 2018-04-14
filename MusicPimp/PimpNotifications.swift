@@ -10,7 +10,7 @@ import Foundation
 import UserNotifications
 
 open class PimpNotifications {
-    let log = LoggerFactory.pimp("PimpNotifications", category: "System")
+    let log = LoggerFactory.shared.system(PimpNotifications.self)
     open static let sharedInstance = PimpNotifications()
     
     let settings = PimpSettings.sharedInstance

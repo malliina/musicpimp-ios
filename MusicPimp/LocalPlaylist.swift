@@ -9,7 +9,7 @@
 import Foundation
 
 class LocalPlaylist: BasePlaylist, PlaylistType {
-    private let log = LoggerFactory.pimp("Local", category: "LocalPlaylist")
+    private let log = LoggerFactory.shared.pimp(LocalPlaylist.self)
     static let sharedInstance = LocalPlaylist()
     
     fileprivate var ts: [Track] = []

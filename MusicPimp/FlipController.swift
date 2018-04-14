@@ -10,7 +10,7 @@ import Foundation
 
 /// A ViewController with a UISegmentedControl on top that flips between two child ViewControllers
 class FlipController: ContainerParent {
-    private let log = LoggerFactory.vc("FlipController")
+    private let log = LoggerFactory.shared.vc(FlipController.self)
     // Override: name of the first segment
     var firstTitle: String { get { return "First" } }
     // Override: name of the second segment

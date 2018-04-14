@@ -19,7 +19,7 @@ protocol SavePlaylistDelegate {
 }
 
 class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
-    let log = LoggerFactory.vc("SavePlaylistViewController")
+    let log = LoggerFactory.shared.vc(SavePlaylistViewController.self)
     let nameLabel = UILabel()
     let nameText = PimpTextField()
     var saveButton: UIBarButtonItem? = nil

@@ -26,7 +26,7 @@ class Endpoints {
 }
 
 class PimpHttpClient: HttpClient {
-    private let log = LoggerFactory.pimp("Pimp.PimpHttpClient", category: "Pimp")
+    private let log = LoggerFactory.shared.pimp(PimpHttpClient.self)
     let baseURL: URL
     let defaultHeaders: [String: String]
     let postHeaders: [String: String]

@@ -9,7 +9,7 @@
 import Foundation
 
 class PlayerParent: FlipController {
-    private let log = LoggerFactory.vc("PlayerParent")
+    private let log = LoggerFactory.shared.vc(PlayerParent.self)
 
     override var currentFooterHeight: CGFloat { get { return 66 } }
     override var preferredPlaybackFooterHeight: CGFloat { get { return 66 } }

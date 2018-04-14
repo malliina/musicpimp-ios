@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class PimpTabBarController: UITabBarController {
-    private let log = LoggerFactory.vc("PimpTabBarController")
+    private let log = LoggerFactory.shared.vc(PimpTabBarController.self)
     let utils = TabUtils.shared
     
     let tabItemTitleVerticalOffset: CGFloat = -3

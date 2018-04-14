@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class PimpTableController: FeedbackTable {
-    private let log = LoggerFactory.vc("PimpTableController")
+    private let log = LoggerFactory.shared.vc(PimpTableController.self)
     let maxNewDownloads = 300
     
     var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
@@ -28,36 +28,36 @@ class PimpTableController: FeedbackTable {
         
     }
     
-    func playTracks(_ tracks: [Track]) -> [ErrorMessage] {
+    func playTracksChecked(_ tracks: [Track]) -> [ErrorMessage] {
         return limitChecked {
-            self.playTracks2(tracks)
+            self.playTracks(tracks)
         } ??  []
     }
     
-    fileprivate func playTracks2(_ tracks: [Track]) -> [ErrorMessage] {
+    fileprivate func playTracks(_ tracks: [Track]) -> [ErrorMessage] {
         if let first = tracks.first {
-            let firstError = playAndDownload2(first)
+            let firstError = playAndDownload(first)
             if let firstError = firstError {
                 return [firstError]
             } else {
-                return addTracks2(tracks.tail())
+                return addTracks(tracks.tail())
             }
         } else {
             return []
         }
     }
     
-    func addTracks(_ tracks: [Track]) -> [ErrorMessage] {
+    func addTracksChecked(_ tracks: [Track]) -> [ErrorMessage] {
         return limitChecked {
-            self.addTracks2(tracks)
+            self.addTracks(tracks)
         } ?? []
     }
     
-    fileprivate func addTracks2(_ tracks: [Track]) -> [ErrorMessage] {
+    fileprivate func addTracks(_ tracks: [Track]) -> [ErrorMessage] {
         if !tracks.isEmpty {
             let errors = player.playlist.add(tracks)
             if errors.isEmpty {
-                return downloadIfNeeded(tracks)
+                return downloadIfNeeded(tracks.take(3))
             } else {
                 return errors
             }
@@ -66,14 +66,14 @@ class PimpTableController: FeedbackTable {
         }
     }
     
-    func playAndDownload(_ track: Track) -> ErrorMessage? {
+    func playAndDownloadCheckedSingle(_ track: Track) -> ErrorMessage? {
         let error = limitChecked {
-            return self.playAndDownload2(track)
+            return self.playAndDownload(track)
         }
         return error ?? nil
     }
     
-    fileprivate func playAndDownload2(_ track: Track) -> ErrorMessage? {
+    fileprivate func playAndDownload(_ track: Track) -> ErrorMessage? {
         let error = player.resetAndPlay(track)
         if error == nil {
             return downloadIfNeeded([track]).headOption()

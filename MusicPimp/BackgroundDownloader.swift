@@ -50,7 +50,7 @@ open class DownloadInfo {
 }
 
 class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate, URLSessionDelegate {
-    let log = LoggerFactory.network("BackgroundDownloader")
+    let log = LoggerFactory.shared.network(BackgroundDownloader.self)
     typealias TaskID = Int
     
     static let musicDownloader = BackgroundDownloader(basePath: LocalLibrary.sharedInstance.musicRootPath, sessionID: "org.musicpimp.downloads.tracks")

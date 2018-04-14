@@ -9,7 +9,7 @@
 import Foundation
 
 class PlayerManager: EndpointManager {
-    let log = LoggerFactory.pimp("PlayerManager", category: "Pimp")
+    let log = LoggerFactory.shared.pimp(PlayerManager.self)
     
     static let sharedInstance = PlayerManager()
     let players = Players.sharedInstance

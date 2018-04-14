@@ -34,23 +34,35 @@ class Logger {
 }
 
 class LoggerFactory {
-    static func network(_ className: String) -> Logger {
-        return pimp("Network", category: className)
+    static let shared = LoggerFactory(packageName: "org.musicpimp.MusicPimp")
+    
+    let packageName: String
+    
+    init(packageName: String) {
+        self.packageName = packageName
     }
     
-    static func system(_ className: String) -> Logger {
-        return pimp("System", category: className)
+    func network<Subject>(_ subject: Subject) -> Logger {
+        return base("Network", category: subject)
     }
     
-    static func view(_ className: String) -> Logger {
-        return pimp("Views", category: className)
+    func system<Subject>(_ subject: Subject) -> Logger {
+        return base("System", category: subject)
     }
     
-    static func vc(_ className: String) -> Logger {
-        return pimp("ViewControllers", category: className)
+    func view<Subject>(_ subject: Subject) -> Logger {
+        return base("Views", category: subject)
     }
     
-    static func pimp(_ suffix: String, category: String) -> Logger {
-        return Logger("org.musicpimp.MusicPimp.\(suffix)", category: category)
+    func vc<Subject>(_ subject: Subject) -> Logger {
+        return base("ViewControllers", category: String(describing: subject))
+    }
+    
+    func pimp<Subject>(_ subject: Subject) -> Logger {
+        return base("MusicPimp", category: String(describing: subject))
+    }
+    
+    func base<Subject>(_ suffix: String, category: Subject) -> Logger {
+        return Logger("\(packageName).\(suffix)", category: String(describing: category))
     }
 }

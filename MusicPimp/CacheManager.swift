@@ -10,7 +10,7 @@ import Foundation
 
 // see https://github.com/malliina/util-android/blob/master/src/main/scala/com/mle/file/DiskHelpers.scala
 class CacheManager {
-    let log = LoggerFactory.pimp("Local.CacheManager", category: "Local")
+    let log = LoggerFactory.shared.pimp(CacheManager.self)
     let folder: Directory
     //let maxSize: StorageSize
     let throttler: Throttler

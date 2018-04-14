@@ -13,7 +13,7 @@ protocol PlaylistSelectDelegate {
 }
 
 class SavedPlaylistsTableViewController: PimpTableController {
-    let log = LoggerFactory.vc("SavedPlaylistsTableViewController")
+    let log = LoggerFactory.shared.vc(SavedPlaylistsTableViewController.self)
     let emptyMessage = "No saved playlists."
     let loadingMessage = "Loading playlists..."
     let playlistCell = "PlaylistCell"
@@ -59,7 +59,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let row = indexPath.row
         if playlists.count > 0 && playlists.count > row {
             let item = playlists[row]
-            _ = playTracks(item.tracks)
+            _ = playTracksChecked(item.tracks)
             delegate?.playlistActivated(item)
         }
         tableView.deselectRow(at: indexPath, animated: false)

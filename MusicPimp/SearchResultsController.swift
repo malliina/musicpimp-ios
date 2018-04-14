@@ -9,7 +9,7 @@
 import Foundation
 
 class SearchResultsController: BaseMusicController {
-    let log = LoggerFactory.vc("SearchResultsController")
+    let log = LoggerFactory.shared.vc(SearchResultsController.self)
     var results: [Track] = []
     
     override var musicItems: [MusicItem] { return results }
