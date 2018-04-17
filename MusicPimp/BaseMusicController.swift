@@ -56,6 +56,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     func paintTrackCell(cell: SnapMusicCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
             cell.progress.progress = downloadProgress.progress
+//            log.info("Progress \(downloadProgress.progress)")
             cell.progress.isHidden = false
         } else {
             cell.progress.isHidden = true

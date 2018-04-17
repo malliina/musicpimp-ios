@@ -220,6 +220,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
             let written = StorageSize.fromBytes(totalBytesWritten) {
             let expectedSize = StorageSize.fromBytes(totalBytesExpectedToWrite)
             let update = DownloadProgressUpdate(info: info, writtenDelta: writtenDelta, written: written, totalExpected: expectedSize)
+//            log.info("Task \(taskID) wrote \(writtenDelta) written \(written) expected \(expectedSize)")
             events.raise(update)
         } else {
             if taskOpt == nil {

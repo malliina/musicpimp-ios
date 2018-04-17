@@ -25,6 +25,7 @@ class PimpColors {
     // used by tabbar, navigationbar
     static let barStyle = UIBarStyle.black
     static let deletion = UIColor.red
+    static let deletionHighlighted = Colors.rgb(139, green: 0, blue: 0)
     static let placeholder = PimpColors.separator
     static let titleFont = UIFont.boldSystemFont(ofSize: 13)
 }

@@ -16,7 +16,7 @@ class DownloadUpdater {
     fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
     
     fileprivate var lastDownloadUpdate: DispatchTime? = nil
-    let fps: UInt64 = 30
+    let fps: UInt64 = 10
 
     let downloader: BackgroundDownloader
 //    let innerDisposable: Disposable

@@ -20,8 +20,7 @@ class Util {
     }
     
     class func onBackgroundThread(_ f: @escaping () -> Void) {
-        //DispatchQueue.global(attributes: .background).async(execute: f)
-        DispatchQueue.main.async(execute: f)
+        DispatchQueue.global(qos: .background).async(execute: f)
     }
     
     class func hasTimePassed(time: Duration, now: DispatchTime, since: DispatchTime?) -> Bool {

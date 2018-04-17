@@ -77,6 +77,7 @@ class PimpTableController: FeedbackTable {
         let error = player.resetAndPlay(track)
         if error == nil {
             return downloadIfNeeded([track]).headOption()
+//            return nil
         } else {
             return error
         }

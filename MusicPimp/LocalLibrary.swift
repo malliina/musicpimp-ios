@@ -9,6 +9,7 @@
 import Foundation
 import AudioToolbox
 import AVFoundation
+import RxSwift
 
 class LocalLibrary: BaseLibrary {
     let log = Logger("org.musicpimp.MusicPimp.Local", category: "Library")
@@ -61,8 +62,18 @@ class LocalLibrary: BaseLibrary {
     func pathTo(_ relativePath: String) -> String {
         return self.musicRootPath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
     }
-
-    func deleteContents() -> Bool {
+    
+    func deleteContents() -> Observable<Bool> {
+        return Observable.create { observer in
+            let outcome = self.deleteContentsSync()
+            observer.onNext(outcome)
+            observer.onCompleted()
+            return Disposables.create()
+        }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+        .observeOn(MainScheduler.instance)
+    }
+    
+    private func deleteContentsSync() -> Bool {
         let deleteSuccess: Bool
         do {
             try fileManager.removeItem(atPath: musicRootPath)

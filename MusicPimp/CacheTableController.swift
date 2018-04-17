@@ -23,6 +23,8 @@ class CacheTableController: CacheInfoController {
     
     var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
     
+    var library: LocalLibrary { return LocalLibrary.sharedInstance }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "OFFLINE STORAGE"
@@ -60,8 +62,9 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func updateCacheUsageLabel() {
-        log.info("Current usage: \(LocalLibrary.sharedInstance.size.shortDescription)")
-        currentCacheSizeLabel.text = LocalLibrary.sharedInstance.size.shortDescription
+        log.info("Current usage: \(library.size.shortDescription)")
+        currentCacheSizeLabel.text = library.size.shortDescription
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,8 +84,11 @@ class CacheTableController: CacheInfoController {
             cell.detailTextLabel?.text = currentCacheSizeLabel.text
             break
         case DeleteCustom:
-            cell.textLabel?.textColor = PimpColors.deletion
-            cell.textLabel?.textAlignment = .center
+            if let label = cell.textLabel {
+                label.textColor = PimpColors.deletion
+                label.textAlignment = .center
+                label.highlightedTextColor = PimpColors.deletionHighlighted
+            }
             break
         default:
             break
@@ -148,7 +154,7 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-        tableView.deselectRow(at: indexPath, animated: false)
+//        tableView.deselectRow(at: indexPath, animated: false)
         if let reuseIdentifier = cell?.reuseIdentifier {
             switch reuseIdentifier {
             case CacheSizeCell:
@@ -163,8 +169,10 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func deleteCache() {
-        let _ = LocalLibrary.sharedInstance.deleteContents()
-        updateCacheUsageLabel()
+        let _ = library.deleteContents().subscribe(onNext: { (outcome) in
+            self.log.info("Done")
+            self.updateCacheUsageLabel()
+        }, onError: nil, onCompleted: nil, onDisposed: nil)
     }
 }
 

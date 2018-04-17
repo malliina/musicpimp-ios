@@ -32,6 +32,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
+        downloadUpdates = DownloadUpdater.instance.listen(onProgress: onProgress)
         setFeedback(loadingMessage)
         listener.tracks = self
         if let folder = selected {
@@ -43,8 +44,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
-        listeners = [downloadDisposable]
         if reloadOnDidAppear {
             renderTable(computeMessage(folder))
         }
@@ -57,6 +56,11 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         if !DownloadUpdater.instance.isEmpty {
             reloadOnDidAppear = true
         }
+    }
+    
+    func stopUpdates() {
+        downloadUpdates?.dispose()
+        downloadUpdates = nil
     }
     
     func onTrackChanged(_ track: Track?) {
@@ -197,7 +201,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         }
     }
     
-    // Used when the user clicks a track or otherwise modifies the player
+    // Used when the user clicks a music item
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = itemAt(tableView, indexPath: indexPath) {
             if let folder = item as? Folder {
@@ -216,15 +220,15 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
 extension LibraryController {
     func onProgress(track: TrackProgress) {
-        //Log.info("track \(track.track.title) \(track.dpu.written)")
         if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
+            // log.info("Updating \(track.dpu.written)")
             updateRows(row: index)
         }
     }
 
     private func updateRows(row: Int) {
         let itemIndexPath = IndexPath(row: row, section: 0)
-        Util.onUiThread {
+        onUiThread {
             self.tableView.reloadRows(at: [itemIndexPath], with: .none)
         }
     }

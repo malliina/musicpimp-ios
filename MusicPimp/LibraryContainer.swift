@@ -6,6 +6,7 @@
 import Foundation
 
 class LibraryContainer: PlaybackContainer {
+    private let log = LoggerFactory.shared.vc(LibraryContainer.self)
     convenience init() {
         self.init(folder: nil)
     }
@@ -18,12 +19,24 @@ class LibraryContainer: PlaybackContainer {
         self.init(title: folder?.title.uppercased() ?? "MUSIC", child: library)
     }
     
+    override func willMove(toParentViewController parent: UIViewController?) {
+        super.willMove(toParentViewController: parent)
+        // https://stackoverflow.com/a/14155394
+        let willPop = parent == nil
+        if willPop {
+            guard let library = child as? LibraryController else { return }
+            library.stopListening()
+            library.stopUpdates()
+            log.info("Stopped for \(library.title)")
+        }
+    }
+    
     override func onLibraryChanged(to newLibrary: LibraryType) {
         super.onLibraryChanged(to: newLibrary)
         pop()
     }
     
-    func pop(_ animated: Bool = false) {
+    private func pop(_ animated: Bool = false) {
         self.navigationController?.popToRootViewController(animated: animated)
         let children = childViewControllers
         if let libraryController = children.headOption() as? LibraryController {
