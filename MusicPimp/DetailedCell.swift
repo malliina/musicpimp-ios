@@ -26,6 +26,6 @@ class DetailedCell: PimpCell {
     }
     
     func initCell() {
-        detailTextLabel?.textColor = PimpColors.titles
+        detailTextLabel?.textColor = colors.titles
     }
 }

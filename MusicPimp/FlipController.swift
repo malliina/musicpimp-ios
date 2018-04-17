@@ -71,7 +71,7 @@ class FlipController: ContainerParent {
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: #selector(scopeChanged(_:)), for: .valueChanged)
-        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.tintColor], for: .normal)
+        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.shared.tintColor], for: .normal)
     }
     
     @objc func scopeChanged(_ sender: UISegmentedControl) {

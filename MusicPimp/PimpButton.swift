@@ -10,6 +10,7 @@ import Foundation
 
 /// Similar to https://cocoacasts.com/elegant-controls-in-swift-with-closures/
 class PimpButton: UIButton {
+    let colors = PimpColors.shared
     var onTouchUpInside: ((UIButton) -> ())? = nil {
         didSet {
             let selector = #selector(didTouchUpInside(sender:))
@@ -24,7 +25,7 @@ class PimpButton: UIButton {
     required init(title: String) {
         super.init(frame: .zero)
         setTitle(title, for: .normal)
-        setTitleColor(PimpColors.tintColor, for: .normal)
+        setTitleColor(colors.tintColor, for: .normal)
     }
     
     convenience init(title: String, touchUp: @escaping (UIButton) -> ()) {
@@ -43,7 +44,7 @@ class PimpButton: UIButton {
     static func with(title: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
-        button.setTitleColor(PimpColors.tintColor, for: .normal)
+        button.setTitleColor(PimpColors.shared.tintColor, for: .normal)
         return button
     }
 }

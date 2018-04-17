@@ -86,7 +86,7 @@ class TabUtils {
     }
     
     func icon(_ name: String, selected: Bool) -> UIImage {
-        let iconColor = selected ? PimpColors.tintColor : UIColor.gray
+        let iconColor = selected ? PimpColors.shared.tintColor : UIColor.gray
         let image = UIImage(icon: name, backgroundColor: .clear, iconColor: iconColor, fontSize: tabIconFontSize)
         return image!.withRenderingMode(.alwaysOriginal)
     }

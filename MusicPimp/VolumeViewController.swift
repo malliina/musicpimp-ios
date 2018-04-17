@@ -72,7 +72,7 @@ class VolumeViewController: PimpViewController {
     }
     
     func faImage(_ name: String) -> UIImage {
-        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.tintColor, fontSize: 28)
+        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.shared.tintColor, fontSize: 28)
     }
     
     @objc func userDidChangeVolume(_ sender: UISlider) {

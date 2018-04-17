@@ -9,12 +9,14 @@
 import Foundation
 
 class PimpViewController: UIViewController {
+    let colors = PimpColors.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         edgesForExtendedLayout = []
-        self.view.backgroundColor = PimpColors.background
+        self.view.backgroundColor = colors.background
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: PimpColors.titleFont
+            NSAttributedStringKey.font: colors.titleFont
         ]
     }
     

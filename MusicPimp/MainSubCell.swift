@@ -12,7 +12,7 @@ class MainSubCell: SnapCell {
     // empirical - no clue how. elements + margins equal 62 pixels
     static let height: CGFloat = 70
     let main = PimpLabel.create()
-    let sub = PimpLabel.create(textColor: PimpColors.subtitles, fontSize: 15)
+    let sub = PimpLabel.create(textColor: PimpColors.shared.subtitles, fontSize: 15)
     
     override func configureView() {
         installTrackAccessoryView(height: MainSubCell.height)

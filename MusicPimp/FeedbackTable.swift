@@ -24,7 +24,7 @@ class FeedbackTable: BaseTableController {
             label.lineBreakMode = .byWordWrapping
             label.numberOfLines = 0
             label.text = text
-            label.textColor = PimpColors.titles
+            label.textColor = colors.titles
         }
         return cell
     }

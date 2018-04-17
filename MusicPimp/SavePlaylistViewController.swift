@@ -51,7 +51,7 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
     func initUI() {
         addSubviews(views: [nameLabel, nameText])
         nameLabel.text = "Playlist Name"
-        nameLabel.textColor = PimpColors.titles
+        nameLabel.textColor = PimpColors.shared.titles
         nameLabel.snp.makeConstraints { (make) in
             make.leadingMargin.trailingMargin.equalToSuperview()
             make.bottom.equalTo(nameText.snp.top).offset(-8)

@@ -67,7 +67,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         let endpoint = endpointForIndex(index)
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
-        cell.textLabel?.textColor = PimpColors.titles
+        cell.textLabel?.textColor = PimpColors.shared.titles
         let accessory = index == selectedIndex ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         cell.accessoryType = accessory
         return cell

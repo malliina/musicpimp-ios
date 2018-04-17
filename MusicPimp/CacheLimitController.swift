@@ -38,8 +38,8 @@ class CacheLimitController: BaseTableController {
         let accessory = isCurrent ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         let cell = tableView.dequeueReusableCell(withIdentifier: prototype, for: indexPath)
         cell.accessoryType = accessory
-        cell.textLabel?.tintColor = PimpColors.titles
-        cell.textLabel?.textColor = PimpColors.titles
+        cell.textLabel?.tintColor = PimpColors.shared.titles
+        cell.textLabel?.textColor = PimpColors.shared.titles
         cell.textLabel?.text = "\(cellGigs) GB"
         return cell
     }

@@ -34,7 +34,7 @@ class SnapPlaybackFooter: BaseView {
     var delegate: PlaybackDelegate? = nil
     
     override func configureView() {
-        self.backgroundColor = PimpColors.background
+        self.backgroundColor = PimpColors.shared.background
         ContainerParent.isIpad ? setBigSize() : setSmallSize()
         prevButton.setFontAwesomeTitle(prevIconName)
         playPauseButton.setFontAwesomeTitle(playIconName)
@@ -100,7 +100,7 @@ class SnapPlaybackFooter: BaseView {
     
     private func initColor(buttons: [UIButton]) {
         buttons.forEach { button in
-            button.setTitleColor(PimpColors.tintColor, for: UIControlState.normal)
+            button.setTitleColor(PimpColors.shared.tintColor, for: UIControlState.normal)
             //button.titleLabel?.textColor = PimpColors.tintColor
         }
     }

@@ -298,7 +298,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         if let view = view as? UITableViewHeaderFooterView {
-            view.contentView.backgroundColor = PimpColors.background
+            view.contentView.backgroundColor = PimpColors.shared.background
         }
     }
     

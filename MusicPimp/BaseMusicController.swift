@@ -61,7 +61,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         } else {
             cell.progress.isHidden = true
         }
-        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.titles, UITableViewCellSelectionStyle.default)
+        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.shared.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.shared.titles, UITableViewCellSelectionStyle.default)
         cell.title.textColor = titleColor
         cell.selectionStyle = selectionStyle
     }
@@ -95,7 +95,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         let title = track.title
         let message = track.artist
         let sheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        sheet.view.window?.backgroundColor = PimpColors.background
+        sheet.view.window?.backgroundColor = PimpColors.shared.background
         let playAction = playTrackAccessoryAction(track, row: row)
         let addAction = addTrackAccessoryAction(track, row: row)
         let downloadAction = accessoryAction("Download") { _ in

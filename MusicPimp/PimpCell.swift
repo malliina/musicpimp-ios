@@ -9,6 +9,8 @@
 import Foundation
 
 class PimpCell: UITableViewCell {
+    let colors = PimpColors.shared
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureView()
@@ -20,6 +22,6 @@ class PimpCell: UITableViewCell {
     }
     
     func configureView() {
-        textLabel?.textColor = PimpColors.titles
+        textLabel?.textColor = PimpColors.shared.titles
     }
 }

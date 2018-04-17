@@ -9,9 +9,11 @@
 import Foundation
 
 class PimpTextField: UITextField, UITextFieldDelegate {
+    let colors = PimpColors.shared
+    
     var placeholderText: String? {
         get { return placeholder }
-        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSAttributedStringKey.foregroundColor: PimpColors.placeholder]) }
+        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSAttributedStringKey.foregroundColor: PimpColors.shared.placeholder]) }
     }
     
     override init(frame: CGRect) {
@@ -27,8 +29,8 @@ class PimpTextField: UITextField, UITextFieldDelegate {
     fileprivate func pimpInit() {
         delegate = self
         autocorrectionType = .no
-        backgroundColor = PimpColors.lighterBackground
-        textColor = PimpColors.titles
+        backgroundColor = colors.lighterBackground
+        textColor = colors.titles
         borderStyle = .roundedRect
         autocapitalizationType = .none
     }

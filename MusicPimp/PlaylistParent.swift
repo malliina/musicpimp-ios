@@ -43,7 +43,7 @@ class PlaylistParent: ContainerParent {
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: .scopeChanged, for: .valueChanged)
-        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.tintColor], for: .normal)
+        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.shared.tintColor], for: .normal)
     }
     
     override func onLibraryChanged(to newLibrary: LibraryType) {

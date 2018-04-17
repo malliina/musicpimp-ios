@@ -26,7 +26,7 @@ class RepeatDaysController: BaseTableController {
         let accessory = isChecked(row) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         if let label = cell.textLabel {
             label.text = "Every \(dayName)"
-            label.textColor = PimpColors.titles
+            label.textColor = PimpColors.shared.titles
         }
         cell.accessoryType = accessory
         return cell

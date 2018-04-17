@@ -71,7 +71,7 @@ class EditAlarmTableViewController: BaseTableController {
         datePicker.datePickerMode = .time
         datePicker.minuteInterval = 5
         // hack
-        datePicker.setValue(PimpColors.titles, forKey: "textColor")
+        datePicker.setValue(colors.titles, forKey: "textColor")
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: .cancelClicked)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .saveClicked)
     }
@@ -192,14 +192,14 @@ class EditAlarmTableViewController: BaseTableController {
                     label.text = "Play Now"
                     label.isEnabled = mutableAlarm?.track != nil
                     label.textAlignment = .center
-                    label.textColor = PimpColors.titles
+                    label.textColor = colors.titles
                 }
                 break
             case deleteAlarmIdentifier:
                 if let label = cell.textLabel {
                     label.text = "Delete Alarm"
                     label.isEnabled = mutableAlarm?.id != nil
-                    label.textColor = PimpColors.deletion
+                    label.textColor = colors.deletion
                     label.textAlignment = .center
                 }
                 cell.selectionStyle = UITableViewCellSelectionStyle.default
@@ -257,7 +257,7 @@ class EditAlarmTableViewController: BaseTableController {
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let v = view as? UITableViewHeaderFooterView {
-            v.tintColor = PimpColors.background
+            v.tintColor = colors.background
         }
     }
     

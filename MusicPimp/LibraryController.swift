@@ -140,7 +140,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         if isFolder {
             let folderCell = identifiedCell(FolderCellId, index: indexPath)
             folderCell.textLabel?.text = item.title
-            folderCell.textLabel?.textColor = PimpColors.titles
+            folderCell.textLabel?.textColor = PimpColors.shared.titles
             folderCell.accessoryType = .disclosureIndicator
             folderCell.layoutMargins = .zero
             return folderCell

@@ -20,7 +20,7 @@ class PimpLabel: UILabel {
         return label
     }
     
-    static func create(textColor: UIColor = PimpColors.titles, fontSize: CGFloat = UIFont.labelFontSize) -> UILabel {
+    static func create(textColor: UIColor = PimpColors.shared.titles, fontSize: CGFloat = UIFont.labelFontSize) -> UILabel {
         let label = UILabel()
         label.textColor = textColor
         label.font = label.font.withSize(fontSize)

@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let log = LoggerFactory.shared.pimp(AppDelegate.self)
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
+    let colors = PimpColors.shared
     
     var window: UIWindow?
     
@@ -69,24 +70,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initTheme(_ app: UIApplication) {
-        app.delegate?.window??.tintColor = PimpColors.tintColor
-        UINavigationBar.appearance().barStyle = PimpColors.barStyle
-//        UINavigationBar.appearance().tintColor = PimpColors.tintColor
-        UITabBar.appearance().barStyle = PimpColors.barStyle
-        UIView.appearance().tintColor = PimpColors.tintColor
-        UITableView.appearance().backgroundColor = PimpColors.background
-        UITableView.appearance().separatorColor = PimpColors.separator
-        UITableViewCell.appearance().backgroundColor = PimpColors.background
+        app.delegate?.window??.tintColor = colors.tintColor
+        UINavigationBar.appearance().barStyle = colors.barStyle
+//        UINavigationBar.appearance().tintColor = colors.tintColor
+        UITabBar.appearance().barStyle = colors.barStyle
+        UIView.appearance().tintColor = colors.tintColor
+        UITableView.appearance().backgroundColor = colors.background
+        UITableView.appearance().separatorColor = colors.separator
+        UITableViewCell.appearance().backgroundColor = colors.background
         let backgroundView = PimpView()
-        backgroundView.backgroundColor = PimpColors.selectedBackground
+        backgroundView.backgroundColor = colors.selectedBackground
         UITableViewCell.appearance().selectedBackgroundView = backgroundView
         //UISegmentedControl.appearance().backgroundColor = PimpColors.background
         // titles for cell texts
-        UILabel.appearance().textColor = PimpColors.titles
-//        UISearchBar.appearance().barStyle = PimpColors.searchBarStyle
-        UITextView.appearance().backgroundColor = PimpColors.background
-        UITextView.appearance().textColor = PimpColors.titles
-        PimpView.appearance().backgroundColor = PimpColors.background
+        UILabel.appearance().textColor = colors.titles
+//        UISearchBar.appearance().barStyle = colors.searchBarStyle
+        UITextView.appearance().backgroundColor = colors.background
+        UITextView.appearance().textColor = colors.titles
+        PimpView.appearance().backgroundColor = colors.background
 //        UIBarButtonItem.appearance()
 //            .setTitleTextAttributes([NSFontAttributeName : PimpColors.titleFont], forState: UIControlState.Normal)
     }

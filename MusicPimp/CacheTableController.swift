@@ -71,7 +71,7 @@ class CacheTableController: CacheInfoController {
         let spec = specForRow(indexPath: indexPath) ?? RowSpec(reuseIdentifier: EmptyCell, text: "")
         let cell = identifiedCell(spec.reuseIdentifier, index: indexPath)
         cell.textLabel?.text = spec.text
-        cell.textLabel?.textColor = PimpColors.titles
+        cell.textLabel?.textColor = colors.titles
         switch spec.reuseIdentifier {
         case CacheEnabledCell:
             cell.accessoryView = onOffSwitch
@@ -85,9 +85,9 @@ class CacheTableController: CacheInfoController {
             break
         case DeleteCustom:
             if let label = cell.textLabel {
-                label.textColor = PimpColors.deletion
+                label.textColor = colors.deletion
                 label.textAlignment = .center
-                label.highlightedTextColor = PimpColors.deletionHighlighted
+                label.highlightedTextColor = colors.deletionHighlighted
             }
             break
         default:
@@ -139,7 +139,7 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let v = view as? UITableViewHeaderFooterView {
-            v.tintColor = PimpColors.background
+            v.tintColor = colors.background
         }
     }
     
@@ -185,7 +185,7 @@ extension UITableViewController {
             make.leading.trailing.equalToSuperview().inset(tableView.layoutMargins.left)
             make.topMargin.equalToSuperview().offset(PimpLabel.headerTopMargin)
         }
-        view?.contentView.backgroundColor = PimpColors.background
+        view?.contentView.backgroundColor = PimpColors.shared.background
         return view
     }
 }

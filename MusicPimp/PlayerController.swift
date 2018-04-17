@@ -32,6 +32,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let coverImage: UIImageView = UIImageView()
     
     let minHeightForNav: CGFloat = 450
+//    let colors = PimpColors.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,9 +40,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
         navigationItem.rightBarButtonItems = [ UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked) ]
         navigationItem.title = "PLAYER"
         initUI()
-        albumLabel.textColor = PimpColors.subtitles
-        positionLabel.textColor = PimpColors.subtitles
-        durationLabel.textColor = PimpColors.subtitles
+        albumLabel.textColor = colors.subtitles
+        positionLabel.textColor = colors.subtitles
+        durationLabel.textColor = colors.subtitles
         updateNavigationBarVisibility(self.view.frame.size.height)
         
         if let thumbImage = PlayerController.seekThumbImage {

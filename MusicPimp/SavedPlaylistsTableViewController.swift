@@ -51,7 +51,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let cell = tableView.dequeueReusableCell(withIdentifier: playlistCell, for: indexPath)
         cell.textLabel?.text = item.name
         // Why doesn't AppDelegate.initTheme settings apply here?
-        cell.textLabel?.textColor = PimpColors.titles
+        cell.textLabel?.textColor = colors.titles
         return cell
     }
     

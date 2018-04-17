@@ -53,7 +53,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         listener.subscribe()
         navigationItem.title = "SETTINGS"
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: PimpColors.titleFont
+            NSAttributedStringKey.font: colors.titleFont
         ]
     }
     
@@ -81,10 +81,10 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         let spec = specForRow(indexPath: indexPath) ?? RowSpec(reuseIdentifier: "", text: "")
         let cell = identifiedCell(spec.reuseIdentifier, index: indexPath)
         cell.textLabel?.text = spec.text
-        cell.textLabel?.textColor = PimpColors.titles
+        cell.textLabel?.textColor = colors.titles
         cell.accessoryType = .disclosureIndicator
         cell.detailTextLabel?.text = textForIdentifier(spec.reuseIdentifier)
-        cell.detailTextLabel?.textColor = PimpColors.titles
+        cell.detailTextLabel?.textColor = colors.titles
         return cell
     }
     
@@ -147,7 +147,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let v = view as? UITableViewHeaderFooterView {
-            v.tintColor = PimpColors.background
+            v.tintColor = colors.background
             v.textLabel?.font = v.textLabel?.font.withSize(12)
             v.textLabel?.textAlignment = .center
         }

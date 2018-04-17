@@ -165,12 +165,12 @@ class EditEndpointController: PimpViewController {
             make.leading.equalTo(activateLabel.snp.trailing).offset(8)
         }
         testButton.setTitle("Test Connectivity", for: .normal)
-        testButton.setTitleColor(PimpColors.tintColor, for: UIControlState.normal)
+        testButton.setTitleColor(colors.tintColor, for: UIControlState.normal)
         testButton.snp.makeConstraints { (make) in
             make.top.equalTo(activateSwitch.snp.bottom).offset(8)
             make.leading.trailing.equalTo(content).inset(8)
         }
-        feedbackText.backgroundColor = PimpColors.background
+        feedbackText.backgroundColor = colors.background
         feedbackText.snp.makeConstraints { (make) in
             make.top.equalTo(testButton.snp.bottom).offset(8)
             make.leading.trailing.equalTo(content).inset(8)
@@ -290,7 +290,7 @@ class EditEndpointController: PimpViewController {
         Util.onUiThread {
             self.feedbackText.text = f
             self.feedbackText.font = UIFont.systemFont(ofSize: 16)
-            self.feedbackText.textColor = PimpColors.titles
+            self.feedbackText.textColor = self.colors.titles
         }
     }
     
