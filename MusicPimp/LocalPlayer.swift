@@ -18,7 +18,7 @@ class LocalPlayer: NSObject, PlayerType {
     let limiter = Limiter.sharedInstance
     var isLocal: Bool { get { return true } }
     
-    fileprivate let localPlaylist = LocalPlaylist()
+    fileprivate let localPlaylist = LocalPlaylist.sharedInstance
     
     var playlist: PlaylistType { get { return localPlaylist } }
     var playerInfo: PlayerInfo? = nil
@@ -29,6 +29,7 @@ class LocalPlayer: NSObject, PlayerType {
     fileprivate static var playerStatusContext = 1
     fileprivate let notificationCenter = NotificationCenter.default
     
+    // TODO use RxSwift
     let stateEvent = Event<PlaybackState>()
     let timeEvent = Event<Duration>()
     let trackEvent = Event<Track?>()
@@ -132,11 +133,11 @@ class LocalPlayer: NSObject, PlayerType {
     }
     
     func next() -> ErrorMessage? {
-        return withPlaylist({ $0.next() })
+        return withPlaylist { $0.next() }
     }
     
     func prev() -> ErrorMessage? {
-        return withPlaylist({ $0.prev() })
+        return withPlaylist { $0.prev() }
     }
     
     func skip(_ index: Int) -> ErrorMessage? {

@@ -31,6 +31,7 @@
 		618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */; };
 		619B7B7D1F058415001CF11A /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619B7B7C1F058415001CF11A /* DemoView.swift */; };
 		619BE4A31F81304A00586A9B /* PlaybackContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619BE4A21F81304A00586A9B /* PlaybackContainer.swift */; };
+		61AC37C02087CD74007A491C /* PlaylistPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */; };
 		61BE408F1F769BFA00A0EEC5 /* PlayQueueController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */; };
 		61BE40911F76ABF100A0EEC5 /* PlayerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */; };
 		61BE40931F77E70200A0EEC5 /* SideBySidePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */; };
@@ -221,6 +222,7 @@
 		618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMainSubCell.swift; sourceTree = "<group>"; };
 		619B7B7C1F058415001CF11A /* DemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
 		619BE4A21F81304A00586A9B /* PlaybackContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackContainer.swift; sourceTree = "<group>"; };
+		61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistPrefetcher.swift; sourceTree = "<group>"; };
 		61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueueController.swift; sourceTree = "<group>"; };
 		61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerParent.swift; sourceTree = "<group>"; };
 		61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBySidePlayer.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */,
 				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
 				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
+				61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -534,11 +537,11 @@
 		7DB1B3AA1B10CC790012B8AE /* Local */ = {
 			isa = PBXGroup;
 			children = (
+				7DDE247A1B7E6139007D810E /* CacheManager.swift */,
+				7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */,
+				7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */,
 				7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */,
 				7D6066E41AEC0EEA0057A67B /* LocalPlaylist.swift */,
-				7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */,
-				7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */,
-				7DDE247A1B7E6139007D810E /* CacheManager.swift */,
 			);
 			name = Local;
 			sourceTree = "<group>";
@@ -1152,6 +1155,7 @@
 				611854C11F63F14700859476 /* JsonError.swift in Sources */,
 				7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */,
 				7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */,
+				61AC37C02087CD74007A491C /* PlaylistPrefetcher.swift in Sources */,
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,
 				61BE408F1F769BFA00A0EEC5 /* PlayQueueController.swift in Sources */,
 				7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */,

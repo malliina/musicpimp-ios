@@ -10,6 +10,7 @@ import Foundation
 
 class DownloadUpdater {
     static let instance = DownloadUpdater(downloader: BackgroundDownloader.musicDownloader)
+    let log = LoggerFactory.shared.network(DownloadUpdater.self)
     
     let progress = Event<TrackProgress>()
     
@@ -32,6 +33,17 @@ class DownloadUpdater {
     
     func progressFor(track: Track) -> TrackProgress? {
         return downloadState[track.path]
+    }
+    
+    func downloadIfNecessary(track: Track) -> ErrorMessage? {
+        let alreadyDownloading = downloadState.contains { (path, _) -> Bool in
+            path == track.path
+        }
+        if alreadyDownloading {
+            log.info("Already downloading \(track.path), dropping additional download request.")
+            return nil
+        }
+        return download(track: track)
     }
     
     func download(track: Track) -> ErrorMessage? {

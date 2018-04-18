@@ -41,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
+        let _ = PlaylistPrefetcher.shared
         connectToPlayer()
 
         if let launchOptions = launchOptions {
