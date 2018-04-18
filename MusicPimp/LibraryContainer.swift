@@ -27,7 +27,6 @@ class LibraryContainer: PlaybackContainer {
             guard let library = child as? LibraryController else { return }
             library.stopListening()
             library.stopUpdates()
-            log.info("Stopped for \(library.title)")
         }
     }
     
