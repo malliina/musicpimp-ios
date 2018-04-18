@@ -214,7 +214,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
             }
         }
         tableView.deselectRow(at: indexPath, animated: false)
-//        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
 
