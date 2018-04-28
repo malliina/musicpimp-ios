@@ -32,6 +32,34 @@ class LocalLibrary: BaseLibrary {
     
     var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     
+    override func pingAuth() -> Observable<Version> {
+        return Observable.just(LocalLibrary.currentVersion)
+    }
+    
+    override func folder(_ id: String) -> Observable<MusicFolder> {
+        return folderAtPath(folderFor(path: id))
+    }
+    
+    override func rootFolder() -> Observable<MusicFolder> {
+        return folderAtPath(Folder.root)
+    }
+    
+    func folderAtPath(_ folder: Folder) -> Observable<MusicFolder> {
+//        log.info("Folder at \(folder.id) \(folder.title)")
+        let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath + ("/" + folder.path)
+        let items: [String] = (try? fileManager.contentsOfDirectory(atPath: absolutePath)) ?? []
+        let paths = items.map({ absolutePath + ("/" + $0) })
+        let (directories, files) = paths.partition(Files.isDirectory)
+        let folders = directories.map(parseFolder)
+        let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
+        //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")
+        return Observable.just(MusicFolder(folder: folder, folders: folders, tracks: tracks))
+    }
+    
+    func isSupportedFile(_ path: String) -> Bool {
+        return supportedExtensions.exists({ path.hasSuffix($0) })
+    }
+    
     func contains(_ track: Track) -> Bool {
         return url(track) != nil
     }
@@ -141,10 +169,13 @@ class LocalLibrary: BaseLibrary {
         return nil
     }
     
-    func parseFolder(_ absolute: String) -> Folder {
-        let path = relativize(absolute)
-        log.info("Abs: \(absolute), relative: \(path)")
-        return Folder(id: Util.urlEncodePathWithPlus(path), title: path.lastPathComponent(), path: path)
+    private func parseFolder(_ absolute: String) -> Folder {
+        return folderFor(path: relativize(absolute))
+    }
+    
+    private func folderFor(path: String) -> Folder {
+        let p = path.startsWith("/") ? path.tail() : path
+        return Folder(id: p, title: path.lastPathComponent(), path: p)
     }
     
     func relativize(_ path: String) -> String {
@@ -158,35 +189,5 @@ class LocalLibrary: BaseLibrary {
             return secs.seconds
         }
         return nil
-    }
-    
-    override func pingAuth() -> Observable<Version> {
-        return Observable.just(LocalLibrary.currentVersion)
-    }
-    
-    override func folder(_ id: String) -> Observable<MusicFolder> {
-        let path = Util.urlDecodeWithPlus(id)
-        let folder = parseFolder(path)
-        //Log.info("ID: \(id)")
-        return folderAtPath(folder)
-    }
-    
-    func isSupportedFile(_ path: String) -> Bool {
-        return supportedExtensions.exists({ path.hasSuffix($0) })
-    }
-    
-    override func rootFolder() -> Observable<MusicFolder> {
-        return folderAtPath(Folder.root)
-    }
-    
-    func folderAtPath(_ folder: Folder) -> Observable<MusicFolder> {
-        let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath + ("/" + folder.path)
-        let items: [String] = (try? fileManager.contentsOfDirectory(atPath: absolutePath)) ?? []
-        let paths = items.map({ absolutePath + ("/" + $0) })
-        let (directories, files) = paths.partition(Files.isDirectory)
-        let folders = directories.map(parseFolder)
-        let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
-        //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")
-        return Observable.just(MusicFolder(folder: folder, folders: folders, tracks: tracks))
     }
 }
