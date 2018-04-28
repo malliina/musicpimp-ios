@@ -12,7 +12,7 @@ import AVFoundation
 import RxSwift
 
 class LocalLibrary: BaseLibrary {
-    let log = Logger("org.musicpimp.MusicPimp.Local", category: "Library")
+    let log = LoggerFactory.shared.pimp(LocalLibrary.self)
     
     static let sharedInstance = LocalLibrary()
     static let currentVersion = Version(version: "1.0.0")
@@ -143,7 +143,7 @@ class LocalLibrary: BaseLibrary {
     
     func parseFolder(_ absolute: String) -> Folder {
         let path = relativize(absolute)
-        //Log.info("Abs: \(absolute), relative: \(path)")
+        log.info("Abs: \(absolute), relative: \(path)")
         return Folder(id: Util.urlEncodePathWithPlus(path), title: path.lastPathComponent(), path: path)
     }
     
@@ -154,32 +154,32 @@ class LocalLibrary: BaseLibrary {
     func duration(_ asset: AVAsset) -> Duration? {
         let time = asset.duration
         let secs = CMTimeGetSeconds(time)
-        if(secs.isNormal) {
+        if secs.isNormal {
             return secs.seconds
         }
         return nil
     }
     
-    override func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
-        f(LocalLibrary.currentVersion)
+    override func pingAuth() -> Observable<Version> {
+        return Observable.just(LocalLibrary.currentVersion)
     }
     
-    override func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
+    override func folder(_ id: String) -> Observable<MusicFolder> {
         let path = Util.urlDecodeWithPlus(id)
         let folder = parseFolder(path)
         //Log.info("ID: \(id)")
-        folderAtPath(folder, f: f)
+        return folderAtPath(folder)
     }
     
     func isSupportedFile(_ path: String) -> Bool {
         return supportedExtensions.exists({ path.hasSuffix($0) })
     }
     
-    override func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
-        folderAtPath(Folder.root, f: f)
+    override func rootFolder() -> Observable<MusicFolder> {
+        return folderAtPath(Folder.root)
     }
     
-    func folderAtPath(_ folder: Folder, f: (MusicFolder) -> Void) {
+    func folderAtPath(_ folder: Folder) -> Observable<MusicFolder> {
         let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath + ("/" + folder.path)
         let items: [String] = (try? fileManager.contentsOfDirectory(atPath: absolutePath)) ?? []
         let paths = items.map({ absolutePath + ("/" + $0) })
@@ -187,6 +187,6 @@ class LocalLibrary: BaseLibrary {
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
         //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")
-        f(MusicFolder(folder: folder, folders: folders, tracks: tracks))
+        return Observable.just(MusicFolder(folder: folder, folders: folders, tracks: tracks))
     }
 }

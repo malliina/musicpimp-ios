@@ -18,7 +18,7 @@ class PimpTableController: FeedbackTable {
     var library: LibraryType { return libraryManager.active }
     var player: PlayerType { return playerManager.active }
     
-    func onLoadError(_ error: PimpError) {
+    func onLoadError(_ error: Error) {
         clearItems()
         renderTable(error.message)
         onError(error)

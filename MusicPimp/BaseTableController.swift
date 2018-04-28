@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class BaseTableController: UITableViewController {
     let settings = PimpSettings.sharedInstance
@@ -15,6 +16,7 @@ class BaseTableController: UITableViewController {
     let limiter = Limiter.sharedInstance
     let colors = PimpColors.shared
     var currentFeedback: String? = nil
+    let bag = DisposeBag()
     
     init() {
         super.init(style: UITableViewStyle.plain)
@@ -119,8 +121,8 @@ class BaseTableController: UITableViewController {
         return label
     }
     
-    func onError(_ pimpError: PimpError) {
-        Util.onError(pimpError)
+    func onError(_ error: Error) {
+        Util.onError(error)
     }
     
 }

@@ -4,6 +4,8 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class HttpClient {
     private let log = LoggerFactory.shared.network(HttpClient.self)
@@ -23,6 +25,8 @@ class HttpClient {
     static func encodeBase64(_ unencoded: String) -> String {
         return unencoded.data(using: String.Encoding.utf8)!.base64EncodedString(options: NSData.Base64EncodingOptions())
     }
+    
+    let session = URLSession.shared
     
     func get(_ url: URL, headers: [String: String] = [:], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
         get(url, headers: headers) { (data, response, error) -> Void in
@@ -64,9 +68,39 @@ class HttpClient {
     func executeRequest(
         _ req: URLRequest,
         completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-        let session = URLSession.shared
         let task = session.dataTask(with: req, completionHandler: completionHandler)
         task.resume()
+    }
+    
+    func executeChecked(_ req: URLRequest) -> Observable<HttpResponse> {
+        // Fix
+        let url = req.url ?? URL(string: "https://www.musicpimp.org")!
+        return executeHttp(req).flatMap { self.statusChecked(url, response: $0) }
+//        return statusChecked(resource, response: self.get(url, headers: defaultHeaders))
+    }
+    
+    func executeHttp(_ req: URLRequest) -> Observable<HttpResponse> {
+        return session.rx.response(request: req).flatMap { (result) -> Observable<HttpResponse> in
+            let (response, data) = result
+            return Observable.just(HttpResponse(http: response, data: data))
+        }
+    }
+    
+    func statusChecked(_ url: URL, response: HttpResponse) -> Observable<HttpResponse> {
+        if response.isStatusOK {
+            return Observable.just(response)
+        } else {
+            self.log.error("Request to '\(url)' failed with status '\(response.statusCode)'.")
+            var errorMessage: String? = nil
+            if let json = Json.asJson(response.data) as? NSDictionary {
+                errorMessage = json[JsonKeys.ERROR] as? String
+            }
+            return Observable.error(PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: errorMessage)))
+        }
+    }
+    
+    func buildGet(url: URL, headers: [String: String] = [:]) -> URLRequest {
+        return buildRequest(url: url, httpMethod: HttpClient.GET, headers: headers, body: nil)
     }
     
     func buildRequest(url: URL, httpMethod: String, headers: [String: String], body: Data?) -> URLRequest {

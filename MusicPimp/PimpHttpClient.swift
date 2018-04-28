@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class Endpoints {
     static let
@@ -45,11 +46,15 @@ class PimpHttpClient: HttpClient {
         self.postHeaders = postHeaders
     }
     
-    func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
-        pimpGetParsed(Endpoints.PING_AUTH, parse: parseVersion, f: f, onError: onError)
+    func pingAuth() -> Observable<Version> {
+        return pimpGetParsed(Endpoints.PING_AUTH, parse: self.parseVersion)
     }
     
-    func pimpGetParsed<T>(_ resource: String, parse: @escaping (AnyObject) throws -> T, f: @escaping (T) -> Void, onError: @escaping (PimpError) -> Void) {
+    func pimpGetParsed<T>(_ resource: String, parse: @escaping (AnyObject) throws -> T) -> Observable<T> {
+        return pimpGetRx(url: urlTo(resource)).flatMap { self.parseAs(response: $0, parse: parse) }
+    }
+    
+    func pimpGetParsedOld<T>(_ resource: String, parse: @escaping (AnyObject) throws -> T, f: @escaping (T) -> Void, onError: @escaping (PimpError) -> Void) {
         pimpGet(resource, f: {
             (data: Data) -> Void in
             if let obj: AnyObject = Json.asJson(data) {
@@ -83,8 +88,21 @@ class PimpHttpClient: HttpClient {
             })
     }
     
+    func urlTo(_ resource: String) -> URL {
+        return URL(string: resource, relativeTo: baseURL)!
+    }
+    
+    func pimpGet(resource: String) -> Observable<HttpResponse> {
+        return pimpGetRx(url: urlTo(resource))
+    }
+    
+    func pimpGetRx(url: URL) -> Observable<HttpResponse> {
+        let req = buildGet(url: url, headers: defaultHeaders)
+        return executeChecked(req)
+    }
+    
     func pimpPost(_ resource: String, payload: [String: AnyObject], f: @escaping (Data) -> Void, onError: @escaping (PimpError) -> Void) {
-        let url = URL(string: resource, relativeTo: baseURL)!
+        let url = urlTo(resource)
         self.postJSON(
             url,
             headers: postHeaders,
@@ -107,7 +125,24 @@ class PimpHttpClient: HttpClient {
             if let json = Json.asJson(data) as? NSDictionary {
                 errorMessage = json[JsonKeys.ERROR] as? String
             }
-            onError(.responseFailure(ResponseDetails(resource: resource, code: statusCode, message: errorMessage)))
+            onError(.responseFailure(ResponseDetails(resource: urlTo(resource), code: statusCode, message: errorMessage)))
+        }
+    }
+    
+    private func parseAs<T>(response: HttpResponse, parse: @escaping (AnyObject) throws -> T) -> Observable<T> {
+        if let obj: AnyObject = Json.asJson(response.data) {
+            do {
+                let parsed = try parse(obj)
+                return Observable.just(parsed)
+            } catch let error as JsonError {
+                self.log.error("Parse error.")
+                return Observable.error(PimpError.parseError(error))
+            } catch _ {
+                return Observable.error(PimpError.simple("Unknown parse error."))
+            }
+        } else {
+            self.log.error("Not JSON: \(response.data)")
+            return Observable.error(PimpError.parseError(JsonError.notJson(response.data)))
         }
     }
     

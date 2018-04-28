@@ -36,14 +36,20 @@ class SearchResultsController: BaseMusicController {
             withMessage("Searching for \(term)...") {
                 self.results = []
             }
-            library.search(term, onError: { self.onSearchFailure(term, error: $0) }) { (results) -> Void in
-                // only updates the UI if the response represents the latest search
-                if self.latestSearchTerm == term {
-                    self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
-                        self.results = results
+            library.search(term).subscribe { (event) in
+                switch event {
+                case .next(let results):
+                    // only updates the UI if the response represents the latest search
+                    if self.latestSearchTerm == term {
+                        self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
+                            self.results = results
+                        }
                     }
+                case .error(let err):
+                    self.onSearchFailure(term, error: err)
+                case .completed: ()
                 }
-            }
+            }.disposed(by: bag)
         } else {
             withMessage(characters == 1 ? "Input one more character..." : "Input two or more characters") {
                 self.results = []
@@ -51,10 +57,14 @@ class SearchResultsController: BaseMusicController {
         }
     }
     
-    func onSearchFailure(_ term: String, error: PimpError) {
+    func onSearchFailure(_ term: String, error: Error) {
         log.info("Search for \(term) failed. \(error.message)")
         if term == latestSearchTerm {
             self.withMessage("Search of \(term) failed") { }
         }
     }
+}
+
+extension Error {
+    var message: String { return Util.message(error: self) }
 }

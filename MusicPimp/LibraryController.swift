@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class LibraryController: SearchableMusicController, TrackEventDelegate {
     private let log = LoggerFactory.shared.vc(LibraryController.self)
@@ -73,12 +74,18 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     }
     
     func loadFolder(_ id: String) {
-        library.folder(id, onError: onLoadError, f: onFolder)
+        let _ = library.folder(id).subscribe(handleFolderEvent)
     }
     
     func loadRoot() {
-        library.rootFolder(onLoadError) { (folder) in
-            self.onFolder(folder)
+        let _ = library.rootFolder().subscribe(handleFolderEvent)
+    }
+    
+    func handleFolderEvent(event: RxSwift.Event<MusicFolder>) {
+        switch event {
+        case .next(let folder): onFolder(folder)
+        case .error(let error): onLoadError(error)
+        case .completed: ()
         }
     }
     

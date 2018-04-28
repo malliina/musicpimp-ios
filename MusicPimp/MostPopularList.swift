@@ -27,16 +27,26 @@ class MostPopularList: TopListController<PopularEntry> {
     }
     
     override func refresh() {
-        withMessage("Loading popular tracks...") {
+        renderTable("Loading popular tracks...") {
             self.entries = []
         }
-        library.popular(0, until: itemsPerLoad, onError: onTopError, f: onTopLoaded)
+        library.popular(0, until: itemsPerLoad).subscribe { (event) in
+            switch event {
+            case .next(let rs): self.onTopLoaded(rs)
+            case .error(let err): self.onTopError(err)
+            case .completed: ()
+            }
+            }.disposed(by: bag)
     }
     
     override func loadMore() {
         let oldSize = entries.count
-        library.popular(oldSize, until: oldSize + itemsPerLoad, onError: onTopError) { content in
-            self.onMoreResults(oldSize, results: content)
-        }
+        library.popular(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
+            switch event {
+            case .next(let rs): self.onMoreResults(oldSize, results: rs)
+            case .error(let err): self.onTopError(err)
+            case .completed: ()
+            }
+            }.disposed(by: bag)
     }
 }

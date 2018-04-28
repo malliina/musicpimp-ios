@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum PimpError {
+enum PimpError: Error {
     case parseError(JsonError)
     case responseFailure(ResponseDetails)
     case networkFailure(RequestFailure)
@@ -60,11 +60,11 @@ class PimpErrorUtil {
 }
 
 class ResponseDetails {
-    let resource: String
+    let resource: URL
     let code: Int
     let message: String?
     
-    init(resource: String, code: Int, message: String?) {
+    init(resource: URL, code: Int, message: String?) {
         self.resource = resource
         self.code = code
         self.message = message

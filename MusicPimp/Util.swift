@@ -58,9 +58,13 @@ class Util {
         return s.addingPercentEncoding(withAllowedCharacters: cs) ?? s
     }
         
-    static func onError(_ pimpError: PimpError) {
-        let message = PimpErrorUtil.stringifyDetailed(pimpError)
-        log.error(message)
+    static func onError(_ error: Error) {
+        log.error(message(error: error))
+    }
+    
+    static func message(error: Error) -> String {
+        guard let error = error as? PimpError else { return "Unknown error" }
+        return PimpErrorUtil.stringifyDetailed(error)
     }
     
     // TODO source? SO?

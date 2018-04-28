@@ -12,6 +12,7 @@
 		610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */; };
 		6103504B1EACC73D00F85F04 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103504A1EACC73D00F85F04 /* Credits.swift */; };
 		611854C11F63F14700859476 /* JsonError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611854C01F63F14700859476 /* JsonError.swift */; };
+		611ED94C2094BE8700702F31 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611ED94B2094BE8700702F31 /* HttpResponse.swift */; };
 		612731731EB8F9FE0032788A /* SnapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612731721EB8F9FE0032788A /* SnapCell.swift */; };
 		613761331F7049BE0070C9CA /* PlaybackListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613761321F7049BE0070C9CA /* PlaybackListener.swift */; };
 		6145018A1F780F6000D8721E /* TopFlipController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614501891F780F6000D8721E /* TopFlipController.swift */; };
@@ -203,6 +204,7 @@
 		610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackDelegate.swift; sourceTree = "<group>"; };
 		6103504A1EACC73D00F85F04 /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		611854C01F63F14700859476 /* JsonError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonError.swift; sourceTree = "<group>"; };
+		611ED94B2094BE8700702F31 /* HttpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
 		612731721EB8F9FE0032788A /* SnapCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapCell.swift; sourceTree = "<group>"; };
 		613761321F7049BE0070C9CA /* PlaybackListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackListener.swift; sourceTree = "<group>"; };
 		614501891F780F6000D8721E /* TopFlipController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopFlipController.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 				7D4FF8DE1B4068E400C2D634 /* HTTPExtensions.swift */,
 				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
 				61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */,
+				611ED94B2094BE8700702F31 /* HttpResponse.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -1140,6 +1143,7 @@
 				7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */,
 				7D6756C31B04D5F100BC0CA9 /* BaseTableController.swift in Sources */,
 				7DC359691B35F196003B01B6 /* PimpTabBarController.swift in Sources */,
+				611ED94C2094BE8700702F31 /* HttpResponse.swift in Sources */,
 				7DC3595E1B35C7B3003B01B6 /* String+FontAwesome.swift in Sources */,
 				7D6756BB1B01092E00BC0CA9 /* UserPrefs.swift in Sources */,
 				7D349E801D8543F700EE9AF4 /* PimpFuture.swift in Sources */,

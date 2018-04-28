@@ -153,7 +153,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
         }
     }
     
-    func onTopError(_ e: PimpError) {
+    func onTopError(_ e: Error) {
         onError(e)
         withMessage(failedToLoadMessage) {
             self.entries = []

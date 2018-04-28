@@ -181,7 +181,13 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func loadAlarms(_ library: LibraryType) {
-        library.alarms(onAlarmError, f: onAlarms)
+        library.alarms().subscribe { (event) in
+            switch event {
+            case .next(let alarms): self.onAlarms(alarms)
+            case .error(let err): self.onError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func saveAndReload(_ alarm: Alarm) {

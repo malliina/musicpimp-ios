@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import RxSwift
 
 class MostRecentList: TopListController<RecentEntry> {
     let MostRecentCellKey = "MostRecentCell"
     override var header: String { return "Most Recent" }
     override var emptyMessage: String { get { return "No recent tracks." } }
     override var failedToLoadMessage: String { return "Failed to load recent tracks." }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.register(MostRecentCell.self, forCellReuseIdentifier: MostRecentCellKey)
@@ -38,13 +39,23 @@ class MostRecentList: TopListController<RecentEntry> {
     override func refresh() {
         entries = []
         renderTable("Loading recent tracks...")
-        library.recent(0, until: itemsPerLoad, onError: onTopError, f: onTopLoaded)
+        library.recent(0, until: itemsPerLoad).subscribe { (event) in
+            switch event {
+            case .next(let rs): self.onTopLoaded(rs)
+            case .error(let err): self.onTopError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     override func loadMore() {
         let oldSize = entries.count
-        library.recent(oldSize, until: oldSize + itemsPerLoad, onError: onTopError) { content in
-            self.onMoreResults(oldSize, results: content)
-        }
+        library.recent(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
+            switch event {
+            case .next(let rs): self.onMoreResults(oldSize, results: rs)
+            case .error(let err): self.onTopError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
 }

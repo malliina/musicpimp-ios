@@ -71,7 +71,7 @@ class Downloader {
                                 onError(self.simpleError("No data in response."))
                             }
                         } else {
-                            onError(.responseFailure(ResponseDetails(resource: "\(url)", code: response.statusCode, message: nil)))
+                            onError(.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: nil)))
                         }
                     } else {
                         onError(self.simpleError("Unknown response."))

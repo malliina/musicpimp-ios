@@ -31,7 +31,13 @@ class SavedPlaylistsTableViewController: PimpTableController {
     
     func loadPlaylists() {
         setFeedback(loadingMessage)
-        library.playlists(onLoadError, f: onPlaylists)
+        library.playlists().subscribe { (event) in
+            switch event {
+            case .next(let ps): self.onPlaylists(ps)
+            case .error(let err): self.onLoadError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func onPlaylists(_ sps: [SavedPlaylist]) {

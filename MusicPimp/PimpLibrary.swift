@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 open class PimpLibrary: BaseLibrary {
     let endpoint: Endpoint
@@ -19,36 +20,36 @@ open class PimpLibrary: BaseLibrary {
         self.helper = PimpUtils(endpoint: endpoint)
     }
 
-    override func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
-        client.pingAuth(onError, f: f)
+    override func pingAuth() -> Observable<Version> {
+        return client.pingAuth()
     }
     
-    override func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
-        client.pimpGetParsed(Endpoints.FOLDERS, parse: parseMusicFolder, f: f, onError: onError)
+    override func rootFolder() -> Observable<MusicFolder> {
+        return client.pimpGetParsed(Endpoints.FOLDERS, parse: parseMusicFolder)
     }
     
-    override func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
-        client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder, f: f, onError: onError)
+    override func folder(_ id: String) -> Observable<MusicFolder> {
+        return client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder)
     }
     
-    override func tracks(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping ([Track]) -> Void) {
-        tracksInner(id,  others: [], acc: [], f: f, onError: onError)
+    override func tracks(_ id: String) -> Observable<[Track]> {
+        return tracksInner(id,  others: [], acc: [])
     }
     
-    override func playlists(_ onError: @escaping (PimpError) -> Void, f: @escaping ([SavedPlaylist]) -> Void) {
-        client.pimpGetParsed("\(Endpoints.PLAYLISTS)", parse: parsePlaylists, f: f, onError: onError)
+    override func playlists() -> Observable<[SavedPlaylist]> {
+        return client.pimpGetParsed("\(Endpoints.PLAYLISTS)", parse: parsePlaylists)
     }
     
-    override func playlist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, f: @escaping (SavedPlaylist) -> Void) {
-        client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse, f: f, onError: onError)
+    override func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist> {
+        return client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse)
     }
     
-    override func popular(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([PopularEntry]) -> Void) {
-        client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", parse: parsePopulars, f: f, onError: onError)
+    override func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]> {
+        return client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", parse: parsePopulars)
     }
     
-    override func recent(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([RecentEntry]) -> Void) {
-        client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", parse: parseRecents, f: f, onError: onError)
+    override func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]> {
+        return client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", parse: parseRecents)
     }
     
     override func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void) {
@@ -77,16 +78,16 @@ open class PimpLibrary: BaseLibrary {
             }, onError: onError)
     }
     
-    override func search(_ term: String, onError: @escaping (PimpError) -> Void, ts: @escaping ([Track]) -> Void) {
+    override func search(_ term: String) -> Observable<[Track]> {
         if let encodedTerm = term.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
-            client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", parse: parseTracks, f: ts, onError: onError)
+            return client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", parse: parseTracks)
         } else {
-            onError(PimpError.simple("Invalid search term: \(term)"))
+            return Observable.error(PimpError.simple("Invalid search term: \(term)"))
         }
     }
     
-    override func alarms(_ onError: @escaping (PimpError) -> Void, f: @escaping ([Alarm]) -> Void) {
-        client.pimpGetParsed(Endpoints.ALARMS, parse: parseAlarms, f: f, onError: onError)
+    override func alarms() -> Observable<[Alarm]> {
+        return client.pimpGetParsed(Endpoints.ALARMS, parse: parseAlarms)
     }
     
     override func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
@@ -138,19 +139,19 @@ open class PimpLibrary: BaseLibrary {
             }, onError: onError)
     }
     
-    fileprivate func tracksInner(_ id: String, others: [String], acc: [Track], f: @escaping ([Track]) -> Void, onError: @escaping (PimpError) -> Void){
-        folder(id, onError: onError) { result in
-            let subIDs = result.folders.map { $0.id }
-            let remaining = others + subIDs
-            let newAcc = acc + result.tracks
-            if let head = remaining.first {
-                let tail = remaining.tail()
-                self.tracksInner(head, others: tail, acc: newAcc, f: f, onError: onError)
-            } else {
-                f(newAcc)
-            }
-        }
-    }
+//    fileprivate func tracksInner(_ id: String, others: [String], acc: [Track]){
+//        return folder(id, onError: onError) { result in
+//            let subIDs = result.folders.map { $0.id }
+//            let remaining = others + subIDs
+//            let newAcc = acc + result.tracks
+//            if let head = remaining.first {
+//                let tail = remaining.tail()
+//                self.tracksInner(head, others: tail, acc: newAcc, f: f, onError: onError)
+//            } else {
+//                f(newAcc)
+//            }
+//        }
+//    }
     
     func parseFolder(_ obj: NSDictionary) throws -> Folder {
         let id = try readString(obj, JsonKeys.ID)

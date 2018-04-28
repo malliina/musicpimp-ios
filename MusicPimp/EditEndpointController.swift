@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 fileprivate extension Selector {
     static let saveClicked = #selector(EditEndpointController.onSave(_:))
@@ -49,6 +50,8 @@ class EditEndpointController: PimpViewController {
     
     var pimpConstraint: Constraint? = nil
     var cloudConstraint: Constraint? = nil
+    
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -231,9 +234,13 @@ class EditEndpointController: PimpViewController {
             log.info("Testing \(endpoint.httpBaseUrl)")
             feedback("Connecting...")
             let client = Libraries.fromEndpoint(endpoint)
-            client.pingAuth(
-                {(err) in self.onTestFailure(endpoint, error: err) },
-                f: {(v) in self.onTestSuccess(endpoint, v: v) })
+            let _ = client.pingAuth().subscribe { (event) in
+                switch event {
+                case .next(let version): self.onTestSuccess(endpoint, v: version)
+                case .error(let error): self.onTestFailure(endpoint, error: error)
+                case .completed: ()
+                }
+            }.disposed(by: disposeBag)
         } else {
             feedback("Please ensure that all the fields are filled in properly.")
         }
@@ -263,23 +270,24 @@ class EditEndpointController: PimpViewController {
         feedback("\(server) \(v.version) at your service.")
     }
     
-    func onTestFailure(_ e: Endpoint, error: PimpError) {
+    func onTestFailure(_ e: Endpoint, error: Error) {
         let msg = errorMessage(e, error: error)
         log.info("Test failed: \(msg)")
         feedback(msg)
     }
     
-    func errorMessage(_ e: Endpoint, error: PimpError) -> String {
+    func errorMessage(_ e: Endpoint, error: Error) -> String {
+        guard let error = error as? PimpError else { return "Unknown error." }
         switch error {
-            case PimpError.responseFailure(let details):
+            case .responseFailure(let details):
                 let code = details.code
                 switch code {
                     case 401: return "Unauthorized. Check your username/password."
                     default: return "HTTP error code \(code)."
                 }
-            case PimpError.networkFailure( _):
+            case .networkFailure( _):
                 return "Unable to connect to \(e.httpBaseUrl)."
-            case PimpError.parseError:
+            case .parseError:
                 return "The response was not understood."
             case .simpleError(let message):
                 return message.message

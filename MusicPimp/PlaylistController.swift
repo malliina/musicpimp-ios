@@ -93,14 +93,14 @@ class PlaylistController: BaseMusicController {
         // TODO DRY by refactoring recent and popular handling into reusable modules
         switch mode {
         case .popular:
-            let oldSize = popular.count
-            library.popular(oldSize, until: oldSize + itemsPerLoad, onError: onPopularError) { content in
-                self.onMorePopulars(oldSize, populars: content)
+            let from = popular.count
+            fetchPopular(from: from, maxItems: itemsPerLoad) { ps in
+                self.onMorePopulars(from, populars: ps)
             }
         case .recent:
-            let oldSize = recent.count
-            library.recent(oldSize, until: oldSize + itemsPerLoad, onError: onRecentError) { content in
-                self.onMoreRecents(oldSize, recents: content)
+            let from = recent.count
+            fetchRecent(from: from, maxItems: itemsPerLoad) { rs in
+                self.onMoreRecents(from, recents: rs)
             }
         }
     }
@@ -113,13 +113,33 @@ class PlaylistController: BaseMusicController {
             withMessage("Loading popular tracks...") {
                 self.popular = []
             }
-            library.popular(0, until: itemsPerLoad, onError: onPopularError, f: onPopularsLoaded)
+            fetchPopular(from: 0, maxItems: itemsPerLoad, onPopulars: onPopularsLoaded)
         case .recent:
             withMessage("Loading recent tracks...") {
                 self.recent = []
             }
-            library.recent(0, until: itemsPerLoad, onError: onRecentError, f: onRecentsLoaded)
+            fetchRecent(from: 0, maxItems: itemsPerLoad, onRecents: onRecentsLoaded)
         }
+    }
+    
+    func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) {
+        library.popular(from, until: from + maxItems).subscribe { (event) in
+            switch event {
+            case .next(let pops): onPopulars(pops)
+            case .error(let err): self.onPopularError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
+    }
+    
+    func fetchRecent(from: Int, maxItems: Int, onRecents: @escaping ([RecentEntry]) -> Void) {
+        library.recent(from, until: from + maxItems).subscribe { (event) in
+            switch event {
+            case .next(let recents): onRecents(recents)
+            case .error(let err): self.onRecentError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func decorateRecentCell(_ cell: SnapMainSubCell, track: RecentEntry) {
@@ -208,14 +228,14 @@ class PlaylistController: BaseMusicController {
         }
     }
     
-    func onPopularError(_ e: PimpError) {
+    func onPopularError(_ e: Error) {
         onError(e)
         withMessage("Failed to load popular tracks.") {
             self.popular = []
         }
     }
     
-    func onRecentError(_ e: PimpError) {
+    func onRecentError(_ e: Error) {
         onError(e)
         withMessage("Failed to load recent tracks.") {
             self.recent = []

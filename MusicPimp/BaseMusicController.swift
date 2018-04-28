@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class BaseMusicController : PimpTableController, AccessoryDelegate {
     private let log = LoggerFactory.shared.vc(BaseMusicController.self)
@@ -164,7 +165,13 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
     
     func withTracks(id: String, f: @escaping ([Track]) -> [ErrorMessage]) {
-        library.tracks(id, onError: onError) { tracks in _ = f(tracks) }
+        library.tracks(id).subscribe { (event) in
+            switch event {
+            case .next(let ts): let _ = f(ts)
+            case .error(let err): self.onError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func addTrack(_ track: Track) -> ErrorMessage? {

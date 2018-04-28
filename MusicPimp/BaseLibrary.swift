@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import RxSwift
+
 open class BaseLibrary: LibraryType {
     var isLocal: Bool { get { return false } }
     var rootFolderKey: String { get { return "" } }
@@ -14,37 +16,37 @@ open class BaseLibrary: LibraryType {
     
     let notImplementedError = PimpError.simpleError(ErrorMessage(message: "Not implemented yet"))
     
-    func pingAuth(_ onError: @escaping (PimpError) -> Void, f: @escaping (Version) -> Void) {
-        
+    func pingAuth() -> Observable<Version> {
+        return Observable.empty()
     }
     
-    func folder(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
-        
+    func folder(_ id: String) -> Observable<MusicFolder> {
+        return Observable.empty()
     }
     
-    func rootFolder(_ onError: @escaping (PimpError) -> Void, f: @escaping (MusicFolder) -> Void) {
-        
+    func rootFolder() -> Observable<MusicFolder> {
+        return Observable.empty()
     }
     
-    func tracks(_ id: String, onError: @escaping (PimpError) -> Void, f: @escaping ([Track]) -> Void) {
-        tracksInner(id,  others: [], acc: [], f: f, onError: onError)
+    func tracks(_ id: String) -> Observable<[Track]> {
+        return tracksInner(id,  others: [], acc: [])
     }
     
     // the saved playlists
-    func playlists(_ onError: @escaping (PimpError) -> Void, f: @escaping ([SavedPlaylist]) -> Void) {
-        f([])
+    func playlists() -> Observable<[SavedPlaylist]> {
+        return Observable.just([])
     }
     
-    func playlist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, f: @escaping (SavedPlaylist) -> Void) {
-        onError(notImplementedError)
+    func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist> {
+        return Observable.error(notImplementedError)
     }
     
-    func popular(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([PopularEntry]) -> Void) {
-        onError(notImplementedError)
+    func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]> {
+        return Observable.error(notImplementedError)
     }
     
-    func recent(_ from: Int, until: Int, onError: @escaping (PimpError) -> Void, f: @escaping ([RecentEntry]) -> Void) {
-        onError(notImplementedError)
+    func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]> {
+        return Observable.error(notImplementedError)
     }
     
     func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void) {
@@ -55,12 +57,12 @@ open class BaseLibrary: LibraryType {
         onSuccess()
     }
     
-    func search(_ term: String, onError: @escaping (PimpError) -> Void, ts: @escaping ([Track]) -> Void) {
-        ts([])
+    func search(_ term: String) -> Observable<[Track]> {
+        return Observable.just([])
     }
     
-    func alarms(_ onError: @escaping (PimpError) -> Void, f: @escaping ([Alarm]) -> Void) {
-        f([])
+    func alarms() -> Observable<[Alarm]> {
+        return Observable.just([])
     }
     
     func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
@@ -83,16 +85,16 @@ open class BaseLibrary: LibraryType {
         onSuccess()
     }
     
-    fileprivate func tracksInner(_ id: String, others: [String], acc: [Track], f: @escaping ([Track]) -> Void, onError: @escaping (PimpError) -> Void){
-        folder(id, onError: onError) { result in
+    func tracksInner(_ id: String, others: [String], acc: [Track]) -> Observable<[Track]> {
+        return folder(id).flatMap { (result) -> Observable<[Track]> in
             let subIDs = result.folders.map { $0.id }
             let remaining = others + subIDs
             let newAcc = acc + result.tracks
             if let head = remaining.first {
                 let tail = remaining.tail()
-                self.tracksInner(head, others: tail, acc: newAcc, f: f, onError: onError)
+                return self.tracksInner(head, others: tail, acc: newAcc)
             } else {
-                f(newAcc)
+                return Observable.just(newAcc)
             }
         }
     }
