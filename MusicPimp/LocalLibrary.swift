@@ -154,11 +154,12 @@ class LocalLibrary: BaseLibrary {
             let relativeDir = relativePath.stringByDeletingLastPathComponent()
                 
             let actualTrack = track ?? relativePath.lastPathComponent().stringByDeletingPathExtension()
-            let actualAlbum = album ?? relativeDir.lastPathComponent()
-            let actualArtist = artist ?? relativeDir.stringByDeletingLastPathComponent().lastPathComponent()
-                
+            let albumString = album ?? relativeDir.lastPathComponent()
+            let actualAlbum = albumString == "/" ? "" : albumString
+            let artistString = artist ?? relativeDir.stringByDeletingLastPathComponent().lastPathComponent()
+            let actualArtist = artistString == "/" ? "" : artistString
             if let dur = duration(asset) {
-                return Track(id: Util.urlEncodePathWithPlus(relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
+                return Track(id: relativePath, title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
             } else {
                 log.error("Unable to parse duration and URL of \(absolutePath)")
             }
