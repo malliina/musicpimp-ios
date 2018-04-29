@@ -46,8 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = PlaylistPrefetcher.shared
         connectToPlayer()
 
-        if let launchOptions = launchOptions {
-            notifications.handleNotification(application, data: launchOptions)
+        if let launchOptions = launchOptions, let payload = launchOptions[UIApplicationLaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+            notifications.handleNotification(application, window: window, data: payload)
         }
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
 
@@ -120,7 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        notifications.handleNotification(application, data: userInfo)
+        notifications.handleNotification(application, window: window, data: userInfo)
     }
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {

@@ -51,14 +51,12 @@ open class PimpNotifications {
         settings.notificationsAllowed = false
     }
     
-    func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
-        log.info("Handling notification")
+    func handleNotification(_ app: UIApplication, window: UIWindow?, data: [AnyHashable: Any]) {
         do {
             let tag: String = try Json.readMapOrFail(data, "tag")
             let cmd: String = try Json.readMapOrFail(data, "cmd")
             guard let endpoint = settings.endpoints().find({ $0.id == tag }) else { throw JsonError.invalid("tag", tag) }
             if cmd == "stop" {
-                log.info("Stopping alarm playback...")
                 let library = Libraries.fromEndpoint(endpoint)
                 library.stopAlarm().subscribe({ (event) in
                     switch event {
