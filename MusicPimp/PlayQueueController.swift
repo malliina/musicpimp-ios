@@ -187,7 +187,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     }
     
     fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
-        LibraryManager.sharedInstance.active.savePlaylist(playlist, onError: Util.onError) { (id: PlaylistID) -> Void in
+        run(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
             self.log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
             self.savedPlaylist = playlist
         }

@@ -14,7 +14,8 @@ class HttpResponse {
     
     var statusCode: Int { return http.statusCode }
     var isStatusOK: Bool { return statusCode >= 200 && statusCode < 300 }
-    var json: NSDictionary? { return Json.asJson(data) as? NSDictionary }
+    var json: NSDictionary? { return jsonData as? NSDictionary }
+    var jsonData: AnyObject? { return Json.asJson(data) }
     
 //    var errors: [SingleError] {
 //        get {

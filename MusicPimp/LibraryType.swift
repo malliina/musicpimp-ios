@@ -25,13 +25,13 @@ protocol LibraryType {
     func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist>
     func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]>
     func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]>
-    func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void)
-    func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func savePlaylist(_ sp: SavedPlaylist) -> Observable<PlaylistID>
+    func deletePlaylist(_ id: PlaylistID) -> Observable<HttpResponse>
     
     func alarms() -> Observable<[Alarm]>
-    func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
-    func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
-    func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
-    func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
-    func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void)
+    func saveAlarm(_ alarm: Alarm) -> Observable<HttpResponse>
+    func deleteAlarm(_ id: AlarmID) -> Observable<HttpResponse>
+    func stopAlarm() -> Observable<HttpResponse>
+    func registerNotifications(_ token: PushToken, tag: String) -> Observable<HttpResponse>
+    func unregisterNotifications(_ tag: String) -> Observable<HttpResponse>
 }

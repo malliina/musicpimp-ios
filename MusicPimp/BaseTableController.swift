@@ -132,7 +132,7 @@ class BaseTableController: UITableViewController {
             case .error(let err): self.onError(err)
             case .completed: ()
             }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
     }
 }
 

@@ -7,9 +7,14 @@
 //
 
 import Foundation
+import RxSwift
 
 class PimpViewController: UIViewController {
+    private let log = LoggerFactory.shared.vc(PimpViewController.self)
+    
     let colors = PimpColors.shared
+   
+    let bag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,5 +37,19 @@ class PimpViewController: UIViewController {
                 make.leadingMargin.trailingMargin.equalToSuperview()
             }
         }
+    }
+    
+    func run<T>(_ o: Observable<T>, onResult: @escaping (T) -> Void) {
+        o.subscribe { (event) in
+            switch event {
+            case .next(let t): onResult(t)
+            case .error(let err): self.onError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
+    }
+    
+    func onError(_ error: Error) {
+        log.error(error.message)
     }
 }

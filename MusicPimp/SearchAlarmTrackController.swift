@@ -9,6 +9,7 @@
 import Foundation
 
 class SearchAlarmTrackController: SearchableMusicController {
+    let log = LoggerFactory.shared.vc(SearchAlarmTrackController.self)
     
     var alarm: MutableAlarm? = nil
     
@@ -32,16 +33,8 @@ class SearchAlarmTrackController: SearchableMusicController {
             alarm?.track = track
         }
         tableView.deselectRow(at: indexPath, animated: false)
-        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+        tableView.reloadRows(at: [indexPath], with: .none)
+        searchController.isActive = false
         goBack()
-    }
-
-    func goBack() {
-        let isAddMode = presentingViewController is UINavigationController
-        if isAddMode {
-            dismiss(animated: true, completion: nil)
-        } else {
-            navigationController!.popViewController(animated: true)
-        }
     }
 }

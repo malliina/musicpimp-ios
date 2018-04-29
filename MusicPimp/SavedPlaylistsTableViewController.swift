@@ -76,7 +76,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let index = indexPath.row
         let playlist = playlists[index]
         if let id = playlist.id {
-            library.deletePlaylist(id, onError: onError) {
+            run(library.deletePlaylist(id)) { _ in
                 self.log.info("Deleted playlist with ID \(id)")
                 self.onUiThread {
                     self.playlists.remove(at: index)
@@ -84,9 +84,5 @@ class SavedPlaylistsTableViewController: PimpTableController {
                 }
             }
         }
-    }
-    
-    @objc func goBack() {
-        dismiss(animated: true, completion: nil)
     }
 }

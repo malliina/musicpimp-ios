@@ -28,55 +28,40 @@ class HttpClient {
     
     let session = URLSession.shared
     
-    func get(_ url: URL, headers: [String: String] = [:], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
-        get(url, headers: headers) { (data, response, error) -> Void in
-            if let error = error {
-                onError(RequestFailure(url: url, code: error._code, data: data))
-            } else if let httpResponse = response as? HTTPURLResponse, let data = data {
-                onResponse(data, httpResponse)
-            } else {
-                self.log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
+    func executeParsedJson<T>(_ req: URLRequest, parse: @escaping (NSDictionary) throws -> T) -> Observable<T> {
+        return executeParsed(req) { response in
+            try self.asJson(response: response, parse: parse)
+        }
+    }
+    
+    func executeParsed<T>(_ req: URLRequest, parse: @escaping (HttpResponse) throws -> T) -> Observable<T> {
+        return executeChecked(req).flatMap { (response) -> Observable<T> in
+            self.recovered { () -> T in
+                try parse(response)
             }
         }
     }
     
-    func get(_ url: URL, headers: [String: String] = [:], completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-        executeRequest(
-            buildRequest(url: url, httpMethod: HttpClient.GET, headers: headers, body: nil),
-            completionHandler: completionHandler)
-    }
-    
-    func postJSON(_ url: URL, headers: [String: String] = [:], payload: [String: AnyObject], onResponse: @escaping (Data, HTTPURLResponse) -> Void, onError: @escaping (RequestFailure) -> Void) {
-        postJSON(url, headers: headers, jsonObj: payload) { (data, response, error) -> Void in
-            if let error = error {
-                onError(RequestFailure(url: url, code: error._code, data: data))
-            } else if let httpResponse = response as? HTTPURLResponse, let data = data {
-                onResponse(data, httpResponse)
-            } else {
-                self.log.error("Unable to interpret HTTP response to URL \(url.absoluteString)")
-            }
+    func asJson<T>(response: HttpResponse, parse: (NSDictionary) throws -> T) throws-> T {
+        if let json = response.json {
+            return try parse(json)
+        } else {
+            throw PimpError.parseError(JsonError.notJson(response.data))
         }
     }
-
-    func postJSON(_ url: URL, headers: [String: String] = [:], jsonObj: [String: AnyObject], completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-        let req = buildRequest(url: url, httpMethod: HttpClient.POST, headers: headers, body: try? JSONSerialization.data(withJSONObject: jsonObj, options: []))
-        executeRequest(
-            req,
-            completionHandler: completionHandler)
-    }
     
-    func executeRequest(
-        _ req: URLRequest,
-        completionHandler: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-        let task = session.dataTask(with: req, completionHandler: completionHandler)
-        task.resume()
+    func recovered<T>(code: () throws -> T) -> Observable<T> {
+        do {
+            return try Observable.just(code())
+        } catch let e {
+            return Observable.error(e)
+        }
     }
     
     func executeChecked(_ req: URLRequest) -> Observable<HttpResponse> {
         // Fix
         let url = req.url ?? URL(string: "https://www.musicpimp.org")!
         return executeHttp(req).flatMap { self.statusChecked(url, response: $0) }
-//        return statusChecked(resource, response: self.get(url, headers: defaultHeaders))
     }
     
     func executeHttp(_ req: URLRequest) -> Observable<HttpResponse> {

@@ -49,12 +49,12 @@ open class BaseLibrary: LibraryType {
         return Observable.error(notImplementedError)
     }
     
-    func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void) {
-        onError(notImplementedError)
+    func savePlaylist(_ sp: SavedPlaylist) -> Observable<PlaylistID> {
+        return Observable.error(notImplementedError)
     }
     
-    func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func deletePlaylist(_ id: PlaylistID) -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
     func search(_ term: String) -> Observable<[Track]> {
@@ -65,24 +65,24 @@ open class BaseLibrary: LibraryType {
         return Observable.just([])
     }
     
-    func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func saveAlarm(_ alarm: Alarm) -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
-    func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func deleteAlarm(_ id: AlarmID) -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
-    func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func stopAlarm() -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
-    func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func registerNotifications(_ token: PushToken, tag: String) -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
-    func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        onSuccess()
+    func unregisterNotifications(_ tag: String) -> Observable<HttpResponse> {
+        return Observable.error(notImplementedError)
     }
     
     func tracksInner(_ id: String, others: [String], acc: [Track]) -> Observable<[Track]> {

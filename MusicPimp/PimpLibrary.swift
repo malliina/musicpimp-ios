@@ -25,11 +25,11 @@ open class PimpLibrary: BaseLibrary {
     }
     
     override func rootFolder() -> Observable<MusicFolder> {
-        return client.pimpGetParsed(Endpoints.FOLDERS, parse: parseMusicFolder)
+        return client.pimpGetParsedJson(Endpoints.FOLDERS, parse: parseMusicFolder)
     }
     
     override func folder(_ id: String) -> Observable<MusicFolder> {
-        return client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder)
+        return client.pimpGetParsedJson("\(Endpoints.FOLDERS)/\(id)", parse: parseMusicFolder)
     }
     
     override func tracks(_ id: String) -> Observable<[Track]> {
@@ -37,45 +37,30 @@ open class PimpLibrary: BaseLibrary {
     }
     
     override func playlists() -> Observable<[SavedPlaylist]> {
-        return client.pimpGetParsed("\(Endpoints.PLAYLISTS)", parse: parsePlaylists)
+        return client.pimpGetParsedJson("\(Endpoints.PLAYLISTS)", parse: parsePlaylists)
     }
     
     override func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist> {
-        return client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse)
+        return client.pimpGetParsedJson("\(Endpoints.PLAYLISTS)\(id.id)", parse: parseGetPlaylistResponse)
     }
     
     override func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]> {
-        return client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", parse: parsePopulars)
+        return client.pimpGetParsedJson("\(Endpoints.Popular)?from=\(from)&until=\(until)", parse: parsePopulars)
     }
     
     override func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]> {
-        return client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", parse: parseRecents)
+        return client.pimpGetParsedJson("\(Endpoints.Recent)?from=\(from)&until=\(until)", parse: parseRecents)
     }
     
-    override func savePlaylist(_ sp: SavedPlaylist, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (PlaylistID) -> Void) {
+    override func savePlaylist(_ sp: SavedPlaylist) -> Observable<PlaylistID> {
         let json = [
             JsonKeys.PLAYLIST: SavedPlaylist.toJson(sp) as AnyObject
         ]
-        client.pimpPost("\(Endpoints.PLAYLISTS)", payload: json, f: { (data) -> Void in
-            if let json = Json.asJson(data) {
-                do {
-                    let id = try self.parsePlaylistID(json)
-                    onSuccess(id)
-                } catch let error as JsonError {
-                    onError(.parseError(error))
-                } catch _ {
-                    onError(.simple("Unknown parse error."))
-                }
-            } else {
-                onError(.parseError(JsonError.notJson(data)))
-            }
-            }, onError: onError)
+        return client.pimpPostParsed(Endpoints.PLAYLISTS, payload: json, parse: self.parsePlaylistID)
     }
     
-    override func deletePlaylist(_ id: PlaylistID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: [:], f: { (data) -> Void in
-            onSuccess()
-            }, onError: onError)
+    override func deletePlaylist(_ id: PlaylistID) -> Observable<HttpResponse> {
+        return client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: [:])
     }
     
     override func search(_ term: String) -> Observable<[Track]> {
@@ -90,104 +75,83 @@ open class PimpLibrary: BaseLibrary {
         return client.pimpGetParsed(Endpoints.ALARMS, parse: parseAlarms)
     }
     
-    override func saveAlarm(_ alarm: Alarm, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
+    override func saveAlarm(_ alarm: Alarm) -> Observable<HttpResponse> {
         let payload: [String: AnyObject] = [
             JsonKeys.CMD: JsonKeys.Save as AnyObject,
             JsonKeys.Ap: Alarm.toJson(alarm) as AnyObject,
             JsonKeys.Enabled: alarm.enabled as AnyObject
         ]
-        client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            onSuccess()
-            }, onError: onError)
+        return client.pimpPost(Endpoints.ALARMS, payload: payload)
     }
     
-    override func deleteAlarm(_ id: AlarmID, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
+    override func deleteAlarm(_ id: AlarmID) -> Observable<HttpResponse> {
         let payload = [
             JsonKeys.CMD : JsonKeys.DELETE,
             JsonKeys.ID : id.id
         ]
-        alarmsPost(payload as [String : AnyObject], onError: onError, onSuccess: onSuccess)
+        return alarmsPost(payload as [String : AnyObject])
     }
     
-    override func stopAlarm(_ onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
+    override func stopAlarm() -> Observable<HttpResponse> {
         let payload = [
             JsonKeys.CMD: JsonKeys.STOP
         ]
-        alarmsPost(payload as [String : AnyObject], onError: onError, onSuccess: onSuccess)
+        return alarmsPost(payload as [String : AnyObject])
     }
     
-    override func registerNotifications(_ token: PushToken, tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
+    override func registerNotifications(_ token: PushToken, tag: String) -> Observable<HttpResponse> {
         let payload = [
             JsonKeys.CMD: JsonKeys.ApnsAdd,
             JsonKeys.Id: token.token,
             JsonKeys.ApnsTag: tag
         ]
-        alarmsPost(payload as [String : AnyObject], onError: onError, onSuccess: onSuccess)
+        return alarmsPost(payload as [String : AnyObject])
     }
     
-    override func unregisterNotifications(_ tag: String, onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
+    override func unregisterNotifications(_ tag: String) -> Observable<HttpResponse> {
         let payload = [
             JsonKeys.CMD: JsonKeys.ApnsRemove,
             JsonKeys.Id: tag
         ]
-        alarmsPost(payload as [String : AnyObject], onError: onError, onSuccess: onSuccess)
+        return alarmsPost(payload as [String : AnyObject])
     }
     
-    fileprivate func alarmsPost(_ payload: [String: AnyObject], onError: @escaping (PimpError) -> Void, onSuccess: @escaping () -> Void) {
-        client.pimpPost(Endpoints.ALARMS, payload: payload, f: { (data) -> Void in
-            onSuccess()
-            }, onError: onError)
+    fileprivate func alarmsPost(_ payload: [String: AnyObject]) -> Observable<HttpResponse> {
+        return client.pimpPost(Endpoints.ALARMS, payload: payload)
     }
     
-//    fileprivate func tracksInner(_ id: String, others: [String], acc: [Track]){
-//        return folder(id, onError: onError) { result in
-//            let subIDs = result.folders.map { $0.id }
-//            let remaining = others + subIDs
-//            let newAcc = acc + result.tracks
-//            if let head = remaining.first {
-//                let tail = remaining.tail()
-//                self.tracksInner(head, others: tail, acc: newAcc, f: f, onError: onError)
-//            } else {
-//                f(newAcc)
-//            }
-//        }
-//    }
-    
-    func parseFolder(_ obj: NSDictionary) throws -> Folder {
-        let id = try readString(obj, JsonKeys.ID)
-        let title = try readString(obj, JsonKeys.TITLE)
-        let path = try readString(obj, JsonKeys.PATH)
+    func parseFolder(_ json: NSDictionary) throws -> Folder {
+        let id = try readString(json, JsonKeys.ID)
+        let title = try readString(json, JsonKeys.TITLE)
+        let path = try readString(json, JsonKeys.PATH)
         return Folder(id: id, title: title, path: path)
     }
     
-    func parseTrack(_ dict: NSDictionary) throws -> Track {
-        return try PimpEndpoint.parseTrack(dict, urlMaker: { (id) -> URL in self.helper.urlFor(id) })
+    func parseTrack(_ json: NSDictionary) throws -> Track {
+        return try PimpEndpoint.parseTrack(json, urlMaker: { (id) -> URL in self.helper.urlFor(id) })
     }
 
-    func parseMusicFolder(_ obj: AnyObject) throws -> MusicFolder {
-        let dict = try readObject(obj)
-        let folderJSON: NSDictionary = try readOrFail(dict, JsonKeys.FOLDER)
-        let foldersJSON: [NSDictionary] = try readOrFail(dict, JsonKeys.FOLDERS)
-        let tracksJSON: [NSDictionary] = try readOrFail(dict, JsonKeys.TRACKS)
+    func parseMusicFolder(_ json: NSDictionary) throws -> MusicFolder {
+        let folderJSON: NSDictionary = try readOrFail(json, JsonKeys.FOLDER)
+        let foldersJSON: [NSDictionary] = try readOrFail(json, JsonKeys.FOLDERS)
+        let tracksJSON: [NSDictionary] = try readOrFail(json, JsonKeys.TRACKS)
         let root = try parseFolder(folderJSON)
         let folders = try foldersJSON.map(parseFolder)
         let tracks = try tracksJSON.map(parseTrack)
         return MusicFolder(folder: root, folders: folders, tracks: tracks)
     }
     
-    func parsePlaylists(_ obj: AnyObject) throws -> [SavedPlaylist] {
-        let dict = try readObject(obj)
-        let playlists: [NSDictionary] = try readOrFail(dict, JsonKeys.PLAYLISTS)
+    func parsePlaylists(_ json: NSDictionary) throws -> [SavedPlaylist] {
+        let playlists: [NSDictionary] = try readOrFail(json, JsonKeys.PLAYLISTS)
         return try playlists.map(parsePlaylist)
     }
     
-    func parseGetPlaylistResponse(_ obj: AnyObject) throws -> SavedPlaylist {
-        let dict = try readObject(obj)
-        let playlist: NSDictionary = try readOrFail(dict, JsonKeys.PLAYLIST)
+    func parseGetPlaylistResponse(_ json: NSDictionary) throws -> SavedPlaylist {
+        let playlist: NSDictionary = try readOrFail(json, JsonKeys.PLAYLIST)
         return try parsePlaylist(playlist)
     }
     
-    func parsePopulars(_ obj: AnyObject) throws -> [PopularEntry] {
+    func parsePopulars(_ obj: NSDictionary) throws -> [PopularEntry] {
         return try parseArray(obj, key: JsonKeys.Populars, single: parsePopular)
     }
     
@@ -198,7 +162,7 @@ open class PimpLibrary: BaseLibrary {
         return PopularEntry(track: track, playbackCount: count)
     }
     
-    func parseRecents(_ obj: AnyObject) throws -> [RecentEntry] {
+    func parseRecents(_ obj: NSDictionary) throws -> [RecentEntry] {
         return try parseArray(obj, key: JsonKeys.Recents, single: parseRecent)
     }
     
@@ -216,8 +180,7 @@ open class PimpLibrary: BaseLibrary {
         return try entries.map(single)
     }
     
-    func parsePlaylist(_ obj: AnyObject) throws -> SavedPlaylist {
-        let obj = try readObject(obj)
+    func parsePlaylist(_ obj: NSDictionary) throws -> SavedPlaylist {
         let id = try readInt(obj, JsonKeys.ID)
         let name = try readString(obj, JsonKeys.NAME)
         let tracksArr: [NSDictionary] = try readOrFail(obj, JsonKeys.TRACKS)
@@ -225,18 +188,18 @@ open class PimpLibrary: BaseLibrary {
         return SavedPlaylist(id: PlaylistID(id: id), name: name, tracks: tracks)
     }
     
-    func parsePlaylistID(_ obj: AnyObject) throws -> PlaylistID {
-        let obj = try readObject(obj)
+    func parsePlaylistID(_ obj: NSDictionary) throws -> PlaylistID {
         let asInt = try readInt(obj, JsonKeys.ID)
         return PlaylistID(id: asInt)
     }
     
-    func parseTracks(_ obj: AnyObject) throws -> [Track] {
-        let arr = try readArray(obj)
+    func parseTracks(_ response: HttpResponse) throws -> [Track] {
+//        let obj = try readObject(obj)
+        let arr = try readArray(response)
         return try arr.map(parseTrack)
     }
     
-    func parseAlarms(_ obj: AnyObject) throws -> [Alarm] {
+    func parseAlarms(_ obj: HttpResponse) throws -> [Alarm] {
         let arr = try readArray(obj)
         return try arr.map(parseAlarm)
     }
@@ -258,11 +221,10 @@ open class PimpLibrary: BaseLibrary {
         return Alarm(id: AlarmID(id: id), track: track, when: AlarmTime(hour: hour, minute: minute, days: Set(days)), enabled: enabled)
     }
     
-    func readArray(_ obj: AnyObject) throws -> [NSDictionary] {
-        if let arr = obj as? [NSDictionary] {
-            return arr
-        }
-        throw JsonError.invalid("object", obj)
+    func readArray(_ response: HttpResponse) throws -> [NSDictionary] {
+        guard let obj = response.jsonData else { throw JsonError.notJson(response.data) }
+        guard let arr = obj as? [NSDictionary] else { throw JsonError.invalid("object", obj) }
+        return arr
     }
     
     func readObject(_ obj: AnyObject) throws -> NSDictionary {
@@ -270,7 +232,6 @@ open class PimpLibrary: BaseLibrary {
             return obj
         }
         throw JsonError.invalid("object", obj)
-
     }
     
     func readString(_ obj: NSDictionary, _ key: String) throws -> String {

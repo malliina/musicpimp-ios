@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import RxSwift
 
 class PimpEndpoint: PimpUtils {
     let log = LoggerFactory.shared.pimp(PimpEndpoint.self)
     let client: PimpHttpClient
+    
+    let bag = DisposeBag()
     
     init(endpoint: Endpoint, client: PimpHttpClient) {
         self.client = client
@@ -28,14 +31,20 @@ class PimpEndpoint: PimpUtils {
     }
     
     func postDict(_ dict: [String: AnyObject]) {
-        client.pimpPost(Endpoints.PLAYBACK, payload: dict, f: onSuccess, onError: onError)
+        client.pimpPost(Endpoints.PLAYBACK, payload: dict).subscribe { (event) in
+            switch event {
+            case .next(let response): self.onSuccess(response.data)
+            case .error(let err): self.onError(err)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func onSuccess(_ data: Data) {
         
     }
     
-    func onError(_ error: PimpError) {
+    func onError(_ error: Error) {
         log.info("Player error: \(error.message)")
     }
     

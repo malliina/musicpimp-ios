@@ -31,7 +31,10 @@ class EditAlarmTableViewController: BaseTableController {
     
     private var mutableAlarm: MutableAlarm? = nil
     private var endpoint: Endpoint? = nil
+    private var player: PlayerType? = nil
+    private var listener: Disposable? = nil
     private var delegate: EditAlarmDelegate? = nil
+    private var isPlaying: Bool = false
     
     let datePicker = UIDatePicker()
     
@@ -67,6 +70,7 @@ class EditAlarmTableViewController: BaseTableController {
         initUI()
     }
     
+    
     func initUI() {
         datePicker.datePickerMode = .time
         datePicker.minuteInterval = 5
@@ -79,10 +83,31 @@ class EditAlarmTableViewController: BaseTableController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadTable(feedback: nil)
+        if let endpoint = endpoint {
+            let p = Players.sharedInstance.fromEndpoint(endpoint)
+            p.open(onError: onConnectError) { () -> Void in
+                self.listener = p.stateEvent.addHandler(self) { (vc) -> (PlaybackState) -> () in
+                    vc.onPlayerState
+                }
+                self.onPlayerState(p.current().state)
+            }
+            player = p
+        }
+    }
+    
+    func onPlayerState(_ state: PlaybackState) {
+        onUiThread {
+            self.isPlaying = state == .Playing
+            let playbackButtonRow = IndexPath(row: 0, section: 2)
+            self.tableView.reloadRows(at: [playbackButtonRow], with: .automatic)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         updateDate()
+        player?.close()
+        listener?.dispose()
+        listener = nil
         super.viewWillDisappear(animated)
     }
     
@@ -137,7 +162,7 @@ class EditAlarmTableViewController: BaseTableController {
         updateDate()
         if let endpoint = endpoint, let alarm = mutableAlarm?.toImmutable() {
             let library = Libraries.fromEndpoint(endpoint)
-            library.saveAlarm(alarm, onError: onError) {
+            run(library.saveAlarm(alarm)) { _ in
                 self.delegate?.alarmUpdated(a: alarm)
             }
         }
@@ -151,7 +176,7 @@ class EditAlarmTableViewController: BaseTableController {
     func identifierFor(_ indexPath: IndexPath) -> String? {
         switch indexPath.section {
         case 0: return timePickerIdentifier
-        case 1: return indexPath.row == 0 ? trackIdentifier: repeatIdentifier
+        case 1: return indexPath.row == 0 ? trackIdentifier : repeatIdentifier
         case 2: return playIdentifier
         case 3: return deleteAlarmIdentifier
         default: return nil
@@ -189,7 +214,7 @@ class EditAlarmTableViewController: BaseTableController {
                 break
             case playIdentifier:
                 if let label = cell.textLabel {
-                    label.text = "Play Now"
+                    label.text = isPlaying ? "Stop Playback" : "Play Now"
                     label.isEnabled = mutableAlarm?.track != nil
                     label.textAlignment = .center
                     label.textColor = colors.titles
@@ -202,7 +227,7 @@ class EditAlarmTableViewController: BaseTableController {
                     label.textColor = colors.deletion
                     label.textAlignment = .center
                 }
-                cell.selectionStyle = UITableViewCellSelectionStyle.default
+                cell.selectionStyle = .default
                 break
             default:
                 break
@@ -217,17 +242,17 @@ class EditAlarmTableViewController: BaseTableController {
             case trackIdentifier:
                 let dest = SearchAlarmTrackController()
                 dest.alarm = self.mutableAlarm
-                self.navigationController?.pushViewController(dest, animated: true)
+                navigationController?.pushViewController(dest, animated: true)
                 break
             case repeatIdentifier:
                 let dest = RepeatDaysController()
                 dest.alarm = self.mutableAlarm
-                self.navigationController?.pushViewController(dest, animated: true)
+                navigationController?.pushViewController(dest, animated: true)
                 break
             case deleteAlarmIdentifier:
                 if let alarmId = mutableAlarm?.id, let endpoint = endpoint {
                     tableView.deselectRow(at: indexPath, animated: false)
-                    Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId, onError: onError) {
+                    run(Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId)) { _ in
                         self.delegate?.alarmDeleted()
                         Util.onUiThread {
                             self.goBack()
@@ -237,13 +262,13 @@ class EditAlarmTableViewController: BaseTableController {
                 break
             case playIdentifier:
                 tableView.deselectRow(at: indexPath, animated: false)
-                if let track = mutableAlarm?.track, let endpoint = endpoint {
-                    let player = Players.sharedInstance.fromEndpoint(endpoint)
-                    player.open(onError: onConnectError) { () -> Void in
-                        let success = player.resetAndPlay(track)?.message ?? "success"
-                        self.log.info("Playing \(track.title): \(success)")
-                        player.close()
+                if let track = mutableAlarm?.track, let _ = endpoint, let player = player {
+                    if isPlaying {
+                        let _ = player.pause()
+                    } else {
+                        let _ = player.resetAndPlay(track)
                     }
+                    // self.log.debug("Playing \(track.title): \(success)")
                 } else {
                     let desc = mutableAlarm?.track?.title ?? "no alarm or track"
                     log.error("Cannot play track, \(desc)")
@@ -273,8 +298,10 @@ class EditAlarmTableViewController: BaseTableController {
     func onConnectError(_ e: Error) {
         
     }
-    
-    func goBack() {
+}
+
+extension UIViewController {
+    @objc func goBack() {
         let isAddMode = presentingViewController != nil
         if isAddMode {
             dismiss(animated: true, completion: nil)

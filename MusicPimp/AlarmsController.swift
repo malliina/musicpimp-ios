@@ -100,23 +100,21 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         let isOn = uiSwitch.isOn
         if let endpoint = endpoint {
             let toggleRegistration = isOn ? registerNotifications : unregisterNotifications
-            toggleRegistration(endpoint) {
-                let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: isOn)
-            }
+            toggleRegistration(endpoint)
         }
     }
     
-    func registerNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
+    func registerNotifications(_ endpoint: Endpoint) {
         if let token = settings.pushToken {
             log.info("Registering with previously saved push token...")
-            registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+            registerWithToken(token: token, endpoint: endpoint)
         } else {
             log.info("No saved push token. Asking for permission...")
             askUserForPermission { (accessGranted) in
                 if accessGranted {
                     if let token = self.settings.pushToken {
                         self.log.info("Permission granted, registering with \(endpoint.address)")
-                        self.registerWithToken(token: token, endpoint: endpoint, onSuccess: onSuccess)
+                        self.registerWithToken(token: token, endpoint: endpoint)
                     } else {
                         self.log.info("Access granted, but no token available.")
                     }
@@ -132,9 +130,15 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         }
     }
     
-    func registerWithToken(token: PushToken, endpoint: Endpoint, onSuccess: @escaping () -> Void) {
+    func registerWithToken(token: PushToken, endpoint: Endpoint) {
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
-        alarmLibrary.registerNotifications(token, tag: endpoint.id, onError: { (err) in self.onRegisterError(error: err, endpoint: endpoint) }, onSuccess: onSuccess)
+        alarmLibrary.registerNotifications(token, tag: endpoint.id).subscribe { (event) in
+            switch event {
+            case .next(_): let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: true)
+            case .error(let err): self.onRegisterError(error: err, endpoint: endpoint)
+            case .completed: ()
+            }
+        }.disposed(by: bag)
     }
     
     func askUserForPermission(onResult: @escaping (Bool) -> Void) {
@@ -144,14 +148,16 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         PimpNotifications.sharedInstance.initNotifications(UIApplication.shared)
     }
     
-    func onRegisterError(error: PimpError, endpoint: Endpoint) {
+    func onRegisterError(error: Error, endpoint: Endpoint) {
         log.error(error.message)
     }
     
-    func unregisterNotifications(_ endpoint: Endpoint, onSuccess: @escaping () -> Void) {
+    func unregisterNotifications(_ endpoint: Endpoint) {
         log.info("Unregistering from \(endpoint.address)...")
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
-        alarmLibrary.unregisterNotifications(endpoint.id, onError: onError, onSuccess: onSuccess)
+        run(alarmLibrary.unregisterNotifications(endpoint.id)) { _ in
+            let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: false)
+        }
     }
     
     func alarmUpdated(a: Alarm) {
@@ -181,19 +187,15 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func loadAlarms(_ library: LibraryType) {
-        library.alarms().subscribe { (event) in
-            switch event {
-            case .next(let alarms): self.onAlarms(alarms)
-            case .error(let err): self.onError(err)
-            case .completed: ()
-            }
-        }.disposed(by: bag)
+        run(library.alarms()) { alarms in
+            self.onAlarms(alarms)
+        }
     }
     
     func saveAndReload(_ alarm: Alarm) {
         if let endpoint = endpoint {
             let library = Libraries.fromEndpoint(endpoint)
-            library.saveAlarm(alarm, onError: onError) {
+            run(library.saveAlarm(alarm)) { _ in
                 self.loadAlarms(library)
             }
         }
@@ -340,7 +342,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         let index = indexPath.row
         let alarm = alarms[index]
         if let id = alarm.id {
-            library.deleteAlarm(id, onError: onError) {
+            run(library.deleteAlarm(id)) { _ in
                 self.alarms.remove(at: index)
                 self.renderTable()
             }

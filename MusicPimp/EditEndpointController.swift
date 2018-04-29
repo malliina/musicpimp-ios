@@ -208,15 +208,6 @@ class EditEndpointController: PimpViewController {
         goBack()
     }
     
-    func goBack() {
-        let isAddMode = presentingViewController != nil
-        if isAddMode {
-            dismiss(animated: true, completion: nil)
-        } else {
-            navigationController?.popViewController(animated: true)
-        }
-    }
-    
     @objc func serverTypeChanged(_ sender: UISegmentedControl) {
         updateVisibility(segment: sender)
     }
