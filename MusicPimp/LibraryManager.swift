@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class LibraryManager: EndpointManager {
     let log = LoggerFactory.shared.pimp(LibraryManager.self)
@@ -14,7 +15,8 @@ class LibraryManager: EndpointManager {
     
     fileprivate var activeLibrary: LibraryType
     var active: LibraryType { get { return activeLibrary } }
-    let libraryChanged = Event<LibraryType>()
+    private let librarySubject = PublishSubject<LibraryType>()
+    var libraryChanged: Observable<LibraryType> { return librarySubject }
  
     init() {
         let settings = PimpSettings.sharedInstance
@@ -31,7 +33,7 @@ class LibraryManager: EndpointManager {
         let client = Libraries.fromEndpoint(endpoint)
         activeLibrary = client
         log.info("Library set to \(endpoint.name)")
-        libraryChanged.raise(client)
+        librarySubject.onNext(client)
         return client
     }
 }

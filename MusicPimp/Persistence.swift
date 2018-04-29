@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol Persistence {
-    var changes: Event<Setting> { get }
+    var changes: Observable<Setting> { get }
     
     func save(_ contents: String, key: String) -> ErrorMessage?
     

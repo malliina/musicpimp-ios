@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import RxSwift
 
 class FilePersistence : Persistence {
     
     let dir = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
     
-    let changes = Event<Setting>()
+    private let subject = PublishSubject<Setting>()
+    var changes: Observable<Setting> { return subject }
     
     // are you fucking kidding me?
     func load(_ path: String) -> String? {
@@ -44,7 +46,7 @@ class FilePersistence : Persistence {
             written = false
         }
         if(written) {
-            changes.raise(Setting(key: key, contents: contents))
+            subject.onNext(Setting(key: key, contents: contents))
             return nil
         } else {
             return ErrorMessage(message: saveError?.localizedDescription ?? "Unknown error")

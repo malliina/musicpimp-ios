@@ -8,6 +8,7 @@
 
 import Foundation
 import MediaPlayer
+import RxSwift
 
 class ExternalCommandDelegate: NSObject {
     static let sharedInstance = ExternalCommandDelegate()
@@ -15,6 +16,8 @@ class ExternalCommandDelegate: NSObject {
     let log = LoggerFactory.shared.pimp(ExternalCommandDelegate.self)
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     private var disposable: Disposable? = nil
+    
+    let bag = DisposeBag()
     
     func initialize(_ commandCenter: MPRemoteCommandCenter) {
         commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
@@ -28,9 +31,9 @@ class ExternalCommandDelegate: NSObject {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward:")
         commandCenter.seekForwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekForward(_:)))
         commandCenter.seekBackwardCommand.addTarget(self, action: #selector(ExternalCommandDelegate.seekBackward(_:)))
-        let _ = LocalPlayer.sharedInstance.trackEvent.addHandler(self) { (ecd) -> (Track?) -> () in
-            ecd.onLocalTrackChanged
-        }
+        LocalPlayer.sharedInstance.trackEvent.subscribe(onNext: { (track) in
+            self.onLocalTrackChanged(track)
+        }).disposed(by: bag)
     }
     
     func onLocalTrackChanged(_ track: Track?) -> Void {

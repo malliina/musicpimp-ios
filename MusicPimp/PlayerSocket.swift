@@ -8,6 +8,7 @@
 
 import Foundation
 import SocketRocket
+import RxSwift
 
 // Web socket that supports reconnects
 class PlayerSocket: NSObject, SRWebSocketDelegate {
@@ -17,8 +18,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
     fileprivate let request: URLRequest
     var isConnected = false
     
-    var onOpenCallback: (() -> Void)? = nil
-    var onOpenErrorCallback: ((Error) -> Void)? = nil
+    private var openObserver: AnyObserver<Void>? = nil
     
     init(baseURL: URL, headers: [String: String]) {
         self.baseURL = baseURL
@@ -30,15 +30,17 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         super.init()
     }
     
-    func open(_ onOpen: @escaping () -> Void, onError: @escaping (Error) -> Void) {
+    func open() -> Observable<Void> {
         close()
         let webSocket = SRWebSocket(urlRequest: request)
         webSocket?.delegate = self
         self.socket = webSocket
-        self.onOpenCallback = onOpen
-        self.onOpenErrorCallback = onError
-        webSocket?.open()
-        log.info("Connecting to \(baseURL)...")
+        return Observable<Void>.create { observer in
+            self.openObserver = observer
+            self.log.info("Connecting to '\(self.baseURL)'...")
+            webSocket?.open()
+            return Disposables.create()
+        }
     }
     
     public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
@@ -55,10 +57,9 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         }
         isConnected = true
         log.info("Socket opened to \(baseURL)")
-        if let onOpen = onOpenCallback {
-            onOpen()
-            onOpenCallback = nil
-            onOpenErrorCallback = nil
+        if let observer = openObserver {
+            observer.onCompleted()
+            openObserver = nil
         }
     }
     
@@ -70,10 +71,9 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         isConnected = false
         log.info("Connection failed to \(baseURL)")
-        if let onError = onOpenErrorCallback {
-            onError(error)
-            onOpenCallback = nil
-            onOpenErrorCallback = nil
+        if let observer = openObserver {
+            observer.onError(error)
+            openObserver = nil
         }
     }
     

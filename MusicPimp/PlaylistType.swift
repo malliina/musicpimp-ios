@@ -7,11 +7,15 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol PlaylistType {
-    var indexEvent: Event<Int?> { get }
-    var playlistEvent: Event<Playlist> { get }
-    var trackAdded: Event<Track> { get }
+    var indexSubject: PublishSubject<Int?> { get }
+    var indexEvent: Observable<Int?> { get }
+    var playlistSubject: PublishSubject<Playlist> { get }
+    var playlistEvent: Observable<Playlist> { get }
+    var trackSubject: PublishSubject<Track> { get }
+    var trackAdded: Observable<Track> { get }
     
     func add(_ track: Track) -> ErrorMessage?
     

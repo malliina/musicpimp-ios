@@ -45,9 +45,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         [playbackDeviceId, musicSourceId, cacheId, alarmId, aboutId, creditsId].forEach { id in
             self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
         }
-        let _ = settings.cacheEnabledChanged.addHandler(self) { (sc) -> (Bool) -> () in
-            sc.onCacheEnabledChanged
-        }
+        run(settings.cacheEnabledChanged, onResult: self.onCacheEnabledChanged)
         listener.players = self
         listener.libraries = self
         listener.subscribe()

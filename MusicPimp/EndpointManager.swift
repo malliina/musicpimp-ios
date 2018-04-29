@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import RxSwift
 
 class EndpointManager {
     let key: String
     let settings: PimpSettings
-    let changed = Event<Endpoint>()
+    private let changedSubject = PublishSubject<Endpoint>()
+    var changed: Observable<Endpoint> { return changedSubject }
     
     init(key: String, settings: PimpSettings) {
         self.key = key
@@ -20,7 +22,7 @@ class EndpointManager {
     
     func saveActive(_ e: Endpoint) -> ErrorMessage? {
         let err =  settings.impl.save(e.id, key: key)
-        changed.raise(e)
+        changedSubject.onNext(e)
         return err
     }
     

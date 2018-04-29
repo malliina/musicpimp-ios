@@ -19,7 +19,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     var musicItems: [MusicItem] { return [] }
     
     // generic listeners
-    var listeners: [Disposable] = []
+    var listeners: [RxSwift.Disposable] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,9 +56,13 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     
     func paintTrackCell(cell: SnapMusicCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
-            cell.progress.progress = downloadProgress.progress
-//            log.info("Progress \(downloadProgress.progress)")
-            cell.progress.isHidden = false
+            if cell.progress.progress < downloadProgress.progress {
+//                log.info("From \(cell.progress.progress) to \(downloadProgress.progress)")
+                cell.progress.progress = downloadProgress.progress
+            }
+            if cell.progress.isHidden {
+                cell.progress.isHidden = false
+            }
         } else {
             cell.progress.isHidden = true
         }

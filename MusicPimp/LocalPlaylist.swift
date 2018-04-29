@@ -66,7 +66,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
         ts = tracks
         self.index = index
         playlistUpdated()
-        indexEvent.raise(index)
+        indexSubject.onNext(index)
         onTracksAdded(tracks)
         return nil
     }
@@ -100,7 +100,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     
     fileprivate func onTracksAdded(_ ts: [Track]) {
         for track in ts {
-            trackAdded.raise(track)
+            trackSubject.onNext(track)
         }
     }
     
@@ -118,14 +118,14 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     }
     
     fileprivate func playlistUpdated() {
-        playlistEvent.raise(Playlist(tracks: ts, index: index))
+        playlistSubject.onNext(Playlist(tracks: ts, index: index))
     }
     
     fileprivate func positionTransform(_ f: (Int?) -> Int) -> Track? {
         let nextPos = f(index)
         if let track = trackAt(nextPos) {
             index = nextPos
-            indexEvent.raise(index)
+            indexSubject.onNext(index)
             return track
         } else {
             log.error("Invalid playlist position \(nextPos)")

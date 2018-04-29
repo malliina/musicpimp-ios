@@ -12,7 +12,9 @@ import RxSwift
 open class BaseLibrary: LibraryType {
     var isLocal: Bool { get { return false } }
     var rootFolderKey: String { get { return "" } }
-    let contentsUpdated = Event<MusicFolder?>()
+    
+    let contentsSubject = PublishSubject<MusicFolder?>()
+    var contentsUpdated: Observable<MusicFolder?> { return contentsSubject }
     
     let notImplementedError = PimpError.simpleError(ErrorMessage(message: "Not implemented yet"))
     

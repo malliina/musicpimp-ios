@@ -7,14 +7,20 @@
 //
 
 import Foundation
+import RxSwift
 
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     var isLocal: Bool { get { return false } }
-    let stateEvent = Event<PlaybackState>()
-    let timeEvent = Event<Duration>()
-    let trackEvent = Event<Track?>()
-    let volumeEvent = Event<VolumeValue>()
-    let muteEvent = Event<Bool>()
+    let stateSubject = PublishSubject<PlaybackState>()
+    var stateEvent: Observable<PlaybackState> { return stateSubject }
+    let timeSubject = PublishSubject<Duration>()
+    var timeEvent: Observable<Duration> { return timeSubject }
+    let trackSubject = PublishSubject<Track?>()
+    var trackEvent: Observable<Track?> { return trackSubject }
+    let volumeSubject = PublishSubject<VolumeValue>()
+    var volumeEvent: Observable<VolumeValue> { return volumeSubject }
+    let muteSubject = PublishSubject<Bool>()
+    var muteEvent: Observable<Bool> { return muteSubject }
 
     let playlist: PlaylistType
     let socket: PimpSocket
@@ -28,9 +34,9 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         super.init(endpoint: e, client: client)
     }
     
-    func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void) {
+    func open() -> Observable<Void> {
         self.socket.delegate = self
-        self.socket.open(onOpen, onError: onError)
+        return self.socket.open()
     }
     
     func close() {
@@ -43,7 +49,6 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
     
     func resetAndPlay(_ track: Track) -> ErrorMessage? {
-//        Limiter.sharedInstance.increment()
         return socket.send([
             JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
             JsonKeys.TRACK: track.id as AnyObject
@@ -90,12 +95,12 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     
     func onTimeUpdated(_ pos: Duration) {
         currentState.position = pos
-        timeEvent.raise(pos)
+        timeSubject.onNext(pos)
     }
     
     func onTrackChanged(_ track: Track?) {
         currentState.track = track
-        trackEvent.raise(track)
+        trackSubject.onNext(track)
         if let _ = track {
             Limiter.sharedInstance.increment()
         }
@@ -103,27 +108,27 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     
     func onMuteToggled(_ mute: Bool) {
         currentState.mute = mute
-        muteEvent.raise(mute)
+        muteSubject.onNext(mute)
     }
     
     func onVolumeChanged(_ volume: VolumeValue) {
         currentState.volume = volume
-        volumeEvent.raise(volume)
+        volumeSubject.onNext(volume)
     }
     
     func onStateChanged(_ state: PlaybackState) {
         currentState.state = state
-        stateEvent.raise(state)
+        stateSubject.onNext(state)
     }
     
     func onIndexChanged(_ index: Int?) {
         currentState.playlistIndex = index
-        playlist.indexEvent.raise(index)
+        playlist.indexSubject.onNext(index)
     }
     
     func onPlaylistModified(_ tracks: [Track]) {
         currentState.playlist = tracks
-        playlist.playlistEvent.raise(Playlist(tracks: tracks, index: currentState.playlistIndex))
+        playlist.playlistSubject.onNext(Playlist(tracks: tracks, index: currentState.playlistIndex))
     }
     
     func onState(_ state: PlayerState) {

@@ -61,9 +61,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
             self.didToggleNotifications(uiSwitch)
         }
         pushSwitch = onOff
-        let _ = settings.defaultAlarmEndpointChanged.addHandler(self) { (ac) -> (Endpoint) -> () in
-            ac.didChangeDefaultAlarmEndpoint
-        }
+        run(settings.defaultAlarmEndpointChanged, onResult: self.didChangeDefaultAlarmEndpoint)
     }
     
     /// Keeps the header margins synced with the cells' margins.
@@ -142,9 +140,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func askUserForPermission(onResult: @escaping (Bool) -> Void) {
-        let _ = PimpSettings.sharedInstance.notificationPermissionChanged.first(self) { (view) -> (Bool) -> () in
-            onResult
-        }
+        run(PimpSettings.sharedInstance.notificationPermissionChanged.take(1), onResult: onResult)
         PimpNotifications.sharedInstance.initNotifications(UIApplication.shared)
     }
     

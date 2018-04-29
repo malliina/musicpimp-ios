@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class PlayerManager: EndpointManager {
     let log = LoggerFactory.shared.pimp(PlayerManager.self)
@@ -16,7 +17,9 @@ class PlayerManager: EndpointManager {
     
     fileprivate var activePlayer: PlayerType
     var active: PlayerType { get { return activePlayer } }
-    let playerChanged = Event<PlayerType>()
+    private let playerSubject = PublishSubject<PlayerType>()
+    var playerChanged: Observable<PlayerType> { return playerSubject }
+    let bag = DisposeBag()
     
     init() {
         let settings = PimpSettings.sharedInstance
@@ -35,11 +38,16 @@ class PlayerManager: EndpointManager {
         activePlayer = p
         log.info("Player set to \(endpoint.name)")
         // async
-        activePlayer.open(onError: onError) { 
-            self.onOpened(p)
-            onOpen(p)
-        }
-        playerChanged.raise(p)
+        activePlayer.open().subscribe { (event) in
+            switch event {
+            case .next(_): ()
+            case .error(let err): self.onError(err)
+            case .completed:
+                self.onOpened(p)
+                onOpen(p)
+            }
+        }.disposed(by: bag)
+        playerSubject.onNext(p)
     }
 
     func onOpened(_ player: PlayerType) {

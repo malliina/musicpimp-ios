@@ -14,6 +14,7 @@ import StoreKit
 import AppCenter
 import AppCenterAnalytics
 import AppCenterCrashes
+import RxSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     let colors = PimpColors.shared
+    let bag = DisposeBag()
     
     var window: UIWindow?
     
@@ -147,7 +149,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func connectToPlayer() {
-        PlayerManager.sharedInstance.active.open(onError: onConnectionFailure, onConnectionOpened)
+        PlayerManager.sharedInstance.active.open().subscribe { (event) in
+            switch event {
+            case .next(_): ()
+            case .error(let err): self.onConnectionFailure(err)
+            case .completed: self.onConnectionOpened()
+            }
+        }.disposed(by: bag)
     }
     
     func onConnectionOpened() {

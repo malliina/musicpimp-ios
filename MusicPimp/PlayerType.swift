@@ -7,16 +7,17 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol PlayerType {
     var isLocal: Bool { get }
-    var stateEvent: Event<PlaybackState> { get }
-    var timeEvent: Event<Duration> { get }
-    var volumeEvent: Event<VolumeValue> { get }
-    var trackEvent: Event<Track?> { get }
+    var stateEvent: Observable<PlaybackState> { get }
+    var timeEvent: Observable<Duration> { get }
+    var volumeEvent: Observable<VolumeValue> { get }
+    var trackEvent: Observable<Track?> { get }
     var playlist: PlaylistType { get }
     
-    func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void)
+    func open() -> Observable<Void>
     
     func close()
     

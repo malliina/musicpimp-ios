@@ -9,6 +9,7 @@
 import Foundation
 import AudioToolbox
 import AVFoundation
+import RxSwift
 
 class LocalPlayer: NSObject, PlayerType {
     let log = LoggerFactory.shared.pimp(LocalPlayer.self)
@@ -29,17 +30,21 @@ class LocalPlayer: NSObject, PlayerType {
     fileprivate static var playerStatusContext = 1
     fileprivate let notificationCenter = NotificationCenter.default
     
-    // TODO use RxSwift
-    let stateEvent = Event<PlaybackState>()
-    let timeEvent = Event<Duration>()
-    let trackEvent = Event<Track?>()
-    let volumeEvent = Event<VolumeValue>()
-    let muteEvent = Event<Bool>()
+    let stateSubject = PublishSubject<PlaybackState>()
+    var stateEvent: Observable<PlaybackState> { return stateSubject }
+    let timeSubject = PublishSubject<Duration>()
+    var timeEvent: Observable<Duration> { return timeSubject }
+    let trackSubject = PublishSubject<Track?>()
+    var trackEvent: Observable<Track?> { return trackSubject }
+    let volumeSubject = PublishSubject<VolumeValue>()
+    var volumeEvent: Observable<VolumeValue> { return volumeSubject }
+    let muteSubject = PublishSubject<Bool>()
+    var muteEvent: Observable<Bool> { return muteSubject }
     let noPlayerError = ErrorMessage(message: "No player")
     let noTrackError = ErrorMessage(message: "No track")
     
-    func open(onError: @escaping (Error) -> Void, _ onOpen: @escaping () -> Void) {
-        onOpen()
+    func open() -> Observable<Void> {
+        return Observable.empty()
     }
     
     func close() {
@@ -76,7 +81,7 @@ class LocalPlayer: NSObject, PlayerType {
         if let playerInfo = playerInfo {
             // TODO see if we can sync this better by only raising the event after confirmation that the player is playing
             playerInfo.player.play()
-            stateEvent.raise(.Playing)
+            stateSubject.onNext(.Playing)
             return nil
         } else {
             return noPlayerError
@@ -86,7 +91,7 @@ class LocalPlayer: NSObject, PlayerType {
     func pause()  -> ErrorMessage? {
         if let player = player {
             player.pause()
-            stateEvent.raise(.Paused)
+            stateSubject.onNext(.Paused)
             return nil
         } else {
             return noPlayerError
@@ -148,7 +153,7 @@ class LocalPlayer: NSObject, PlayerType {
         if let _ = playFromPlaylist(f) {
             return nil
         } else {
-            stateEvent.raise(.NoMedia)
+            stateSubject.onNext(.NoMedia)
             return noTrackError
         }
     }
@@ -193,11 +198,11 @@ class LocalPlayer: NSObject, PlayerType {
             object: p.currentItem)
         p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: .initial, context: &LocalPlayer.playerStatusContext)
         playerInfo = PlayerInfo(player: p, track: track)
-        trackEvent.raise(track)
+        trackSubject.onNext(track)
         timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: .main) { (time) -> Void in
             let secs = CMTimeGetSeconds(time)
             if let duration = secs.seconds {
-                self.timeEvent.raise(duration)
+                self.timeSubject.onNext(duration)
             } else {
                 self.log.error("Unable to convert time to Duration: \(secs)")
             }

@@ -92,7 +92,7 @@ class LocalLibrary: BaseLibrary {
     }
     
     func deleteContents() -> Observable<Bool> {
-        return Observable.create { observer in
+        return Observable<Bool>.create { observer in
             let outcome = self.deleteContentsSync()
             observer.onNext(outcome)
             observer.onCompleted()
@@ -116,7 +116,7 @@ class LocalLibrary: BaseLibrary {
         } catch _ {
             dirRecreateSuccess = false
         }
-        contentsUpdated.raise(nil)
+        contentsSubject.onNext(nil)
         return deleteSuccess && dirRecreateSuccess
     }
     

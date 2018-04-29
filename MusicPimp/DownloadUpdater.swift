@@ -7,28 +7,32 @@
 //
 
 import Foundation
+import RxSwift
 
 class DownloadUpdater {
     static let instance = DownloadUpdater(downloader: BackgroundDownloader.musicDownloader)
     let log = LoggerFactory.shared.network(DownloadUpdater.self)
     
-    let progress = Event<TrackProgress>()
+    let progressSubject = PublishSubject<TrackProgress>()
+    var progress: Observable<TrackProgress> { return progressSubject }
+    var slowProgress: Observable<[TrackProgress]> { return progress.buffer(timeSpan: 1, count: 100, scheduler: ConcurrentDispatchQueueScheduler(qos: .background)) }
     
     fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
     
     fileprivate var lastDownloadUpdate: DispatchTime? = nil
-    let fps: UInt64 = 10
+    let fps: UInt64 = 1
 
     let downloader: BackgroundDownloader
 //    let innerDisposable: Disposable
+    let bag = DisposeBag()
     
     var isEmpty: Bool { get { return downloadState.isEmpty } }
     
     init(downloader: BackgroundDownloader) {
         self.downloader = downloader
-        let _ = downloader.events.addHandler(self) { (me) -> (DownloadProgressUpdate) -> () in
-            me.onDownloadProgressUpdate
-        }
+        downloader.events.subscribe(onNext: { (update) in
+            self.onDownloadProgressUpdate(update)
+        }).disposed(by: bag)
     }
     
     func progressFor(track: Track) -> TrackProgress? {
@@ -56,13 +60,6 @@ class DownloadUpdater {
         }
     }
     
-    // call from viewWillAppear
-    func listen(onProgress: @escaping (TrackProgress) -> Void) -> Disposable {
-        return progress.addHandler(self) { (me) -> (TrackProgress) -> () in
-            onProgress
-        }
-    }
-    
     private func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
         // TODO use Rx to throttle this instead
         let path = dpu.relativePath
@@ -72,14 +69,15 @@ class DownloadUpdater {
             let isDownloadComplete = newProgress.isCompleted
             if isDownloadComplete {
                 downloadState.removeValue(forKey: path)
-                progress.raise(newProgress)
+                progressSubject.onNext(newProgress)
             } else {
                 downloadState[path] = newProgress
+//                progressSubject.onNext(newProgress)
                 let now = DispatchTime.now()
                 let shouldUpdate = enoughTimePassed(now: now)
                 if shouldUpdate {
                     lastDownloadUpdate = now
-                    progress.raise(newProgress)
+                    progressSubject.onNext(newProgress)
                 }
             }
         }

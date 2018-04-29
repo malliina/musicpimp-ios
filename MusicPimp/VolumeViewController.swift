@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 fileprivate extension Selector {
     static let volumeChanged = #selector(VolumeViewController.userDidChangeVolume(_:))
@@ -19,7 +20,7 @@ class VolumeViewController: PimpViewController {
     
     let volumeSlider = UISlider()
     
-    fileprivate var appearedListeners: [Disposable] = []
+    var appearedBag = DisposeBag()
     
     var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
     
@@ -98,17 +99,12 @@ class VolumeViewController: PimpViewController {
     
     fileprivate func listenWhenAppeared(_ targetPlayer: PlayerType) {
         unlistenWhenDisappeared()
-        let listener = targetPlayer.volumeEvent.addHandler(self, handler: { (pc) -> (VolumeValue) -> () in
-            pc.onVolumeChanged
-        })
-        appearedListeners = [listener]
+        targetPlayer.volumeEvent.subscribe(onNext: { (vol) in
+            self.onVolumeChanged(vol)
+        }).disposed(by: appearedBag)
     }
     
     fileprivate func unlistenWhenDisappeared() {
-        for listener in appearedListeners {
-            listener.dispose()
-        }
-        appearedListeners = []
+        appearedBag = DisposeBag()
     }
-
 }

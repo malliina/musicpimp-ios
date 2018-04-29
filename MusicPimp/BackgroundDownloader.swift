@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 typealias SessionID = String
 public typealias RelativePath = String
@@ -55,8 +56,8 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     
     static let musicDownloader = BackgroundDownloader(basePath: LocalLibrary.sharedInstance.musicRootPath, sessionID: "org.musicpimp.downloads.tracks")
     
-    let events = Event<DownloadProgressUpdate>()
-    
+    private let subject = PublishSubject<DownloadProgressUpdate>()
+    var events: Observable<DownloadProgressUpdate> { return subject }
     fileprivate let fileManager = FileManager.default
     let basePath: String
     
@@ -221,7 +222,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
             let expectedSize = StorageSize.fromBytes(totalBytesExpectedToWrite)
             let update = DownloadProgressUpdate(info: info, writtenDelta: writtenDelta, written: written, totalExpected: expectedSize)
 //            log.info("Task \(taskID) wrote \(writtenDelta) written \(written) expected \(expectedSize)")
-            events.raise(update)
+            subject.onNext(update)
         } else {
             if taskOpt == nil {
                 //info("Download task not found: \(taskID)")

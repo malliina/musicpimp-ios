@@ -22,7 +22,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     
     var header: UIView? = nil
     
-    fileprivate var downloadUpdates: Disposable? = nil
+    fileprivate var downloadUpdates: RxSwift.Disposable? = nil
     private var reloadOnDidAppear = false
     
     let listener = PlaybackListener()
@@ -33,7 +33,9 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-        downloadUpdates = DownloadUpdater.instance.listen(onProgress: onProgress)
+        downloadUpdates = DownloadUpdater.instance.progress.observeOn(MainScheduler.instance).subscribe(onNext: { (trackProgress) in
+            self.onProgress(track: trackProgress)
+        })
         setFeedback(loadingMessage)
         listener.tracks = self
         if let folder = selected {
@@ -138,10 +140,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return libraryCell(tableView, indexPath: indexPath)
-    }
-    
-    fileprivate func libraryCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
         if isFolder {
@@ -156,6 +154,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
                 paintTrackCell(cell: pimpCell, track: track, isHighlight: self.player.current().track?.id == track.id, downloadState: DownloadUpdater.instance.progressFor(track: track))
                 return pimpCell
             } else {
+                log.error("Invalid code path")
                 // we should never get here
                 return super.tableView(tableView, cellForRowAt: indexPath)
             }
@@ -227,15 +226,16 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 extension LibraryController {
     func onProgress(track: TrackProgress) {
         if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
-            // log.info("Updating \(track.dpu.written)")
-            updateRows(row: index)
+//            log.info("Updating \(track.progress)")
+            updateRows(row: index, p: track)
         }
     }
 
-    private func updateRows(row: Int) {
+    private func updateRows(row: Int, p: TrackProgress) {
         let itemIndexPath = IndexPath(row: row, section: 0)
-        onUiThread {
+//        onUiThread {
             self.tableView.reloadRows(at: [itemIndexPath], with: .none)
-        }
+//            self.log.info("Scheduled \(row) for \(p.progress)")
+//        }
     }
 }

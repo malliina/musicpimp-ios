@@ -25,7 +25,6 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
         super.viewDidLoad()
         self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
         initNavbar()
-        
         listener.playlists = self
     }
     
@@ -35,7 +34,9 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
         let state = player.current()
         let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
         onNewPlaylist(currentPlaylist)
-        let downloadDisposable = DownloadUpdater.instance.listen(onProgress: onProgress)
+        let downloadDisposable = DownloadUpdater.instance.progress.subscribe(onNext: { (progress) in
+            self.onProgress(track: progress)
+        })
         listeners = [downloadDisposable]
     }
     

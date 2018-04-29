@@ -9,8 +9,8 @@
 import Foundation
 
 class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDelegate {
-    var loadedListeners: [Disposable] = []
-    var appearedListeners: [Disposable] = []
+//    var loadedListeners: [Disposable] = []
+//    var appearedListeners: [Disposable] = []
     
     var playerManager: PlayerManager { return PlayerManager.sharedInstance }
     var player: PlayerType { return playerManager.active }

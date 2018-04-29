@@ -11,7 +11,7 @@ import RxSwift
 
 protocol LibraryType {
     var isLocal: Bool { get }
-    var contentsUpdated: Event<MusicFolder?> { get }
+    var contentsUpdated: Observable<MusicFolder?> { get }
     var rootFolderKey: String { get }
     
     func pingAuth() -> Observable<Version>

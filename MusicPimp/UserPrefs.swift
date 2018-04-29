@@ -6,18 +6,21 @@
 //  Copyright (c) 2015 Skogberg Labs. All rights reserved.
 //
 import Foundation
+import RxSwift
 
 open class UserPrefs: Persistence {
     let log = LoggerFactory.shared.system(UserPrefs.self)
     static let sharedInstance = UserPrefs()
     
     let prefs = UserDefaults.standard
-    let changes = Event<Setting>()
+    let subject = PublishSubject<Setting>()
+    
+    var changes: Observable<Setting> { return subject }
     
     func save(_ contents: String, key: String) -> ErrorMessage? {
         prefs.set(contents, forKey: key)
 //        log.info("Saved \(contents) to \(key)")
-        changes.raise(Setting(key: key, contents: contents))
+        subject.onNext(Setting(key: key, contents: contents))
         return nil
     }
     

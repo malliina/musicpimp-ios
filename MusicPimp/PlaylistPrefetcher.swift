@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 /// Downloads upcoming tracks in advance whenever the local track changes
 class PlaylistPrefetcher {
@@ -19,11 +20,12 @@ class PlaylistPrefetcher {
     let playlist = LocalPlaylist.sharedInstance
     let library = LocalLibrary.sharedInstance
     var disposable: Disposable? = nil
+    let bag = DisposeBag()
     
     init() {
-        disposable = playlist.indexEvent.addHandler(self) { (pp) -> (Int?) -> () in
-            pp.onIndex
-        }
+        playlist.indexEvent.subscribe(onNext: { (index) in
+            self.onIndex(newIndex: index)
+        }, onError: nil).disposed(by: bag)
     }
     
     func onIndex(newIndex: Int?) {

@@ -8,10 +8,12 @@
 
 import Foundation
 import StoreKit
+import RxSwift
 
 class TransactionObserver : NSObject, SKPaymentTransactionObserver {
     static let sharedInstance = TransactionObserver()
-    let events = Event<SKPaymentTransaction>()
+    private let subject = PublishSubject<SKPaymentTransaction>()
+    var events: Observable<SKPaymentTransaction> { return subject }
     
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
@@ -36,7 +38,7 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
 //                Log.error("Unexpected transactions state \(transaction.transactionState)")
 //                break
             }
-            events.raise(transaction)
+            subject.onNext(transaction)
             if state == .purchased || state == .failed || state == .restored {
                 finishTransaction(transaction)
             }

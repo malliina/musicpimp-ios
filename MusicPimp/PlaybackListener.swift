@@ -7,13 +7,13 @@
 //
 
 import Foundation
+import RxSwift
 
 class BaseListener: Disposable {
-    var subscriptions: [Disposable] = []
+    var bag = DisposeBag()
     
     func unsubscribe() {
-        subscriptions.forEach { $0.dispose() }
-        subscriptions = []
+        bag = DisposeBag()
     }
     
     func dispose() {
@@ -29,11 +29,9 @@ class LibraryListener: BaseListener {
     var delegate: LibraryDelegate? = nil
     
     func subscribe() {
-        subscriptions = [
-            LibraryManager.sharedInstance.libraryChanged.addHandler(self) { (ivc) -> (LibraryType) -> () in
-                ivc.onLibraryChanged
-            }
-        ]
+        LibraryManager.sharedInstance.libraryChanged.subscribe(onNext: { (library) in
+            self.onLibraryChanged(library)
+        }).disposed(by: bag)
     }
     
     func onLibraryChanged(_ newLibrary: LibraryType) {
@@ -54,14 +52,12 @@ class EndpointsListener: BaseListener {
     var players: PlayerEndpointDelegate? = nil
     
     func subscribe() {
-        let libraryListener = LibraryManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
-            ssc.libraryChanged
-        }
-        let playerListener = PlayerManager.sharedInstance.changed.addHandler(self) { (ssc) -> (Endpoint) -> () in
-            ssc.playerChanged
-        }
-
-        subscriptions = [libraryListener, playerListener]
+        LibraryManager.sharedInstance.changed.subscribe(onNext: { (library) in
+            self.libraryChanged(library)
+        }).disposed(by: bag)
+        PlayerManager.sharedInstance.changed.subscribe(onNext: { (player) in
+            self.playerChanged(player)
+        }).disposed(by: bag)
     }
     
     private func libraryChanged(_ newLibrary: Endpoint) {
@@ -102,25 +98,18 @@ class PlaybackListener: BaseListener {
     
     private func subscribe(to newPlayer: PlayerType) {
         unsubscribe()
-        let playerListener = playerManager.playerChanged.addHandler(self) { (pc) -> (PlayerType) -> () in
-            pc.onNewPlayer
-        }
-        let playlistListener = player.playlist.playlistEvent.addHandler(self) { (pc) -> (Playlist) -> () in
-            pc.onNewPlaylist
-        }
-        let indexListener = player.playlist.indexEvent.addHandler(self) { (pc) -> (Int?) -> () in
-            pc.onIndexChanged
-        }
-        let trackListener = newPlayer.trackEvent.addHandler(self) { (pc) -> (Track?) -> () in
-            pc.updateTrack
-        }
-        let timeListener = newPlayer.timeEvent.addHandler(self) { (pc) -> (Duration) -> () in
-            pc.onTimeUpdated
-        }
-        let stateListener = newPlayer.stateEvent.addHandler(self) { (pc) -> (PlaybackState) -> () in
-            pc.onStateChanged
-        }
-        subscriptions = [playerListener, playlistListener, indexListener, trackListener, timeListener, stateListener]
+        subscribe(playerManager.playerChanged, self.onNewPlayer)
+        subscribe(player.playlist.playlistEvent) { playlist in self.onNewPlaylist(playlist) }
+        subscribe(player.playlist.indexEvent) { self.onIndexChanged($0) }
+        subscribe(newPlayer.trackEvent) { self.updateTrack($0) }
+        subscribe(newPlayer.timeEvent) { self.onTimeUpdated($0) }
+        subscribe(newPlayer.stateEvent) { self.onStateChanged($0) }
+    }
+    
+    func subscribe<T>(_ o: Observable<T>, _ onNext: @escaping (T) -> Void) {
+        o.subscribe(onNext: { (t) in
+            onNext(t)
+        }).disposed(by: bag)
     }
     
     private func onNewPlayer(_ newPlayer: PlayerType) {
@@ -129,9 +118,7 @@ class PlaybackListener: BaseListener {
     }
     
     private func moveSubscriptions(to newPlayer: PlayerType) {
-        if !subscriptions.isEmpty {
-            subscribe(to: newPlayer)
-        }
+        subscribe(to: newPlayer)
     }
     
     private func onNewPlaylist(_ playlist: Playlist) {

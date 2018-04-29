@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 fileprivate extension Selector {
     static let saveClicked = #selector(EditAlarmTableViewController.onSave(_:))
@@ -32,9 +33,10 @@ class EditAlarmTableViewController: BaseTableController {
     private var mutableAlarm: MutableAlarm? = nil
     private var endpoint: Endpoint? = nil
     private var player: PlayerType? = nil
-    private var listener: Disposable? = nil
     private var delegate: EditAlarmDelegate? = nil
     private var isPlaying: Bool = false
+    
+    var playbackBag = DisposeBag()
     
     let datePicker = UIDatePicker()
     
@@ -85,12 +87,17 @@ class EditAlarmTableViewController: BaseTableController {
         reloadTable(feedback: nil)
         if let endpoint = endpoint {
             let p = Players.sharedInstance.fromEndpoint(endpoint)
-            p.open(onError: onConnectError) { () -> Void in
-                self.listener = p.stateEvent.addHandler(self) { (vc) -> (PlaybackState) -> () in
-                    vc.onPlayerState
+            p.open().subscribe { (event) in
+                switch event {
+                case .next(_): ()
+                case .error(let err): self.onConnectError(err)
+                case .completed:
+                    p.stateEvent.subscribe(onNext: { (newState) in
+                        self.onPlayerState(newState)
+                    }).disposed(by: self.playbackBag)
+                    self.onPlayerState(p.current().state)
                 }
-                self.onPlayerState(p.current().state)
-            }
+            }.disposed(by: playbackBag)
             player = p
         }
     }
@@ -106,8 +113,7 @@ class EditAlarmTableViewController: BaseTableController {
     override func viewWillDisappear(_ animated: Bool) {
         updateDate()
         player?.close()
-        listener?.dispose()
-        listener = nil
+        playbackBag = DisposeBag()
         super.viewWillDisappear(animated)
     }
     

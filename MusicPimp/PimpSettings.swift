@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 open class PimpSettings {
     let log = LoggerFactory.shared.system(PimpSettings.self)
@@ -14,11 +15,21 @@ open class PimpSettings {
     
     open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
-    let endpointsEvent = Event<[Endpoint]>()
-    let cacheLimitChanged = Event<StorageSize>()
-    let cacheEnabledChanged = Event<Bool>()
-    let defaultAlarmEndpointChanged = Event<Endpoint>()
-    let notificationPermissionChanged = Event<Bool>()
+    
+    let endpointsSubject = PublishSubject<[Endpoint]>()
+    var endpointsEvent: Observable<[Endpoint]> { return endpointsSubject }
+    
+    let cacheLimitSubject = PublishSubject<StorageSize>()
+    var cacheLimitChanged: Observable<StorageSize> { return cacheLimitSubject }
+    
+    let cacheEnabledSubject = PublishSubject<Bool>()
+    var cacheEnabledChanged: Observable<Bool> { return cacheEnabledSubject }
+    
+    let defaultAlarmEndpointSubject = PublishSubject<Endpoint>()
+    var defaultAlarmEndpointChanged: Observable<Endpoint> { return defaultAlarmEndpointSubject }
+    
+    let notificationPermissionSubject = PublishSubject<Bool>()
+    var notificationPermissionChanged: Observable<Bool> { return notificationPermissionSubject }
     
     let impl: Persistence
     
@@ -54,7 +65,7 @@ open class PimpSettings {
         return Json.stringifyObject(blob as [String : AnyObject])
     }
     
-    var changes: Event<Setting> { get { return impl.changes } }
+    var changes: Observable<Setting> { get { return impl.changes } }
     
     var pushToken: PushToken? {
         get {
@@ -77,7 +88,7 @@ open class PimpSettings {
         set(allowed) {
             let errors = impl.save("\(allowed)", key: PimpSettings.NotificationsAllowed)
             if errors == nil {
-                notificationPermissionChanged.raise(allowed)
+                notificationPermissionSubject.onNext(allowed)
             }
         }
     }
@@ -87,7 +98,7 @@ open class PimpSettings {
         set(value) {
             let errors = impl.save("\(value)", key: PimpSettings.CACHE_ENABLED)
             if errors == nil {
-                cacheEnabledChanged.raise(value)
+                cacheEnabledSubject.onNext(value)
             }
         }
     }
@@ -113,7 +124,7 @@ open class PimpSettings {
         set(newLimit) {
             let errors = impl.save("\(newLimit.toBytes)", key: PimpSettings.CACHE_LIMIT)
             if errors == nil {
-                cacheLimitChanged.raise(newLimit)
+                cacheLimitSubject.onNext(newLimit)
             }
         }
     }
@@ -139,7 +150,7 @@ open class PimpSettings {
     func saveDefaultNotificationsEndpoint(_ e: Endpoint) {
         let errors = impl.save(e.id, key: PimpSettings.defaultAlarmEndpoint)
         if errors == nil {
-            defaultAlarmEndpointChanged.raise(e)
+            defaultAlarmEndpointSubject.onNext(e)
         }
     }
     
@@ -199,7 +210,7 @@ open class PimpSettings {
         if let stringified = serialize(es) {
             let _ = impl.save(stringified, key: PimpSettings.ENDPOINTS)
             let esAfter = endpoints()
-            endpointsEvent.raise(esAfter)
+            endpointsSubject.onNext(esAfter)
         } else {
             log.error("Unable to save endpoints")
         }
