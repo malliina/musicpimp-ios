@@ -28,7 +28,7 @@ protocol PlayerType {
     /// - parameter track: track to play
     ///
     /// - returns: an error message, if any
-    func resetAndPlay(_ track: Track) -> ErrorMessage?
+    func resetAndPlay(tracks: [Track]) -> ErrorMessage?
     
     func play() -> ErrorMessage?
     

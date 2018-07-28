@@ -272,7 +272,7 @@ class EditAlarmTableViewController: BaseTableController {
                     if isPlaying {
                         let _ = player.pause()
                     } else {
-                        let _ = player.resetAndPlay(track)
+                        let _ = player.resetAndPlay(tracks: [track])
                     }
                     // self.log.debug("Playing \(track.title): \(success)")
                 } else {

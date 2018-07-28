@@ -35,16 +35,10 @@ class PimpTableController: FeedbackTable {
     }
     
     fileprivate func playTracks(_ tracks: [Track]) -> [ErrorMessage] {
-        if let first = tracks.first {
-            let firstError = playAndDownload(first)
-            if let firstError = firstError {
-                return [firstError]
-            } else {
-                return addTracks(tracks.tail())
-            }
-        } else {
-            return []
-        }
+        let playResult = player.resetAndPlay(tracks: tracks)
+        let downloadResult = downloadIfNeeded(tracks.take(3))
+        let result = playResult.map { [$0] } ?? []
+        return downloadResult + result
     }
     
     func addTracksChecked(_ tracks: [Track]) -> [ErrorMessage] {
@@ -74,10 +68,9 @@ class PimpTableController: FeedbackTable {
     }
     
     fileprivate func playAndDownload(_ track: Track) -> ErrorMessage? {
-        let error = player.resetAndPlay(track)
+        let error = player.resetAndPlay(tracks: [track])
         if error == nil {
             return downloadIfNeeded([track]).headOption()
-//            return nil
         } else {
             return error
         }

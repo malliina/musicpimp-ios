@@ -48,10 +48,18 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         return currentState
     }
     
-    func resetAndPlay(_ track: Track) -> ErrorMessage? {
+//    func resetAndPlay(_ track: Track) -> ErrorMessage? {
+//        return socket.send([
+//            JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
+//            JsonKeys.TRACK: track.id as AnyObject
+//        ])
+//    }
+    
+    func resetAndPlay(tracks: [Track]) -> ErrorMessage? {
         return socket.send([
-            JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
-            JsonKeys.TRACK: track.id as AnyObject
+            JsonKeys.CMD: "play_items" as AnyObject,
+            "tracks": tracks.map { $0.id } as AnyObject,
+            "folders": [] as AnyObject
         ])
     }
     

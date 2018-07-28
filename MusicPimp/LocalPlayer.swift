@@ -161,7 +161,7 @@ class LocalPlayer: NSObject, PlayerType {
     fileprivate func playFromPlaylist(_ f: (LocalPlaylist) -> Track?) -> Track? {
         if let track = f(localPlaylist) {
             closePlayer()
-            initAndPlay(track)
+            let _ = initAndPlay(track)
             return track
         } else {
             log.info("Unable to find track from playlist")
@@ -169,20 +169,14 @@ class LocalPlayer: NSObject, PlayerType {
         }
     }
     
-    func resetAndPlay(_ track: Track) -> ErrorMessage? {
-        return resetAndPlay([track]).headOption()
-    }
-    
-    func resetAndPlay(_ tracks: [Track]) -> [ErrorMessage] {
+    func resetAndPlay(tracks: [Track]) -> ErrorMessage? {
         closePlayer()
         let _ = localPlaylist.reset(tracks)
-        if let first = tracks.first {
-            initAndPlay(first)
-        }
-        return []
+        guard let first = tracks.first else { return nil }
+        return initAndPlay(first)
     }
     
-    fileprivate func initAndPlay(_ track: Track) {
+    fileprivate func initAndPlay(_ track: Track) -> ErrorMessage? {
         limiter.increment()
         let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
         let playerItem = AVPlayerItem(url: preferredUrl)
@@ -207,7 +201,7 @@ class LocalPlayer: NSObject, PlayerType {
                 self.log.error("Unable to convert time to Duration: \(secs)")
             }
         } as AnyObject?
-        _ = play()
+        return play()
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
