@@ -32,8 +32,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let coverImage: UIImageView = UIImageView()
     
     let minHeightForNav: CGFloat = 450
-//    let colors = PimpColors.shared
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
@@ -46,7 +45,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
         updateNavigationBarVisibility(self.view.frame.size.height)
         
         if let thumbImage = PlayerController.seekThumbImage {
-            seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 8, height: 8)), for: .normal)
+            seek.setThumbImage(imageWithSize(image: thumbImage, scaledToSize: CGSize(width: 14, height: 14)), for: .normal)
         }
     }
     
@@ -78,8 +77,8 @@ class PlayerController: ListeningController, PlaybackDelegate {
         seek.isContinuous = false
         seek.addTarget(self, action: .seekChanged, for: .valueChanged)
         seek.snp.makeConstraints { make in
-            make.top.equalTo(positionLabel.snp.bottom).offset(3)
-            make.top.equalTo(durationLabel.snp.bottom).offset(3)
+            make.top.equalTo(positionLabel.snp.bottom).offset(6)
+            make.top.equalTo(durationLabel.snp.bottom).offset(6)
             make.bottom.equalToSuperview().inset(16)
         }
         positionLabel.textAlignment = .left
@@ -98,18 +97,18 @@ class PlayerController: ListeningController, PlaybackDelegate {
     
     func initLabels() {
         centered(labels: [titleLabel, albumLabel, artistLabel])
-        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+        titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         titleLabel.font = UIFont.systemFont(ofSize: 28)
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(coverContainer.snp.bottom).offset(16)
         }
-        albumLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+        albumLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         albumLabel.font = UIFont.systemFont(ofSize: 17)
         albumLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
         }
         artistLabel.font = UIFont.systemFont(ofSize: 17)
-        artistLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+        artistLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         artistLabel.snp.makeConstraints { make in
             make.top.equalTo(albumLabel.snp.bottom).offset(8)
         }
@@ -142,7 +141,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     // TODO source? SO?
     func imageWithSize(image: UIImage, scaledToSize newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
-        image.draw(in: CGRect(origin: CGPoint(x: 0,y: 0), size: CGSize(width: newSize.width, height: newSize.height)))
+        image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: newSize.width, height: newSize.height)))
         let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return newImage

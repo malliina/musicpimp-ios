@@ -25,7 +25,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         super.viewDidLoad()
         navigationItem.title = "SELECT TO PLAY"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.goBack))
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: playlistCell)
+        self.tableView.register(SavedPlaylistCell.self, forCellReuseIdentifier: playlistCell)
         loadPlaylists()
     }
     
@@ -55,9 +55,9 @@ class SavedPlaylistsTableViewController: PimpTableController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = playlists[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: playlistCell, for: indexPath)
-        cell.textLabel?.text = item.name
-        // Why doesn't AppDelegate.initTheme settings apply here?
-        cell.textLabel?.textColor = colors.titles
+        if let cell = cell as? SavedPlaylistCell {
+            cell.fill(name: item.name, count: item.trackCount)
+        }
         return cell
     }
     

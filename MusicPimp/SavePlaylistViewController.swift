@@ -87,9 +87,9 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
     }
     
     fileprivate func savePlaylist(name: String) {
-        let playlist = SavedPlaylist(id: nil, name: name, tracks: tracks)
+        let playlist = SavedPlaylist(id: nil, name: name, trackCount: tracks.count, tracks: tracks)
         run(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
-            self.delegate?.onPlaylistSaved(saved: SavedPlaylist(id: id, name: playlist.name, tracks: playlist.tracks))
+            self.delegate?.onPlaylistSaved(saved: SavedPlaylist(id: id, name: playlist.name, trackCount: playlist.tracks.count, tracks: playlist.tracks))
             self.log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
         }
     }

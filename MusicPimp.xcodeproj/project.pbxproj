@@ -32,6 +32,7 @@
 		618ECD3F1EB7A04B0018B309 /* SnapMainSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */; };
 		619B7B7D1F058415001CF11A /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619B7B7C1F058415001CF11A /* DemoView.swift */; };
 		619BE4A31F81304A00586A9B /* PlaybackContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619BE4A21F81304A00586A9B /* PlaybackContainer.swift */; };
+		61AB2C81213B1BAB009774DC /* SavedPlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AB2C80213B1BAB009774DC /* SavedPlaylistCell.swift */; };
 		61AC37C02087CD74007A491C /* PlaylistPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */; };
 		61BE408F1F769BFA00A0EEC5 /* PlayQueueController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */; };
 		61BE40911F76ABF100A0EEC5 /* PlayerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */; };
@@ -221,6 +222,7 @@
 		618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapMainSubCell.swift; sourceTree = "<group>"; };
 		619B7B7C1F058415001CF11A /* DemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
 		619BE4A21F81304A00586A9B /* PlaybackContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackContainer.swift; sourceTree = "<group>"; };
+		61AB2C80213B1BAB009774DC /* SavedPlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPlaylistCell.swift; sourceTree = "<group>"; };
 		61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistPrefetcher.swift; sourceTree = "<group>"; };
 		61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueueController.swift; sourceTree = "<group>"; };
 		61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerParent.swift; sourceTree = "<group>"; };
@@ -464,6 +466,7 @@
 				33498C6C27044382E317113E /* SnapMusicCell.swift */,
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
 				616EC57F1FAF8FE600C3EB91 /* ThreeLabelCell.swift */,
+				61AB2C80213B1BAB009774DC /* SavedPlaylistCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1061,6 +1064,7 @@
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D62879C1D7C36930053BF52 /* PimpCell.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
+				61AB2C81213B1BAB009774DC /* SavedPlaylistCell.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
 				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,

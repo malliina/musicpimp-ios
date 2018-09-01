@@ -11,11 +11,13 @@ import Foundation
 open class SavedPlaylist {
     let id: PlaylistID?
     let name: String
+    let trackCount: Int
     let tracks: [Track]
     
-    public init(id: PlaylistID?, name: String, tracks: [Track]) {
+    public init(id: PlaylistID?, name: String, trackCount: Int, tracks: [Track]) {
         self.id = id
         self.name = name
+        self.trackCount = trackCount
         self.tracks = tracks
     }
     
@@ -26,6 +28,7 @@ open class SavedPlaylist {
         return [
             JsonKeys.ID: sp.id?.id as AnyObject? ?? NSNull(),
             JsonKeys.NAME: sp.name as AnyObject,
+            "trackCount": sp.trackCount as AnyObject,
             JsonKeys.TRACKS: trackIDs as AnyObject
         ]
     }

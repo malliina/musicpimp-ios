@@ -181,11 +181,14 @@ open class PimpLibrary: BaseLibrary {
     }
     
     func parsePlaylist(_ obj: NSDictionary) throws -> SavedPlaylist {
-        let id = try readInt(obj, JsonKeys.ID)
-        let name = try readString(obj, JsonKeys.NAME)
         let tracksArr: [NSDictionary] = try readOrFail(obj, JsonKeys.TRACKS)
         let tracks = try tracksArr.map(parseTrack)
-        return SavedPlaylist(id: PlaylistID(id: id), name: name, tracks: tracks)
+        return SavedPlaylist(
+            id: PlaylistID(id: try readInt(obj, JsonKeys.ID)),
+            name: try readString(obj, JsonKeys.NAME),
+            trackCount: try readInt(obj, "trackCount"),
+            tracks: tracks
+        )
     }
     
     func parsePlaylistID(_ obj: NSDictionary) throws -> PlaylistID {
