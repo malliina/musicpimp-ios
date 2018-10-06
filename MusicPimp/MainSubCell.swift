@@ -32,27 +32,3 @@ class MainSubCell: SnapCell {
         }
     }
 }
-
-class MostRecentCell: ThreeLabelCell {
-    override func configureView() {
-        super.configureView()
-        subRight.snp.makeConstraints { make in
-            make.top.equalTo(main.snp.bottom).offset(6)
-            make.trailing.equalTo(contentView)
-            make.bottom.equalToSuperview().inset(12)
-            make.width.equalTo(140)
-        }
-    }
-}
-
-class MostPopularCell: ThreeLabelCell {    
-    override func configureView() {
-        super.configureView()
-        subRight.snp.makeConstraints { make in
-            make.top.equalTo(main.snp.bottom).offset(6)
-            make.trailing.equalTo(contentView)
-            make.bottom.equalToSuperview().inset(12)
-            make.width.equalTo(80)
-        }
-    }
-}

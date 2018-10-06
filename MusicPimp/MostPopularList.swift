@@ -21,7 +21,7 @@ class MostPopularList: TopListController<PopularEntry> {
     
     override func cellFor(track: PopularEntry, indexPath: IndexPath) -> UITableViewCell {
         let cell: MostPopularCell = loadCell(MostPopularCellKey, index: indexPath)
-        decorateTwoLines(cell, main: track.track.title, subLeft: track.track.artist, subRight: "\(track.playbackCount) plays")
+        cell.fill(main: track.track.title, subLeft: track.track.artist, subRight: "\(track.playbackCount) plays")
         cell.accessoryDelegate = self
         return cell
     }
@@ -36,7 +36,7 @@ class MostPopularList: TopListController<PopularEntry> {
             case .error(let err): self.onTopError(err)
             case .completed: ()
             }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
     }
     
     override func loadMore() {
@@ -47,6 +47,6 @@ class MostPopularList: TopListController<PopularEntry> {
             case .error(let err): self.onTopError(err)
             case .completed: ()
             }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
     }
 }

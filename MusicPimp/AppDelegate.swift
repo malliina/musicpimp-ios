@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let audioSession = AVAudioSession.sharedInstance()
     
     var downloadCompletionHandlers: [String: () -> Void] = [:]
+    // Hack
+    private var notification: [AnyHashable: Any]? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         MSAppCenter.start("bfa6d43e-d1f3-42e2-823a-920a16965470", withServices: [
@@ -47,6 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectToPlayer()
 
         if let launchOptions = launchOptions, let payload = launchOptions[UIApplicationLaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+            log.info("Launched app via remote notification, handling...")
             notifications.handleNotification(application, window: window, data: payload)
         }
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
@@ -120,7 +123,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        notifications.handleNotification(application, window: window, data: userInfo)
+        log.info("Received remote notification...")
+        notification = userInfo
+//        notifications.handleNotification(application, window: window, data: userInfo)
     }
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
@@ -168,6 +173,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         log.info("Became active")
+        if let notification = notification {
+            notifications.handleNotification(application, window: window, data: notification)
+            self.notification = nil
+        }
         if let viewController = window?.rootViewController {
             Players.sharedInstance.suggestPlayerChangeIfNecessary(view: viewController)
         }
@@ -178,7 +187,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settings.trackHistory = Limiter.sharedInstance.history
         log.info("Terminating")
     }
-    
     
     //    override func remoteControlReceivedWithEvent(event: UIEvent) {
     //        switch event.subtype {

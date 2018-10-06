@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 open class PimpLibrary: BaseLibrary {
+    static let log = LoggerFactory.shared.pimp(PimpLibrary.self)
     let endpoint: Endpoint
     let client: PimpHttpClient
     let helper: PimpUtils
@@ -187,6 +188,7 @@ open class PimpLibrary: BaseLibrary {
             id: PlaylistID(id: try readInt(obj, JsonKeys.ID)),
             name: try readString(obj, JsonKeys.NAME),
             trackCount: try readInt(obj, "trackCount"),
+            duration: Duration(seconds: try readInt(obj, "duration")),
             tracks: tracks
         )
     }

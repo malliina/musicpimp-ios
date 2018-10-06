@@ -20,6 +20,14 @@ DEPENDENCIES:
   - SnapKit (= 4.0.0)
   - SocketRocket (= 0.5.1)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AppCenter
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+    - SocketRocket
+
 SPEC CHECKSUMS:
   AppCenter: d0b68b2a7a87ac0aed78e66f36d87fd321d0a29c
   RxCocoa: fd0862fd2df95fa55562ad28ffd2522c25eb4a85
@@ -27,6 +35,6 @@ SPEC CHECKSUMS:
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: 28ba7d47c5f9a0342a29d6d614828c25d2ea5dd2
+PODFILE CHECKSUM: c318995bbde331d83e2b3d872ee1159e5441e0cb
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

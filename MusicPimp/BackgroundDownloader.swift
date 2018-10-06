@@ -41,8 +41,8 @@ class DownloadProgressUpdate {
 }
 
 open class DownloadInfo {
-    open let relativePath: RelativePath
-    open let destinationURL: DestinationURL
+    let relativePath: RelativePath
+    let destinationURL: DestinationURL
     
     public init(relativePath: RelativePath, destinationURL: DestinationURL) {
         self.relativePath = relativePath
@@ -65,7 +65,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     fileprivate var tasks: [TaskID: DownloadInfo] = [:]
     let lockQueue: DispatchQueue
     
-    lazy var session: Foundation.URLSession = self.setupSession()
+    lazy var session: URLSession = self.setupSession()
     
     init(basePath: String, sessionID: SessionID) {
         self.basePath = basePath
@@ -92,7 +92,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         let conf = URLSessionConfiguration.background(withIdentifier: sessionID)
         conf.sessionSendsLaunchEvents = true
         conf.isDiscretionary = false
-        let session = Foundation.URLSession(configuration: conf, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: conf, delegate: self, delegateQueue: nil)
         session.getTasksWithCompletionHandler { (datas, uploads, downloads) -> Void in
             // removes outdated tasks
             let taskIDs = downloads.map({ (t) -> String in

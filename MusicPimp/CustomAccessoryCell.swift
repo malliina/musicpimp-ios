@@ -46,8 +46,8 @@ class CustomAccessoryCell: PimpCell {
             let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
             button.frame = frame
             button.setImage(image, for: UIControlState())
-            button.contentMode = UIViewContentMode.scaleAspectFit
-            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: UIControlEvents.touchUpInside)
+            button.contentMode = .scaleAspectFit
+            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: .touchUpInside)
             button.contentEdgeInsets = .zero
             return button
         }

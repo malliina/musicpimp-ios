@@ -12,12 +12,14 @@ open class SavedPlaylist {
     let id: PlaylistID?
     let name: String
     let trackCount: Int
+    let duration: Duration
     let tracks: [Track]
     
-    public init(id: PlaylistID?, name: String, trackCount: Int, tracks: [Track]) {
+    public init(id: PlaylistID?, name: String, trackCount: Int, duration: Duration, tracks: [Track]) {
         self.id = id
         self.name = name
         self.trackCount = trackCount
+        self.duration = duration
         self.tracks = tracks
     }
     
@@ -29,6 +31,7 @@ open class SavedPlaylist {
             JsonKeys.ID: sp.id?.id as AnyObject? ?? NSNull(),
             JsonKeys.NAME: sp.name as AnyObject,
             "trackCount": sp.trackCount as AnyObject,
+            "duration": sp.duration.seconds as AnyObject,
             JsonKeys.TRACKS: trackIDs as AnyObject
         ]
     }

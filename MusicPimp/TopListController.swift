@@ -113,13 +113,6 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     // Override to load more for infinite scroll
     func loadMore() { }
     
-    func decorateTwoLines(_ cell: ThreeLabelCell, main: String, subLeft: String, subRight: String) {
-        cell.main.text = main
-        cell.subLeft.text = subLeft
-        cell.subRight.text = subRight
-//        log.info("main: \(cell.main.textColor) sub: \(cell.sub.textColor), desired sub: \(PimpColors.subtitles) main size: \(cell.main.font.pointSize), sub size: \(cell.sub.font.pointSize), sys size: \(UIFont.labelFontSize)")
-    }
-    
     func onTopLoaded(_ results: [T]) {
         hasLoaded = true
         withMessage(nil) {

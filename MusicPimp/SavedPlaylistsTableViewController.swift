@@ -56,7 +56,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let item = playlists[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: playlistCell, for: indexPath)
         if let cell = cell as? SavedPlaylistCell {
-            cell.fill(name: item.name, count: item.trackCount)
+            cell.fill(main: item.name, subLeft: "\(item.trackCount) tracks", subRight: "\(item.duration.description)")
         }
         return cell
     }
@@ -84,5 +84,9 @@ class SavedPlaylistsTableViewController: PimpTableController {
                 }
             }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        log.info("Tapped")
     }
 }

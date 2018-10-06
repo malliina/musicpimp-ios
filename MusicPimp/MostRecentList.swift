@@ -33,7 +33,7 @@ class MostRecentList: TopListController<RecentEntry> {
         formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
         let formattedDate = formatter.string(from: track.when)
-        decorateTwoLines(cell, main: track.track.title, subLeft: track.track.artist, subRight: formattedDate)
+        cell.fill(main: track.track.title, subLeft: track.track.artist, subRight: formattedDate)
     }
     
     override func refresh() {

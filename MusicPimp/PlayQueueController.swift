@@ -120,7 +120,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     @objc func savePlaylistClicked(_ item: UIBarButtonItem) {
         if let playlist = savedPlaylist {
             // opens actions drop-up: does the user want to save the existing playlist or create a new one?
-            displayActionsForPlaylist(SavedPlaylist(id: playlist.id, name: playlist.name, trackCount: playlist.trackCount, tracks: tracks))
+            displayActionsForPlaylist(SavedPlaylist(id: playlist.id, name: playlist.name, trackCount: playlist.trackCount, duration: playlist.duration, tracks: tracks))
         } else {
             // goes directly to the "new playlist" view controller
             newPlaylistAction()

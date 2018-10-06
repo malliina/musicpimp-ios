@@ -9,23 +9,23 @@
 import Foundation
 
 open class Json {
-    open static func asJson(_ input: String) -> AnyObject? {
+    static func asJson(_ input: String) -> AnyObject? {
         if let data = input.data(using: String.Encoding.utf8, allowLossyConversion: false), let json = asJson(data) {
             return json
         }
         return nil
     }
     
-    open static func asJson(_ data: Data) -> AnyObject? {
+    static func asJson(_ data: Data) -> AnyObject? {
         let attempt = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
         return attempt as AnyObject?
     }
     
-    open static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
+    static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
         return stringify(value as AnyObject, prettyPrinted: prettyPrinted)
     }
     
-    open static func stringify(_ value: AnyObject, prettyPrinted: Bool = true) -> String? {
+    static func stringify(_ value: AnyObject, prettyPrinted: Bool = true) -> String? {
 //        var options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : nil
         let options = JSONSerialization.WritingOptions.prettyPrinted
         if JSONSerialization.isValidJSONObject(value) {

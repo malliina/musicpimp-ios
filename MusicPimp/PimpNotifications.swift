@@ -12,7 +12,7 @@ import RxSwift
 
 open class PimpNotifications {
     let log = LoggerFactory.shared.system(PimpNotifications.self)
-    open static let sharedInstance = PimpNotifications()
+    static let sharedInstance = PimpNotifications()
     
     let settings = PimpSettings.sharedInstance
     
@@ -42,7 +42,7 @@ open class PimpNotifications {
     }
     
     func didFailToRegister(_ error: Error) {
-        log.error("Remote notifications registration failure")
+        log.error("Remote notifications registration failure \(error.localizedDescription)")
         disableNotifications()
     }
     
@@ -61,7 +61,7 @@ open class PimpNotifications {
                 library.stopAlarm().subscribe({ (event) in
                     switch event {
                     case .next(_): self.log.info("Stopped alarm playback.")
-                    case .error(_): self.log.info("Failed to stop alarm playback.")
+                    case .error(let err): self.log.info("Failed to stop alarm playback. \(err.localizedDescription)")
                     case .completed: ()
                     }
                 }).disposed(by: bag)
