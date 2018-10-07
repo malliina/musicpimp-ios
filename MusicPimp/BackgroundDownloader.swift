@@ -13,14 +13,14 @@ typealias SessionID = String
 public typealias RelativePath = String
 public typealias DestinationURL = URL
 
-class DownloadProgressUpdate {
+public class DownloadProgressUpdate {
     let info: DownloadInfo
     let writtenDelta: StorageSize
     let written: StorageSize
     let totalExpected: StorageSize?
     
     var relativePath: String { return info.relativePath }
-    var destinationURL: URL { return info.destinationURL }
+    public var destinationURL: URL { return info.destinationURL }
     
     var isComplete: Bool? { get { return written == totalExpected } }
     
@@ -42,7 +42,7 @@ class DownloadProgressUpdate {
 
 open class DownloadInfo {
     let relativePath: RelativePath
-    let destinationURL: DestinationURL
+    public let destinationURL: DestinationURL
     
     public init(relativePath: RelativePath, destinationURL: DestinationURL) {
         self.relativePath = relativePath

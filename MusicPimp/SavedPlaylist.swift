@@ -25,7 +25,7 @@ open class SavedPlaylist {
     
     open var description: String { get { return "Playlist(\(id ?? PlaylistID(id: -1)), \(name), \(tracks.mkString(", ")))" } }
     
-    open static func toJson(_ sp: SavedPlaylist) -> [String: AnyObject] {
+    public static func toJson(_ sp: SavedPlaylist) -> [String: AnyObject] {
         let trackIDs = sp.tracks.map { $0.id }
         return [
             JsonKeys.ID: sp.id?.id as AnyObject? ?? NSNull(),

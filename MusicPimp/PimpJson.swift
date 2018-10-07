@@ -9,7 +9,7 @@
 import Foundation
 
 open class PimpJson {
-    open static let sharedInstance = PimpJson()
+    public static let sharedInstance = PimpJson()
     
     static let ID = "id", SERVER_TYPE = "serverType", NAME = "name", PROTO = "proto", ADDRESS = "address", PORT = "port", USERNAME = "username", PASSWORD = "password", SSL = "ssl"
     

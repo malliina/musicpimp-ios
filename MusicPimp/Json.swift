@@ -9,19 +9,19 @@
 import Foundation
 
 open class Json {
-    static func asJson(_ input: String) -> AnyObject? {
+    public static func asJson(_ input: String) -> AnyObject? {
         if let data = input.data(using: String.Encoding.utf8, allowLossyConversion: false), let json = asJson(data) {
             return json
         }
         return nil
     }
     
-    static func asJson(_ data: Data) -> AnyObject? {
+    public static func asJson(_ data: Data) -> AnyObject? {
         let attempt = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
         return attempt as AnyObject?
     }
     
-    static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
+    public static func stringifyObject(_ value: [String: AnyObject], prettyPrinted: Bool = true) -> String? {
         return stringify(value as AnyObject, prettyPrinted: prettyPrinted)
     }
     

@@ -79,7 +79,7 @@ class MusicPimpTests: XCTestCase {
     
     func testPlaylistSerialization() {
         let track = Track(id: "id", title: "a", album: "b", artist: "c", duration: 5.seconds, path: "path", size: 5.bytes!, url: URL(fileURLWithPath: "hey"))
-        let pl = SavedPlaylist(id: nil, name: "test pl", tracks: [track])
+        let pl = SavedPlaylist(id: nil, name: "test pl", trackCount: 1, duration: 5.seconds, tracks: [track])
         let json = SavedPlaylist.toJson(pl)
         if let data = try? JSONSerialization.data(withJSONObject: json, options: []),
             let s = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String? {
