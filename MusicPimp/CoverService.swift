@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class CoverResult {
     let artist: String
@@ -40,23 +41,20 @@ class CoverService {
     static let sharedInstance = CoverService()
     static let coversDir = Files.documentsPath + "/covers"
     static let defaultCover = UIImage(named: "pimp-512.png")
+    
     let downloader = Downloader(basePath: coversDir)
     
-    func cover(_ artist: String, album: String, f: @escaping (CoverResult) -> Void) {
+    func cover(_ artist: String, album: String) -> Single<CoverResult> {
         if let url = coverURL(artist, album: album) {
             let relativeCoverFilePath = "\(artist)-\(album).jpg"
-            downloader.download(
+            return downloader.download(
                 url,
-                relativePath: relativeCoverFilePath,
-                onError: { (err) -> () in
-                    f(CoverResult.noCover(artist, album: album))
-                },
-                onSuccess: { (path) -> () in
-                    f(CoverResult(artist: artist, album: album, coverPath: path))
-                }
-            )
+                authValue: nil,
+                relativePath: relativeCoverFilePath)
+                .map { CoverResult(artist: artist, album: album, coverPath: $0) }
+                .catchError { err in Single.just(CoverResult.noCover(artist, album: album)) }
         } else {
-            f(CoverResult.noCover(artist, album: album))
+            return Single.just(CoverResult.noCover(artist, album: album))
         }
     }
     

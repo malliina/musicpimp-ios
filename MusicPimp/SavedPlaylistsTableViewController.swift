@@ -33,9 +33,8 @@ class SavedPlaylistsTableViewController: PimpTableController {
         setFeedback(loadingMessage)
         library.playlists().subscribe { (event) in
             switch event {
-            case .next(let ps): self.onPlaylists(ps)
+            case .success(let ps): self.onPlaylists(ps)
             case .error(let err): self.onLoadError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -76,7 +75,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         let index = indexPath.row
         let playlist = playlists[index]
         if let id = playlist.id {
-            run(library.deletePlaylist(id)) { _ in
+            runSingle(library.deletePlaylist(id)) { _ in
                 self.log.info("Deleted playlist with ID \(id)")
                 self.onUiThread {
                     self.playlists.remove(at: index)

@@ -188,7 +188,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     }
     
     fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
-        run(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
+        runSingle(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
             self.log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
             self.savedPlaylist = playlist
         }
@@ -205,7 +205,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
 
 extension PlayQueueController {
     func onProgress(track: TrackProgress) {
-        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
+        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.idStr == track.track.idStr }) {
             updateRows(row: index)
         }
     }

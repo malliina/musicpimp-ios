@@ -40,8 +40,8 @@ class LocalPlayer: NSObject, PlayerType {
     var volumeEvent: Observable<VolumeValue> { return volumeSubject }
     let muteSubject = PublishSubject<Bool>()
     var muteEvent: Observable<Bool> { return muteSubject }
-    let noPlayerError = ErrorMessage(message: "No player")
-    let noTrackError = ErrorMessage(message: "No track")
+    let noPlayerError = ErrorMessage("No player")
+    let noTrackError = ErrorMessage("No track")
     
     func open() -> Observable<Void> {
         return Observable.empty()
@@ -176,10 +176,19 @@ class LocalPlayer: NSObject, PlayerType {
         return initAndPlay(first)
     }
     
+    /// Adds credentials to the query parameters of remote URLs because I cannot set headers in AVPlayer
+    private func buildUrl(track: Track) -> URL {
+        let noQuery = LocalLibrary.sharedInstance.url(track) ?? track.url
+        let authQuery = LibraryManager.sharedInstance.active.authQuery
+        if !noQuery.isFile && !authQuery.isEmpty {
+            return URL(string: "\(noQuery.absoluteString)?\(authQuery)") ?? noQuery
+        }
+        return noQuery
+    }
+    
     fileprivate func initAndPlay(_ track: Track) -> ErrorMessage? {
         limiter.increment()
-        let preferredUrl = LocalLibrary.sharedInstance.url(track) ?? track.url
-        let playerItem = AVPlayerItem(url: preferredUrl)
+        let playerItem = AVPlayerItem(url: buildUrl(track: track))
         playerItem.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: .initial, context: &LocalPlayer.itemStatusContext)
         let p = AVPlayer(playerItem: playerItem)
         notificationCenter.addObserver(self,

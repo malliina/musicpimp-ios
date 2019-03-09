@@ -8,6 +8,25 @@
 
 import Foundation
 
+struct AlarmJobIdOnly: Codable {
+    let track: TrackID
+}
+
+struct AlarmJob: Codable {
+    let track: Track
+}
+
+struct AlarmJson<T: Codable>: Codable {
+    let id: AlarmID?
+    let job: T
+    let when: AlarmTime
+    let enabled: Bool
+}
+
+extension AlarmJson where T == AlarmJob {
+    func asAlarm() -> Alarm { return Alarm(id: id, track: job.track, when: when, enabled: enabled) }
+}
+
 class Alarm {
     let id: AlarmID?
     let track: Track
@@ -21,15 +40,8 @@ class Alarm {
         self.enabled = enabled
     }
     
-    static func toJson(_ a: Alarm) -> [String: AnyObject] {
-        let when = a.when
-        let days = when.days.map { $0.rawValue }
-        return [
-            JsonKeys.ID: a.id?.id as AnyObject? ?? NSNull(),
-            JsonKeys.JOB: [ JsonKeys.TRACK: a.track.id ] as AnyObject,
-            JsonKeys.WHEN: [ JsonKeys.Hour: when.hour, JsonKeys.Minute: when.minute, JsonKeys.Days: days ] as AnyObject,
-            JsonKeys.Enabled: a.enabled as AnyObject
-        ]
+    func asJson() -> AlarmJson<AlarmJobIdOnly> {
+        return AlarmJson(id: id, job: AlarmJobIdOnly(track: track.id), when: when, enabled: enabled)
     }
 }
 
@@ -63,26 +75,17 @@ class MutableAlarm {
     }
 }
 
-class AlarmTime {
-    let hour: Int
-    let minute: Int
-    let time: ClockTime
-    let days: Set<Day>
+struct AlarmTime: Codable {
+    let hour, minute: Int
+    let days: [Day]
     
-    init(hour: Int, minute: Int, days: Set<Day>) {
-        self.hour = hour
-        self.minute = minute
-        self.time = ClockTime(hour: hour, minute: minute)
-        self.days = days
-    }
-    
-//    var daysSorted: [Day] { return days.sort({ Day.index($0) < Day.index($1) }) }
+    var time: ClockTime { return ClockTime(hour: hour, minute: minute) }
 }
 
 class MutableAlarmTime {
     var hour: Int
     var minute: Int
-    var days: Set<Day>
+    var days: [Day]
     
     init(at: AlarmTime) {
         self.hour = at.hour
@@ -101,15 +104,7 @@ class MutableAlarmTime {
     }
 }
 
-class AlarmJob {
-    let track: TrackID
-    
-    init(track: TrackID) {
-        self.track = track
-    }
-}
-
-enum Day: String {
+enum Day: String, Codable {
     case Mon = "mon"
     case Tue = "tue"
     case Wed = "wed"
@@ -151,20 +146,4 @@ enum Day: String {
             }.mkString(" ")
     }
 
-}
-
-class AlarmID {
-    let id: String
-    
-    init(id: String) {
-        self.id = id
-    }
-}
-
-class TrackID {
-    let id: String
-    
-    init(id: String) {
-        self.id = id
-    }
 }

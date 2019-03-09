@@ -38,7 +38,7 @@ class SearchResultsController: BaseMusicController {
             }
             library.search(term).subscribe { (event) in
                 switch event {
-                case .next(let results):
+                case .success(let results):
                     // only updates the UI if the response represents the latest search
                     if self.latestSearchTerm == term {
                         self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
@@ -47,7 +47,6 @@ class SearchResultsController: BaseMusicController {
                     }
                 case .error(let err):
                     self.onSearchFailure(term, error: err)
-                case .completed: ()
                 }
             }.disposed(by: bag)
         } else {

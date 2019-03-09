@@ -169,10 +169,12 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func deleteCache() {
-        let _ = library.deleteContents().subscribe(onNext: { (outcome) in
+        let _ = library.deleteContents().subscribe(onSuccess: { (Bool) in
             self.log.info("Done")
             self.updateCacheUsageLabel()
-        }, onError: nil, onCompleted: nil, onDisposed: nil)
+        }) { (err) in
+            self.log.info("Failed to delete contents: '\(err)'.")
+        }
     }
 }
 

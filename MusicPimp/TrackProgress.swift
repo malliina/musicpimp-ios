@@ -21,7 +21,7 @@ class TrackProgress {
         self.dpu = dpu
     }
     
-    static func initial(track: Track, info: DownloadInfo) -> TrackProgress {
+    static func initial(track: Track, info: DownloadTask) -> TrackProgress {
         return TrackProgress(track: track, dpu: DownloadProgressUpdate.initial(info: info, size: track.size))
     }
 }

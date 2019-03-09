@@ -39,12 +39,11 @@ class PimpViewController: UIViewController {
         }
     }
     
-    func run<T>(_ o: Observable<T>, onResult: @escaping (T) -> Void) {
+    func run<T>(_ o: Single<T>, onResult: @escaping (T) -> Void) {
         o.subscribe { (event) in
             switch event {
-            case .next(let t): onResult(t)
+            case .success(let t): onResult(t)
             case .error(let err): self.onError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }

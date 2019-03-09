@@ -14,7 +14,7 @@ public typealias RelativePath = String
 public typealias DestinationURL = URL
 
 public class DownloadProgressUpdate {
-    let info: DownloadInfo
+    let info: DownloadTask
     let writtenDelta: StorageSize
     let written: StorageSize
     let totalExpected: StorageSize?
@@ -24,7 +24,7 @@ public class DownloadProgressUpdate {
     
     var isComplete: Bool? { get { return written == totalExpected } }
     
-    init(info: DownloadInfo, writtenDelta: StorageSize, written: StorageSize, totalExpected: StorageSize?) {
+    init(info: DownloadTask, writtenDelta: StorageSize, written: StorageSize, totalExpected: StorageSize?) {
         self.info = info
         self.writtenDelta = writtenDelta
         self.written = written
@@ -35,19 +35,30 @@ public class DownloadProgressUpdate {
         return DownloadProgressUpdate(info: info, writtenDelta: writtenDelta, written: written, totalExpected: newTotalExpected)
     }
     
-    static func initial(info: DownloadInfo, size: StorageSize) -> DownloadProgressUpdate {
+    static func initial(info: DownloadTask, size: StorageSize) -> DownloadProgressUpdate {
         return DownloadProgressUpdate(info: info, writtenDelta: StorageSize.Zero, written: StorageSize.Zero, totalExpected: size)
     }
 }
 
-open class DownloadInfo {
+struct DownloadInfo: Codable {
     let relativePath: RelativePath
-    public let destinationURL: DestinationURL
+    let destinationURL: DestinationURL
+    let authValue: String
     
-    public init(relativePath: RelativePath, destinationURL: DestinationURL) {
-        self.relativePath = relativePath
-        self.destinationURL = destinationURL
+    func toTask(id: Int) -> DownloadTask {
+        return DownloadTask(taskId: id, relativePath: relativePath, destinationURL: destinationURL, authValue: authValue)
     }
+}
+
+struct DownloadTasks: Codable {
+    let tasks: [DownloadTask]
+}
+
+struct DownloadTask: Codable {
+    let taskId: Int
+    let relativePath: RelativePath
+    let destinationURL: DestinationURL
+    let authValue: String
 }
 
 class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate, URLSessionDelegate {
@@ -62,7 +73,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     let basePath: String
     
     fileprivate let sessionID: SessionID
-    fileprivate var tasks: [TaskID: DownloadInfo] = [:]
+    fileprivate var tasks: [TaskID: DownloadTask] = [:]
     let lockQueue: DispatchQueue
     
     lazy var session: URLSession = self.setupSession()
@@ -70,7 +81,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     init(basePath: String, sessionID: SessionID) {
         self.basePath = basePath
         self.sessionID = sessionID
-        self.tasks = PimpSettings.sharedInstance.tasks(sessionID)
+        self.tasks = Dictionary(uniqueKeysWithValues: PimpSettings.sharedInstance.tasks(sessionID).tasks.map { t in (t.taskId, t) })
         self.lockQueue = DispatchQueue(label: sessionID, attributes: [])
     }
     
@@ -120,33 +131,35 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         }
     }
     
-    func download(_ url: URL, relativePath: RelativePath) -> DownloadInfo? {
+    func download(_ url: URL, authValue: String, relativePath: RelativePath) -> DownloadTask? {
         log.info("Preparing download of \(relativePath) from \(url)")
         if let destPath = prepareDestination(relativePath) {
             let destURL = URL(fileURLWithPath: destPath)
-            let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL)
+            let info = DownloadInfo(relativePath: relativePath, destinationURL: destURL, authValue: authValue)
             self.log.info("Download \(url) to dest path \(destPath) with url \(destURL)")
-            download(url, info: info)
-            return info
+            return download(url, info: info)
         } else {
             log.error("Unable to prepare destination URL \(relativePath)")
             return nil
         }
     }
     
-    private func download(_ src: URL, info: DownloadInfo) {
-        let request = URLRequest(url: src)
+    private func download(_ src: URL, info: DownloadInfo) -> DownloadTask {
+        var request = URLRequest(url: src)
+        request.addValue(info.authValue, forHTTPHeaderField: "Authorization")
         let task = session.downloadTask(with: request)
-        saveTask(task.taskIdentifier, di: info)
+        let downloadTask = info.toTask(id: task.taskIdentifier)
+        save(task: downloadTask)
         // Delays the (background) download so that any playback might start earlier
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10), execute: {
             task.resume()
         })
+        return downloadTask
     }
     
-    func saveTask(_ taskID: Int, di: DownloadInfo) {
+    func save(task: DownloadTask) {
         synchronized {
-            self.tasks[taskID] = di
+            self.tasks[task.taskId] = task
             self.persistTasks()
         }
     }
@@ -185,7 +198,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     }
     
     func simpleError(_ message: String) -> PimpError {
-        return PimpError.simpleError(ErrorMessage(message: message))
+        return PimpError.simpleError(ErrorMessage(message))
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

@@ -177,7 +177,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     fileprivate func updateCover(_ track: Track) {
-        CoverService.sharedInstance.cover(track.artist, album: track.album) { result in
+        let _ = CoverService.sharedInstance.cover(track.artist, album: track.album).subscribe(onSuccess: { (result) in
             var image = CoverService.defaultCover
             // the track may have changed between the time the cover was requested and received
             if let imageResult = result.image, self.player.current().track?.title == track.title {
@@ -185,12 +185,14 @@ class PlayerController: ListeningController, PlaybackDelegate {
             }
             if let image = image {
                 Util.onUiThread {
-//                    self.log.info("Setting cover of \(image) for \(track.title)")
+                    //                    self.log.info("Setting cover of \(image) for \(track.title)")
                     self.coverImage.image = image
                 }
             } else {
                 self.log.warn("No image. This is most likely an error.")
             }
+        }) { (err) in
+            self.log.error("Failed to update cover for \(track.artist) - \(track.album).")
         }
     }
     

@@ -17,7 +17,7 @@ class LocalLibrary: BaseLibrary {
     static let sharedInstance = LocalLibrary()
     static let currentVersion = Version(version: "1.0.0")
     static let documentsPath = Files.documentsPath
-    static let ARTIST = "TPE1", ALBUM = "TALB", TRACK = "TIT2", TRACK_INDEX = "TRCK", YEAR = "TYER", GENRE = "TCON"
+    static let artist = "TPE1", album = "TALB", track = "TIT2", trackIndex = "TRCK", year = "TYER", genre = "TCON"
     static let rootFolderName = "music"
     
     override var isLocal: Bool { get { return true } }
@@ -32,19 +32,19 @@ class LocalLibrary: BaseLibrary {
     
     var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
     
-    override func pingAuth() -> Observable<Version> {
-        return Observable.just(LocalLibrary.currentVersion)
+    override func pingAuth() -> Single<Version> {
+        return Single.just(LocalLibrary.currentVersion)
     }
     
-    override func folder(_ id: String) -> Observable<MusicFolder> {
-        return folderAtPath(folderFor(path: id))
+    override func folder(_ id: FolderID) -> Single<MusicFolder> {
+        return folderAtPath(folderFor(path: id.id))
     }
     
-    override func rootFolder() -> Observable<MusicFolder> {
+    override func rootFolder() -> Single<MusicFolder> {
         return folderAtPath(Folder.root)
     }
     
-    func folderAtPath(_ folder: Folder) -> Observable<MusicFolder> {
+    func folderAtPath(_ folder: Folder) -> Single<MusicFolder> {
 //        log.info("Folder at \(folder.id) \(folder.title)")
         let absolutePath = folder.path == Folder.root.path ? musicRootPath : musicRootPath + ("/" + folder.path)
         let items: [String] = (try? fileManager.contentsOfDirectory(atPath: absolutePath)) ?? []
@@ -53,7 +53,7 @@ class LocalLibrary: BaseLibrary {
         let folders = directories.map(parseFolder)
         let tracks = files.filter(isSupportedFile).flatMapOpt(parseTrack)
         //Log.info("Dir count at \(folder.path): \(directories.count), file count: \(files.count)")
-        return Observable.just(MusicFolder(folder: folder, folders: folders, tracks: tracks))
+        return Single.just(MusicFolder(folder: folder, folders: folders, tracks: tracks))
     }
     
     func isSupportedFile(_ path: String) -> Bool {
@@ -91,14 +91,14 @@ class LocalLibrary: BaseLibrary {
         return self.musicRootPath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
     }
     
-    func deleteContents() -> Observable<Bool> {
+    func deleteContents() -> Single<Bool> {
         return Observable<Bool>.create { observer in
             let outcome = self.deleteContentsSync()
             observer.onNext(outcome)
             observer.onCompleted()
             return Disposables.create()
         }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-        .observeOn(MainScheduler.instance)
+        .observeOn(MainScheduler.instance).asSingle()
     }
     
     private func deleteContentsSync() -> Bool {
@@ -135,13 +135,13 @@ class LocalLibrary: BaseLibrary {
                 let value = meta.stringValue
                 if let key = meta.key {
                     switch key.description {
-                    case LocalLibrary.TRACK:
+                    case LocalLibrary.track:
                         track = value
                         break
-                    case LocalLibrary.ALBUM:
+                    case LocalLibrary.album:
                         album = value
                         break
-                    case LocalLibrary.ARTIST:
+                    case LocalLibrary.artist:
                         artist = value
                         break
                     default:
@@ -159,7 +159,7 @@ class LocalLibrary: BaseLibrary {
             let artistString = artist ?? relativeDir.stringByDeletingLastPathComponent().lastPathComponent()
             let actualArtist = artistString == "/" ? "" : artistString
             if let dur = duration(asset) {
-                return Track(id: relativePath, title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
+                return Track(id: TrackID(id: relativePath), title: actualTrack, album: actualAlbum, artist: actualArtist, duration: dur, path: relativePath, size: size, url: url)
             } else {
                 log.error("Unable to parse duration and URL of \(absolutePath)")
             }
@@ -176,7 +176,7 @@ class LocalLibrary: BaseLibrary {
     
     private func folderFor(path: String) -> Folder {
         let p = path.startsWith("/") ? path.tail() : path
-        return Folder(id: p, title: path.lastPathComponent(), path: p)
+        return Folder(id: FolderID(id: p), title: path.lastPathComponent(), path: p)
     }
     
     func relativize(_ path: String) -> String {

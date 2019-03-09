@@ -9,12 +9,15 @@
 import Foundation
 import RxSwift
 
+struct TrackPlaybackHistory: Codable {
+    let history: [Date]
+}
+
 open class PimpSettings {
     let log = LoggerFactory.shared.system(PimpSettings.self)
-    static let ENDPOINTS = "endpoints", PLAYER = "player", LIBRARY = "library", CACHE_ENABLED = "cache_enabled", CACHE_LIMIT = "cache_limit", TASKS = "tasks", NotificationsPrefix = "notifications-", defaultAlarmEndpoint = "defaultAlarmEndpoint", NotificationsAllowed = "notificationsAllowed", PushTokenKey = "pushToken", NoPushTokenValue = "none", TrackHistory = "trackHistory", IsPremium = "isPremium"
+    static let ENDPOINTS = "endpoints", PLAYER = "v2-player", LIBRARY = "v2-library", CACHE_ENABLED = "v2-cache_enabled", CACHE_LIMIT = "v2-cache_limit", TASKS = "v2-tasks", NotificationsPrefix = "v2-notifications-", defaultAlarmEndpoint = "v2-defaultAlarmEndpoint", NotificationsAllowed = "v2-notificationsAllowed", PushTokenKey = "v2-pushToken", NoPushTokenValue = "v2-none", TrackHistory = "v2-trackHistory", IsPremium = "v2-isPremium"
     
-    open static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
-    
+    public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsSubject = PublishSubject<[Endpoint]>()
     var endpointsEvent: Observable<[Endpoint]> { return endpointsSubject }
@@ -39,54 +42,36 @@ open class PimpSettings {
     
     var trackHistory: [Date] {
         get {
-            if let historyArray = impl.load(PimpSettings.TrackHistory) {
-                return readHistory(historyArray)
-            }
-            return []
+            return (impl.load(PimpSettings.TrackHistory, TrackPlaybackHistory.self) ?? TrackPlaybackHistory(history: [])).history
         }
         
-        set(newHistory) {
-            if let json = serializeHistory(newHistory) ?? serializeHistory([]) {
-                let _ = impl.save(json, key: PimpSettings.TrackHistory)
-            }
+        set (newHistory) {
+            let _ = impl.save(TrackPlaybackHistory(history: newHistory), key: PimpSettings.TrackHistory)
         }
-    }
-    
-    open func readHistory(_ raw: String) -> [Date] {
-        if let json = Json.asJson(raw) as? NSDictionary,
-            let history = json[PimpSettings.TrackHistory] as? [Double] {
-                return history.map { Date(timeIntervalSince1970: $0) }
-        }
-        return []
-    }
-    
-    open func serializeHistory(_ history: [Date]) -> String? {
-        let blob = [ PimpSettings.TrackHistory: history.map { $0.timeIntervalSince1970 } ]
-        return Json.stringifyObject(blob as [String : AnyObject])
     }
     
     var changes: Observable<Setting> { get { return impl.changes } }
     
     var pushToken: PushToken? {
         get {
-            let tokenString = impl.load(PimpSettings.PushTokenKey)
-            if let tokenString = tokenString {
-                if tokenString != PimpSettings.NoPushTokenValue {
-                    return PushToken(token: tokenString)
+            let token = impl.load(PimpSettings.PushTokenKey, Wrapped<PushToken>.self)?.value
+            if let token = token {
+                if token != PushToken.noToken {
+                    return token
                 }
             }
             return nil
         }
-        set(newToken) {
-            let token = newToken?.token ?? PimpSettings.NoPushTokenValue
-            let _ = impl.save(token, key: PimpSettings.PushTokenKey)
+        set (newToken) {
+            let token = newToken ?? PushToken.noToken
+            let _ = impl.saveString(token.token, key: PimpSettings.PushTokenKey)
         }
     }
     
     var notificationsAllowed: Bool {
-        get { return impl.load(PimpSettings.NotificationsAllowed) == "true" }
-        set(allowed) {
-            let errors = impl.save("\(allowed)", key: PimpSettings.NotificationsAllowed)
+        get { return impl.loadBool(PimpSettings.NotificationsAllowed) ?? false }
+        set (allowed) {
+            let errors = impl.saveBool(allowed, key: PimpSettings.NotificationsAllowed)
             if errors == nil {
                 notificationPermissionSubject.onNext(allowed)
             }
@@ -94,9 +79,9 @@ open class PimpSettings {
     }
     
     var cacheEnabled: Bool {
-        get { return impl.load(PimpSettings.CACHE_ENABLED) != "false" }
-        set(value) {
-            let errors = impl.save("\(value)", key: PimpSettings.CACHE_ENABLED)
+        get { return impl.loadBool(PimpSettings.CACHE_ENABLED) ?? true }
+        set (value) {
+            let errors = impl.saveBool(value, key: PimpSettings.CACHE_ENABLED)
             if errors == nil {
                 cacheEnabledSubject.onNext(value)
             }
@@ -104,9 +89,9 @@ open class PimpSettings {
     }
     
     var isUserPremium: Bool {
-        get { return impl.load(PimpSettings.IsPremium) == "true" }
-        set(value) {
-            let _ = impl.save("\(value)", key: PimpSettings.IsPremium)
+        get { return impl.loadBool(PimpSettings.IsPremium) ?? false }
+        set (value) {
+            let _ = impl.saveBool(value, key: PimpSettings.IsPremium)
         }
     }
     
@@ -114,15 +99,10 @@ open class PimpSettings {
     
     var cacheLimit: StorageSize {
         get {
-            if let bytesAsString = impl.load(PimpSettings.CACHE_LIMIT) {
-                if let asLong = NumberFormatter().number(from: bytesAsString)?.int64Value {
-                    return StorageSize.fromBytes(asLong) ?? defaultLimit
-                }
-            }
-            return defaultLimit
+            return impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
         }
-        set(newLimit) {
-            let errors = impl.save("\(newLimit.toBytes)", key: PimpSettings.CACHE_LIMIT)
+        set (newLimit) {
+            let errors = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT)
             if errors == nil {
                 cacheLimitSubject.onNext(newLimit)
             }
@@ -131,7 +111,7 @@ open class PimpSettings {
     
     func defaultNotificationEndpoint() -> Endpoint? {
         let alarmEndpoints = endpoints().filter { $0.supportsAlarms }
-        if let id = impl.load(PimpSettings.defaultAlarmEndpoint) {
+        if let id = impl.loadString(PimpSettings.defaultAlarmEndpoint) {
             let e = alarmEndpoints.find { $0.id == id }
             return e ?? initDefaultNotificationEndpoint(alarmEndpoints)
         } else {
@@ -155,11 +135,11 @@ open class PimpSettings {
     }
     
     func notificationsEnabled(_ e: Endpoint) -> Bool {
-        return impl.load(notificationsKey(e)) == "true"
+        return impl.loadBool(notificationsKey(e)) ?? false
     }
     
     func saveNotificationsEnabled(_ e: Endpoint, enabled: Bool) -> ErrorMessage? {
-        return impl.save("\(enabled)", key: notificationsKey(e))
+        return impl.saveBool(enabled, key: notificationsKey(e))
     }
     
     fileprivate func notificationsKey(_ e: Endpoint) -> String {
@@ -167,17 +147,7 @@ open class PimpSettings {
     }
     
     func endpoints() -> [Endpoint] {
-        if let str = impl.load(PimpSettings.ENDPOINTS) {
-            if let json: AnyObject = Json.asJson(str) {
-                if let dict = json as? NSDictionary {
-                    if let endArray = dict[PimpSettings.ENDPOINTS] as? [NSDictionary] {
-                        // TODO Fix
-                        return endArray.flatMapOpt(PimpJson.sharedInstance.asEndpoint)
-                    }
-                }
-            }
-        }
-        return []
+        return impl.load(PimpSettings.ENDPOINTS, EndpointsContainer.self)?.endpoints ?? []
     }
     
     func activePlayer() -> Endpoint {
@@ -189,7 +159,7 @@ open class PimpSettings {
     }
     
     func activeEndpoint(_ key: String) -> Endpoint {
-        if let id = impl.load(key) {
+        if let id = impl.loadString(key) {
             return endpoints().find({ $0.id == id }) ?? Endpoint.Local
         }
         return Endpoint.Local
@@ -207,8 +177,7 @@ open class PimpSettings {
     }
     
     func saveAll(_ es: [Endpoint]) {
-        if let stringified = serialize(es) {
-            let _ = impl.save(stringified, key: PimpSettings.ENDPOINTS)
+        if impl.save(EndpointsContainer(endpoints: es), key: PimpSettings.ENDPOINTS) == nil {
             let esAfter = endpoints()
             endpointsSubject.onNext(esAfter)
         } else {
@@ -216,39 +185,16 @@ open class PimpSettings {
         }
     }
     
-    func serialize(_ es: [Endpoint]) -> String? {
-        let jsonified = es.map(PimpJson.sharedInstance.toJson)
-        let blob = [PimpSettings.ENDPOINTS: jsonified as AnyObject]
-        return Json.stringifyObject(blob, prettyPrinted: true)
-    }
-    
-    func tasks(_ sid: String) -> [Int: DownloadInfo] {
+    func tasks(_ sid: String) -> DownloadTasks {
         let key = taskKey(sid)
-        if let str = impl.load(key),
-            let json = Json.asJson(str) as? NSDictionary,
-            let dict = json as? [String: AnyObject],
-            let tasks = PimpJson.sharedInstance.asTasks(dict) {
-            return tasks
-        }
-        return [:]
+        return impl.load(key, DownloadTasks.self) ?? DownloadTasks(tasks: [])
     }
     
-    func saveTasks(_ sid: String, tasks: [Int: DownloadInfo]) -> ErrorMessage? {
-        if let stringified = serialize(tasks) {
-            return impl.save(stringified, key: taskKey(sid))
-        } else {
-            let msg = "Unable to serialize tasks"
-            log.error(msg)
-            return ErrorMessage(message: msg)
-        }
+    func saveTasks(_ sid: String, tasks: [DownloadTask]) -> ErrorMessage? {
+        return impl.save(DownloadTasks(tasks: tasks), key: taskKey(sid))
     }
     
     func taskKey(_ sid: String) -> String {
         return "\(PimpSettings.TASKS)-\(sid)"
-    }
-    
-    func serialize(_ tasks: [Int: DownloadInfo]) -> String? {
-        let jsonified = PimpJson.sharedInstance.toJson(tasks)
-        return Json.stringifyObject(jsonified, prettyPrinted: true)
     }
 }

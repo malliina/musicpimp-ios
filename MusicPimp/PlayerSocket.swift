@@ -47,7 +47,7 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         if let message = message as? String {
             log.info("Got message \(message)")
         } else {
-            log.info("Got data \(message)")
+            log.info("Got data \(message ?? "unknown")")
         }
     }
     
@@ -105,7 +105,7 @@ class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
     }
     
     public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
-        info("Got message from \(baseURL): \(message)")
+        info("Got message from \(baseURL): \(message ?? "unknown")")
     }
     
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {

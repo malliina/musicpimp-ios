@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 extension HTTPURLResponse {
     var isSuccess: Bool {
         return self.statusCode >= 200 && self.statusCode < 300

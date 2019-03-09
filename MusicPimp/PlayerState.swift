@@ -32,8 +32,28 @@ class PlayerStateClass {
     }
 }
 
+struct PlayerStateJson: Codable {
+    static let empty = PlayerStateJson(track: nil, state: .closed, position: Duration.Zero, volume: VolumeValue.Default, mute: false, playlist: [], index: nil)
+    
+    let track: Track?
+    let state: PlayStateJson
+    let position: Duration
+    let volume: VolumeValue
+    let mute: Bool
+    let playlist: [Track]
+    let index: Int?
+    
+    var playbackState: PlaybackState { return state.playbackState }
+    var isPlaying: Bool { get { return state.playbackState == .Playing } }
+    
+    func mutable() -> PlayerState {
+        return PlayerState(track: track, state: state.playbackState, position: position, volume: volume, mute: mute, playlist: playlist, playlistIndex: index)
+    }
+}
+
 struct PlayerState {
     static let empty = PlayerState(track: nil, state: .NoMedia, position: Duration.Zero, volume: VolumeValue.Default, mute: false, playlist: [], playlistIndex: nil)
+    
     var track: Track?
     var state: PlaybackState
     var position: Duration

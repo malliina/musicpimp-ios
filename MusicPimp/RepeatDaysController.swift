@@ -40,9 +40,9 @@ class RepeatDaysController: BaseTableController {
             let willBeEnabled = !wasChecked
             if let day = dayForIndex(indexPath.row), let alarm = alarm {
                 if willBeEnabled {
-                    alarm.when.days.insert(day)
+                    alarm.when.days.append(day)
                 } else {
-                    alarm.when.days.remove(day)
+                    alarm.when.days.removeAll { $0 == day }
                 }
             }
             cell.accessoryType = newAccessory

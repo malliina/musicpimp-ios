@@ -24,14 +24,19 @@ class PimpSocket: PlayerSocket {
         super.init(baseURL: baseURL, headers: headers)
     }
     
-    func send(_ dict: [String: AnyObject]) -> ErrorMessage? {
+    func send<T: Encodable>(_ json: T) -> ErrorMessage? {
         if let socket = socket {
-            if let payload = Json.stringifyObject(dict, prettyPrinted: false) {
-                socket.send(payload)
+            let encoder = JSONEncoder()
+            do {
+                let data = try encoder.encode(json)
+                guard let asString = String(data: data, encoding: .utf8) else {
+                    return ErrorMessage("JSON-to-String conversion failed.")
+                }
+                socket.send(asString)
                 //Log.info("Sent \(payload) to \(baseURL))")
                 return nil
-            } else {
-                return failWith("Unable to send payload, encountered non-JSON payload: \(dict)")
+            } catch let err {
+                return failWith("Unable to send payload, encountered non-JSON payload: '\(err)'.")
             }
         } else {
             return failWith("Unable to send payload, socket not available.")
@@ -41,84 +46,60 @@ class PimpSocket: PlayerSocket {
     
     func failWith(_ message: String) -> ErrorMessage {
         log.error(message)
-        return ErrorMessage(message: message)
+        return ErrorMessage(message)
     }
     
     override func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         if let message = message as? String {
 //            log.info("Got message \(message)")
-            if let dict = Json.asJson(message) as? NSDictionary {
-                if let event = dict[JsonKeys.EVENT] as? String {
-                    switch event {
-                    case JsonKeys.TIME_UPDATED:
-                        if let position = dict[JsonKeys.POSITION] as? Int {
-                            delegate.onTimeUpdated(position.seconds)
-                        }
-                        break
-                    case JsonKeys.TRACK_CHANGED:
-                        if let track = dict[JsonKeys.TRACK] as? NSDictionary {
-                            if let track = try? delegate.parseTrack(track) {
-                                delegate.onTrackChanged(track)
-                            } else {
-                                log.error("Unable to parse track: \(message)")
-                            }
-                        }
-                        break
-                    case JsonKeys.MUTE_TOGGLED:
-                        if let mute = dict[JsonKeys.MUTE] as? Bool {
-                            delegate.onMuteToggled(mute)
-                        }
-                        break
-                    case JsonKeys.VOLUME_CHANGED:
-                        if let volume = dict[JsonKeys.VOLUME] as? Int {
-                            delegate.onVolumeChanged(VolumeValue(volume: volume))
-                        }
-                        break
-                    case JsonKeys.PLAYSTATE_CHANGED:
-                        if let stateName = dict[JsonKeys.STATE] as? String {
-                            if let state = PlaybackState.fromName(stateName) {
-                                delegate.onStateChanged(state)
-                            } else {
-                                log.error("Unknown playback state name: \(stateName)")
-                            }
-                        }
-                        break
-                    case JsonKeys.INDEX_CHANGED:
-                        if let index = dict[JsonKeys.PLAYLIST_INDEX] as? Int {
-                            let idx: Int? = index >= 0 ? index : nil
-                            delegate.onIndexChanged(idx)
-                        }
-                        break
-                    case JsonKeys.PLAYLIST_MODIFIED:
-                        if let list = dict[JsonKeys.PLAYLIST] as? [NSDictionary] {
-                            if let tracks = try? list.map(self.delegate.parseTrack) {
-                                delegate.onPlaylistModified(tracks)
-                            } else {
-                                log.error("Unable to parse tracks: \(message)")
-                            }
-                        }
-                        break
-                    case JsonKeys.STATUS:
-                        if let state = try? delegate.parseStatus(dict) {
-                            delegate.onState(state)
-                        } else {
-                            log.error("Unable to parse status: \(message)")
-                        }
-                        break
-                    case JsonKeys.WELCOME:
-                        socket?.send(Json.stringifyObject([JsonKeys.CMD: JsonKeys.STATUS as AnyObject]))
-                        break
-                    case JsonKeys.PING:
-                        break
-                    default:
-                        log.error("Unknown event: \(event)")
+            guard let data = message.data(using: String.Encoding.utf8, allowLossyConversion: false) else {
+                log.error("Cannot read message data from: '\(message)'.")
+                return
+            }
+            let decoder = JSONDecoder()
+            do {
+                let event = try decoder.decode(KeyedEvent.self, from: data)
+                switch event.event {
+                case JsonKeys.TIME_UPDATED:
+                    delegate.onTimeUpdated(try decoder.decode(TimeUpdated.self, from: data).position)
+                    break
+                case JsonKeys.TRACK_CHANGED:
+                    delegate.onTrackChanged(try decoder.decode(TrackChanged.self, from: data).track)
+                    break
+                case JsonKeys.MUTE_TOGGLED:
+                    delegate.onMuteToggled(try decoder.decode(MuteToggled.self, from: data).mute)
+                    break
+                case JsonKeys.VOLUME_CHANGED:
+                    delegate.onVolumeChanged(VolumeValue(volume: try decoder.decode(VolumeChanged.self, from: data).volume))
+                    break
+                case JsonKeys.PLAYSTATE_CHANGED:
+                    delegate.onStateChanged(try decoder.decode(PlayStateChanged.self, from: data).playbackState)
+                    break
+                case JsonKeys.INDEX_CHANGED:
+                    let idx = try decoder.decode(IndexChanged.self, from: data).index
+                    delegate.onIndexChanged(idx >= 0 ? idx : nil)
+                    break
+                case JsonKeys.PLAYLIST_MODIFIED:
+                    delegate.onPlaylistModified(try decoder.decode(PlaylistModified.self, from: data).playlist)
+                    break
+                case JsonKeys.STATUS:
+                    delegate.onState(try decoder.decode(PlayerStateJson.self, from: data))
+                    break
+                case JsonKeys.WELCOME:
+                    if let err = send(SimpleCommand(cmd: JsonKeys.STATUS)) {
+                        log.error("Unable to send welcome message over socket: '\(err.message)'.")
                     }
+                    break
+                case JsonKeys.PING:
+                    break
+                default:
+                    log.error("Unknown event: \(event)")
                 }
-            } else {
-                log.error("Message is not a JSON object: \(message)")
+            } catch let err {
+                log.error("Failed to parse JSON. \(err). Message was: '\(message)'.")
             }
         } else {
-            log.error("WebSocket message is not a string: \(message)")
+            log.error("WebSocket message is not a string: \(message ?? "Unknown message")")
         }
     }
 }

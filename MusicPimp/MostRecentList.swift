@@ -32,7 +32,7 @@ class MostRecentList: TopListController<RecentEntry> {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
-        let formattedDate = formatter.string(from: track.when)
+        let formattedDate = formatter.string(from: track.timestamp)
         cell.fill(main: track.track.title, subLeft: track.track.artist, subRight: formattedDate)
     }
     
@@ -41,9 +41,8 @@ class MostRecentList: TopListController<RecentEntry> {
         renderTable("Loading recent tracks...")
         library.recent(0, until: itemsPerLoad).subscribe { (event) in
             switch event {
-            case .next(let rs): self.onTopLoaded(rs)
+            case .success(let rs): self.onTopLoaded(rs)
             case .error(let err): self.onTopError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -52,9 +51,8 @@ class MostRecentList: TopListController<RecentEntry> {
         let oldSize = entries.count
         library.recent(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
             switch event {
-            case .next(let rs): self.onMoreResults(oldSize, results: rs)
+            case .success(let rs): self.onMoreResults(oldSize, results: rs)
             case .error(let err): self.onTopError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }

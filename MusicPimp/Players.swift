@@ -25,14 +25,10 @@ class Players {
     ]
     
     func fromEndpoint(_ e: Endpoint) -> PlayerType {
-        let serverType = e.serverType
-        switch serverType.name {
-        case ServerTypes.MusicPimp.name:
-            return PimpPlayer(e: e)
-        case ServerTypes.Cloud.name:
-            return PimpPlayer(e: e)
-        default:
-            return LocalPlayer.sharedInstance
+        switch e.serverType {
+        case .musicPimp: return PimpPlayer(e: e)
+        case .cloud: return PimpPlayer(e: e)
+        default: return LocalPlayer.sharedInstance
         }
     }
     

@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 class PlayerManager: EndpointManager {
-    let log = LoggerFactory.shared.pimp(PlayerManager.self)
-    
+    static let playerLog = LoggerFactory.shared.pimp(PlayerManager.self)
+    fileprivate var log: Logger { return PlayerManager.playerLog }
     static let sharedInstance = PlayerManager()
     let players = Players.sharedInstance
     

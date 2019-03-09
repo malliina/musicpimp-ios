@@ -48,19 +48,8 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         return currentState
     }
     
-//    func resetAndPlay(_ track: Track) -> ErrorMessage? {
-//        return socket.send([
-//            JsonKeys.CMD: JsonKeys.PLAY as AnyObject,
-//            JsonKeys.TRACK: track.id as AnyObject
-//        ])
-//    }
-    
     func resetAndPlay(tracks: [Track]) -> ErrorMessage? {
-        return socket.send([
-            JsonKeys.CMD: "play_items" as AnyObject,
-            "tracks": tracks.map { $0.id } as AnyObject,
-            "folders": [] as AnyObject
-        ])
+        return socket.send(PlayItems(tracks: tracks))
     }
     
     func play() -> ErrorMessage? {
@@ -72,7 +61,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
     
     func seek(_ position: Duration) -> ErrorMessage? {
-        return sendValued(JsonKeys.SEEK, value: Int(position.seconds) as AnyObject)
+        return sendValued(IntPayload(seek: position))
     }
     
     func next() -> ErrorMessage? {
@@ -84,21 +73,19 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
     
     func skip(_ index: Int)  -> ErrorMessage? {
-        return sendValued(JsonKeys.SKIP, value: index as AnyObject)
+        return sendValued(IntPayload(skip: index))
     }
     
     func volume(_ newVolume: VolumeValue) -> ErrorMessage? {
-        return sendValued(JsonKeys.VOLUME, value: newVolume.volume as AnyObject)
+        return sendValued(IntPayload(volumeChanged: newVolume.volume))
     }
     
-    func sendValued(_ cmd: String, value: AnyObject) -> ErrorMessage? {
-        let payload = PimpEndpoint.valuedCommand(cmd, value: value)
-        return socket.send(payload)
+    func sendValued<T: Encodable>(_ t: T) -> ErrorMessage? {
+        return socket.send(t)
     }
     
     func sendSimple(_ cmd: String) -> ErrorMessage? {
-        let payload = PimpEndpoint.simpleCommand(cmd)
-        return socket.send(payload as [String : AnyObject])
+        return socket.send(SimpleCommand(cmd: cmd))
     }
     
     func onTimeUpdated(_ pos: Duration) {
@@ -139,14 +126,14 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
         playlist.playlistSubject.onNext(Playlist(tracks: tracks, index: currentState.playlistIndex))
     }
     
-    func onState(_ state: PlayerState) {
-        currentState = state
+    func onState(_ state: PlayerStateJson) {
+        currentState = state.mutable()
         onPlaylistModified(state.playlist)
-        onIndexChanged(state.playlistIndex)
+        onIndexChanged(state.index)
         onTrackChanged(state.track)
         onMuteToggled(state.mute)
         onVolumeChanged(state.volume)
         onTimeUpdated(state.position)
-        onStateChanged(state.state)
+        onStateChanged(state.playbackState)
     }
 }

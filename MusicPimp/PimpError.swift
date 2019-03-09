@@ -17,7 +17,7 @@ enum PimpError: Error {
     var message: String { return PimpError.stringify(error: self) }
     
     static func simple(_ message: String) -> PimpError {
-        return PimpError.simpleError(ErrorMessage(message: message))
+        return PimpError.simpleError(ErrorMessage(message))
     }
     
     static func stringify(error: PimpError) -> String {
@@ -83,10 +83,10 @@ class RequestFailure {
     }
 }
 
-class ErrorMessage {
+struct ErrorMessage {
     let message: String
     
-    init(message: String) {
+    init(_ message: String) {
         self.message = message
     }
 }

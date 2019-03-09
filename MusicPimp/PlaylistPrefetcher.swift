@@ -41,6 +41,6 @@ class PlaylistPrefetcher {
         if idx >= ts.count { return nil }
         let track = ts[idx]
         if library.contains(track) { return nil }
-        return downloader.downloadIfNecessary(track: track)
+        return downloader.downloadIfNecessary(track: track, authValue: library.authValue)
     }
 }

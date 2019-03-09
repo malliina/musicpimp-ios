@@ -11,27 +11,29 @@ import RxSwift
 
 protocol LibraryType {
     var isLocal: Bool { get }
+    var authValue: String { get }
+    var authQuery: String { get }
     var contentsUpdated: Observable<MusicFolder?> { get }
     var rootFolderKey: String { get }
     
-    func pingAuth() -> Observable<Version>
+    func pingAuth() -> Single<Version>
     
-    func rootFolder() -> Observable<MusicFolder>
-    func folder(_ id: String) -> Observable<MusicFolder>
-    func tracks(_ id: String) -> Observable<[Track]>
-    func search(_ term: String) -> Observable<[Track]>
+    func rootFolder() -> Single<MusicFolder>
+    func folder(_ id: FolderID) -> Single<MusicFolder>
+    func tracks(_ id: FolderID) -> Single<[Track]>
+    func search(_ term: String) -> Single<[Track]>
     
-    func playlists() -> Observable<[SavedPlaylist]>
-    func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist>
-    func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]>
-    func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]>
-    func savePlaylist(_ sp: SavedPlaylist) -> Observable<PlaylistID>
-    func deletePlaylist(_ id: PlaylistID) -> Observable<HttpResponse>
+    func playlists() -> Single<[SavedPlaylist]>
+    func playlist(_ id: PlaylistID) -> Single<SavedPlaylist>
+    func popular(_ from: Int, until: Int) -> Single<[PopularEntry]>
+    func recent(_ from: Int, until: Int) -> Single<[RecentEntry]>
+    func savePlaylist(_ sp: SavedPlaylist) -> Single<PlaylistID>
+    func deletePlaylist(_ id: PlaylistID) -> Single<HttpResponse>
     
-    func alarms() -> Observable<[Alarm]>
-    func saveAlarm(_ alarm: Alarm) -> Observable<HttpResponse>
-    func deleteAlarm(_ id: AlarmID) -> Observable<HttpResponse>
-    func stopAlarm() -> Observable<HttpResponse>
-    func registerNotifications(_ token: PushToken, tag: String) -> Observable<HttpResponse>
-    func unregisterNotifications(_ tag: String) -> Observable<HttpResponse>
+    func alarms() -> Single<[Alarm]>
+    func saveAlarm(_ alarm: Alarm) -> Single<HttpResponse>
+    func deleteAlarm(_ id: AlarmID) -> Single<HttpResponse>
+    func stopAlarm() -> Single<HttpResponse>
+    func registerNotifications(_ token: PushToken, tag: String) -> Single<HttpResponse>
+    func unregisterNotifications(_ tag: String) -> Single<HttpResponse>
 }

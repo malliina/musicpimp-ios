@@ -28,75 +28,65 @@ class HttpClient {
     
     let session = URLSession.shared
     
-    func executeParsedJson<T>(_ req: URLRequest, parse: @escaping (NSDictionary) throws -> T) -> Observable<T> {
-        return executeParsed(req) { response in
-            try self.asJson(response: response, parse: parse)
-        }
-    }
-    
-    func executeParsed<T>(_ req: URLRequest, parse: @escaping (HttpResponse) throws -> T) -> Observable<T> {
-        return executeChecked(req).flatMap { (response) -> Observable<T> in
+    func executeParsed<T: Decodable>(_ req: URLRequest, to: T.Type) -> Single<T> {
+        return executeChecked(req).flatMap { (response) -> Single<T> in
             self.recovered { () -> T in
-                try parse(response)
+                try response.decode(to)
             }
         }
     }
     
-    func asJson<T>(response: HttpResponse, parse: (NSDictionary) throws -> T) throws-> T {
-        if let json = response.json {
-            return try parse(json)
-        } else {
-            throw PimpError.parseError(JsonError.notJson(response.data))
-        }
-    }
-    
-    func recovered<T>(code: () throws -> T) -> Observable<T> {
+    func recovered<T>(code: () throws -> T) -> Single<T> {
         do {
-            return try Observable.just(code())
+            return try Single.just(code())
         } catch let e {
-            return Observable.error(e)
+            return Single.error(e)
         }
     }
     
-    func executeChecked(_ req: URLRequest) -> Observable<HttpResponse> {
+    func executeChecked(_ req: URLRequest) -> Single<HttpResponse> {
         // Fix
         let url = req.url ?? URL(string: "https://www.musicpimp.org")!
         return executeHttp(req).flatMap { self.statusChecked(url, response: $0) }
     }
     
-    func executeHttp(_ req: URLRequest) -> Observable<HttpResponse> {
-        return session.rx.response(request: req).flatMap { (result) -> Observable<HttpResponse> in
+    func executeHttp(_ req: URLRequest) -> Single<HttpResponse> {
+        return session.rx.response(request: req).asSingle().flatMap { (result) -> Single<HttpResponse> in
             let (response, data) = result
-            return Observable.just(HttpResponse(http: response, data: data))
+            return Single.just(HttpResponse(http: response, data: data))
         }
     }
     
-    func statusChecked(_ url: URL, response: HttpResponse) -> Observable<HttpResponse> {
+    func statusChecked(_ url: URL, response: HttpResponse) -> Single<HttpResponse> {
         if response.isStatusOK {
-            return Observable.just(response)
+            return Single.just(response)
         } else {
             self.log.error("Request to '\(url)' failed with status '\(response.statusCode)'.")
-            var errorMessage: String? = nil
-            if let json = Json.asJson(response.data) as? NSDictionary {
-                errorMessage = json[JsonKeys.ERROR] as? String
-            }
-            return Observable.error(PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: errorMessage)))
+            let errorMessage = try? response.decode(FailReason.self).reason
+            return Single.error(PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: errorMessage)))
         }
     }
     
     func buildGet(url: URL, headers: [String: String] = [:]) -> URLRequest {
-        return buildRequest(url: url, httpMethod: HttpClient.GET, headers: headers, body: nil)
+        return buildRequest(url: url, httpMethod: HttpClient.GET, headers: headers)
     }
     
-    func buildRequest(url: URL, httpMethod: String, headers: [String: String], body: Data?) -> URLRequest {
+    func buildRequestWithBody(url: URL, httpMethod: String, headers: [String: String], body: Data) -> URLRequest {
+        var req = buildRequest(url: url, httpMethod: httpMethod, headers: headers)
+        req.httpBody = body
+        return req
+    }
+    
+    func buildRequest(url: URL, httpMethod: String, headers: [String: String]) -> URLRequest {
         var req = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 5)
         req.httpMethod = httpMethod
         for (key, value) in headers {
             req.addValue(value, forHTTPHeaderField: key)
         }
-        if let body = body {
-            req.httpBody = body
-        }
         return req
     }
+}
+
+struct FailReason: Codable {
+    let reason: String
 }
