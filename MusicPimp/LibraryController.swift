@@ -18,7 +18,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     
     var folder: MusicFolder = MusicFolder.empty
     override var musicItems: [MusicItem] { return folder.items }
-    var selected: MusicItem? = nil
+    var selected: Folder? = nil
     
     var header: UIView? = nil
     
@@ -75,7 +75,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         }
     }
     
-    func loadFolder(_ id: String) {
+    func loadFolder(_ id: FolderID) {
         let _ = library.folder(id).subscribe(handleFolderEvent)
     }
     
@@ -83,11 +83,10 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         let _ = library.rootFolder().subscribe(handleFolderEvent)
     }
     
-    func handleFolderEvent(event: RxSwift.Event<MusicFolder>) {
+    func handleFolderEvent(event: RxSwift.SingleEvent<MusicFolder>) {
         switch event {
-        case .next(let folder): onFolder(folder)
+        case .success(let folder): onFolder(folder)
         case .error(let error): onLoadError(error)
-        case .completed: ()
         }
     }
     
@@ -225,7 +224,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
 extension LibraryController {
     func onProgress(track: TrackProgress) {
-        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.id == track.track.id }) {
+        if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.idStr.description == track.track.idStr.description }) {
 //            log.info("Updating \(track.progress)")
             updateRows(row: index, p: track)
         }

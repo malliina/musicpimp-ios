@@ -125,9 +125,8 @@ class PlaylistController: BaseMusicController {
     func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) {
         library.popular(from, until: from + maxItems).subscribe { (event) in
             switch event {
-            case .next(let pops): onPopulars(pops)
+            case .success(let pops): onPopulars(pops)
             case .error(let err): self.onPopularError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -135,9 +134,8 @@ class PlaylistController: BaseMusicController {
     func fetchRecent(from: Int, maxItems: Int, onRecents: @escaping ([RecentEntry]) -> Void) {
         library.recent(from, until: from + maxItems).subscribe { (event) in
             switch event {
-            case .next(let recents): onRecents(recents)
+            case .success(let recents): onRecents(recents)
             case .error(let err): self.onRecentError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -147,7 +145,7 @@ class PlaylistController: BaseMusicController {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
-        let formattedDate = formatter.string(from: track.when)
+        let formattedDate = formatter.string(from: track.timestamp)
         decorateTwoLines(cell, first: track.track.title, second: formattedDate)
     }
     

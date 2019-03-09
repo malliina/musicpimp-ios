@@ -17,7 +17,9 @@ class FeedbackTable: BaseTableController {
         super.viewDidLoad()
         registerCell(reuseIdentifier: FeedbackTable.feedbackIdentifier)
     }
+}
 
+extension BaseTableController {
     func feedbackCellWithText(_ tableView: UITableView, indexPath: IndexPath, text: String) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedbackTable.feedbackIdentifier, for: indexPath)
         if let label = cell.textLabel {

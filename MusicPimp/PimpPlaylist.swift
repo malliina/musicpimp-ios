@@ -17,15 +17,11 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
     }
     
     func skip(_ index: Int) -> ErrorMessage? {
-        return socket.send(PimpEndpoint.valuedCommand(JsonKeys.SKIP, value: index as AnyObject))
+        return socket.send(IntPayload(skip: index))
     }
     
     func add(_ track: Track) -> ErrorMessage? {
-        let payload = [
-            JsonKeys.CMD: JsonKeys.ADD,
-            JsonKeys.TRACK: track.id
-        ]
-        return socket.send(payload as [String : AnyObject])
+        return socket.send(AddTrackPayload(cmd: JsonKeys.ADD, track: track.id))
     }
     
     func add(_ tracks: [Track]) -> [ErrorMessage] {
@@ -35,25 +31,14 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
     }
     
     func removeIndex(_ index: Int) -> ErrorMessage? {
-        let payload = PimpEndpoint.valuedCommand(JsonKeys.REMOVE, value: index as AnyObject)
-        return socket.send(payload)
+        return socket.send(IntPayload(removeAt: index))
     }
     
     func move(_ src: Int, dest: Int) -> ErrorMessage? {
-        let payload: [String: AnyObject] = [
-            JsonKeys.CMD: JsonKeys.Move as AnyObject,
-            JsonKeys.From: src as AnyObject,
-            JsonKeys.To: dest as AnyObject
-        ]
-        return socket.send(payload)
+        return socket.send(MoveTrack(cmd: JsonKeys.Move, from: src, to: dest))
     }
     
     func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage? {
-        let payload: [String: AnyObject] = [
-            JsonKeys.CMD: ResetPlaylist as AnyObject,
-            JsonKeys.INDEX: (index ?? -1) as AnyObject,
-            JsonKeys.TRACKS: tracks.map { $0.id } as AnyObject
-        ]
-        return socket.send(payload)
+        return socket.send(ResetPlaylistPayload(cmd: ResetPlaylist, index: index ?? -1, tracks: tracks.map { $0.id }))
     }
 }

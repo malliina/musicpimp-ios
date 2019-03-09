@@ -227,9 +227,8 @@ class EditEndpointController: PimpViewController {
             let client = Libraries.fromEndpoint(endpoint)
             let _ = client.pingAuth().subscribe { (event) in
                 switch event {
-                case .next(let version): self.onTestSuccess(endpoint, v: version)
+                case .success(let version): self.onTestSuccess(endpoint, v: version)
                 case .error(let error): self.onTestFailure(endpoint, error: error)
-                case .completed: ()
                 }
             }.disposed(by: disposeBag)
         } else {
@@ -240,7 +239,7 @@ class EditEndpointController: PimpViewController {
     fileprivate func adjustVisibility(_ serverType: ServerType) {
         let cloudViews: [UIView] = [cloudIDLabel, cloudIDField]
         let nonCloudViews: [UIView] = [nameLabel, nameField, addressLabel, addressField, portLabel, portField, protocolControl]
-        let cloudVisible = serverType.name == ServerTypes.Cloud.name
+        let cloudVisible = serverType == ServerType.cloud
         if cloudVisible {
             pimpConstraint?.deactivate()
             cloudConstraint?.activate()
@@ -297,7 +296,7 @@ class EditEndpointController: PimpViewController {
         let serverType = e.serverType
         adjustVisibility(serverType)
         typeControl.selectedSegmentIndex = serverType.index
-        if serverType.name == ServerTypes.Cloud.name {
+        if serverType == ServerType.cloud {
             cloudIDField.text = e.name
         } else {
             nameField.text = e.name
@@ -317,12 +316,12 @@ class EditEndpointController: PimpViewController {
     func parseEndpoint() -> Endpoint? {
         let id = editedItem?.id ?? UUID().uuidString
         if let serverType = readServerType(typeControl) {
-            if serverType.name == ServerTypes.Cloud.name {
+            if serverType == ServerType.cloud {
                 let existsEmpty = [cloudIDField, usernameField, passwordField].exists({ $0.text!.isEmpty })
                 if existsEmpty {
                     return nil
                 }
-                return Endpoint(id: id, cloudID: cloudIDField.text!, username: usernameField.text!, password: passwordField.text!)
+                return Endpoint.cloud(id: id, cloudID: cloudIDField.text!, username: usernameField.text!, password: passwordField.text!)
             } else {
                 if let portText = portField.text, let port = Int(portText) {
                     let protoIndex = protocolControl.selectedSegmentIndex

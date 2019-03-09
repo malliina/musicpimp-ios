@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class Downloader {
     let log = LoggerFactory.shared.network(Downloader.self)
@@ -22,67 +24,67 @@ class Downloader {
         self.basePath = basePath
     }
     
-    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false) {
-        download(
-            url,
-            relativePath: relativePath,
-            replace: replace,
-            onError: { (err: PimpError) -> Void in
-                self.log.error(err.message)
-            },
-            onSuccess: { (destPath: String) -> Void in
-            }
-        )
-    }
-    
-    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false, onError: @escaping (PimpError) -> Void, onSuccess: @escaping (String) -> Void) {
+//    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false) {
+//        download(
+//            url,
+//            relativePath: relativePath,
+//            replace: replace,
+//            onError: { (err: PimpError) -> Void in
+//                self.log.error(err.message)
+//            },
+//            onSuccess: { (destPath: String) -> Void in
+//            }
+//        )
+//    }
+//
+    func download(_ url: URL, authValue: String?, relativePath: RelativePath, replace: Bool = false) -> Single<String> {
         let destPath = pathTo(relativePath)
+        let subject: PublishSubject<String> = PublishSubject()
         if replace || !Files.exists(destPath) {
             log.info("Downloading \(url)")
-            let request = URLRequest(url: url)
+            var request = URLRequest(url: url)
+            if let authValue = authValue {
+                request.addValue(authValue, forHTTPHeaderField: "Authorization")
+            }
+            
             let task = session.dataTask(with: request) { (data, response, err) in
                 if let err = err {
-                    onError(self.simpleError("Error \(err)"))
+                    subject.onError(self.simpleError("Error \(err)"))
                 } else {
-                    if let response = response as? HTTPURLResponse {
-                        if response.isSuccess {
-                            if let data = data {
-                                let dir = destPath.stringByDeletingLastPathComponent()
-                                let dirSuccess: Bool
-                                do {
-                                    try self.fileManager.createDirectory(atPath: dir, withIntermediateDirectories: true, attributes: nil)
-                                    dirSuccess = true
-                                } catch _ {
-                                    dirSuccess = false
-                                }
-                                if dirSuccess {
-                                    let fileSuccess = (try? data.write(to: URL(fileURLWithPath: destPath), options: [.atomic])) != nil
-                                    if fileSuccess {
-                                        //let size = Files.sharedInstance.fileSize(destPath) crashes
-                                        self.log.info("Downloaded \(destPath)")
-                                        onSuccess(destPath)
-                                    } else {
-                                        onError(self.simpleError("Unable to write \(destPath)"))
-                                    }
-                                } else {
-                                    onError(self.simpleError("Unable to create directory: \(dir)"))
-                                }
-                            } else {
-                                onError(self.simpleError("No data in response."))
-                            }
-                        } else {
-                            onError(.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: nil)))
-                        }
-                    } else {
-                        onError(self.simpleError("Unknown response."))
+                    guard let response = response as? HTTPURLResponse else {
+                        subject.onError(self.simpleError("Unknown response."))
+                        return
                     }
+                    guard response.isSuccess else {
+                        subject.onError(PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: nil)))
+                        return
+                    }
+                    guard let data = data else {
+                        subject.onError(self.simpleError("No data in response."))
+                        return
+                    }
+                    let dir = destPath.stringByDeletingLastPathComponent()
+                    guard (try? self.fileManager.createDirectory(atPath: dir, withIntermediateDirectories: true, attributes: nil)) != nil else {
+                        subject.onError(self.simpleError("Unable to create directory: \(dir)"))
+                        return
+                    }
+                    guard (try? data.write(to: URL(fileURLWithPath: destPath), options: [.atomic])) != nil else {
+                        subject.onError(self.simpleError("Unable to write \(destPath)"))
+                        return
+                    }
+                    //let size = Files.sharedInstance.fileSize(destPath) crashes
+                    self.log.info("Downloaded \(destPath)")
+                    subject.onNext(destPath)
+                    subject.onCompleted()
                 }
             }
             task.resume()
         } else {
-            onSuccess(destPath)
+            subject.onNext(destPath)
+            subject.onCompleted()
             log.info("Already exists, not downloading \(relativePath)")
         }
+        return subject.asSingle()
     }
     
     func prepareDestination(_ relativePath: RelativePath) -> String? {
@@ -103,6 +105,6 @@ class Downloader {
     }
     
     func simpleError(_ message: String) -> PimpError {
-        return PimpError.simpleError(ErrorMessage(message: message))
+        return PimpError.simpleError(ErrorMessage(message))
     }
 }

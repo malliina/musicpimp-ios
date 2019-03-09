@@ -9,10 +9,6 @@
 import Foundation
 
 protocol PlayerEventDelegate {
-    func parseStatus(_ json: NSDictionary) throws -> PlayerState
-    
-    func parseTrack(_ json: NSDictionary) throws -> Track
-    
     func onTimeUpdated(_ pos: Duration)
     
     func onTrackChanged(_ track: Track?)
@@ -27,26 +23,18 @@ protocol PlayerEventDelegate {
     
     func onPlaylistModified(_ tracks: [Track])
     
-    func onState(_ state: PlayerState)
+    func onState(_ state: PlayerStateJson)
 }
 
 class LoggingDelegate : PlayerEventDelegate {
     let log = LoggerFactory.shared.pimp(LoggingDelegate.self)
-    
-    func parseStatus(_ json: NSDictionary) throws -> PlayerState {
-        return PlayerState.empty
-    }
-    
-    func parseTrack(_ json: NSDictionary) throws -> Track {
-        return Track.empty
-    }
     
     func onTimeUpdated(_ pos: Duration) {
         log("Time: \(pos)")
     }
     
     func onTrackChanged(_ track: Track?) {
-        log("Track: \(track?.id ?? "None")")
+        log("Track: \(track?.id.id ?? "None")")
     }
     
     func onMuteToggled(_ mute: Bool) {
@@ -69,7 +57,7 @@ class LoggingDelegate : PlayerEventDelegate {
         log("Tracks: \(tracks.description)")
     }
     
-    func onState(_ state: PlayerState) {
+    func onState(_ state: PlayerStateJson) {
         log("Status")
     }
     

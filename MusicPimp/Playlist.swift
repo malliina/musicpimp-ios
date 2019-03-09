@@ -8,14 +8,9 @@
 
 import Foundation
 
-class Playlist {
+struct Playlist {
     static let empty = Playlist(tracks: [], index: nil)
     
     let tracks: [Track]
     let index: Int?
-    
-    init(tracks: [Track], index: Int?) {
-        self.tracks = tracks
-        self.index = index
-    }
 }

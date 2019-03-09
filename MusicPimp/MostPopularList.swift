@@ -32,9 +32,8 @@ class MostPopularList: TopListController<PopularEntry> {
         }
         library.popular(0, until: itemsPerLoad).subscribe { (event) in
             switch event {
-            case .next(let rs): self.onTopLoaded(rs)
+            case .success(let rs): self.onTopLoaded(rs)
             case .error(let err): self.onTopError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -43,9 +42,8 @@ class MostPopularList: TopListController<PopularEntry> {
         let oldSize = entries.count
         library.popular(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
             switch event {
-            case .next(let rs): self.onMoreResults(oldSize, results: rs)
+            case .success(let rs): self.onMoreResults(oldSize, results: rs)
             case .error(let err): self.onTopError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }

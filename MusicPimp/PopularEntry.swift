@@ -9,15 +9,15 @@
 import Foundation
 
 protocol TopEntry {
-    var track: Track { get }
+    var entry: Track { get }
 }
 
-open class PopularEntry: TopEntry {
+struct Populars: Codable {
+    let populars: [PopularEntry]
+}
+
+struct PopularEntry: Codable, TopEntry {
     let track: Track
+    var entry: Track { return track }
     let playbackCount: Int
-    
-    init(track: Track, playbackCount: Int) {
-        self.track = track
-        self.playbackCount = playbackCount
-    }
 }

@@ -12,83 +12,84 @@ import RxSwift
 open class BaseLibrary: LibraryType {
     var isLocal: Bool { get { return false } }
     var rootFolderKey: String { get { return "" } }
-    
+    var authValue: String { return "" }
+    var authQuery: String { return "" }
     let contentsSubject = PublishSubject<MusicFolder?>()
     var contentsUpdated: Observable<MusicFolder?> { return contentsSubject }
     
-    let notImplementedError = PimpError.simpleError(ErrorMessage(message: "Not implemented yet"))
+    let notImplementedError = PimpError.simpleError(ErrorMessage("Not implemented yet"))
     
-    func pingAuth() -> Observable<Version> {
-        return Observable.empty()
+    func pingAuth() -> Single<Version> {
+        return Single.error(notImplementedError)
     }
     
-    func folder(_ id: String) -> Observable<MusicFolder> {
-        return Observable.empty()
+    func folder(_ id: FolderID) -> Single<MusicFolder> {
+        return Single.error(notImplementedError)
     }
     
-    func rootFolder() -> Observable<MusicFolder> {
-        return Observable.empty()
+    func rootFolder() -> Single<MusicFolder> {
+        return Single.error(notImplementedError)
     }
     
-    func tracks(_ id: String) -> Observable<[Track]> {
+    func tracks(_ id: FolderID) -> Single<[Track]> {
         return tracksInner(id,  others: [], acc: [])
     }
     
     // the saved playlists
-    func playlists() -> Observable<[SavedPlaylist]> {
-        return Observable.just([])
+    func playlists() -> Single<[SavedPlaylist]> {
+        return Single.just([])
     }
     
-    func playlist(_ id: PlaylistID) -> Observable<SavedPlaylist> {
-        return Observable.error(notImplementedError)
+    func playlist(_ id: PlaylistID) -> Single<SavedPlaylist> {
+        return Single.error(notImplementedError)
     }
     
-    func popular(_ from: Int, until: Int) -> Observable<[PopularEntry]> {
-        return Observable.error(notImplementedError)
+    func popular(_ from: Int, until: Int) -> Single<[PopularEntry]> {
+        return Single.error(notImplementedError)
     }
     
-    func recent(_ from: Int, until: Int) -> Observable<[RecentEntry]> {
-        return Observable.error(notImplementedError)
+    func recent(_ from: Int, until: Int) -> Single<[RecentEntry]> {
+        return Single.error(notImplementedError)
     }
     
-    func savePlaylist(_ sp: SavedPlaylist) -> Observable<PlaylistID> {
-        return Observable.error(notImplementedError)
+    func savePlaylist(_ sp: SavedPlaylist) -> Single<PlaylistID> {
+        return Single.error(notImplementedError)
     }
     
-    func deletePlaylist(_ id: PlaylistID) -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func deletePlaylist(_ id: PlaylistID) -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func search(_ term: String) -> Observable<[Track]> {
-        return Observable.just([])
+    func search(_ term: String) -> Single<[Track]> {
+        return Single.just([])
     }
     
-    func alarms() -> Observable<[Alarm]> {
-        return Observable.just([])
+    func alarms() -> Single<[Alarm]> {
+        return Single.just([])
     }
     
-    func saveAlarm(_ alarm: Alarm) -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func saveAlarm(_ alarm: Alarm) -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func deleteAlarm(_ id: AlarmID) -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func deleteAlarm(_ id: AlarmID) -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func stopAlarm() -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func stopAlarm() -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func registerNotifications(_ token: PushToken, tag: String) -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func registerNotifications(_ token: PushToken, tag: String) -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func unregisterNotifications(_ tag: String) -> Observable<HttpResponse> {
-        return Observable.error(notImplementedError)
+    func unregisterNotifications(_ tag: String) -> Single<HttpResponse> {
+        return Single.error(notImplementedError)
     }
     
-    func tracksInner(_ id: String, others: [String], acc: [Track]) -> Observable<[Track]> {
-        return folder(id).flatMap { (result) -> Observable<[Track]> in
+    func tracksInner(_ id: FolderID, others: [FolderID], acc: [Track]) -> Single<[Track]> {
+        return folder(id).flatMap { (result) -> Single<[Track]> in
             let subIDs = result.folders.map { $0.id }
             let remaining = others + subIDs
             let newAcc = acc + result.tracks
@@ -96,7 +97,7 @@ open class BaseLibrary: LibraryType {
                 let tail = remaining.tail()
                 return self.tracksInner(head, others: tail, acc: newAcc)
             } else {
-                return Observable.just(newAcc)
+                return Single.just(newAcc)
             }
         }
     }

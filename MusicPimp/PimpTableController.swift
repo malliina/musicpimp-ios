@@ -90,6 +90,6 @@ class PimpTableController: FeedbackTable {
     }
     
     func startDownload(_ track: Track) -> ErrorMessage? {
-        return DownloadUpdater.instance.downloadIfNecessary(track: track)
+        return DownloadUpdater.instance.downloadIfNecessary(track: track, authValue: library.authValue)
     }
 }

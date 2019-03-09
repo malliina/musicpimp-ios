@@ -53,16 +53,21 @@ open class PimpNotifications {
     
     func handleNotification(_ app: UIApplication, window: UIWindow?, data: [AnyHashable: Any]) {
         do {
-            let tag: String = try Json.readMapOrFail(data, "tag")
-            let cmd: String = try Json.readMapOrFail(data, "cmd")
-            guard let endpoint = settings.endpoints().find({ $0.id == tag }) else { throw JsonError.invalid("tag", tag) }
+            guard let tag = data["tag"] as? String else {
+                throw PimpError.simple("Key 'tag' is not a String in payload.")
+            }
+            guard let cmd = data["cmd"] as? String else {
+                throw PimpError.simple("Key 'cmd' is not a String in payload.")
+            }
+            guard let endpoint = settings.endpoints().find({ $0.id == tag }) else {
+                throw JsonError.invalid("tag", tag)
+            }
             if cmd == "stop" {
                 let library = Libraries.fromEndpoint(endpoint)
                 library.stopAlarm().subscribe({ (event) in
                     switch event {
-                    case .next(_): self.log.info("Stopped alarm playback.")
+                    case .success(_): self.log.info("Stopped alarm playback.")
                     case .error(let err): self.log.info("Failed to stop alarm playback. \(err.localizedDescription)")
-                    case .completed: ()
                     }
                 }).disposed(by: bag)
                 app.applicationIconBadgeNumber = 0
@@ -71,8 +76,10 @@ open class PimpNotifications {
             }
         } catch let json as JsonError {
             log.error("Failed to validate notification payload. \(json.message)")
-        } catch _ {
-            log.error("Failed to handle notification, unknown error")
+        } catch let err as PimpError {
+            log.error("Failed to handle notification. \(err.message)")
+        } catch {
+            log.error("Failed to handle notification, unknown error.")
         }
     }
     

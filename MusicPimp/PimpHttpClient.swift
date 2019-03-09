@@ -46,31 +46,37 @@ class PimpHttpClient: HttpClient {
         self.postHeaders = postHeaders
     }
     
-    func pingAuth() -> Observable<Version> {
-        return pimpGetParsed(Endpoints.PING_AUTH, parse: self.parseVersion)
+    func pingAuth() -> Single<Version> {
+        return pimpGetParsed(Endpoints.PING_AUTH, to: Version.self)
     }
     
-    func pimpGetParsed<T>(_ resource: String, parse: @escaping (HttpResponse) throws -> T) -> Observable<T> {
+    func pimpGetParsed<T: Decodable>(_ resource: String, to: T.Type) -> Single<T> {
         let req = buildGet(url: urlTo(resource), headers: defaultHeaders)
-        return executeParsed(req, parse: parse)
+        return executeParsed(req, to: to)
     }
     
-    func pimpGetParsedJson<T>(_ resource: String, parse: @escaping (NSDictionary) throws -> T) -> Observable<T> {
-        let req = buildGet(url: urlTo(resource), headers: defaultHeaders)
-        return executeParsedJson(req, parse: parse)
-    }
-    
-    func pimpPostParsed<T>(_ resource: String, payload: [String: AnyObject], parse: @escaping (NSDictionary) throws -> T) -> Observable<T> {
+    func pimpPostParsed<W: Encodable, R: Decodable>(_ resource: String, payload: W, to: R.Type) -> Single<R> {
         return pimpPost(resource, payload: payload).flatMap { response in
-            self.recovered { () -> T in
-                try self.asJson(response: response, parse: parse)
+            self.recovered { () -> R in
+                try response.decode(to)
             }
         }
     }
     
-    func pimpPost(_ resource: String, payload: [String: AnyObject]) -> Observable<HttpResponse> {
-        let req = buildRequest(url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders, body: try? JSONSerialization.data(withJSONObject: payload, options: []))
+    func pimpPostEmpty(_ resource: String) -> Single<HttpResponse> {
+        let req = buildRequest(url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders)
         return executeChecked(req)
+    }
+    
+    func pimpPost<T: Encodable>(_ resource: String, payload: T) -> Single<HttpResponse> {
+        let encoder = JSONEncoder()
+        do {
+            let body = try encoder.encode(payload)
+            let req = buildRequestWithBody(url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders, body: body)
+            return executeChecked(req)
+        } catch let err {
+            return Single.error(err)
+        }
     }
  
     func urlTo(_ resource: String) -> URL {
@@ -83,11 +89,5 @@ class PimpHttpClient: HttpClient {
     
     func onMusicFolder(_ f: MusicFolder) -> Void {
         log.info("Tracks: \(f.tracks.count)")
-    }
-    
-    func parseVersion(_ response: HttpResponse) throws -> Version {
-        guard let json = response.json else { throw JsonError.notJson(response.data) }
-        guard let version = json[JsonKeys.VERSION] as? String else { throw JsonError.missing(JsonKeys.VERSION) }
-        return Version(version: version)
     }
 }

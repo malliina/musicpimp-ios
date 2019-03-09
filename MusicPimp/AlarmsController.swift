@@ -132,9 +132,8 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
         alarmLibrary.registerNotifications(token, tag: endpoint.id).subscribe { (event) in
             switch event {
-            case .next(_): let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: true)
+            case .success(_): let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: true)
             case .error(let err): self.onRegisterError(error: err, endpoint: endpoint)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }
@@ -151,7 +150,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     func unregisterNotifications(_ endpoint: Endpoint) {
         log.info("Unregistering from \(endpoint.address)...")
         let alarmLibrary = Libraries.fromEndpoint(endpoint)
-        run(alarmLibrary.unregisterNotifications(endpoint.id)) { _ in
+        runSingle(alarmLibrary.unregisterNotifications(endpoint.id)) { _ in
             let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: false)
         }
     }
@@ -183,7 +182,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     }
     
     func loadAlarms(_ library: LibraryType) {
-        run(library.alarms()) { alarms in
+        runSingle(library.alarms()) { alarms in
             self.onAlarms(alarms)
         }
     }
@@ -191,7 +190,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     func saveAndReload(_ alarm: Alarm) {
         if let endpoint = endpoint {
             let library = Libraries.fromEndpoint(endpoint)
-            run(library.saveAlarm(alarm)) { _ in
+            runSingle(library.saveAlarm(alarm)) { _ in
                 self.loadAlarms(library)
             }
         }
@@ -249,7 +248,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
                 let alarmCell: MainSubCell = loadCell(alarmCellKey, index: indexPath)
                 let when = item.when
                 alarmCell.main.text = item.track.title + " at " + when.time.formatted()
-                alarmCell.sub.text = Day.describeDays(when.days)
+                alarmCell.sub.text = Day.describeDays(Set(when.days))
                 let uiSwitch = PimpSwitch { (uiSwitch) in
                     self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
                 }
@@ -338,7 +337,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         let index = indexPath.row
         let alarm = alarms[index]
         if let id = alarm.id {
-            run(library.deleteAlarm(id)) { _ in
+            runSingle(library.deleteAlarm(id)) { _ in
                 self.alarms.remove(at: index)
                 self.renderTable()
             }

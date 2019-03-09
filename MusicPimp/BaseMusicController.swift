@@ -156,7 +156,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
 
 
-    func playFolder(_ id: String) {
+    func playFolder(_ id: FolderID) {
         withTracks(id: id, f: self.playTracksChecked)
     }
     
@@ -164,16 +164,15 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         return playTracksChecked([track]).headOption()
     }
     
-    func addFolder(_ id: String) {
+    func addFolder(_ id: FolderID) {
         withTracks(id: id, f: self.addTracksChecked)
     }
     
-    func withTracks(id: String, f: @escaping ([Track]) -> [ErrorMessage]) {
+    func withTracks(id: FolderID, f: @escaping ([Track]) -> [ErrorMessage]) {
         library.tracks(id).subscribe { (event) in
             switch event {
-            case .next(let ts): let _ = f(ts)
+            case .success(let ts): let _ = f(ts)
             case .error(let err): self.onError(err)
-            case .completed: ()
             }
         }.disposed(by: bag)
     }

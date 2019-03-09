@@ -18,7 +18,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     var failedToLoadMessage: String { get { return "Failed to load tracks."} }
     var header: String { return "Top Tracks" }
     var entries: [T] = []
-    var tracks: [Track] { get { return entries.map { $0.track } } }
+    var tracks: [Track] { get { return entries.map { $0.entry } } }
     override var musicItems: [MusicItem] { return tracks }
     var showHeader: Bool = false
     // Unless this is used, the infinite scroll does not maintain proper scroll position when adding items to the bottom

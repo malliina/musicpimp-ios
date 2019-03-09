@@ -8,8 +8,16 @@
 
 import Foundation
 
-class Endpoint: CustomStringConvertible {
-    static let Local = Endpoint(id: "local", serverType: ServerTypes.Local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")!
+struct EndpointsContainer: Codable {
+    let endpoints: [Endpoint]
+}
+
+struct Endpoint: Codable, CustomStringConvertible {
+    static let Local = Endpoint(id: "local", serverType: ServerType.local, name: "this device", ssl: false, address: "localhost", port: 1234, username: "top", password: "secret")
+    
+    static func cloud(id: String, cloudID: String, username: String, password: String) -> Endpoint {
+        return Endpoint(id: id, serverType: ServerType.cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
+    }
     
     let id: String
     let serverType: ServerType
@@ -19,39 +27,11 @@ class Endpoint: CustomStringConvertible {
     let port: Int
     let username: String
     let password: String
-    let httpBaseUrl: URL
-    let wsBaseUrl: URL
     
-    init?(id: String, serverType: ServerType, name: String, ssl: Bool, address: String, port: Int, username: String, password: String) {
-        self.id = id
-        self.serverType = serverType
-        self.name = name
-        self.ssl = ssl
-        self.address = address
-        self.port = port
-        self.username = username
-        self.password = password
-        let httpProto = ssl ? "https" : "http"
-        let wsProto = ssl ? "wss" : "ws"
-        let httpUrl = URL(string: "\(httpProto)://\(address):\(port)")
-        let wsUrl = URL(string: "\(wsProto)://\(address):\(port)")
-        if let httpUrl = httpUrl, let wsUrl = wsUrl {
-            self.httpBaseUrl = httpUrl
-            self.wsBaseUrl = wsUrl
-        } else {
-            return nil
-        }
-    }
-    
-    convenience init?(id: String, cloudID: String, username: String, password: String) {
-        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
-    }
-    
-//    convenience init?(id: String, cloudID: String, username: String, password: String) {
-//        self.init(id: id, serverType: ServerTypes.Cloud, name: cloudID, ssl: false, address: "10.0.0.21", port: 9000, username: username, password: password)
-//    }
-    
-    // TODO polymorphism
+    var httpProto: String { return ssl ? "https" : "http" }
+    var wsProto: String { return ssl ? "wss" : "ws" }
+    var httpBaseUrl: URL { return URL(string: "\(httpProto)://\(address):\(port)")! }
+    var wsBaseUrl: URL { return URL(string: "\(wsProto)://\(address):\(port)")! }
     
     var authHeader: String {
         get {
@@ -62,14 +42,16 @@ class Endpoint: CustomStringConvertible {
             }
         }
     }
+    
+    /// It seems like AVPlayer does not support HTTP headers, so we pass the credentials in the query string for local playback
     var authQueryString: String {
         get {
             let unencoded = serverType.isCloud ? "s=\(name)&u=\(username)&p=\(password)" : "u=\(username)&p=\(password)"
             return unencoded.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? unencoded
         }
     }
-    
+
     var description: String { get { return "Endpoint \(name) at \(username)@\(httpBaseUrl)" } }
 
-    var supportsAlarms: Bool { get { return serverType == ServerTypes.MusicPimp || serverType == ServerTypes.Cloud } }
+    var supportsAlarms: Bool { get { return serverType == ServerType.musicPimp || serverType == ServerType.cloud } }
 }

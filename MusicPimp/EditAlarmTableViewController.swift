@@ -168,7 +168,7 @@ class EditAlarmTableViewController: BaseTableController {
         updateDate()
         if let endpoint = endpoint, let alarm = mutableAlarm?.toImmutable() {
             let library = Libraries.fromEndpoint(endpoint)
-            run(library.saveAlarm(alarm)) { _ in
+            runSingle(library.saveAlarm(alarm)) { _ in
                 self.delegate?.alarmUpdated(a: alarm)
             }
         }
@@ -208,9 +208,9 @@ class EditAlarmTableViewController: BaseTableController {
                 if let label = cell.textLabel {
                     label.text = "Repeat"
                 }
-                let emptyDays = Set<Day>()
-                let activeDays = mutableAlarm?.when.days ?? emptyDays
-                cell.detailTextLabel?.text = Day.describeDays(activeDays)
+//                let emptyDays = Set<Day>()
+                let activeDays = mutableAlarm?.when.days ?? []
+                cell.detailTextLabel?.text = Day.describeDays(Set(activeDays))
                 break
             case trackIdentifier:
                 if let label = cell.textLabel {
@@ -258,7 +258,7 @@ class EditAlarmTableViewController: BaseTableController {
             case deleteAlarmIdentifier:
                 if let alarmId = mutableAlarm?.id, let endpoint = endpoint {
                     tableView.deselectRow(at: indexPath, animated: false)
-                    run(Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId)) { _ in
+                    runSingle(Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId)) { _ in
                         self.delegate?.alarmDeleted()
                         Util.onUiThread {
                             self.goBack()

@@ -12,7 +12,25 @@ import RxSwift
 protocol Persistence {
     var changes: Observable<Setting> { get }
     
-    func save(_ contents: String, key: String) -> ErrorMessage?
+    func save<T: Encodable>(_ contents: T, key: String) -> ErrorMessage?
     
-    func load(_ key: String) -> String?
+    func load<T: Decodable>(_ key: String, _ t: T.Type) -> T?
+}
+
+extension Persistence {
+    func loadBool(_ key: String) -> Bool? {
+        return load(key, Wrapped<Bool>.self)?.value
+    }
+    
+    func loadString(_ key: String) -> String? {
+        return load(key, Wrapped<String>.self)?.value
+    }
+    
+    func saveString(_ contents: String, key: String) -> ErrorMessage? {
+        return save(Wrapped<String>(contents), key: key)
+    }
+    
+    func saveBool(_ contents: Bool, key: String) -> ErrorMessage? {
+        return save(Wrapped<Bool>(contents), key: key)
+    }
 }

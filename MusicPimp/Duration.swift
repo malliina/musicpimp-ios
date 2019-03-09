@@ -8,8 +8,25 @@
 
 import Foundation
 
+protocol SecondsCodable: Codable {
+    init(seconds: Int64)
+    var seconds: Int64 { get }
+}
 
-open class Duration: CustomStringConvertible, Comparable {
+extension SecondsCodable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(Int64.self)
+        self.init(seconds: raw)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(seconds)
+    }
+}
+
+struct Duration: CustomStringConvertible, Comparable, SecondsCodable {
     static let Zero = Duration(millis: 0)
     let millis: Int64
     var secondsFloat: Float { get { return Float(seconds) } }
@@ -21,23 +38,23 @@ open class Duration: CustomStringConvertible, Comparable {
         self.millis = millis
     }
     
-    convenience init(ms: UInt) {
+    init(ms: UInt) {
         self.init(millis: Int64(ms))
     }
     
-    convenience init(seconds: Int)  {
-        self.init(millis: Int64(seconds * 1000))
+    init(seconds: Int64)  {
+        self.init(millis: seconds * 1000)
     }
     
-    convenience init(secs: UInt)  {
+    init(secs: UInt)  {
         self.init(millis: Int64(secs * 1000))
     }
     
-    convenience init(minutes: UInt) {
+    init(minutes: UInt) {
         self.init(secs: minutes * 60)
     }
     
-    convenience init(hours: UInt) {
+    init(hours: UInt) {
         self.init(minutes: hours * 60)
     }
     
@@ -74,38 +91,39 @@ open class Duration: CustomStringConvertible, Comparable {
         return time.seconds / 3600
     }
     
-    open var description: String { get { return toReadable(self) } }
+    var description: String { get { return toReadable(self) } }
+    
+    public static func ==(lhs: Duration, rhs: Duration) -> Bool {
+        return lhs.millis == rhs.millis
+    }
+    
+    public static func <=(lhs: Duration, rhs: Duration) -> Bool {
+        return lhs.millis <= rhs.millis
+    }
+    
+    public static func <(lhs: Duration, rhs: Duration) -> Bool {
+        return lhs.millis < rhs.millis
+    }
+    
+    public static func >(lhs: Duration, rhs: Duration) -> Bool {
+        return lhs.millis > rhs.millis
+    }
+    
+    public static func >=(lhs: Duration, rhs: Duration) -> Bool {
+        return lhs.millis >= rhs.millis
+    }
+    
+    public static func -(lhs: Duration, rhs: Duration) ->  Duration {
+        return Duration(millis: lhs.millis - rhs.millis)
+    }
+
 }
 
-public func ==(lhs: Duration, rhs: Duration) -> Bool {
-    return lhs.millis == rhs.millis
-}
-
-public func <=(lhs: Duration, rhs: Duration) -> Bool {
-    return lhs.millis <= rhs.millis
-}
-
-public func <(lhs: Duration, rhs: Duration) -> Bool {
-    return lhs.millis < rhs.millis
-}
-
-public func >(lhs: Duration, rhs: Duration) -> Bool {
-    return lhs.millis > rhs.millis
-}
-
-public func >=(lhs: Duration, rhs: Duration) -> Bool {
-    return lhs.millis >= rhs.millis
-}
-
-func -(lhs: Duration, rhs: Duration) ->  Duration {
-    return Duration(millis: lhs.millis - rhs.millis)
-}
-
-public extension Int {
+extension Int {
     var millis: Duration { get { return Duration(millis: Int64(self)) } }
-    var seconds: Duration { get { return Duration(seconds: self) } }
-    var minutes: Duration { get { return Duration(seconds: self * 60) } }
-    var hours: Duration { get { return Duration(seconds: self * 60 * 60) } }
+    var seconds: Duration { get { return Duration(seconds: Int64(self)) } }
+    var minutes: Duration { get { return Duration(seconds: Int64(self * 60)) } }
+    var hours: Duration { get { return Duration(seconds: Int64(self * 60 * 60)) } }
 }
 
 extension UInt {

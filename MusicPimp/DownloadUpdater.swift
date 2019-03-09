@@ -39,7 +39,7 @@ class DownloadUpdater {
         return downloadState[track.path]
     }
     
-    func downloadIfNecessary(track: Track) -> ErrorMessage? {
+    func downloadIfNecessary(track: Track, authValue: String) -> ErrorMessage? {
         let alreadyDownloading = downloadState.contains { (path, _) -> Bool in
             path == track.path
         }
@@ -47,16 +47,16 @@ class DownloadUpdater {
             log.info("Already downloading \(track.path), dropping additional download request.")
             return nil
         }
-        return download(track: track)
+        return download(track: track, authValue: authValue)
     }
     
-    func download(track: Track) -> ErrorMessage? {
-        if let info = downloader.download(track.url, relativePath: track.path) {
+    func download(track: Track, authValue: String) -> ErrorMessage? {
+        if let info = downloader.download(track.url, authValue: authValue, relativePath: track.path) {
             let initialProgress = TrackProgress.initial(track: track, info: info)
             downloadState[track.path] = initialProgress
             return nil
         } else {
-            return ErrorMessage(message: "Unable to download \(track.id)")
+            return ErrorMessage("Unable to download \(track.id)")
         }
     }
     

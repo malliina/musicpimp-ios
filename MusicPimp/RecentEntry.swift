@@ -8,14 +8,17 @@
 
 import Foundation
 
-open class RecentEntry: TopEntry {
+struct Recents: Codable {
+    let recents: [RecentEntry]
+}
+
+struct RecentEntry: Codable, TopEntry {
     static let When = "when"
     
     let track: Track
-    let when: Date
+    var entry: Track { return track }
+    // milliseconds
+    let when: UInt64
     
-    init(track: Track, when: Date) {
-        self.track = track
-        self.when = when
-    }
+    var timestamp: Date { return Date(timeIntervalSince1970: Double(when) / 1000) }
 }

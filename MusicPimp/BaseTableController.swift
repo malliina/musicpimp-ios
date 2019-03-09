@@ -125,6 +125,10 @@ class BaseTableController: UITableViewController {
         Util.onError(error)
     }
     
+    func runSingle<T>(_ o: Single<T>, onResult: @escaping (T) -> Void) {
+        run(o.asObservable(), onResult: onResult)
+    }
+    
     func run<T>(_ o: Observable<T>, onResult: @escaping (T) -> Void) {
         o.subscribe { (event) in
             switch event {
