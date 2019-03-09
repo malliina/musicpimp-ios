@@ -9,7 +9,6 @@
 import Foundation
 
 class CacheInfoController: BaseTableController {
-        
     var currentLimitDescription: String {
         get {
             let gigs = settings.cacheLimit.toGigs

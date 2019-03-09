@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class CacheTableController: CacheInfoController {
     private let log = LoggerFactory.shared.pimp(CacheTableController.self)
@@ -14,9 +15,7 @@ class CacheTableController: CacheInfoController {
     let CacheEnabledCell = "CacheEnabledCell", CacheSizeCell = "CacheSizeCell", CurrentUsageCell = "CurrentUsageCell", DeleteCacheCell = "DeleteCacheCell", DeleteCustom = "DeleteCustom", EmptyCell = "EmptyCell"
     
     let onOffSwitch = UISwitch(frame: CGRect.zero)
-    let currentLimitLabel = UILabel()
-    let currentCacheSizeLabel = UILabel()
-    
+
     let sectionFooterIdentifier = "SectionFooter"
     static let footerText = "Deletes locally cached tracks when the specified cache size limit is exceeded."
     let headerLabel = PimpLabel.footerLabel(CacheTableController.footerText)
@@ -24,6 +23,10 @@ class CacheTableController: CacheInfoController {
     var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
     
     var library: LocalLibrary { return LocalLibrary.sharedInstance }
+    
+    let disposeBag = DisposeBag()
+    let usedStorage = BehaviorSubject<StorageSize>(value: StorageSize.Zero)
+    private var latestStorage: StorageSize = StorageSize.Zero
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +40,11 @@ class CacheTableController: CacheInfoController {
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: sectionFooterIdentifier)
         onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControlEvents.valueChanged)
         onOffSwitch.isOn = settings.cacheEnabled
-        currentLimitLabel.text = currentLimitDescription
-        updateCacheUsageLabel()
+        usedStorage.observeOn(MainScheduler.instance).subscribe(onNext: { (size) in
+            self.latestStorage = size
+            self.tableView.reloadData()
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
+        calculateCacheUsage()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -56,15 +62,16 @@ class CacheTableController: CacheInfoController {
     }
     
     override func onCacheLimitChanged(_ newSize: StorageSize) {
+        log.info("Updating cache limit UI to \(newSize)")
         Util.onUiThread {
-            self.currentLimitLabel.text = self.currentLimitDescription
+            self.tableView.reloadData()
         }
     }
     
-    fileprivate func updateCacheUsageLabel() {
-        log.info("Current usage: \(library.size.shortDescription)")
-        currentCacheSizeLabel.text = library.size.shortDescription
-        tableView.reloadData()
+    fileprivate func calculateCacheUsage() {
+        DispatchQueue.global(qos: .background).async {
+            self.usedStorage.onNext(self.library.size)
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -78,10 +85,10 @@ class CacheTableController: CacheInfoController {
             break
         case CacheSizeCell:
             cell.accessoryType = .disclosureIndicator
-            cell.detailTextLabel?.text = currentLimitLabel.text
+            cell.detailTextLabel?.text = currentLimitDescription
             break
         case CurrentUsageCell:
-            cell.detailTextLabel?.text = currentCacheSizeLabel.text
+            cell.detailTextLabel?.text = latestStorage.shortDescription
             break
         case DeleteCustom:
             if let label = cell.textLabel {
@@ -171,7 +178,7 @@ class CacheTableController: CacheInfoController {
     fileprivate func deleteCache() {
         let _ = library.deleteContents().subscribe(onSuccess: { (Bool) in
             self.log.info("Done")
-            self.updateCacheUsageLabel()
+            self.calculateCacheUsage()
         }) { (err) in
             self.log.info("Failed to delete contents: '\(err)'.")
         }

@@ -102,8 +102,10 @@ open class PimpSettings {
             return impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
         }
         set (newLimit) {
-            let errors = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT)
-            if errors == nil {
+            if let error = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT) {
+                log.error("Failed to save cache limit: \(error.message)")
+            } else {
+                log.info("Saved cache limit to \(newLimit)")
                 cacheLimitSubject.onNext(newLimit)
             }
         }
