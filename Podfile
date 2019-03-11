@@ -10,7 +10,7 @@ target 'MusicPimp' do
     pod 'AppCenter', '1.7.1'
     pod 'RxCocoa', '4.4.2'
     pod 'RxSwift', '4.4.2'
-    pod 'SnapKit', '4.0.1'
+    pod 'SnapKit', '4.2.0'
     pod 'SocketRocket', '0.5.1'
 end
 
