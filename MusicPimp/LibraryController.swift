@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import RxSwift
-import RxCocoa
 
 class LibraryController: SearchableMusicController, TrackEventDelegate {
     private let log = LoggerFactory.shared.vc(LibraryController.self)
