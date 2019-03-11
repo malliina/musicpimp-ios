@@ -61,51 +61,6 @@ class MusicPimpTests: XCTestCase {
         XCTAssert(true, "Pass")
     }
     
-    func testJson() {
-        let testURL = "file:///www.google.com"
-        let testData: [Int: DownloadInfo] = [1: DownloadInfo(relativePath: "abba/mammamia.music", destinationURL: URL(string: testURL)!)]
-        let jsValue = PimpJson.sharedInstance.toJson(testData)
-        let isValidJson = JSONSerialization.isValidJSONObject(jsValue)
-        XCTAssert(isValidJson, "Serializer produces valid JSON")
-        let s = Json.stringifyObject(jsValue, prettyPrinted: true)
-        let containsGoogle = s!.range(of: "google") != nil
-        XCTAssert(containsGoogle, "Serialized value contains original content")
-        let json = Json.asJson(s!) as! NSDictionary
-        let tasks = PimpJson.sharedInstance.asTasks(json as! [String : AnyObject])!
-        let deURL = tasks[1]?.destinationURL.absoluteString
-        let isUrlCorrect = deURL == testURL
-        XCTAssert(isUrlCorrect, "Deserializes back to original content")
-    }
-    
-    func testPlaylistSerialization() {
-        let track = Track(id: "id", title: "a", album: "b", artist: "c", duration: 5.seconds, path: "path", size: 5.bytes!, url: URL(fileURLWithPath: "hey"))
-        let pl = SavedPlaylist(id: nil, name: "test pl", trackCount: 1, duration: 5.seconds, tracks: [track])
-        let json = SavedPlaylist.toJson(pl)
-        if let data = try? JSONSerialization.data(withJSONObject: json, options: []),
-            let s = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String? {
-            print(pl.description)
-            print(s)
-            XCTAssert(true)
-        } else {
-            XCTAssert(false)
-        }
-    }
-    
-    func testLimitSerialization() {
-        let settings = PimpSettings.sharedInstance
-        let json = settings.serializeHistory([])!
-        let history = settings.readHistory(json)
-        XCTAssert(history.count == 0)
-        let firstDate = Date() // hehe
-        let firstSeconds = round(firstDate.timeIntervalSince1970)
-        let dates = [ Date(), Date() ]
-        let json2 = settings.serializeHistory(dates)!
-        let history2 = settings.readHistory(json2)
-        XCTAssert(history2.count == dates.count)
-        let firstInt = round(history2.first!.timeIntervalSince1970)
-        XCTAssert(firstInt == firstSeconds)
-    }
-    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure() {
