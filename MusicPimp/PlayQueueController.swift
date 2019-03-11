@@ -68,7 +68,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
         return true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = indexPath.row
         tableView.reloadRows(at: [indexPath], with: .none)
         _ = limitChecked {

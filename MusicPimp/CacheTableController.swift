@@ -38,7 +38,7 @@ class CacheTableController: CacheInfoController {
             registerCell(reuseIdentifier: id)
         }
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: sectionFooterIdentifier)
-        onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControlEvents.valueChanged)
+        onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControl.Event.valueChanged)
         onOffSwitch.isOn = settings.cacheEnabled
         usedStorage.observeOn(MainScheduler.instance).subscribe(onNext: { (size) in
             self.latestStorage = size

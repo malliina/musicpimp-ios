@@ -259,7 +259,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
 extension UIButton {
     func setFontAwesomeTitle(_ fontAwesomeName: String) {
         let buttonText = String.fontAwesomeIconStringForIconIdentifier(fontAwesomeName)
-        self.setTitle(buttonText, for: UIControlState())
+        self.setTitle(buttonText, for: UIControl.State())
     }
 }
 

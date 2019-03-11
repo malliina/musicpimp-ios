@@ -15,7 +15,7 @@ class PimpSwitch: UISwitch {
     init(onClick: @escaping (UISwitch) -> Void) {
         self.onClick = onClick
         super.init(frame: CGRect.zero)
-        addTarget(nil, action: #selector(runOnClick(_:)), for: UIControlEvents.valueChanged)
+        addTarget(nil, action: #selector(runOnClick(_:)), for: UIControl.Event.valueChanged)
     }
     
     required init?(coder aDecoder: NSCoder) {

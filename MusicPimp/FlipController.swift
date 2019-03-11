@@ -71,7 +71,7 @@ class FlipController: ContainerParent {
     fileprivate func initScope(_ ctrl: UISegmentedControl) {
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: #selector(scopeChanged(_:)), for: .valueChanged)
-        ctrl.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: PimpColors.shared.tintColor], for: .normal)
+        ctrl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: PimpColors.shared.tintColor], for: .normal)
     }
     
     @objc func scopeChanged(_ sender: UISegmentedControl) {
@@ -90,12 +90,12 @@ class FlipController: ContainerParent {
     }
     
     // https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html
-    func swap(oldVc: UIViewController, newVc: UIViewController, options: UIViewAnimationOptions) {
-        oldVc.willMove(toParentViewController: nil)
-        self.addChildViewController(newVc)
+    func swap(oldVc: UIViewController, newVc: UIViewController, options: UIView.AnimationOptions) {
+        oldVc.willMove(toParent: nil)
+        self.addChild(newVc)
         self.transition(from: oldVc, to: newVc, duration: flipAnimationDuration, options: options, animations: { self.snap(child: newVc) }) { _ in
-            oldVc.removeFromParentViewController()
-            newVc.didMove(toParentViewController: self)
+            oldVc.removeFromParent()
+            newVc.didMove(toParent: self)
             self.onSwapped(to: newVc)
         }
     }

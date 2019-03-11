@@ -68,7 +68,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
         cell.textLabel?.textColor = PimpColors.shared.titles
-        let accessory = index == selectedIndex ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        let accessory = index == selectedIndex ? UITableViewCell.AccessoryType.checkmark : UITableViewCell.AccessoryType.none
         cell.accessoryType = accessory
         return cell
     }
@@ -83,11 +83,11 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         use(endpoint: endpoint)
         
         let cell = tableView.cellForRow(at: indexPath)
-        cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+        cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
         
         if let previous = selectedIndex {
             let previousCell = tableView.cellForRow(at: IndexPath(row: previous, section: 0))
-            previousCell?.accessoryType = UITableViewCellAccessoryType.none
+            previousCell?.accessoryType = UITableViewCell.AccessoryType.none
         }
         selectedIndex = index
     }
@@ -100,7 +100,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         return endpoints.count + 1 // +1 for local endpoint
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -127,7 +127,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
                     let _ = self.use(endpoint: Endpoint.Local)
                 }
                 let visualIndex = IndexPath(row: index + 1, section: 0)
-                tableView.deleteRows(at: [visualIndex], with: UITableViewRowAnimation.fade)
+                tableView.deleteRows(at: [visualIndex], with: UITableView.RowAnimation.fade)
             }
             return [edit, remove]
         }
@@ -136,7 +136,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     }
     
     func endpointRowAction(_ tableView: UITableView, title: String, f: @escaping (Int) -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: UITableViewRowActionStyle.default, title: title) {
+        return UITableViewRowAction(style: UITableViewRowAction.Style.default, title: title) {
             (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             let endIndex = indexPath.row - 1
             if endIndex >= 0 && self.endpoints.count > endIndex {

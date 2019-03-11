@@ -100,7 +100,7 @@ class SnapPlaybackFooter: BaseView {
     
     private func initColor(buttons: [UIButton]) {
         buttons.forEach { button in
-            button.setTitleColor(PimpColors.shared.tintColor, for: UIControlState.normal)
+            button.setTitleColor(PimpColors.shared.tintColor, for: UIControl.State.normal)
             //button.titleLabel?.textColor = PimpColors.tintColor
         }
     }

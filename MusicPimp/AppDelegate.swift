@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Hack
     private var notification: [AnyHashable: Any]? = nil
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         MSAppCenter.start("bfa6d43e-d1f3-42e2-823a-920a16965470", withServices: [
             MSAnalytics.self,
             MSCrashes.self
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = PlaylistPrefetcher.shared
         connectToPlayer()
 
-        if let launchOptions = launchOptions, let payload = launchOptions[UIApplicationLaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+        if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
             log.info("Launched app via remote notification, handling...")
             notifications.handleNotification(application, window: window, data: payload)
         }
@@ -99,7 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initAudio() {
-        let categorySuccess: Bool = (try? audioSession.setCategory(AVAudioSessionCategoryPlayback)) != nil
+        let categorySuccess: Bool = (try? audioSession.setCategory(.playback, mode: .default)) != nil
         if categorySuccess {
             ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
         } else {

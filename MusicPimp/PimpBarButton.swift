@@ -11,7 +11,7 @@ import Foundation
 class PimpBarButton: UIBarButtonItem {
     let onClick: (UIBarButtonItem) -> Void
     
-    init(title: String, style: UIBarButtonItemStyle, onClick: @escaping (UIBarButtonItem) -> Void) {
+    init(title: String, style: UIBarButtonItem.Style, onClick: @escaping (UIBarButtonItem) -> Void) {
         self.onClick = onClick
         super.init()
         self.style = style

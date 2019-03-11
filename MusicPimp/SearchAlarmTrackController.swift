@@ -35,6 +35,7 @@ class SearchAlarmTrackController: SearchableMusicController {
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: .none)
         searchController.isActive = false
-        goBack()
+        // goBack() would go back two pages here for some reason
+        self.navigationController?.popViewController(animated: false)
     }
 }

@@ -13,7 +13,7 @@ class PimpTextField: UITextField, UITextFieldDelegate {
     
     var placeholderText: String? {
         get { return placeholder }
-        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSAttributedStringKey.foregroundColor: PimpColors.shared.placeholder]) }
+        set(newPlaceholder) { attributedPlaceholder = NSAttributedString(string: newPlaceholder ?? "", attributes: [NSAttributedString.Key.foregroundColor: PimpColors.shared.placeholder]) }
     }
     
     override init(frame: CGRect) {

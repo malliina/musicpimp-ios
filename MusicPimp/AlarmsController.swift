@@ -274,9 +274,9 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         /// This method is called before viewForHeaderInSection. So we need to check how much space the label will take,
         /// then return a height that takes the margin into account as well.
         switch section {
-        case 0: return endpointLabel.tableHeaderHeight(tableView)
-        case 1: return notificationLabel.tableHeaderHeight(tableView)
-        case 2: return schedulesLabel.tableHeaderHeight(tableView)
+        case 0: return endpointLabel.tableHeaderHeight(tableView) + 8
+        case 1: return notificationLabel.tableHeaderHeight(tableView) + 8
+        case 2: return schedulesLabel.tableHeaderHeight(tableView) + 8
         default: return 0
         }
     }
@@ -333,7 +333,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         return isEndpointValid
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = indexPath.row
         let alarm = alarms[index]
         if let id = alarm.id {

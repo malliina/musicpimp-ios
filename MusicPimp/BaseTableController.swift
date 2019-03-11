@@ -19,7 +19,7 @@ class BaseTableController: UITableViewController {
     let bag = DisposeBag()
     
     init() {
-        super.init(style: UITableViewStyle.plain)
+        super.init(style: UITableView.Style.plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -34,7 +34,7 @@ class BaseTableController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: colors.titleFont
+            NSAttributedString.Key.font: colors.titleFont
         ]
         edgesForExtendedLayout = []
         // Does not add left-right margins to table cells on iPad Pro+
@@ -95,7 +95,7 @@ class BaseTableController: UITableViewController {
         configureTable(background: nil, separatorStyle: .singleLine)
     }
     
-    func configureTable(background: UIView?, separatorStyle: UITableViewCellSeparatorStyle) {
+    func configureTable(background: UIView?, separatorStyle: UITableViewCell.SeparatorStyle) {
         self.tableView.backgroundView = background
         self.tableView.separatorStyle = separatorStyle
     }
@@ -158,11 +158,11 @@ extension UIViewController {
     }
     
     func suggestPremium() {
-        let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertControllerStyle.alert)
-        let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertActionStyle.default) { a -> Void in
+        let sheet = UIAlertController(title: IAPConstants.Title, message: IAPConstants.Message, preferredStyle: UIAlertController.Style.alert)
+        let premiumAction = UIAlertAction(title: IAPConstants.OkText, style: UIAlertAction.Style.default) { a -> Void in
             self.navigationController?.pushViewController(IAPViewController(), animated: true)
         }
-        let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertActionStyle.cancel) { a -> Void in
+        let notInterestedAction = UIAlertAction(title: IAPConstants.CancelText, style: UIAlertAction.Style.cancel) { a -> Void in
         }
         sheet.addAction(premiumAction)
         sheet.addAction(notInterestedAction)

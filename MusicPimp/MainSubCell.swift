@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Used at least to list alarms, playlists
 class MainSubCell: SnapCell {
     // empirical - no clue how. elements + margins equal 62 pixels
     static let height: CGFloat = 70
@@ -18,17 +19,20 @@ class MainSubCell: SnapCell {
         installTrackAccessoryView(height: MainSubCell.height)
         contentView.addSubview(main)
         main.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
+            make.top.equalTo(contentView).offset(8)
             make.leading.equalTo(contentView.snp.leadingMargin)
             make.trailing.equalTo(contentView)
         }
         
         contentView.addSubview(sub)
+//        self.backgroundColor = .purple
+//        contentView.backgroundColor = .green
+//        sub.backgroundColor = .yellow
         sub.snp.makeConstraints { make in
             make.top.equalTo(main.snp.bottom).offset(6)
             make.leading.equalTo(contentView.snp.leadingMargin)
             make.trailing.equalTo(contentView)
-            make.bottom.equalToSuperview().inset(12)
+            make.bottom.equalTo(contentView).inset(8)
         }
     }
 }

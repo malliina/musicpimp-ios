@@ -44,7 +44,7 @@ class AlarmEndpointController: BaseTableController {
         let endpoint = endpoints[index]
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
-        let accessory = endpoint.id == selectedId ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        let accessory = endpoint.id == selectedId ? UITableViewCell.AccessoryType.checkmark : UITableViewCell.AccessoryType.none
         cell.accessoryType = accessory
         return cell
     }

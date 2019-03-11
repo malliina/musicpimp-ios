@@ -19,8 +19,8 @@ class LibraryContainer: PlaybackContainer {
         self.init(title: folder?.title.uppercased() ?? "MUSIC", child: library)
     }
     
-    override func willMove(toParentViewController parent: UIViewController?) {
-        super.willMove(toParentViewController: parent)
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
         // https://stackoverflow.com/a/14155394
         let willPop = parent == nil
         if willPop {
@@ -37,7 +37,6 @@ class LibraryContainer: PlaybackContainer {
     
     private func pop(_ animated: Bool = false) {
         self.navigationController?.popToRootViewController(animated: animated)
-        let children = childViewControllers
         if let libraryController = children.headOption() as? LibraryController {
             libraryController.loadRoot()
         }

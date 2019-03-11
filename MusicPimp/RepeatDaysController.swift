@@ -23,7 +23,7 @@ class RepeatDaysController: BaseTableController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let row = indexPath.row
         let dayName = weekDayName(row)
-        let accessory = isChecked(row) ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        let accessory = isChecked(row) ? UITableViewCell.AccessoryType.checkmark : UITableViewCell.AccessoryType.none
         if let label = cell.textLabel {
             label.text = "Every \(dayName)"
             label.textColor = PimpColors.shared.titles
@@ -36,7 +36,7 @@ class RepeatDaysController: BaseTableController {
         tableView.deselectRow(at: indexPath, animated: true)
         if let cell = tableView.cellForRow(at: indexPath) {
             let wasChecked = cell.accessoryType == .checkmark
-            let newAccessory = wasChecked ? UITableViewCellAccessoryType.none : UITableViewCellAccessoryType.checkmark
+            let newAccessory = wasChecked ? UITableViewCell.AccessoryType.none : UITableViewCell.AccessoryType.checkmark
             let willBeEnabled = !wasChecked
             if let day = dayForIndex(indexPath.row), let alarm = alarm {
                 if willBeEnabled {

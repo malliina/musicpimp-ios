@@ -102,7 +102,7 @@ class LocalPlayer: NSObject, PlayerType {
         // fucking hell
         let scale: Int32 = 1
         let pos64 = Float64(position.seconds)
-        let posTime = CMTimeMakeWithSeconds(pos64, scale)
+        let posTime = CMTimeMakeWithSeconds(pos64, preferredTimescale: scale)
         if let player = player {
             player.seek(to: posTime)
             return nil
@@ -202,7 +202,7 @@ class LocalPlayer: NSObject, PlayerType {
         p.addObserver(self, forKeyPath: LocalPlayer.statusKeyPath, options: .initial, context: &LocalPlayer.playerStatusContext)
         playerInfo = PlayerInfo(player: p, track: track)
         trackSubject.onNext(track)
-        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: .main) { (time) -> Void in
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, preferredTimescale: 1), queue: .main) { (time) -> Void in
             let secs = CMTimeGetSeconds(time)
             if let duration = secs.seconds {
                 self.timeSubject.onNext(duration)
@@ -217,7 +217,7 @@ class LocalPlayer: NSObject, PlayerType {
         if context == &LocalPlayer.itemStatusContext {
             if let item = object as? AVPlayerItem {
                 switch(item.status) {
-                case AVPlayerItemStatus.failed:
+                case AVPlayerItem.Status.failed:
                     self.log.info("AVPlayerItemStatus.Failed")
                     closePlayer()
                 default:
@@ -229,7 +229,7 @@ class LocalPlayer: NSObject, PlayerType {
         } else if context == &LocalPlayer.playerStatusContext {
             if let p = object as? AVPlayer {
                 switch(p.status) {
-                case AVPlayerStatus.failed:
+                case AVPlayer.Status.failed:
                     self.log.error("Player failed")
                 default:
                     break

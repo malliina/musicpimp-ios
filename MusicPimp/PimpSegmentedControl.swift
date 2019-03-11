@@ -18,7 +18,7 @@ class PimpSegmentedControl: UISegmentedControl {
         answer = 42
         self.valueChanged = valueChanged
         super.init(items: itemz)
-        addTarget(nil, action: #selector(onSegmentChanged(_:)), for: UIControlEvents.valueChanged)
+        addTarget(nil, action: #selector(onSegmentChanged(_:)), for: UIControl.Event.valueChanged)
     }
     
     override init(frame: CGRect) {

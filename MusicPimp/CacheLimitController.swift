@@ -33,7 +33,7 @@ class CacheLimitController: BaseTableController {
         let cellSize = sizes[row]
         let isCurrent = cellSize == current
         let prototype = isCurrent ? currentCacheCell : cacheCell
-        let accessory = isCurrent ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        let accessory = isCurrent ? UITableViewCell.AccessoryType.checkmark : UITableViewCell.AccessoryType.none
         let cell = tableView.dequeueReusableCell(withIdentifier: prototype, for: indexPath)
         cell.accessoryType = accessory
         cell.textLabel?.tintColor = PimpColors.shared.titles

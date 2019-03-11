@@ -68,8 +68,8 @@ class VolumeViewController: PimpViewController {
     }
     
     func installFaImage(_ name: String, button: UIButton) {
-        button.setTitle("", for: UIControlState())
-        button.setImage(faImage(name), for: UIControlState())
+        button.setTitle("", for: UIControl.State())
+        button.setImage(faImage(name), for: UIControl.State())
     }
     
     func faImage(_ name: String) -> UIImage {

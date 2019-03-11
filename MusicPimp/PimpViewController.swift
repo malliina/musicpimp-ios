@@ -21,7 +21,7 @@ class PimpViewController: UIViewController {
         edgesForExtendedLayout = []
         self.view.backgroundColor = colors.background
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: colors.titleFont
+            NSAttributedString.Key.font: colors.titleFont
         ]
     }
     

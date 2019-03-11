@@ -1,5 +1,5 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.3'
+platform :ios, '11.3'
 ENV['COCOAPODS_DISABLE_STATS'] = "true"
 use_frameworks!
 
@@ -8,8 +8,8 @@ inhibit_all_warnings!
 
 target 'MusicPimp' do
     pod 'AppCenter', '1.7.1'
-    pod 'RxCocoa', '4.4.0'
-    pod 'RxSwift', '4.4.0'
+    pod 'RxCocoa', '4.4.1'
+    pod 'RxSwift', '4.4.1'
     pod 'SnapKit', '4.0.1'
     pod 'SocketRocket', '0.5.1'
 end

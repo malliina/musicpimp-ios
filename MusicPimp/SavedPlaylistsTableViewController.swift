@@ -71,7 +71,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         goBack()
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = indexPath.row
         let playlist = playlists[index]
         if let id = playlist.id {

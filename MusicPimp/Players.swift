@@ -17,11 +17,11 @@ class Players {
     private var lastRemoteSuggestion: DispatchTime? = nil
     
     let audioPortTypes = [
-        AVAudioSessionPortBluetoothHFP,
-        AVAudioSessionPortBluetoothA2DP,
-        AVAudioSessionPortCarAudio,
-        AVAudioSessionPortHeadphones,
-        AVAudioSessionPortAirPlay
+        AVAudioSession.Port.bluetoothHFP,
+        AVAudioSession.Port.bluetoothA2DP,
+        AVAudioSession.Port.carAudio,
+        AVAudioSession.Port.headphones,
+        AVAudioSession.Port.airPlay
     ]
     
     func fromEndpoint(_ e: Endpoint) -> PlayerType {
@@ -99,11 +99,11 @@ class Players {
     func describeLocalOutput() -> [String] {
         return AVAudioSession.sharedInstance().currentRoute.outputs.flatMapOpt { (desc) -> String? in
             switch desc.portType {
-            case AVAudioSessionPortBluetoothHFP: return "Bluetooth"
-            case AVAudioSessionPortBluetoothA2DP: return "Bluetooth"
-            case AVAudioSessionPortCarAudio: return "Car Audio"
-            case AVAudioSessionPortHeadphones: return "Headphones"
-            case AVAudioSessionPortAirPlay: return "Air Play"
+            case AVAudioSession.Port.bluetoothHFP: return "Bluetooth"
+            case AVAudioSession.Port.bluetoothA2DP: return "Bluetooth"
+            case AVAudioSession.Port.carAudio: return "Car Audio"
+            case AVAudioSession.Port.headphones: return "Headphones"
+            case AVAudioSession.Port.airPlay: return "Air Play"
             default: return nil
             }
         }

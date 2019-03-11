@@ -259,9 +259,11 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         let sid = session.configuration.identifier
         log.info("All complete for session \(sid ?? "unknown")")
-        if let sid = sid, let app = UIApplication.shared.delegate as? AppDelegate,
-            let handler = app.downloadCompletionHandlers.removeValue(forKey: sid) {
+        DispatchQueue.main.async {
+            if let sid = sid, let app = UIApplication.shared.delegate as? AppDelegate,
+                let handler = app.downloadCompletionHandlers.removeValue(forKey: sid) {
                 handler()
+            }
         }
     }
 }

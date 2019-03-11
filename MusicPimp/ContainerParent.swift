@@ -57,11 +57,11 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     
     /// https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html#//apple_ref/doc/uid/TP40007457-CH11-SW12
     func initChild(_ child: UIViewController) {
-        addChildViewController(child)
+        addChild(child)
         // ?
         child.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(child.view)
-        child.didMove(toParentViewController: self)
+        child.didMove(toParent: self)
     }
     
     func initPlaybackFooter() {

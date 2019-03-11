@@ -168,7 +168,7 @@ class EditEndpointController: PimpViewController {
             make.leading.equalTo(activateLabel.snp.trailing).offset(8)
         }
         testButton.setTitle("Test Connectivity", for: .normal)
-        testButton.setTitleColor(colors.tintColor, for: UIControlState.normal)
+        testButton.setTitleColor(colors.tintColor, for: UIControl.State.normal)
         testButton.snp.makeConstraints { (make) in
             make.top.equalTo(activateSwitch.snp.bottom).offset(8)
             make.leading.trailing.equalTo(content).inset(8)

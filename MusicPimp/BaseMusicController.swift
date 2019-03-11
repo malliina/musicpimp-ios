@@ -66,7 +66,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         } else {
             cell.progress.isHidden = true
         }
-        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.shared.tintColor, UITableViewCellSelectionStyle.blue) : (PimpColors.shared.titles, UITableViewCellSelectionStyle.default)
+        let (titleColor, selectionStyle) = isHighlight ? (PimpColors.shared.tintColor, UITableViewCell.SelectionStyle.blue) : (PimpColors.shared.titles, UITableViewCell.SelectionStyle.default)
         cell.title.textColor = titleColor
         cell.selectionStyle = selectionStyle
     }
@@ -133,13 +133,13 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         let title = folder.title
         let id = folder.id
         let message = ""
-        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.actionSheet)
         let playAction = accessoryAction("Play", action: { _ in self.playFolder(id) })
         let addAction = accessoryAction("Add", action: { _ in self.addFolder(id) })
         let downloadAction = accessoryAction("Download") { _ in
             self.withTracks(id: id, f: self.downloadIfNeeded)
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
             
         }
         sheet.addAction(playAction)
@@ -152,7 +152,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
     
     func accessoryAction(_ title: String, action: @escaping (UIAlertAction) -> Void) -> UIAlertAction {
-        return UIAlertAction(title: title, style: UIAlertActionStyle.default, handler: action)
+        return UIAlertAction(title: title, style: UIAlertAction.Style.default, handler: action)
     }
 
 
