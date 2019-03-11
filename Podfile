@@ -1,5 +1,5 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '11.3'
+platform :ios, '10.3'
 ENV['COCOAPODS_DISABLE_STATS'] = "true"
 use_frameworks!
 
