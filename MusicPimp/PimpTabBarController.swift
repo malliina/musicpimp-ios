@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class PimpTabBarController: UITabBarController {
     private let log = LoggerFactory.shared.vc(PimpTabBarController.self)
@@ -21,16 +22,32 @@ class PimpTabBarController: UITabBarController {
     let flippableTopList: UIViewController = TabUtils.shared.attachTab(vc: TopFlipController(), title: "Playlists", fontAwesomeName: "list")
     let sideBySideTopList: UIViewController = TabUtils.shared.attachTab(vc: SideBySideTopList(), title: "Playlists", fontAwesomeName: "list")
     
+    let bag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let topList = UINavigationController(rootViewController: topListFor(traits: UIScreen.main.traitCollection))
-//        topList.setNavigationBarHidden(UIScreen.main.traitCollection.horizontalSizeClass == .regular, animated: false)
-        viewControllers = [
+        var permanentTabs = [
             UINavigationController(rootViewController: utils.attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music")),
             UINavigationController(rootViewController: playerFor(traits: UIScreen.main.traitCollection)),
-            topList,
             UINavigationController(rootViewController: utils.attachTab(vc: PlaybackContainer(title: "SETTINGS", child: SettingsController()), title: "Settings", fontAwesomeName: "cog"))
         ]
+        if !LibraryManager.sharedInstance.active.isLocal {
+            permanentTabs.insert(topList, at: 2)
+        }
+        viewControllers = permanentTabs
+        LibraryManager.sharedInstance.libraryChanged.subscribe(onNext: { (library) in
+            Util.onUiThread {
+                guard var vcs = self.viewControllers else { return }
+                if vcs.count == 4 && library.isLocal {
+                    vcs.remove(at: 2)
+                } else if vcs.count == 3 && !library.isLocal {
+                    vcs.insert(topList, at: 2)
+                }
+                // https://stackoverflow.com/a/9908361
+                self.setViewControllers(vcs, animated: true)
+            }
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: bag)
     }
     
     // swaps between mobile and tablet viewcontrollers, as necessary
@@ -60,8 +77,7 @@ class PimpTabBarController: UITabBarController {
 
 class TabUtils {
     static let shared = TabUtils()
-    // WTF?
-//    let tabItemTitleVerticalOffset: CGFloat = -3
+
     let tabIconFontSize: Int32 = 24
     
     func attachTab(vc: UIViewController, title: String, fontAwesomeName: String) -> UIViewController {

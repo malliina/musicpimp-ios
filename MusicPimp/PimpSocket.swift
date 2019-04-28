@@ -41,7 +41,6 @@ class PimpSocket: PlayerSocket {
         } else {
             return failWith("Unable to send payload, socket not available.")
         }
-        
     }
     
     func failWith(_ message: String) -> ErrorMessage {
