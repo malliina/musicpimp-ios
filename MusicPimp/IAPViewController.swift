@@ -65,7 +65,7 @@ class IAPViewController: PimpViewController {
     }
     
     func onTransactionUpdate(_ transaction: SKPaymentTransaction) {
-        switch(transaction.transactionState) {
+        switch (transaction.transactionState) {
         case SKPaymentTransactionState.purchasing:
             setStatus("Purchasing...")
             break

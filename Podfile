@@ -6,14 +6,18 @@ use_frameworks!
 # https://stackoverflow.com/a/13209057
 inhibit_all_warnings!
 
-target 'MusicPimp' do
-    pod 'AppCenter', '1.7.1'
-    pod 'RxCocoa', '4.4.2'
-    pod 'RxSwift', '4.4.2'
+def app_pods
+    pod 'AppCenter', '1.14.0'
+    pod 'RxCocoa', '4.5.0'
+    pod 'RxSwift', '4.5.0'
     pod 'SnapKit', '4.2.0'
     pod 'SocketRocket', '0.5.1'
 end
 
-target 'MusicPimpTests' do
+target 'MusicPimp' do
+    app_pods
+end
 
+target 'MusicPimpTests' do
+    app_pods
 end

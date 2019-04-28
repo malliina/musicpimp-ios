@@ -169,7 +169,7 @@ open class PimpSettings {
     
     func save(_ endpoint: Endpoint) {
         var es = endpoints()
-        if let idx = es.index(where: { $0.id == endpoint.id }) {
+        if let idx = es.firstIndex(where: { $0.id == endpoint.id }) {
             es.remove(at: idx)
             es.insert(endpoint, at: idx)
         } else {

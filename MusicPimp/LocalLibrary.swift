@@ -69,8 +69,7 @@ class LocalLibrary: BaseLibrary {
         let absolutePath = pathTo(path)
         if Files.exists(absolutePath) {
             if let sizeNum = try? fileManager.attributesOfItem(atPath: absolutePath)[FileAttributeKey.size] as? NSNumber,
-                let size = sizeNum,
-                let localStorageSize = StorageSize.fromBytes(size.int64Value) {
+                let localStorageSize = StorageSize.fromBytes(sizeNum.int64Value) {
                 let trackSize = track.size
                 if trackSize == localStorageSize {
                     log.info("Found local track at \(path)")

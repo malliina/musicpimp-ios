@@ -51,7 +51,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         if id == Endpoint.Local.id {
             selectedIndex = 0
         } else {
-            if let idx = endpoints.index(where: { $0.id == id }) {
+            if let idx = endpoints.firstIndex(where: { $0.id == id }) {
                 selectedIndex = idx + 1
             }
         }
