@@ -16,7 +16,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     let defaultCellHeight: CGFloat = 44
     static let accessoryRightPadding: CGFloat = 14
     
-    var musicItems: [MusicItem] { return [] }
+    var musicItems: [MusicItem] { [] }
     
     // generic listeners
     var listeners: [RxSwift.Disposable] = []

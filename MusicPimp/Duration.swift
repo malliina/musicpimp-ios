@@ -29,10 +29,10 @@ extension SecondsCodable {
 struct Duration: CustomStringConvertible, Comparable, SecondsCodable {
     static let Zero = Duration(millis: 0)
     let millis: Int64
-    var secondsFloat: Float { get { return Float(seconds) } }
-    var seconds: Int64 { get { return self.millis / 1000 } }
-    var minutes: Int64 { get { return self.millis / 60000 } }
-    var hours: Int64 { get { return self.millis / 3600000 } }
+    var secondsFloat: Float { get { Float(seconds) } }
+    var seconds: Int64 { get { self.millis / 1000 } }
+    var minutes: Int64 { get { self.millis / 60000 } }
+    var hours: Int64 { get { self.millis / 3600000 } }
     
     init(millis: Int64) {
         self.millis = millis
@@ -76,67 +76,67 @@ struct Duration: CustomStringConvertible, Comparable, SecondsCodable {
     }
     
     fileprivate func padded(_ time: Int64) -> String {
-        return time < 10 ? "0\(time)" : "\(time)"
+        time < 10 ? "0\(time)" : "\(time)"
     }
     
     fileprivate func countSeconds(_ time: Duration) -> Int64 {
-        return time.seconds % 60
+        time.seconds % 60
     }
     
     fileprivate func countMinutes(_ time: Duration) -> Int64 {
-        return time.minutes % 60
+        time.minutes % 60
     }
     
     fileprivate func countHours(_ time: Duration) -> Int64 {
-        return time.seconds / 3600
+        time.seconds / 3600
     }
     
-    var description: String { get { return toReadable(self) } }
+    var description: String { get { toReadable(self) } }
     
     public static func ==(lhs: Duration, rhs: Duration) -> Bool {
-        return lhs.millis == rhs.millis
+        lhs.millis == rhs.millis
     }
     
     public static func <=(lhs: Duration, rhs: Duration) -> Bool {
-        return lhs.millis <= rhs.millis
+        lhs.millis <= rhs.millis
     }
     
     public static func <(lhs: Duration, rhs: Duration) -> Bool {
-        return lhs.millis < rhs.millis
+        lhs.millis < rhs.millis
     }
     
     public static func >(lhs: Duration, rhs: Duration) -> Bool {
-        return lhs.millis > rhs.millis
+        lhs.millis > rhs.millis
     }
     
     public static func >=(lhs: Duration, rhs: Duration) -> Bool {
-        return lhs.millis >= rhs.millis
+        lhs.millis >= rhs.millis
     }
     
     public static func -(lhs: Duration, rhs: Duration) ->  Duration {
-        return Duration(millis: lhs.millis - rhs.millis)
+        Duration(millis: lhs.millis - rhs.millis)
     }
 
 }
 
 extension Int {
-    var millis: Duration { get { return Duration(millis: Int64(self)) } }
-    var seconds: Duration { get { return Duration(seconds: Int64(self)) } }
-    var minutes: Duration { get { return Duration(seconds: Int64(self * 60)) } }
-    var hours: Duration { get { return Duration(seconds: Int64(self * 60 * 60)) } }
+    var millis: Duration { get { Duration(millis: Int64(self)) } }
+    var seconds: Duration { get { Duration(seconds: Int64(self)) } }
+    var minutes: Duration { get { Duration(seconds: Int64(self * 60)) } }
+    var hours: Duration { get { Duration(seconds: Int64(self * 60 * 60)) } }
 }
 
 extension UInt {
-    var millis: Duration { get { return Duration(ms: self) } }
-    var seconds: Duration { get { return Duration(ms: self * 1000) } }
+    var millis: Duration { get { Duration(ms: self) } }
+    var seconds: Duration { get { Duration(ms: self * 1000) } }
 }
 
 extension Float64 {
-    var millis: Duration? { get { return Duration(millis: Int64(self)) } }
-    var seconds: Duration? { get { return Duration(millis: Int64(self * 1000)) } }
+    var millis: Duration? { get { Duration(millis: Int64(self)) } }
+    var seconds: Duration? { get { Duration(millis: Int64(self * 1000)) } }
 }
 
 extension Float {
-    var millis: Duration? { get { return Duration(millis: Int64(self)) } }
-    var seconds: Duration? { get { return Duration(millis: Int64(self * 1000)) } }
+    var millis: Duration? { get { Duration(millis: Int64(self)) } }
+    var seconds: Duration? { get { Duration(millis: Int64(self * 1000)) } }
 }

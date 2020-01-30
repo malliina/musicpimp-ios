@@ -103,7 +103,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
         }
     }
     
-    func onLibraryChanged(to newLibrary: LibraryType) {
+    func onLibraryUpdated(to newLibrary: LibraryType) {
         refresh()
     }
     

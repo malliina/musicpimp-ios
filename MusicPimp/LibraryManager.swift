@@ -14,9 +14,9 @@ class LibraryManager: EndpointManager {
     static let sharedInstance = LibraryManager()
     
     fileprivate var activeLibrary: LibraryType
-    var active: LibraryType { get { return activeLibrary } }
+    var active: LibraryType { get { activeLibrary } }
     private let librarySubject = PublishSubject<LibraryType>()
-    var libraryChanged: Observable<LibraryType> { return librarySubject }
+    var libraryUpdated: Observable<LibraryType> { librarySubject }
  
     init() {
         let settings = PimpSettings.sharedInstance
@@ -25,7 +25,7 @@ class LibraryManager: EndpointManager {
     }
     
     func endpoints() -> [Endpoint] {
-        return settings.endpoints()
+        settings.endpoints()
     }
     
     func use(endpoint: Endpoint) -> LibraryType {

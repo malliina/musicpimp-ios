@@ -20,9 +20,9 @@ class CacheTableController: CacheInfoController {
     static let footerText = "Deletes locally cached tracks when the specified cache size limit is exceeded."
     let headerLabel = PimpLabel.footerLabel(CacheTableController.footerText)
     
-    var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
+    var footerInset: CGFloat { get { tableView.layoutMargins.left } }
     
-    var library: LocalLibrary { return LocalLibrary.sharedInstance }
+    var library: LocalLibrary { LocalLibrary.sharedInstance }
     
     let disposeBag = DisposeBag()
     let usedStorage = BehaviorSubject<StorageSize>(value: StorageSize.Zero)
@@ -58,7 +58,7 @@ class CacheTableController: CacheInfoController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        3
     }
     
     override func onCacheLimitChanged(_ newSize: StorageSize) {
@@ -151,7 +151,7 @@ class CacheTableController: CacheInfoController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return headerLabel.tableHeaderHeight(tableView)
+        headerLabel.tableHeaderHeight(tableView)
     }
     
     @objc func didToggleCache(_ uiSwitch: UISwitch) {

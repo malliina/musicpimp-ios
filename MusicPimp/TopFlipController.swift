@@ -14,8 +14,8 @@ class TopFlipController: FlipController {
         navigationItem.title = "PLAYLISTS"
     }
     
-    override var firstTitle: String { return "Popular" }
-    override var secondTitle: String { return "Recent" }
+    override var firstTitle: String { "Popular" }
+    override var secondTitle: String { "Recent" }
     override func buildFirst() -> UIViewController {
         let list = MostPopularList()
         list.showHeader = false

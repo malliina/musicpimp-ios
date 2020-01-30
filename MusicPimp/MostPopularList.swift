@@ -10,9 +10,9 @@ import Foundation
 
 class MostPopularList: TopListController<PopularEntry> {
     let MostPopularCellKey = "MostPopularCell"
-    override var header: String { return "Most Popular" }
-    override var emptyMessage: String { get { return "No popular tracks." } }
-    override var failedToLoadMessage: String { return "Failed to load popular tracks." }
+    override var header: String { "Most Popular" }
+    override var emptyMessage: String { get { "No popular tracks." } }
+    override var failedToLoadMessage: String { "Failed to load popular tracks." }
     
     override func viewDidLoad() {
         super.viewDidLoad()

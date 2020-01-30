@@ -10,8 +10,8 @@ import Foundation
 
 class CacheLimitController: BaseTableController {
     let gigOptions: [Int] = [1, 2, 5, 10, 20, 50, 100, 500]
-    var sizes: [StorageSize] { get { return gigOptions.map { (gB) -> StorageSize in return StorageSize(gigs: gB) } } }
-    var current: StorageSize { return settings.cacheLimit }
+    var sizes: [StorageSize] { get { gigOptions.map { (gB) -> StorageSize in StorageSize(gigs: gB) } } }
+    var current: StorageSize { settings.cacheLimit }
     let currentCacheCell = "CurrentCacheLimit"
     let cacheCell = "CacheLimit"
     
@@ -49,6 +49,6 @@ class CacheLimitController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return gigOptions.count
+        gigOptions.count
     }
 }

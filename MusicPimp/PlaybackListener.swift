@@ -22,29 +22,29 @@ class BaseListener: Disposable {
 }
 
 protocol LibraryDelegate {
-    func onLibraryChanged(to newLibrary: LibraryType)
+    func onLibraryUpdated(to newLibrary: LibraryType)
 }
 
 class LibraryListener: BaseListener {
     var delegate: LibraryDelegate? = nil
     
     func subscribe() {
-        LibraryManager.sharedInstance.libraryChanged.subscribe(onNext: { (library) in
-            self.onLibraryChanged(library)
+        LibraryManager.sharedInstance.libraryUpdated.subscribe(onNext: { (library) in
+            self.onLibraryUpdated(library)
         }).disposed(by: bag)
     }
     
-    func onLibraryChanged(_ newLibrary: LibraryType) {
-        delegate?.onLibraryChanged(to: newLibrary)
+    func onLibraryUpdated(_ newLibrary: LibraryType) {
+        delegate?.onLibraryUpdated(to: newLibrary)
     }
 }
 
 protocol LibraryEndpointDelegate {
-    func onLibraryChanged(to newLibrary: Endpoint)
+    func onLibraryUpdated(to newLibrary: Endpoint)
 }
 
 protocol PlayerEndpointDelegate {
-    func onPlayerChanged(to newPlayer: Endpoint)
+    func onPlayerUpdated(to newPlayer: Endpoint)
 }
 
 class EndpointsListener: BaseListener {
@@ -53,19 +53,19 @@ class EndpointsListener: BaseListener {
     
     func subscribe() {
         LibraryManager.sharedInstance.changed.subscribe(onNext: { (library) in
-            self.libraryChanged(library)
+            self.libraryUpdated(library)
         }).disposed(by: bag)
         PlayerManager.sharedInstance.changed.subscribe(onNext: { (player) in
             self.playerChanged(player)
         }).disposed(by: bag)
     }
     
-    private func libraryChanged(_ newLibrary: Endpoint) {
-        libraries?.onLibraryChanged(to: newLibrary)
+    private func libraryUpdated(_ newLibrary: Endpoint) {
+        libraries?.onLibraryUpdated(to: newLibrary)
     }
     
     private func playerChanged(_ newPlayer: Endpoint) {
-        players?.onPlayerChanged(to: newPlayer)
+        players?.onPlayerUpdated(to: newPlayer)
     }
 }
 

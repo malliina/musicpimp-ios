@@ -22,7 +22,7 @@ class VolumeViewController: PimpViewController {
     
     var appearedBag = DisposeBag()
     
-    var player: PlayerType { get { return PlayerManager.sharedInstance.active } }
+    var player: PlayerType { get { PlayerManager.sharedInstance.active } }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,7 +73,7 @@ class VolumeViewController: PimpViewController {
     }
     
     func faImage(_ name: String) -> UIImage {
-        return UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.shared.tintColor, fontSize: 28)
+        UIImage(icon: name, backgroundColor: UIColor.clear, iconColor: PimpColors.shared.tintColor, fontSize: 28)
     }
     
     @objc func userDidChangeVolume(_ sender: UISlider) {
@@ -94,7 +94,7 @@ class VolumeViewController: PimpViewController {
     }
     
     func sliderValue(_ volume: VolumeValue) -> Float {
-        return volume.toFloat() * (volumeSlider.maximumValue - volumeSlider.minimumValue)
+        volume.toFloat() * (volumeSlider.maximumValue - volumeSlider.minimumValue)
     }
     
     fileprivate func listenWhenAppeared(_ targetPlayer: PlayerType) {

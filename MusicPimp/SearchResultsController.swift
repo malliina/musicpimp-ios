@@ -65,5 +65,5 @@ class SearchResultsController: BaseMusicController {
 }
 
 extension Error {
-    var message: String { return Util.message(error: self) }
+    var message: String { Util.message(error: self) }
 }

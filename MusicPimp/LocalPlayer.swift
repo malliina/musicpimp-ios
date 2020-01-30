@@ -17,13 +17,13 @@ class LocalPlayer: NSObject, PlayerType {
     static let statusKeyPath = "status"
     
     let limiter = Limiter.sharedInstance
-    var isLocal: Bool { get { return true } }
+    var isLocal: Bool { get { true } }
     
     fileprivate let localPlaylist = LocalPlaylist.sharedInstance
     
-    var playlist: PlaylistType { get { return localPlaylist } }
+    var playlist: PlaylistType { get { localPlaylist } }
     var playerInfo: PlayerInfo? = nil
-    var player: AVPlayer? { get { return playerInfo?.player } }
+    var player: AVPlayer? { get { playerInfo?.player } }
     
     fileprivate var timeObserver: AnyObject? = nil
     fileprivate static var itemStatusContext = 0
@@ -138,15 +138,15 @@ class LocalPlayer: NSObject, PlayerType {
     }
     
     func next() -> ErrorMessage? {
-        return withPlaylist { $0.next() }
+        withPlaylist { $0.next() }
     }
     
     func prev() -> ErrorMessage? {
-        return withPlaylist { $0.prev() }
+        withPlaylist { $0.prev() }
     }
     
     func skip(_ index: Int) -> ErrorMessage? {
-        return withPlaylist { $0.skip(index) }
+        withPlaylist { $0.skip(index) }
     }
     
     func withPlaylist(_ f: (LocalPlaylist) -> Track?) -> ErrorMessage? {

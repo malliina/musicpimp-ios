@@ -12,11 +12,11 @@ import Foundation
 class FlipController: ContainerParent {
     private let log = LoggerFactory.shared.vc(FlipController.self)
     // Override: name of the first segment
-    var firstTitle: String { get { return "First" } }
+    var firstTitle: String { get { "First" } }
     // Override: name of the second segment
-    var secondTitle: String { get { return "Second" } }
+    var secondTitle: String { get { "Second" } }
     
-    var flipAnimationDuration: TimeInterval { return 0.4 }
+    var flipAnimationDuration: TimeInterval { 0.4 }
     
     var scopeSegment: UISegmentedControl? = nil
     
@@ -49,12 +49,12 @@ class FlipController: ContainerParent {
     
     /// Override: return the first viewcontroller
     func buildFirst() -> UIViewController {
-        return UIViewController()
+        UIViewController()
     }
     
     /// Override: return the second viewcontroller
     func buildSecond() -> UIViewController {
-        return UIViewController()
+        UIViewController()
     }
     
     /// Optionally override: Called when a viewcontroller has been installed

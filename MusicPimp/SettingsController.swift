@@ -34,8 +34,8 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     let libraryManager = LibraryManager.sharedInstance
     let playerManager = PlayerManager.sharedInstance
     
-    var activeLibrary: Endpoint { return libraryManager.loadActive() }
-    var activePlayer: Endpoint  { return playerManager.loadActive() }
+    var activeLibrary: Endpoint { libraryManager.loadActive() }
+    var activePlayer: Endpoint  { playerManager.loadActive() }
     
     let sourcePicker = UIPickerView()
     let listener = EndpointsListener()
@@ -55,15 +55,15 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         ]
     }
     
-    func endpointUpdated(_ endpoint: Endpoint) {
+    func endpointAddedOrUpdated(_ endpoint: Endpoint) {
         renderTable()
     }
     
-    func onLibraryChanged(to newLibrary: Endpoint) {
+    func onLibraryUpdated(to newLibrary: Endpoint) {
         renderTable()
     }
     
-    func onPlayerChanged(to newPlayer: Endpoint) {
+    func onPlayerUpdated(to newPlayer: Endpoint) {
         renderTable()
     }
     
@@ -116,7 +116,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        4
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -140,7 +140,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return sectionHeaderHeight
+        sectionHeaderHeight
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {

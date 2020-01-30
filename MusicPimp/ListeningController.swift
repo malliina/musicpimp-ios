@@ -9,11 +9,11 @@
 import Foundation
 
 class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDelegate {
-    var playerManager: PlayerManager { return PlayerManager.sharedInstance }
-    var player: PlayerType { return playerManager.active }
+    var playerManager: PlayerManager { PlayerManager.sharedInstance }
+    var player: PlayerType { playerManager.active }
     
-    var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
-    var library: LibraryType { return libraryManager.active }
+    var libraryManager: LibraryManager { LibraryManager.sharedInstance }
+    var library: LibraryType { libraryManager.active }
     
     let listener = PlaybackListener()
     let libraryListener = LibraryListener()
@@ -59,7 +59,7 @@ class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDel
         
     }
     
-    func onLibraryChanged(to newLibrary: LibraryType) {
+    func onLibraryUpdated(to newLibrary: LibraryType) {
         
     }
 }

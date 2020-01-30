@@ -12,8 +12,8 @@ class SideBySidePlayer: ContainerParent {
     let playerVc = PlayerController()
     let queueVc = PlayQueueController()
     
-    override var currentFooterHeight: CGFloat { get { return 66 } }
-    override var preferredPlaybackFooterHeight: CGFloat { get { return 66 } }
+    override var currentFooterHeight: CGFloat { get { 66 } }
+    override var preferredPlaybackFooterHeight: CGFloat { get { 66 } }
     
     override func viewDidLoad() {
         super.viewDidLoad()

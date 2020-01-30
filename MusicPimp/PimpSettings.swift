@@ -20,19 +20,19 @@ open class PimpSettings {
     public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
     
     let endpointsSubject = PublishSubject<[Endpoint]>()
-    var endpointsEvent: Observable<[Endpoint]> { return endpointsSubject }
+    var endpointsEvent: Observable<[Endpoint]> { endpointsSubject }
     
     let cacheLimitSubject = PublishSubject<StorageSize>()
-    var cacheLimitChanged: Observable<StorageSize> { return cacheLimitSubject }
+    var cacheLimitChanged: Observable<StorageSize> { cacheLimitSubject }
     
     let cacheEnabledSubject = PublishSubject<Bool>()
-    var cacheEnabledChanged: Observable<Bool> { return cacheEnabledSubject }
+    var cacheEnabledChanged: Observable<Bool> { cacheEnabledSubject }
     
     let defaultAlarmEndpointSubject = PublishSubject<Endpoint>()
-    var defaultAlarmEndpointChanged: Observable<Endpoint> { return defaultAlarmEndpointSubject }
+    var defaultAlarmEndpointChanged: Observable<Endpoint> { defaultAlarmEndpointSubject }
     
     let notificationPermissionSubject = PublishSubject<Bool>()
-    var notificationPermissionChanged: Observable<Bool> { return notificationPermissionSubject }
+    var notificationPermissionChanged: Observable<Bool> { notificationPermissionSubject }
     
     let impl: Persistence
     
@@ -42,7 +42,7 @@ open class PimpSettings {
     
     var trackHistory: [Date] {
         get {
-            return (impl.load(PimpSettings.TrackHistory, TrackPlaybackHistory.self) ?? TrackPlaybackHistory(history: [])).history
+            (impl.load(PimpSettings.TrackHistory, TrackPlaybackHistory.self) ?? TrackPlaybackHistory(history: [])).history
         }
         
         set (newHistory) {
@@ -69,7 +69,7 @@ open class PimpSettings {
     }
     
     var notificationsAllowed: Bool {
-        get { return impl.loadBool(PimpSettings.NotificationsAllowed) ?? false }
+        get { impl.loadBool(PimpSettings.NotificationsAllowed) ?? false }
         set (allowed) {
             let errors = impl.saveBool(allowed, key: PimpSettings.NotificationsAllowed)
             if errors == nil {
@@ -79,7 +79,7 @@ open class PimpSettings {
     }
     
     var cacheEnabled: Bool {
-        get { return impl.loadBool(PimpSettings.CACHE_ENABLED) ?? true }
+        get { impl.loadBool(PimpSettings.CACHE_ENABLED) ?? true }
         set (value) {
             let errors = impl.saveBool(value, key: PimpSettings.CACHE_ENABLED)
             if errors == nil {
@@ -99,7 +99,7 @@ open class PimpSettings {
     
     var cacheLimit: StorageSize {
         get {
-            return impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
+            impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
         }
         set (newLimit) {
             if let error = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT) {
@@ -137,27 +137,27 @@ open class PimpSettings {
     }
     
     func notificationsEnabled(_ e: Endpoint) -> Bool {
-        return impl.loadBool(notificationsKey(e)) ?? false
+        impl.loadBool(notificationsKey(e)) ?? false
     }
     
     func saveNotificationsEnabled(_ e: Endpoint, enabled: Bool) -> ErrorMessage? {
-        return impl.saveBool(enabled, key: notificationsKey(e))
+        impl.saveBool(enabled, key: notificationsKey(e))
     }
     
     fileprivate func notificationsKey(_ e: Endpoint) -> String {
-        return PimpSettings.NotificationsPrefix + e.id
+        PimpSettings.NotificationsPrefix + e.id
     }
     
     func endpoints() -> [Endpoint] {
-        return impl.load(PimpSettings.ENDPOINTS, EndpointsContainer.self)?.endpoints ?? []
+        impl.load(PimpSettings.ENDPOINTS, EndpointsContainer.self)?.endpoints ?? []
     }
     
     func activePlayer() -> Endpoint {
-        return activeEndpoint(PimpSettings.PLAYER)
+        activeEndpoint(PimpSettings.PLAYER)
     }
     
     func activeLibrary() -> Endpoint {
-        return activeEndpoint(PimpSettings.LIBRARY)
+        activeEndpoint(PimpSettings.LIBRARY)
     }
     
     func activeEndpoint(_ key: String) -> Endpoint {
@@ -193,10 +193,10 @@ open class PimpSettings {
     }
     
     func saveTasks(_ sid: String, tasks: [DownloadTask]) -> ErrorMessage? {
-        return impl.save(DownloadTasks(tasks: tasks), key: taskKey(sid))
+        impl.save(DownloadTasks(tasks: tasks), key: taskKey(sid))
     }
     
     func taskKey(_ sid: String) -> String {
-        return "\(PimpSettings.TASKS)-\(sid)"
+        "\(PimpSettings.TASKS)-\(sid)"
     }
 }

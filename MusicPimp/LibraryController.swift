@@ -17,7 +17,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     let noTracksMessage = "No tracks."
     
     var folder: MusicFolder = MusicFolder.empty
-    override var musicItems: [MusicItem] { return folder.items }
+    override var musicItems: [MusicItem] { folder.items }
     var selected: Folder? = nil
     
     var header: UIView? = nil
@@ -192,7 +192,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     }
     
     func musicItemAction(_ tableView: UITableView, title: String, onTrack: @escaping (Track) -> Void, onFolder: @escaping (Folder) -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: .default, title: title) {
+        UITableViewRowAction(style: .default, title: title) {
             (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             if let tappedItem = self.itemAt(tableView, indexPath: indexPath) {
                 if let track = tappedItem as? Track {

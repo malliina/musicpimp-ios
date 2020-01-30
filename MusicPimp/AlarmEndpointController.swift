@@ -36,7 +36,7 @@ class AlarmEndpointController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return endpoints.count
+        endpoints.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

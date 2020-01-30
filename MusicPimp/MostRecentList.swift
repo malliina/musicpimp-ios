@@ -11,9 +11,9 @@ import RxSwift
 
 class MostRecentList: TopListController<RecentEntry> {
     let MostRecentCellKey = "MostRecentCell"
-    override var header: String { return "Most Recent" }
-    override var emptyMessage: String { get { return "No recent tracks." } }
-    override var failedToLoadMessage: String { return "Failed to load recent tracks." }
+    override var header: String { "Most Recent" }
+    override var emptyMessage: String { get { "No recent tracks." } }
+    override var failedToLoadMessage: String { "Failed to load recent tracks." }
 
     override func viewDidLoad() {
         super.viewDidLoad()

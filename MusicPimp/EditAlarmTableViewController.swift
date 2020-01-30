@@ -27,8 +27,8 @@ class EditAlarmTableViewController: BaseTableController {
     let playIdentifier = "PlayCell"
     let deleteAlarmIdentifier = "DeleteCell"
     
-    var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
-    var playerManager: PlayerManager { return PlayerManager.sharedInstance }
+    var libraryManager: LibraryManager { LibraryManager.sharedInstance }
+    var playerManager: PlayerManager { PlayerManager.sharedInstance }
     
     private var mutableAlarm: MutableAlarm? = nil
     private var endpoint: Endpoint? = nil
@@ -127,7 +127,7 @@ class EditAlarmTableViewController: BaseTableController {
         }
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        4
     }
 
     func initEditAlarm(_ alarm: Alarm, endpoint: Endpoint) {
@@ -293,7 +293,7 @@ class EditAlarmTableViewController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section > 0 ? 44 : 0
+        section > 0 ? 44 : 0
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

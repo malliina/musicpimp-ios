@@ -13,9 +13,9 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let defaultCellKey = "PimpMusicItemCell"
     
     private var current: Playlist = Playlist.empty
-    private var tracks: [Track] { get { return current.tracks } }
-    var emptyMessage: String { get { return "The playlist is empty." } }
-    override var musicItems: [MusicItem] { return tracks }
+    private var tracks: [Track] { get { current.tracks } }
+    var emptyMessage: String { get { "The playlist is empty." } }
+    override var musicItems: [MusicItem] { tracks }
     let listener = PlaybackListener()
     
     // non-nil if the playlist is server-loaded
@@ -65,7 +65,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -77,7 +77,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
+        true
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

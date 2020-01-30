@@ -22,6 +22,6 @@ class PlayerSettingController: EndpointSelectController {
     }
     
     override func loadActive() -> Endpoint {
-        return manager.loadActive()
+        manager.loadActive()
     }
 }

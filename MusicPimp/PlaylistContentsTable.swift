@@ -11,7 +11,7 @@ import Foundation
 class PlaylistContentsTable: BaseTableController {
     let identifier = PlaylistTrackCell.identifier
     let playlist: SavedPlaylist
-    var tracks: [Track] { return playlist.tracks }
+    var tracks: [Track] { playlist.tracks }
     
     init(playlist: SavedPlaylist) {
         self.playlist = playlist
@@ -35,6 +35,6 @@ class PlaylistContentsTable: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tracks.count
+        tracks.count
     }
 }

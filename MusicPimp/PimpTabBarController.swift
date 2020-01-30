@@ -36,7 +36,7 @@ class PimpTabBarController: UITabBarController {
             permanentTabs.insert(topList, at: 2)
         }
         viewControllers = permanentTabs
-        LibraryManager.sharedInstance.libraryChanged.subscribe(onNext: { (library) in
+        LibraryManager.sharedInstance.libraryUpdated.subscribe(onNext: { (library) in
             Util.onUiThread {
                 guard var vcs = self.viewControllers else { return }
                 if vcs.count == 4 && library.isLocal {

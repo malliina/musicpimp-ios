@@ -40,8 +40,8 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     
     var pushSwitch: UISwitch? = nil
     
-    var isEndpointValid: Bool { return endpoint != nil }
-    var footerInset: CGFloat { get { return tableView.layoutMargins.left } }
+    var isEndpointValid: Bool { endpoint != nil }
+    var footerInset: CGFloat { get { tableView.layoutMargins.left } }
     
     override func viewDidLoad() {
         super.viewDidLoad()

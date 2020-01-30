@@ -25,7 +25,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     }
     
     func loadActive() -> Endpoint {
-        return Endpoint.Local
+        Endpoint.Local
     }
     
     override func viewDidLoad() {
@@ -41,9 +41,11 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         reloadTable(feedback: nil)
     }
     
-    func endpointUpdated(_ endpoint: Endpoint) {
+    func endpointAddedOrUpdated(_ endpoint: Endpoint) {
+        log.info("Endpoint added or updated, re-rendering endpoints table.")
+        endpoints = settings.endpoints()
         renderTable()
-        delegate?.endpointUpdated(endpoint)
+        delegate?.endpointAddedOrUpdated(endpoint)
     }
     
     func updateSelected(_ selected: Endpoint) {
@@ -59,6 +61,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     
     @objc func onAddNew(_ sender: UIBarButtonItem) {
         let dest = EditEndpointController()
+        dest.delegate = self
         self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
     }
     
@@ -93,11 +96,11 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     }
     
     func endpointForIndex(_ index: Int) -> Endpoint {
-        return index == 0 ? Endpoint.Local : endpoints[index-1]
+        index == 0 ? Endpoint.Local : endpoints[index-1]
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return endpoints.count + 1 // +1 for local endpoint
+        endpoints.count + 1 // +1 for local endpoint
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -136,7 +139,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     }
     
     func endpointRowAction(_ tableView: UITableView, title: String, f: @escaping (Int) -> Void) -> UITableViewRowAction {
-        return UITableViewRowAction(style: UITableViewRowAction.Style.default, title: title) {
+        UITableViewRowAction(style: UITableViewRowAction.Style.default, title: title) {
             (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             let endIndex = indexPath.row - 1
             if endIndex >= 0 && self.endpoints.count > endIndex {

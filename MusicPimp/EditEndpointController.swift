@@ -19,7 +19,7 @@ fileprivate extension Selector {
 }
 
 protocol EditEndpointDelegate {
-    func endpointUpdated(_ endpoint: Endpoint)
+    func endpointAddedOrUpdated(_ endpoint: Endpoint)
 }
 
 class EditEndpointController: PimpViewController {
@@ -196,11 +196,12 @@ class EditEndpointController: PimpViewController {
     func saveChanges() {
         if let endpoint = parseEndpoint() {
             PimpSettings.sharedInstance.save(endpoint)
-            if activateSwitch.isOn {
+            let active = LibraryManager.sharedInstance.loadActive()
+            if activateSwitch.isOn || endpoint.id == active.id {
                 log.info("Activating \(endpoint.name)")
                 let _ = LibraryManager.sharedInstance.use(endpoint: endpoint)
             }
-            delegate?.endpointUpdated(endpoint)
+            delegate?.endpointAddedOrUpdated(endpoint)
         }
     }
     
@@ -310,7 +311,7 @@ class EditEndpointController: PimpViewController {
     }
 
     func readServerType(_ control: UISegmentedControl) -> ServerType? {
-        return ServerTypes.fromIndex(control.selectedSegmentIndex)
+        ServerTypes.fromIndex(control.selectedSegmentIndex)
     }
     
     func parseEndpoint() -> Endpoint? {

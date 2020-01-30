@@ -30,7 +30,7 @@ class SourceSettingController: EndpointSelectController, LibraryEndpointDelegate
         listener.unsubscribe()
     }
     
-    func onLibraryChanged(to newLibrary: Endpoint) {
+    func onLibraryUpdated(to newLibrary: Endpoint) {
         updateSelected(newLibrary)
         renderTable()
     }
@@ -40,6 +40,6 @@ class SourceSettingController: EndpointSelectController, LibraryEndpointDelegate
     }
     
     override func loadActive() -> Endpoint {
-        return manager.loadActive()
+        manager.loadActive()
     }
 }

@@ -85,6 +85,6 @@ class RepeatDaysController: BaseTableController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        7
     }
 }

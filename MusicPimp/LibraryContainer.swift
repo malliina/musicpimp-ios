@@ -30,8 +30,8 @@ class LibraryContainer: PlaybackContainer {
         }
     }
     
-    override func onLibraryChanged(to newLibrary: LibraryType) {
-        super.onLibraryChanged(to: newLibrary)
+    override func onLibraryUpdated(to newLibrary: LibraryType) {
+        super.onLibraryUpdated(to: newLibrary)
         pop()
     }
     

@@ -75,7 +75,7 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return true
+        true
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -168,12 +168,12 @@ class PlaylistController: BaseMusicController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.tracks.count
+        self.tracks.count
     }
     
     override func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
         // starts playback of the selected track, and appends the rest to the playlist
-        return accessoryAction("Start Playback Here") { _ in
+        accessoryAction("Start Playback Here") { _ in
             _ = self.playTracksChecked(self.tracks.drop(row))
         }
     }

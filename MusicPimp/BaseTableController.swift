@@ -46,19 +46,19 @@ class BaseTableController: UITableViewController {
     }
     
     func loadCell<T>(_ name: String, index: IndexPath) -> T {
-        return findCell(name, index: index)!
+        findCell(name, index: index)!
     }
     
     func findCell<T>(_ name: String, index: IndexPath) -> T? {
-        return identifiedCell(name, index: index) as? T
+        identifiedCell(name, index: index) as? T
     }
     
     func identifiedCell(_ name: String, index: IndexPath) -> UITableViewCell {
-        return self.tableView.dequeueReusableCell(withIdentifier: name, for: index)
+        self.tableView.dequeueReusableCell(withIdentifier: name, for: index)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        1
     }
     
     func renderTable(_ feedback: String? = nil) {

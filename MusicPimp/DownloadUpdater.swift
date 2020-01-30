@@ -14,8 +14,8 @@ class DownloadUpdater {
     let log = LoggerFactory.shared.network(DownloadUpdater.self)
     
     let progressSubject = PublishSubject<TrackProgress>()
-    var progress: Observable<TrackProgress> { return progressSubject }
-    var slowProgress: Observable<[TrackProgress]> { return progress.buffer(timeSpan: 1, count: 100, scheduler: ConcurrentDispatchQueueScheduler(qos: .background)) }
+    var progress: Observable<TrackProgress> { progressSubject }
+    var slowProgress: Observable<[TrackProgress]> { progress.buffer(timeSpan: 1, count: 100, scheduler: ConcurrentDispatchQueueScheduler(qos: .background)) }
     
     fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
     
@@ -26,7 +26,7 @@ class DownloadUpdater {
 //    let innerDisposable: Disposable
     let bag = DisposeBag()
     
-    var isEmpty: Bool { get { return downloadState.isEmpty } }
+    var isEmpty: Bool { get { downloadState.isEmpty } }
     
     init(downloader: BackgroundDownloader) {
         self.downloader = downloader
@@ -36,7 +36,7 @@ class DownloadUpdater {
     }
     
     func progressFor(track: Track) -> TrackProgress? {
-        return downloadState[track.path]
+        downloadState[track.path]
     }
     
     func downloadIfNecessary(track: Track, authValue: String) -> ErrorMessage? {
@@ -84,7 +84,7 @@ class DownloadUpdater {
     }
     
     private func enoughTimePassed(now: DispatchTime) -> Bool {
-        return DownloadUpdater.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
+        DownloadUpdater.enoughTimePassed(now: now, last: lastDownloadUpdate, fps: fps)
     }
     
     static func enoughTimePassed(now: DispatchTime, last: DispatchTime?, fps: UInt64) -> Bool {

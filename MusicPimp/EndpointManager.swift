@@ -11,11 +11,11 @@ import RxSwift
 
 class EndpointManager {
     static let endpointLog = LoggerFactory.shared.system(EndpointManager.self)
-    fileprivate var log: Logger { return EndpointManager.endpointLog }
+    fileprivate var log: Logger { EndpointManager.endpointLog }
     let key: String
     let settings: PimpSettings
     private let changedSubject = PublishSubject<Endpoint>()
-    var changed: Observable<Endpoint> { return changedSubject }
+    var changed: Observable<Endpoint> { changedSubject }
     
     init(key: String, settings: PimpSettings) {
         self.key = key

@@ -13,10 +13,10 @@ class PimpTableController: FeedbackTable {
     private let log = LoggerFactory.shared.vc(PimpTableController.self)
     let maxNewDownloads = 300
     
-    var libraryManager: LibraryManager { return LibraryManager.sharedInstance }
-    var playerManager: PlayerManager { return PlayerManager.sharedInstance }
-    var library: LibraryType { return libraryManager.active }
-    var player: PlayerType { return playerManager.active }
+    var libraryManager: LibraryManager { LibraryManager.sharedInstance }
+    var playerManager: PlayerManager { PlayerManager.sharedInstance }
+    var library: LibraryType { libraryManager.active }
+    var player: PlayerType { playerManager.active }
     
     func onLoadError(_ error: Error) {
         clearItems()
