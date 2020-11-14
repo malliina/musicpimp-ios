@@ -33,9 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var notification: [AnyHashable: Any]? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        MSAppCenter.start("bfa6d43e-d1f3-42e2-823a-920a16965470", withServices: [
-            MSAnalytics.self,
-            MSCrashes.self
+        AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
+            Analytics.self,
+            Crashes.self
         ])
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()

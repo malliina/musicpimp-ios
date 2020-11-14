@@ -1,25 +1,25 @@
 PODS:
-  - AppCenter (2.5.3):
-    - AppCenter/Analytics (= 2.5.3)
-    - AppCenter/Crashes (= 2.5.3)
-  - AppCenter/Analytics (2.5.3):
+  - AppCenter (4.0.0):
+    - AppCenter/Analytics (= 4.0.0)
+    - AppCenter/Crashes (= 4.0.0)
+  - AppCenter/Analytics (4.0.0):
     - AppCenter/Core
-  - AppCenter/Core (2.5.3)
-  - AppCenter/Crashes (2.5.3):
+  - AppCenter/Core (4.0.0)
+  - AppCenter/Crashes (4.0.0):
     - AppCenter/Core
-  - RxCocoa (5.0.1):
+  - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
-  - RxRelay (5.0.1):
+  - RxRelay (5.1.1):
     - RxSwift (~> 5)
-  - RxSwift (5.0.1)
+  - RxSwift (5.1.1)
   - SnapKit (5.0.1)
   - SocketRocket (0.5.1)
 
 DEPENDENCIES:
-  - AppCenter (= 2.5.3)
-  - RxCocoa (= 5.0.1)
-  - RxSwift (= 5.0.1)
+  - AppCenter (= 4.0.0)
+  - RxCocoa (= 5.1.1)
+  - RxSwift (= 5.1.1)
   - SnapKit (= 5.0.1)
   - SocketRocket (= 0.5.1)
 
@@ -33,13 +33,13 @@ SPEC REPOS:
     - SocketRocket
 
 SPEC CHECKSUMS:
-  AppCenter: 765ff38c4d360fc5ec61b61a8be24d74cd6d4d83
-  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
-  RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
-  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  AppCenter: 51351e0121e40ba75e28ecb7de5c2e69d480df5e
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: af39315ebb4cd9cab7af04fdebd4e340a2201a8b
+PODFILE CHECKSUM: 853d5bf975f7ff3c61a67720bbe1197988e9f617
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

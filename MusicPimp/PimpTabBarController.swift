@@ -50,13 +50,14 @@ class PimpTabBarController: UITabBarController {
         }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: bag)
     }
     
-    // swaps between mobile and tablet viewcontrollers, as necessary
+    // swaps between mobile and tablet viewcontrollers, as necessary, called when orientation changes
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if var vcs = viewControllers, vcs.count > 2 {
+        if let vcs = viewControllers, vcs.count > 2 {
             if let playerNav = vcs[1] as? UINavigationController {
                 playerNav.viewControllers = [ playerFor(traits: newCollection) ]
             }
-            if let listNav = vcs[2] as? UINavigationController {
+            // Sets the top list VC according to screen size
+            if !LibraryManager.sharedInstance.active.isLocal, let listNav = vcs[2] as? UINavigationController {
                 listNav.viewControllers = [ topListFor(traits: newCollection) ]
                 listNav.setNavigationBarHidden(newCollection.horizontalSizeClass == .regular, animated: true)
             }

@@ -8,9 +8,9 @@ use_frameworks!
 inhibit_all_warnings!
 
 def app_pods
-    pod 'AppCenter', '2.5.3'
-    pod 'RxCocoa', '5.0.1'
-    pod 'RxSwift', '5.0.1'
+    pod 'AppCenter', '4.0.0'
+    pod 'RxCocoa', '5.1.1'
+    pod 'RxSwift', '5.1.1'
     pod 'SnapKit', '5.0.1'
     pod 'SocketRocket', '0.5.1'
 end
