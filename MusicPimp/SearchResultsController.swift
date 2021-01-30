@@ -45,7 +45,7 @@ class SearchResultsController: BaseMusicController {
                             self.results = results
                         }
                     }
-                case .error(let err):
+                case .failure(let err):
                     self.onSearchFailure(term, error: err)
                 }
             }.disposed(by: bag)

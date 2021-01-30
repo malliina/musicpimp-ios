@@ -67,7 +67,7 @@ open class PimpNotifications {
                 library.stopAlarm().subscribe({ (event) in
                     switch event {
                     case .success(_): self.log.info("Stopped alarm playback.")
-                    case .error(let err): self.log.info("Failed to stop alarm playback. \(err.localizedDescription)")
+                    case .failure(let err): self.log.info("Failed to stop alarm playback. \(err.localizedDescription)")
                     }
                 }).disposed(by: bag)
                 app.applicationIconBadgeNumber = 0

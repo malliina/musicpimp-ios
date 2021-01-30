@@ -42,7 +42,7 @@ class MostRecentList: TopListController<RecentEntry> {
         library.recent(0, until: itemsPerLoad).subscribe { (event) in
             switch event {
             case .success(let rs): self.onTopLoaded(rs)
-            case .error(let err): self.onTopError(err)
+            case .failure(let err): self.onTopError(err)
             }
         }.disposed(by: bag)
     }
@@ -52,7 +52,7 @@ class MostRecentList: TopListController<RecentEntry> {
         library.recent(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
             switch event {
             case .success(let rs): self.onMoreResults(oldSize, results: rs)
-            case .error(let err): self.onTopError(err)
+            case .failure(let err): self.onTopError(err)
             }
         }.disposed(by: bag)
     }

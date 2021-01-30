@@ -33,7 +33,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-        downloadUpdates = DownloadUpdater.instance.progress.observeOn(MainScheduler.instance).subscribe(onNext: { (trackProgress) in
+        downloadUpdates = DownloadUpdater.instance.progress.observe(on: MainScheduler.instance).subscribe(onNext: { (trackProgress) in
             self.onProgress(track: trackProgress)
         })
         setFeedback(loadingMessage)
@@ -86,7 +86,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     func handleFolderEvent(event: RxSwift.SingleEvent<MusicFolder>) {
         switch event {
         case .success(let folder): onFolder(folder)
-        case .error(let error): onLoadError(error)
+        case .failure(let error): onLoadError(error)
         }
     }
     
@@ -180,13 +180,13 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
             tableView,
             title: "Play",
             onTrack: { (t) -> Void in _ = self.playTrack(t) },
-            onFolder: { (f) -> Void in _ = self.playFolder(f.id) }
+            onFolder: { (f) -> Void in self.playFolder(f.id) }
         )
         let addAction = musicItemAction(
             tableView,
             title: "Add",
             onTrack: { (t) -> Void in _ = self.addTrack(t) },
-            onFolder: { (f) -> Void in _ = self.addFolder(f.id) }
+            onFolder: { (f) -> Void in self.addFolder(f.id) }
         )
         return [playAction, addAction]
     }

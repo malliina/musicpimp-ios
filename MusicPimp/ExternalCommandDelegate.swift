@@ -46,14 +46,15 @@ class ExternalCommandDelegate: NSObject {
                 MPMediaItemPropertyMediaType: MPMediaType.music.rawValue as AnyObject,
                 MPMediaItemPropertyPlaybackDuration: TimeInterval(track.duration.seconds) as AnyObject
             ]
-            
-            let _ = CoverService.sharedInstance.cover(track.artist, album: track.album).subscribe(onSuccess: { (result) in
+            let _ = CoverService.sharedInstance.cover(track.artist, album: track.album).subscribe { (result) in
                 if let image = result.imageOrDefault {
                     info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in image.withSize(scaledToSize: size) })
                 }
                 center.nowPlayingInfo = info
-            }) { (err) in
+            } onFailure: { (err) in
                 self.log.error("Failed to fetch cover for '\(track.artist) - \(track.album). \(err)")
+            } onDisposed: {
+                ()
             }
         } else {
             center.nowPlayingInfo = nil

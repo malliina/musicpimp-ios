@@ -85,6 +85,9 @@ class IAPViewController: PimpViewController {
             setStatus("Restored.")
             showUserOwnsPremium()
             break
+        @unknown default:
+            log.error("Unknown transaction state.")
+            ()
         }
     }
     

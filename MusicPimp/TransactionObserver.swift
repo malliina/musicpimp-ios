@@ -11,6 +11,7 @@ import StoreKit
 import RxSwift
 
 class TransactionObserver : NSObject, SKPaymentTransactionObserver {
+    let log = LoggerFactory.shared.pimp(TransactionObserver.self)
     static let sharedInstance = TransactionObserver()
     private let subject = PublishSubject<SKPaymentTransaction>()
     var events: Observable<SKPaymentTransaction> { return subject }
@@ -34,9 +35,9 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
             case SKPaymentTransactionState.restored:
                 onRestored(transaction)
                 break
-//            default:
-//                Log.error("Unexpected transactions state \(transaction.transactionState)")
-//                break
+            @unknown default:
+                log.error("Unexpected transactions state \(transaction.transactionState)")
+                break
             }
             subject.onNext(transaction)
             if state == .purchased || state == .failed || state == .restored {

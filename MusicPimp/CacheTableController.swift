@@ -40,7 +40,7 @@ class CacheTableController: CacheInfoController {
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: sectionFooterIdentifier)
         onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControl.Event.valueChanged)
         onOffSwitch.isOn = settings.cacheEnabled
-        usedStorage.observeOn(MainScheduler.instance).subscribe(onNext: { (size) in
+        usedStorage.observe(on: MainScheduler.instance).subscribe(onNext: { (size) in
             self.latestStorage = size
             self.tableView.reloadData()
         }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
@@ -176,11 +176,13 @@ class CacheTableController: CacheInfoController {
     }
     
     fileprivate func deleteCache() {
-        let _ = library.deleteContents().subscribe(onSuccess: { (Bool) in
+        let _ = library.deleteContents().subscribe { (bool) in
             self.log.info("Done")
             self.calculateCacheUsage()
-        }) { (err) in
+        } onFailure: { (err) in
             self.log.info("Failed to delete contents: '\(err)'.")
+        } onDisposed: {
+            ()
         }
     }
 }

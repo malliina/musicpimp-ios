@@ -126,7 +126,7 @@ class PlaylistController: BaseMusicController {
         library.popular(from, until: from + maxItems).subscribe { (event) in
             switch event {
             case .success(let pops): onPopulars(pops)
-            case .error(let err): self.onPopularError(err)
+            case .failure(let err): self.onPopularError(err)
             }
         }.disposed(by: bag)
     }
@@ -135,7 +135,7 @@ class PlaylistController: BaseMusicController {
         library.recent(from, until: from + maxItems).subscribe { (event) in
             switch event {
             case .success(let recents): onRecents(recents)
-            case .error(let err): self.onRecentError(err)
+            case .failure(let err): self.onRecentError(err)
             }
         }.disposed(by: bag)
     }

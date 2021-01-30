@@ -52,7 +52,7 @@ class CoverService {
                 authValue: nil,
                 relativePath: relativeCoverFilePath)
                 .map { CoverResult(artist: artist, album: album, coverPath: $0) }
-                .catchError { err in Single.just(CoverResult.noCover(artist, album: album)) }
+                .catch { err in Single.just(CoverResult.noCover(artist, album: album)) }
         } else {
             return Single.just(CoverResult.noCover(artist, album: album))
         }

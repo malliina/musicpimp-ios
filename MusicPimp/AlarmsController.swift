@@ -133,7 +133,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         alarmLibrary.registerNotifications(token, tag: endpoint.id).subscribe { (event) in
             switch event {
             case .success(_): let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: true)
-            case .error(let err): self.onRegisterError(error: err, endpoint: endpoint)
+            case .failure(let err): self.onRegisterError(error: err, endpoint: endpoint)
             }
         }.disposed(by: bag)
     }

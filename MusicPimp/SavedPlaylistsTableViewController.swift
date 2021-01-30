@@ -34,7 +34,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
         library.playlists().subscribe { (event) in
             switch event {
             case .success(let ps): self.onPlaylists(ps)
-            case .error(let err): self.onLoadError(err)
+            case .failure(let err): self.onLoadError(err)
             }
         }.disposed(by: bag)
     }

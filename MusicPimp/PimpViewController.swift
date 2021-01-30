@@ -43,7 +43,7 @@ class PimpViewController: UIViewController {
         o.subscribe { (event) in
             switch event {
             case .success(let t): onResult(t)
-            case .error(let err): self.onError(err)
+            case .failure(let err): self.onError(err)
             }
         }.disposed(by: bag)
     }

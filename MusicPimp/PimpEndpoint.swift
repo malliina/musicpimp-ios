@@ -29,7 +29,7 @@ class PimpEndpoint {
         client.pimpPost(Endpoints.PLAYBACK, payload: json).subscribe { (event) in
             switch event {
             case .success(let response): self.onSuccess(response.data)
-            case .error(let err): self.onError(err)
+            case .failure(let err): self.onError(err)
             }
         }.disposed(by: bag)
     }

@@ -229,7 +229,7 @@ class EditEndpointController: PimpViewController {
             let _ = client.pingAuth().subscribe { (event) in
                 switch event {
                 case .success(let version): self.onTestSuccess(endpoint, v: version)
-                case .error(let error): self.onTestFailure(endpoint, error: error)
+                case .failure(let error): self.onTestFailure(endpoint, error: error)
                 }
             }.disposed(by: disposeBag)
         } else {

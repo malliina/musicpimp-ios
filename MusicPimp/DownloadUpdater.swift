@@ -12,10 +12,9 @@ import RxSwift
 class DownloadUpdater {
     static let instance = DownloadUpdater(downloader: BackgroundDownloader.musicDownloader)
     let log = LoggerFactory.shared.network(DownloadUpdater.self)
-    
     let progressSubject = PublishSubject<TrackProgress>()
     var progress: Observable<TrackProgress> { progressSubject }
-    var slowProgress: Observable<[TrackProgress]> { progress.buffer(timeSpan: 1, count: 100, scheduler: ConcurrentDispatchQueueScheduler(qos: .background)) }
+    var slowProgress: Observable<[TrackProgress]> { progress.buffer(timeSpan: .seconds(1), count: 100, scheduler: ConcurrentDispatchQueueScheduler(qos: .background)) }
     
     fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
     

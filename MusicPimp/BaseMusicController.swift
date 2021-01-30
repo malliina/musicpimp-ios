@@ -172,7 +172,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         library.tracks(id).subscribe { (event) in
             switch event {
             case .success(let ts): let _ = f(ts)
-            case .error(let err): self.onError(err)
+            case .failure(let err): self.onError(err)
             }
         }.disposed(by: bag)
     }
