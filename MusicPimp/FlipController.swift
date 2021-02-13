@@ -30,6 +30,11 @@ class FlipController: ContainerParent {
     
     func initUI() {
         let scope = UISegmentedControl(items: [firstTitle, secondTitle])
+        if #available(iOS 13.0, *) {
+            scope.selectedSegmentTintColor = PimpColors.shared.background
+        } else {
+            // Fallback on earlier versions
+        }
         scopeSegment = scope
         initScope(scope)
         addSubviews(views: [scope])

@@ -44,6 +44,11 @@ class PlaylistParent: ContainerParent {
         ctrl.selectedSegmentIndex = 0
         ctrl.addTarget(self, action: .scopeChanged, for: .valueChanged)
         ctrl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: PimpColors.shared.tintColor], for: .normal)
+        if #available(iOS 13.0, *) {
+            ctrl.selectedSegmentTintColor = PimpColors.shared.background
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     override func onLibraryUpdated(to newLibrary: LibraryType) {
