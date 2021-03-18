@@ -55,6 +55,12 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
 //        searchBar.searchBarStyle = UISearchBarStyle.minimal
         searchBar.barStyle = UIBarStyle.default
         searchBar.barTintColor = UIColor.clear
+        searchBar.tintColor = UIColor.red
+        if #available(iOS 13.0, *) {
+            searchBar.searchTextField.textColor = colors.text
+        } else {
+            // I think the color is OK before iOS 13
+        }
         searchBar.isTranslucent = true
         searchBar.placeholder = "Search track or artist"
         searchController.delegate = self

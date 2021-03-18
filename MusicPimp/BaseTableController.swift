@@ -34,7 +34,8 @@ class BaseTableController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: colors.titleFont
+            NSAttributedString.Key.font: colors.titleFont,
+            NSAttributedString.Key.foregroundColor: colors.titles
         ]
         edgesForExtendedLayout = []
         // Does not add left-right margins to table cells on iPad Pro+

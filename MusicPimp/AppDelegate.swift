@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initTheme(_ app: UIApplication) {
         app.delegate?.window??.tintColor = colors.tintColor
         UINavigationBar.appearance().barStyle = colors.barStyle
-//        UINavigationBar.appearance().tintColor = colors.tintColor
+        // UINavigationBar.appearance().tintColor = colors.tintColor
         UITabBar.appearance().barStyle = colors.barStyle
         UIView.appearance().tintColor = colors.tintColor
         UITableView.appearance().backgroundColor = colors.background
@@ -96,6 +96,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PimpView.appearance().backgroundColor = colors.background
 //        UIBarButtonItem.appearance()
 //            .setTitleTextAttributes([NSFontAttributeName : PimpColors.titleFont], forState: UIControlState.Normal)
+        if #available(iOS 13.0, *) {
+            UISegmentedControl.appearance().selectedSegmentTintColor = PimpColors.shared.background
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func initAudio() {

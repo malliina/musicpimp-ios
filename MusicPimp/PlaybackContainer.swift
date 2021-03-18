@@ -25,9 +25,6 @@ class PlaybackContainer: ContainerParent {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = navTitle
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: colors.titleFont
-        ]
         initUI()
     }
     
