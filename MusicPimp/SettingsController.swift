@@ -43,7 +43,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     override func viewDidLoad() {
         super.viewDidLoad()
         [playbackDeviceId, musicSourceId, cacheId, alarmId, aboutId, creditsId].forEach { id in
-            self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
+            self.tableView?.register(DisclosureCell.self, forCellReuseIdentifier: id)
         }
         run(settings.cacheEnabledChanged, onResult: self.onCacheEnabledChanged)
         listener.players = self
@@ -77,12 +77,12 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let spec = specForRow(indexPath: indexPath) ?? RowSpec(reuseIdentifier: "", text: "")
-        let cell = identifiedCell(spec.reuseIdentifier, index: indexPath)
-        cell.textLabel?.text = spec.text
-        cell.textLabel?.textColor = colors.titles
-        cell.accessoryType = .disclosureIndicator
-        cell.detailTextLabel?.text = textForIdentifier(spec.reuseIdentifier)
-        cell.detailTextLabel?.textColor = colors.titles
+        let cell: DisclosureCell = loadCell(spec.reuseIdentifier, index: indexPath)
+        cell.title.text = spec.text
+//        cell.textLabel?.textColor = colors.titles
+//        cell.accessoryType = .disclosureIndicator
+        cell.detail.text = textForIdentifier(spec.reuseIdentifier)
+//        cell.detailTextLabel?.textColor = colors.titles
         return cell
     }
     

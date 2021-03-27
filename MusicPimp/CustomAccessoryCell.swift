@@ -18,8 +18,9 @@ class CustomAccessoryCell: PimpCell {
     let accessoryWidth: CGFloat = 44
     
     static let accessoryImageSize = CGSize(width: 16, height: 16)
-    static let accessoryImage: UIImage? = UIImage(named: "more_filled_grey-100.png")?
-        .withSize(scaledToSize: accessoryImageSize)
+    static let disclosureIndicatorSize = CGSize(width: 10, height: 14)
+    static let trackAccessory = UIImage(named: "more_filled_grey-100.png")!.withSize(scaledToSize: accessoryImageSize)
+    static let folderAccessory = UIImage(named: "chevron-right-100.png")!.withSize(scaledToSize: disclosureIndicatorSize)
     var accessoryDelegate: AccessoryDelegate? = nil
     
     // call from layoutSubviews if necessary
@@ -33,25 +34,22 @@ class CustomAccessoryCell: PimpCell {
     }
     
     func installTrackAccessoryView(height: CGFloat = CustomAccessoryCell.defaultCellHeight) {
-        if let accessory = createTrackAccessory(height: height) {
-            self.accessoryView = accessory
-        } else {
-            log.error("No accessory available")
-        }
+        self.accessoryView = createAccessory(height: height, image: CustomAccessoryCell.trackAccessory)
     }
     
-    private func createTrackAccessory(height: CGFloat) -> UIButton? {
-        if let image = CustomAccessoryCell.accessoryImage {
-            let button = UIButton(type: .custom)
-            let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
-            button.frame = frame
-            button.setImage(image, for: UIControl.State())
-            button.contentMode = .scaleAspectFit
-            button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: .touchUpInside)
-            button.contentEdgeInsets = .zero
-            return button
-        }
-        return nil
+    func installDisclosureAccessoryView(height: CGFloat = CustomAccessoryCell.defaultCellHeight) {
+        self.accessoryView = createAccessory(height: height, image: CustomAccessoryCell.folderAccessory)
+    }
+    
+    private func createAccessory(height: CGFloat, image: UIImage) -> UIButton {
+        let button = UIButton(type: .custom)
+        let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
+        button.frame = frame
+        button.setImage(image, for: UIControl.State())
+        button.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(self.accessoryClicked(_:event:)), for: .touchUpInside)
+        button.contentEdgeInsets = .zero
+        return button
     }
     
     @objc func accessoryClicked(_ sender: UIButton, event: AnyObject) {
@@ -61,5 +59,4 @@ class CustomAccessoryCell: PimpCell {
             log.error("No accessory delegate")
         }
     }
-
 }

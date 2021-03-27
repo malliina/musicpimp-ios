@@ -31,16 +31,17 @@ class CacheTableController: CacheInfoController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "OFFLINE STORAGE"
-        [CacheEnabledCell, CacheSizeCell, CurrentUsageCell, DeleteCacheCell].forEach { id in
+        [CacheEnabledCell, CurrentUsageCell, DeleteCacheCell].forEach { id in
             self.tableView?.register(DetailedCell.self, forCellReuseIdentifier: id)
         }
+        self.tableView?.register(DisclosureCell.self, forCellReuseIdentifier: CacheSizeCell)
         [DeleteCustom, EmptyCell].forEach { (id) in
             registerCell(reuseIdentifier: id)
         }
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: sectionFooterIdentifier)
         onOffSwitch.addTarget(self, action: #selector(CacheTableController.didToggleCache(_:)), for: UIControl.Event.valueChanged)
         onOffSwitch.isOn = settings.cacheEnabled
-        usedStorage.observe(on: MainScheduler.instance).subscribe(onNext: { (size) in
+        usedStorage.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { (size) in
             self.latestStorage = size
             self.tableView.reloadData()
         }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
@@ -76,30 +77,37 @@ class CacheTableController: CacheInfoController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let spec = specForRow(indexPath: indexPath) ?? RowSpec(reuseIdentifier: EmptyCell, text: "")
-        let cell = identifiedCell(spec.reuseIdentifier, index: indexPath)
-        cell.textLabel?.text = spec.text
-        cell.textLabel?.textColor = colors.titles
         switch spec.reuseIdentifier {
         case CacheEnabledCell:
+            let cell = basicCell(spec: spec, indexPath: indexPath)
             cell.accessoryView = onOffSwitch
-            break
+            return cell
         case CacheSizeCell:
-            cell.accessoryType = .disclosureIndicator
-            cell.detailTextLabel?.text = currentLimitDescription
-            break
+            let cell: DisclosureCell = loadCell(spec.reuseIdentifier, index: indexPath)
+            cell.title.text = spec.text
+            cell.detail.text = currentLimitDescription
+            return cell
         case CurrentUsageCell:
+            let cell = basicCell(spec: spec, indexPath: indexPath)
             cell.detailTextLabel?.text = latestStorage.shortDescription
-            break
+            return cell
         case DeleteCustom:
+            let cell = basicCell(spec: spec, indexPath: indexPath)
             if let label = cell.textLabel {
                 label.textColor = colors.deletion
                 label.textAlignment = .center
                 label.highlightedTextColor = colors.deletionHighlighted
             }
-            break
+            return cell
         default:
-            break
+            return identifiedCell(EmptyCell, index: indexPath)
         }
+    }
+    
+    func basicCell(spec: RowSpec, indexPath: IndexPath) -> UITableViewCell {
+        let cell = identifiedCell(spec.reuseIdentifier, index: indexPath)
+        cell.textLabel?.text = spec.text
+        cell.textLabel?.textColor = colors.titles
         return cell
     }
     

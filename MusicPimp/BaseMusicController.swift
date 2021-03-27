@@ -11,8 +11,8 @@ import RxSwift
 
 class BaseMusicController : PimpTableController, AccessoryDelegate {
     private let log = LoggerFactory.shared.vc(BaseMusicController.self)
-    let FolderCellId = "FolderCell"
-    let trackReuseIdentifier = "PimpMusicItemCell"
+    let folderCellId = "FolderCell"
+    let trackCellId = "TrackCell"
     let defaultCellHeight: CGFloat = 44
     static let accessoryRightPadding: CGFloat = 14
     
@@ -23,8 +23,8 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: trackReuseIdentifier)
-        registerCell(reuseIdentifier: FolderCellId)
+        self.tableView?.register(SnapTrackCell.self, forCellReuseIdentifier: trackCellId)
+        self.tableView?.register(DisclosureCell.self, forCellReuseIdentifier: folderCellId)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -43,8 +43,8 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         listeners = []
     }
     
-    func trackCell(_ item: Track, index: IndexPath) -> SnapMusicCell? {
-        if let pimpCell: SnapMusicCell = findCell(trackReuseIdentifier, index: index) {
+    func trackCell(_ item: Track, index: IndexPath) -> SnapTrackCell? {
+        if let pimpCell: SnapTrackCell = findCell(trackCellId, index: index) {
             pimpCell.title.text = item.title
             pimpCell.accessoryDelegate = self
             return pimpCell
@@ -54,7 +54,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         }
     }
     
-    func paintTrackCell(cell: SnapMusicCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
+    func paintTrackCell(cell: SnapTrackCell, track: Track, isHighlight: Bool, downloadState: TrackProgress?) {
         if let downloadProgress = downloadState {
             if cell.progress.progress < downloadProgress.progress {
 //                log.info("From \(cell.progress.progress) to \(downloadProgress.progress)")

@@ -33,7 +33,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         super.viewDidLoad()
         self.tableView.tableHeaderView = self.searchController.searchBar
         self.tableView.contentOffset = CGPoint(x: 0, y: self.searchController.searchBar.frame.size.height)
-        downloadUpdates = DownloadUpdater.instance.progress.observe(on: MainScheduler.instance).subscribe(onNext: { (trackProgress) in
+        downloadUpdates = DownloadUpdater.instance.progress.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { (trackProgress) in
             self.onProgress(track: trackProgress)
         })
         setFeedback(loadingMessage)
@@ -142,12 +142,11 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         let item = musicItems[indexPath.row]
         let isFolder = item as? Folder != nil
         if isFolder {
-            let folderCell = identifiedCell(FolderCellId, index: indexPath)
-            folderCell.textLabel?.text = item.title
-            folderCell.textLabel?.textColor = PimpColors.shared.titles
-            folderCell.accessoryType = .disclosureIndicator
-            folderCell.layoutMargins = .zero
-            return folderCell
+            if let cell: DisclosureCell = findCell(folderCellId, index: indexPath) {
+                cell.title.text = item.title
+                return cell
+            }
+            return super.tableView(tableView, cellForRowAt: indexPath)
         } else {
             if let track = item as? Track, let pimpCell = trackCell(track, index: indexPath) {
                 paintTrackCell(cell: pimpCell, track: track, isHighlight: self.player.current().track?.id == track.id, downloadState: DownloadUpdater.instance.progressFor(track: track))

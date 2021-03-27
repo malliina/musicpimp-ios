@@ -23,7 +23,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.register(SnapMusicCell.self, forCellReuseIdentifier: defaultCellKey)
+        self.tableView?.register(SnapTrackCell.self, forCellReuseIdentifier: defaultCellKey)
         initNavbar()
         listener.playlists = self
     }
@@ -47,7 +47,7 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.row
-        let cell: SnapMusicCell = loadCell(defaultCellKey, index: indexPath)
+        let cell: SnapTrackCell = loadCell(defaultCellKey, index: indexPath)
         cell.accessoryDelegate = self
         // crash w/ index out of range - I think this is now fixed
         let track = tracks[index]

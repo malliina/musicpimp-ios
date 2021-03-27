@@ -48,7 +48,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         self.navigationItem.title = "ALARMS"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: .addClicked)
         if let tableView = self.tableView {
-            tableView.register(DetailedCell.self, forCellReuseIdentifier: endpointIdentifier)
+            tableView.register(DisclosureCell.self, forCellReuseIdentifier: endpointIdentifier)
             tableView.register(DetailedCell.self, forCellReuseIdentifier: pushEnabledIdentifier)
             tableView.register(SnapMainSubCell.self, forCellReuseIdentifier: alarmIdentifier)
             tableView.register(MainSubCell.self, forCellReuseIdentifier: alarmCellKey)
@@ -224,11 +224,12 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case endpointSection:
-            let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
-            cell.textLabel?.text = "Playback Device"
-            cell.textLabel?.isEnabled = isEndpointValid
-            cell.accessoryType = .disclosureIndicator
-            cell.detailTextLabel?.text = endpoint?.name ?? "None"
+            let cell: DisclosureCell = loadCell(endpointIdentifier, index: indexPath)
+//            let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
+            cell.title.text = "Playback Device"
+            cell.title.isEnabled = isEndpointValid
+//            cell.accessoryType = .disclosureIndicator
+            cell.detail.text = endpoint?.name ?? "None"
             return cell
         case notificationSection:
             let cell = tableView.dequeueReusableCell(withIdentifier: pushEnabledIdentifier, for: indexPath)
@@ -246,6 +247,7 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
             } else {
                 let item = alarms[indexPath.row]
                 let alarmCell: MainSubCell = loadCell(alarmCellKey, index: indexPath)
+                alarmCell.zeroAccessoryMargin = false
                 let when = item.when
                 alarmCell.main.text = item.track.title + " at " + when.time.formatted()
                 alarmCell.sub.text = Day.describeDays(Set(when.days))

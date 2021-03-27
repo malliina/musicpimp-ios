@@ -83,7 +83,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIView.appearance().tintColor = colors.tintColor
         UITableView.appearance().backgroundColor = colors.background
         UITableView.appearance().separatorColor = colors.separator
+        UITableView.appearance().tintColor = colors.deletion
         UITableViewCell.appearance().backgroundColor = colors.background
+        UITableViewCell.appearance().tintColor = colors.deletion
         let backgroundView = PimpView()
         backgroundView.backgroundColor = colors.selectedBackground
         UITableViewCell.appearance().selectedBackgroundView = backgroundView

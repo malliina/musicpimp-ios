@@ -25,9 +25,6 @@ class MainSubCell: SnapCell {
         }
         
         contentView.addSubview(sub)
-//        self.backgroundColor = .purple
-//        contentView.backgroundColor = .green
-//        sub.backgroundColor = .yellow
         sub.snp.makeConstraints { make in
             make.top.equalTo(main.snp.bottom).offset(6)
             make.leading.equalTo(contentView.snp.leadingMargin)

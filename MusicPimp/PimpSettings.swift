@@ -113,9 +113,9 @@ open class PimpSettings {
     
     func defaultNotificationEndpoint() -> Endpoint? {
         let alarmEndpoints = endpoints().filter { $0.supportsAlarms }
-        if let id = impl.loadString(PimpSettings.defaultAlarmEndpoint) {
-            let e = alarmEndpoints.find { $0.id == id }
-            return e ?? initDefaultNotificationEndpoint(alarmEndpoints)
+        if let id = impl.loadString(PimpSettings.defaultAlarmEndpoint),
+           let e = alarmEndpoints.find({ $0.id == id }) {
+            return e
         } else {
             return initDefaultNotificationEndpoint(alarmEndpoints)
         }
@@ -124,14 +124,14 @@ open class PimpSettings {
     func initDefaultNotificationEndpoint(_ es: [Endpoint]) -> Endpoint? {
         let result = es.headOption()
         if let result = result {
-            saveDefaultNotificationsEndpoint(result)
+            saveDefaultNotificationsEndpoint(result, publish: false)
         }
         return result
     }
     
-    func saveDefaultNotificationsEndpoint(_ e: Endpoint) {
+    func saveDefaultNotificationsEndpoint(_ e: Endpoint, publish: Bool) {
         let errors = impl.save(e.id, key: PimpSettings.defaultAlarmEndpoint)
-        if errors == nil {
+        if errors == nil && publish {
             defaultAlarmEndpointSubject.onNext(e)
         }
     }

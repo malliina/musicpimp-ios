@@ -44,8 +44,7 @@ class AlarmEndpointController: BaseTableController {
         let endpoint = endpoints[index]
         let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
         cell.textLabel?.text = endpoint.name
-        let accessory = endpoint.id == selectedId ? UITableViewCell.AccessoryType.checkmark : UITableViewCell.AccessoryType.none
-        cell.accessoryType = accessory
+        cell.accessoryType = endpoint.id == selectedId ? .checkmark : .none
         return cell
     }
     
@@ -53,7 +52,7 @@ class AlarmEndpointController: BaseTableController {
         tableView.deselectRow(at: indexPath, animated: false)
         let endpoint = endpoints[indexPath.row]
         selectedId = endpoint.id
-        settings.saveDefaultNotificationsEndpoint(endpoint)
+        settings.saveDefaultNotificationsEndpoint(endpoint, publish: true)
         reloadTable(feedback: nil)
         delegate?.endpointChanged(newEndpoint: endpoint)
     }

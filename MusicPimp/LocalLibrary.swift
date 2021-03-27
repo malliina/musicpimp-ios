@@ -97,7 +97,7 @@ class LocalLibrary: BaseLibrary {
             observer.onCompleted()
             return Disposables.create()
         }.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-        .observe(on: MainScheduler.instance).asSingle()
+        .observe(on: MainScheduler.asyncInstance).asSingle()
     }
     
     private func deleteContentsSync() -> Bool {

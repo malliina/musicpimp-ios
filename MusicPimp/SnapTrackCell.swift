@@ -5,28 +5,13 @@
 
 import Foundation
 
-class SnapMusicCell: SnapCell {
-    let title = PimpLabel.create()
+class SnapTrackCell: SnapCell {
     let progress = UIProgressView(progressViewStyle: .default)
 
     override func configureView() {
+        super.configureView()
         installTrackAccessoryView()
-        initTitle()
         initProgress()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        super.removeAccessoryMargin()
-    }
-
-    func initTitle() {
-        contentView.addSubview(title)
-        title.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
-            make.leading.equalTo(contentView.snp.leadingMargin)
-            make.trailing.equalTo(contentView.snp.trailingMargin)
-        }
     }
 
     func initProgress() {
