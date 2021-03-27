@@ -20,7 +20,7 @@ class RowSpec {
     }
 }
 
-class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpointDelegate, LibraryEndpointDelegate {
+class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpointDelegate, LibraryEndpointDelegate, AccessoryDelegate {
     private let log = LoggerFactory.shared.vc(SettingsController.self)
     let detailId = "DetailedCell"
     let sectionHeaderHeight: CGFloat = 44
@@ -79,10 +79,8 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         let spec = specForRow(indexPath: indexPath) ?? RowSpec(reuseIdentifier: "", text: "")
         let cell: DisclosureCell = loadCell(spec.reuseIdentifier, index: indexPath)
         cell.title.text = spec.text
-//        cell.textLabel?.textColor = colors.titles
-//        cell.accessoryType = .disclosureIndicator
         cell.detail.text = textForIdentifier(spec.reuseIdentifier)
-//        cell.detailTextLabel?.textColor = colors.titles
+        cell.accessoryDelegate = self
         return cell
     }
     
@@ -157,6 +155,12 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
         }
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    func accessoryTapped(_ sender: UIButton, event: AnyObject) {
+        if let indexPath = clickedIndexPath(event), let dest = destinationFor(indexPath: indexPath) {
+            self.navigationController?.pushViewController(dest, animated: true)
+        }
     }
     
     func destinationFor(indexPath: IndexPath) -> UIViewController? {

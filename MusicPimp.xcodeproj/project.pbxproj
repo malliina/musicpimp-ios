@@ -435,6 +435,7 @@
 				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
+				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				6167B10F1F6D993200FF002F /* MainSubCell.swift */,
 				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
@@ -451,10 +452,9 @@
 				610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
-				33498C6C27044382E317113E /* SnapTrackCell.swift */,
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
+				33498C6C27044382E317113E /* SnapTrackCell.swift */,
 				616EC57F1FAF8FE600C3EB91 /* ThreeLabelCell.swift */,
-				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1271,7 +1271,7 @@
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.8.5;
+				MARKETING_VERSION = 1.8.6;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1292,7 +1292,7 @@
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.8.5;
+				MARKETING_VERSION = 1.8.6;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

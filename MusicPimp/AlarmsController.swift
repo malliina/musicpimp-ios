@@ -12,7 +12,7 @@ fileprivate extension Selector {
     static let addClicked = #selector(AlarmsController.onAddNew(_:))
 }
 
-class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate {
+class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDelegate, AccessoryDelegate {
     let log = LoggerFactory.shared.vc(AlarmsController.self)
     static let endpointFooter = "MusicPimp servers support scheduled playback of music."
     static let notificationFooter = "Receive a notification when scheduled playback starts, so that you can easily silence it."
@@ -225,11 +225,10 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
         switch indexPath.section {
         case endpointSection:
             let cell: DisclosureCell = loadCell(endpointIdentifier, index: indexPath)
-//            let cell = tableView.dequeueReusableCell(withIdentifier: endpointIdentifier, for: indexPath)
             cell.title.text = "Playback Device"
             cell.title.isEnabled = isEndpointValid
-//            cell.accessoryType = .disclosureIndicator
             cell.detail.text = endpoint?.name ?? "None"
+            cell.accessoryDelegate = self
             return cell
         case notificationSection:
             let cell = tableView.dequeueReusableCell(withIdentifier: pushEnabledIdentifier, for: indexPath)
@@ -328,6 +327,13 @@ class AlarmsController : PimpTableController, EditAlarmDelegate, AlarmEndpointDe
             break
         default:
             break
+        }
+    }
+    
+    func accessoryTapped(_ sender: UIButton, event: AnyObject) {
+        if let indexPath = clickedIndexPath(event), indexPath.section == endpointSection {
+            let dest = AlarmEndpointController(d: self)
+            self.navigationController?.pushViewController(dest, animated: true)
         }
     }
     

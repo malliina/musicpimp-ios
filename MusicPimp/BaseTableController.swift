@@ -122,6 +122,19 @@ class BaseTableController: UITableViewController {
         return label
     }
     
+    func clickedRow(_ touchEvent: AnyObject) -> Int? {
+        return clickedIndexPath(touchEvent)?.row
+    }
+    
+    // TODO add link to source (SO?)
+    func clickedIndexPath(_ touchEvent: AnyObject) -> IndexPath? {
+        if let touch = touchEvent.allTouches??.first {
+            let point = touch.location(in: tableView)
+            return tableView.indexPathForRow(at: point)
+        }
+        return nil
+    }
+    
     func onError(_ error: Error) {
         Util.onError(error)
     }

@@ -144,6 +144,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         if isFolder {
             if let cell: DisclosureCell = findCell(folderCellId, index: indexPath) {
                 cell.title.text = item.title
+                cell.accessoryDelegate = self
                 return cell
             }
             return super.tableView(tableView, cellForRowAt: indexPath)

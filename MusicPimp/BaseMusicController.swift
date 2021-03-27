@@ -85,17 +85,6 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
         }
     }
     
-    // TODO add link to source (SO?)
-    func clickedRow(_ touchEvent: AnyObject) -> Int? {
-        if let touch = touchEvent.allTouches??.first {
-            let point = touch.location(in: tableView)
-            if let indexPath = tableView.indexPathForRow(at: point) {
-                return indexPath.row
-            }
-        }
-        return nil
-    }
-    
     func displayActionsForTrack(_ track: Track, row: Int, sender: UIButton) {
         let title = track.title
         let message = track.artist
@@ -130,6 +119,12 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
     
     func displayActionsForFolder(_ folder: Folder, row: Int) {
+        let destination = LibraryContainer(folder: folder)
+        navigationController?.pushViewController(destination, animated: true)
+    }
+    
+    func displayActionsForFolder2(_ folder: Folder, row: Int) {
+        log.info("Display for folder " + folder.title)
         let title = folder.title
         let id = folder.id
         let message = ""

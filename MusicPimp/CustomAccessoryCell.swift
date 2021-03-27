@@ -20,7 +20,7 @@ class CustomAccessoryCell: PimpCell {
     static let accessoryImageSize = CGSize(width: 16, height: 16)
     static let disclosureIndicatorSize = CGSize(width: 10, height: 14)
     static let trackAccessory = UIImage(named: "more_filled_grey-100.png")!.withSize(scaledToSize: accessoryImageSize)
-    static let folderAccessory = UIImage(named: "chevron-right-100.png")!.withSize(scaledToSize: disclosureIndicatorSize)
+    static let disclosureAccessory = UIImage(named: "chevron-right-100.png")!.withSize(scaledToSize: disclosureIndicatorSize)
     var accessoryDelegate: AccessoryDelegate? = nil
     
     // call from layoutSubviews if necessary
@@ -38,10 +38,10 @@ class CustomAccessoryCell: PimpCell {
     }
     
     func installDisclosureAccessoryView(height: CGFloat = CustomAccessoryCell.defaultCellHeight) {
-        self.accessoryView = createAccessory(height: height, image: CustomAccessoryCell.folderAccessory)
+        self.accessoryView = createAccessory(height: height, image: CustomAccessoryCell.disclosureAccessory)
     }
     
-    private func createAccessory(height: CGFloat, image: UIImage) -> UIButton {
+    func createAccessory(height: CGFloat, image: UIImage) -> UIButton {
         let button = UIButton(type: .custom)
         let frame = CGRect(x: 0, y: 0, width: accessoryWidth, height: height)
         button.frame = frame
