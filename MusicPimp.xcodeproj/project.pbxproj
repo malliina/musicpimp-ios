@@ -43,6 +43,8 @@
 		61BE40911F76ABF100A0EEC5 /* PlayerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */; };
 		61BE40931F77E70200A0EEC5 /* SideBySidePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */; };
 		6B618627FDDC45415FA044C4 /* Pods_MusicPimpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5329DEDDE50B3E055D5E9AD /* Pods_MusicPimpTests.framework */; };
+		7D045D67265845FE00B92EE8 /* chevron-right-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D045D65265845FE00B92EE8 /* chevron-right-100.png */; };
+		7D045D68265845FE00B92EE8 /* chevron-right-solid-mod.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7D045D66265845FE00B92EE8 /* chevron-right-solid-mod.svg */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
 		7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */; };
 		7D072FEF1B12394E000D416D /* PlayerSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D072FEE1B12394E000D416D /* PlayerSocket.swift */; };
@@ -171,8 +173,6 @@
 		7DE944D31BE67B6A00CD441B /* SavedPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE944D21BE67B6A00CD441B /* SavedPlaylist.swift */; };
 		7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00B1AED50B300F25B9B /* Arrays.swift */; };
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
-		7DF7F69F260F1C0700C4842B /* chevron-right-solid-mod.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7DF7F69E260F1C0700C4842B /* chevron-right-solid-mod.svg */; };
-		7DF7F6A3260F1E1300C4842B /* chevron-right-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF7F6A2260F1E1300C4842B /* chevron-right-100.png */; };
 		7DF7F6A9260F278000C4842B /* DisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */; };
 		7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */; };
 /* End PBXBuildFile section */
@@ -225,6 +225,8 @@
 		61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerParent.swift; sourceTree = "<group>"; };
 		61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBySidePlayer.swift; sourceTree = "<group>"; };
 		747551ABC6020E16A754A5A9 /* Pods-MusicPimpTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.release.xcconfig"; sourceTree = "<group>"; };
+		7D045D65265845FE00B92EE8 /* chevron-right-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chevron-right-100.png"; path = "MusicPimp/Assets/chevron-right-100.png"; sourceTree = "<group>"; };
+		7D045D66265845FE00B92EE8 /* chevron-right-solid-mod.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "chevron-right-solid-mod.svg"; path = "MusicPimp/Assets/chevron-right-solid-mod.svg"; sourceTree = "<group>"; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
 		7D0660071B1B712100C6DB15 /* PlayerEventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEventDelegate.swift; sourceTree = "<group>"; };
 		7D072FEE1B12394E000D416D /* PlayerSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSocket.swift; sourceTree = "<group>"; };
@@ -367,8 +369,6 @@
 		7DE944D21BE67B6A00CD441B /* SavedPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylist.swift; sourceTree = "<group>"; };
 		7DF5C00B1AED50B300F25B9B /* Arrays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrays.swift; sourceTree = "<group>"; };
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
-		7DF7F69E260F1C0700C4842B /* chevron-right-solid-mod.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "chevron-right-solid-mod.svg"; path = "../chevron-right-solid-mod.svg"; sourceTree = "<group>"; };
-		7DF7F6A2260F1E1300C4842B /* chevron-right-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chevron-right-100.png"; path = "../chevron-right-100.png"; sourceTree = "<group>"; };
 		7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureCell.swift; sourceTree = "<group>"; };
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
 		AC3720F10663AE163A8E695A /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
@@ -700,8 +700,8 @@
 		7DC359551B35BDD8003B01B6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				7DF7F6A2260F1E1300C4842B /* chevron-right-100.png */,
-				7DF7F69E260F1C0700C4842B /* chevron-right-solid-mod.svg */,
+				7D045D65265845FE00B92EE8 /* chevron-right-100.png */,
+				7D045D66265845FE00B92EE8 /* chevron-right-solid-mod.svg */,
 				618A5A4C1F73017500AB45CA /* pimp-20.png */,
 				618A5A4A1F73010F00AB45CA /* pimp-1024.png */,
 				7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */,
@@ -856,17 +856,17 @@
 				7DC206B01A1547370032C01D /* Images.xcassets in Resources */,
 				618A5A4B1F73010F00AB45CA /* pimp-1024.png in Resources */,
 				7D2C77991B933A810066A7B5 /* more-50.png in Resources */,
+				7D045D67265845FE00B92EE8 /* chevron-right-100.png in Resources */,
 				7DC891511D623E8100331A4D /* pimp-4096.png in Resources */,
 				7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */,
 				7D2C779D1B933C5E0066A7B5 /* more_filled-100.png in Resources */,
 				7D2C77A01B9352A20066A7B5 /* more_filled_darker-100.png in Resources */,
-				7DF7F6A3260F1E1300C4842B /* chevron-right-100.png in Resources */,
 				7DC891531D623FB600331A4D /* pimp-512.png in Resources */,
 				618A5A4D1F73017500AB45CA /* pimp-20.png in Resources */,
 				7D2C77981B933A810066A7B5 /* more_filled-50.png in Resources */,
 				7D74F3581BF902DA0004506B /* Media.xcassets in Resources */,
-				7DF7F69F260F1C0700C4842B /* chevron-right-solid-mod.svg in Resources */,
 				7D2C77971B933A810066A7B5 /* guitar.png in Resources */,
+				7D045D68265845FE00B92EE8 /* chevron-right-solid-mod.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
