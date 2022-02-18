@@ -7,55 +7,42 @@
 //
 
 import Foundation
-import SocketRocket
 import RxSwift
 
 // Web socket that supports reconnects
-class PlayerSocket: NSObject, SRWebSocketDelegate {
+class PlayerSocket: WebSocketMessageDelegate, OpenCloseDelegate {
     private let log = LoggerFactory.shared.network(PlayerSocket.self)
-    var socket: SRWebSocket? = nil
+    var socket: WebSocket? = nil
     let baseURL: URL
-    fileprivate let request: URLRequest
-    var isConnected = false
+    let headers: [String: String]
+    var isConnected: Bool { socket?.isConnected ?? false }
     
     private var openObserver: AnyObserver<Void>? = nil
     
     init(baseURL: URL, headers: [String: String]) {
         self.baseURL = baseURL
-        var baseRequest = URLRequest(url: self.baseURL)
-        for (key, value) in headers {
-            baseRequest.addValue(value, forHTTPHeaderField: key)
-        }
-        self.request = baseRequest
-        super.init()
+        self.headers = headers
     }
     
     func open() -> Observable<Void> {
         close()
-        let webSocket = SRWebSocket(urlRequest: request)
-        webSocket?.delegate = self
+        let webSocket = WebSocket(baseURL: baseURL, headers: headers)
+        webSocket.delegate = self
+        webSocket.openCloseDelegate = self
         self.socket = webSocket
         return Observable<Void>.create { observer in
             self.openObserver = observer
             self.log.info("Connecting to '\(self.baseURL)'...")
-            webSocket?.open()
+            webSocket.connect()
             return Disposables.create()
         }
     }
     
-    public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
-        if let message = message as? String {
-            log.info("Got message \(message)")
-        } else {
-            log.info("Got data \(message ?? "unknown")")
-        }
+    func on(message: String) {
+        log.info("Got message \(message)")
     }
     
-    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        if webSocket != self.socket {
-            return
-        }
-        isConnected = true
+    func onOpen(task: URLSessionWebSocketTask) {
         log.info("Socket opened to \(baseURL)")
         if let observer = openObserver {
             observer.onCompleted()
@@ -63,56 +50,25 @@ class PlayerSocket: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-        isConnected = false
+    func onClose(task: URLSessionWebSocketTask) {
         log.info("Error for connection to \(baseURL)")
     }
     
-    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        isConnected = false
-        log.info("Connection failed to \(baseURL)")
-        if let observer = openObserver {
-            observer.onError(error)
-            openObserver = nil
-        }
-    }
+//    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
+//        isConnected = false
+//        log.info("Connection failed to \(baseURL)")
+//        if let observer = openObserver {
+//            observer.onError(error)
+//            openObserver = nil
+//        }
+//    }
     
     func close() {
         // disposes of any previous socket
         if let socket = socket {
-            socket.delegate = LoggingSRSocketDelegate(baseURL: self.baseURL)
-            socket.close()
+            socket.delegate = nil
+            socket.disconnect()
             self.socket = nil
         }
-        isConnected = false
-    }
-}
-
-class LoggingSRSocketDelegate: NSObject, SRWebSocketDelegate {
-    let log = LoggerFactory.shared.network(LoggingSRSocketDelegate.self)
-    let baseURL: URL
-    
-    init(baseURL: URL) {
-        self.baseURL = baseURL
-    }
-    
-    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-        info("Closed socket to \(baseURL), code: \(code)")
-    }
-    
-    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        info("Failed socket to \(baseURL)")
-    }
-    
-    public func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
-        info("Got message from \(baseURL): \(message ?? "unknown")")
-    }
-    
-    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        info("Opened socket to \(baseURL)")
-    }
-    
-    func info(_ s: String) {
-        log.info(s)
     }
 }

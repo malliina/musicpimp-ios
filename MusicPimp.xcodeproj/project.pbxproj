@@ -3,11 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02951BFCEF4FA394F3953237 /* Pods_MusicPimp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCC1AEE14AC5DB04BA590716 /* Pods_MusicPimp.framework */; };
 		33498C3F23EB1089BEEAB8CC /* SnapTrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33498C6C27044382E317113E /* SnapTrackCell.swift */; };
 		33498E03D12D1B46D6E4B9BA /* LibraryContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334982F712798EFB9B7735E0 /* LibraryContainer.swift */; };
 		610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */; };
@@ -42,7 +41,6 @@
 		61BE408F1F769BFA00A0EEC5 /* PlayQueueController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */; };
 		61BE40911F76ABF100A0EEC5 /* PlayerParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */; };
 		61BE40931F77E70200A0EEC5 /* SideBySidePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */; };
-		6B618627FDDC45415FA044C4 /* Pods_MusicPimpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5329DEDDE50B3E055D5E9AD /* Pods_MusicPimpTests.framework */; };
 		7D045D67265845FE00B92EE8 /* chevron-right-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D045D65265845FE00B92EE8 /* chevron-right-100.png */; };
 		7D045D68265845FE00B92EE8 /* chevron-right-solid-mod.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7D045D66265845FE00B92EE8 /* chevron-right-solid-mod.svg */; };
 		7D0660061B1B573500C6DB15 /* PimpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0660051B1B573500C6DB15 /* PimpSocket.swift */; };
@@ -165,6 +163,12 @@
 		7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8915A1D78AD0600331A4D /* PimpViewController.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
+		7DDBE03C27C021080045712A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBE03B27C021080045712A /* WebSocket.swift */; };
+		7DDBE03F27C025580045712A /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE03E27C025580045712A /* RxCocoa */; };
+		7DDBE04127C025580045712A /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04027C025580045712A /* RxSwift */; };
+		7DDBE04427C025790045712A /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04327C025790045712A /* AppCenterAnalytics */; };
+		7DDBE04627C025790045712A /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04527C025790045712A /* AppCenterCrashes */; };
+		7DDBE04927C0258F0045712A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04827C0258F0045712A /* SnapKit */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
 		7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */; };
 		7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24781B7E5B78007D810E /* Throttler.swift */; };
@@ -189,7 +193,6 @@
 
 /* Begin PBXFileReference section */
 		1A6A61E06A765CCD8765B423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
-		2F3584A7A012D7BD7EC54DDE /* Pods-MusicPimpTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.debug.xcconfig"; sourceTree = "<group>"; };
 		334982F712798EFB9B7735E0 /* LibraryContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryContainer.swift; sourceTree = "<group>"; };
 		33498C6C27044382E317113E /* SnapTrackCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapTrackCell.swift; sourceTree = "<group>"; };
 		610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackDelegate.swift; sourceTree = "<group>"; };
@@ -224,7 +227,6 @@
 		61BE408E1F769BFA00A0EEC5 /* PlayQueueController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueueController.swift; sourceTree = "<group>"; };
 		61BE40901F76ABF100A0EEC5 /* PlayerParent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerParent.swift; sourceTree = "<group>"; };
 		61BE40921F77E70200A0EEC5 /* SideBySidePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBySidePlayer.swift; sourceTree = "<group>"; };
-		747551ABC6020E16A754A5A9 /* Pods-MusicPimpTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimpTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests.release.xcconfig"; sourceTree = "<group>"; };
 		7D045D65265845FE00B92EE8 /* chevron-right-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chevron-right-100.png"; path = "MusicPimp/Assets/chevron-right-100.png"; sourceTree = "<group>"; };
 		7D045D66265845FE00B92EE8 /* chevron-right-solid-mod.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "chevron-right-solid-mod.svg"; path = "MusicPimp/Assets/chevron-right-solid-mod.svg"; sourceTree = "<group>"; };
 		7D0660051B1B573500C6DB15 /* PimpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSocket.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
 		7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPimp.entitlements; sourceTree = "<group>"; };
+		7DDBE03B27C021080045712A /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
 		7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundDownloader.swift; sourceTree = "<group>"; };
 		7DDE24781B7E5B78007D810E /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
@@ -371,10 +374,6 @@
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 		7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureCell.swift; sourceTree = "<group>"; };
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
-		AC3720F10663AE163A8E695A /* Pods-MusicPimp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.release.xcconfig"; sourceTree = "<group>"; };
-		AE63397ED49D8866427C5C6C /* Pods-MusicPimp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPimp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPimp/Pods-MusicPimp.debug.xcconfig"; sourceTree = "<group>"; };
-		C5329DEDDE50B3E055D5E9AD /* Pods_MusicPimpTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimpTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCC1AEE14AC5DB04BA590716 /* Pods_MusicPimp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPimp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -382,9 +381,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DDBE03F27C025580045712A /* RxCocoa in Frameworks */,
+				7DDBE04627C025790045712A /* AppCenterCrashes in Frameworks */,
 				7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */,
+				7DDBE04927C0258F0045712A /* SnapKit in Frameworks */,
+				7DDBE04127C025580045712A /* RxSwift in Frameworks */,
+				7DDBE04427C025790045712A /* AppCenterAnalytics in Frameworks */,
 				7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */,
-				02951BFCEF4FA394F3953237 /* Pods_MusicPimp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,7 +395,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B618627FDDC45415FA044C4 /* Pods_MusicPimpTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,8 +409,6 @@
 				7D0730201B123C6D000D416D /* CFNetwork.framework */,
 				7D07301E1B123C5E000D416D /* Security.framework */,
 				7D07301C1B123C52000D416D /* Foundation.framework */,
-				CCC1AEE14AC5DB04BA590716 /* Pods_MusicPimp.framework */,
-				C5329DEDDE50B3E055D5E9AD /* Pods_MusicPimpTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -424,6 +424,7 @@
 				7D072FEE1B12394E000D416D /* PlayerSocket.swift */,
 				61AC37BF2087CD74007A491C /* PlaylistPrefetcher.swift */,
 				611ED94B2094BE8700702F31 /* HttpResponse.swift */,
+				7DDBE03B27C021080045712A /* WebSocket.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -615,7 +616,6 @@
 				7DC3595D1B35C7B3003B01B6 /* String+FontAwesome.swift */,
 				7DC359601B35E73A003B01B6 /* UIFont+FontAwesome.h */,
 				7DC359611B35E73A003B01B6 /* UIImage+FontAwesome.h */,
-				EDFD716981A683C35BC4159C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -741,17 +741,6 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
-		EDFD716981A683C35BC4159C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				AE63397ED49D8866427C5C6C /* Pods-MusicPimp.debug.xcconfig */,
-				AC3720F10663AE163A8E695A /* Pods-MusicPimp.release.xcconfig */,
-				2F3584A7A012D7BD7EC54DDE /* Pods-MusicPimpTests.debug.xcconfig */,
-				747551ABC6020E16A754A5A9 /* Pods-MusicPimpTests.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -759,17 +748,22 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7DC206C21A1547380032C01D /* Build configuration list for PBXNativeTarget "MusicPimp" */;
 			buildPhases = (
-				A921671FABB37E07150C7B42 /* [CP] Check Pods Manifest.lock */,
 				7DC2069D1A1547370032C01D /* Sources */,
 				7DC2069E1A1547370032C01D /* Frameworks */,
 				7DC2069F1A1547370032C01D /* Resources */,
-				50BD6800A2D97656DC184169 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = MusicPimp;
+			packageProductDependencies = (
+				7DDBE03E27C025580045712A /* RxCocoa */,
+				7DDBE04027C025580045712A /* RxSwift */,
+				7DDBE04327C025790045712A /* AppCenterAnalytics */,
+				7DDBE04527C025790045712A /* AppCenterCrashes */,
+				7DDBE04827C0258F0045712A /* SnapKit */,
+			);
 			productName = MusicPimp;
 			productReference = 7DC206A11A1547370032C01D /* MusicPimp.app */;
 			productType = "com.apple.product-type.application";
@@ -778,11 +772,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7DC206C51A1547380032C01D /* Build configuration list for PBXNativeTarget "MusicPimpTests" */;
 			buildPhases = (
-				06FAF1EF9FDDF6A1ECA82E3D /* [CP] Check Pods Manifest.lock */,
 				7DC206B41A1547380032C01D /* Sources */,
 				7DC206B51A1547380032C01D /* Frameworks */,
 				7DC206B61A1547380032C01D /* Resources */,
-				E596BE6AC27281289E375403 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -835,6 +827,11 @@
 				Base,
 			);
 			mainGroup = 7DC206981A1547370032C01D;
+			packageReferences = (
+				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */,
+				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
+				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 7DC206A21A1547370032C01D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -878,97 +875,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		06FAF1EF9FDDF6A1ECA82E3D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MusicPimpTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		50BD6800A2D97656DC184169 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MusicPimp/Pods-MusicPimp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MusicPimp/Pods-MusicPimp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A921671FABB37E07150C7B42 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MusicPimp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E596BE6AC27281289E375403 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MusicPimpTests/Pods-MusicPimpTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7DC2069D1A1547370032C01D /* Sources */ = {
@@ -1093,6 +999,7 @@
 				7D6287A61D7C61990053BF52 /* PimpTextView.swift in Sources */,
 				7D74F35C1BFA70E00004506B /* Alarm.swift in Sources */,
 				7D4FF8E21B41CFED00C2D634 /* StorageSize.swift in Sources */,
+				7DDBE03C27C021080045712A /* WebSocket.swift in Sources */,
 				7D6756C51B0744B100BC0CA9 /* PimpError.swift in Sources */,
 				7DB1B3B81B11D2B20012B8AE /* BasePlaylist.swift in Sources */,
 				7D62879A1D7C36850053BF52 /* PimpLabel.swift in Sources */,
@@ -1200,7 +1107,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1249,11 +1156,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1261,7 +1169,6 @@
 		};
 		7DC206C31A1547380032C01D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AE63397ED49D8866427C5C6C /* Pods-MusicPimp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicPimp/MusicPimp.entitlements;
@@ -1269,9 +1176,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.8.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.8.7;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1282,7 +1192,6 @@
 		};
 		7DC206C41A1547380032C01D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC3720F10663AE163A8E695A /* Pods-MusicPimp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicPimp/MusicPimp.entitlements;
@@ -1290,9 +1199,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.8.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.8.7;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1303,7 +1215,6 @@
 		};
 		7DC206C61A1547380032C01D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F3584A7A012D7BD7EC54DDE /* Pods-MusicPimpTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1311,7 +1222,11 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1321,11 +1236,14 @@
 		};
 		7DC206C71A1547380032C01D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 747551ABC6020E16A754A5A9 /* Pods-MusicPimpTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1364,6 +1282,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 6.5.0;
+			};
+		};
+		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.4.1;
+			};
+		};
+		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7DDBE03E27C025580045712A /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		7DDBE04027C025580045712A /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		7DDBE04327C025790045712A /* AppCenterAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterAnalytics;
+		};
+		7DDBE04527C025790045712A /* AppCenterCrashes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterCrashes;
+		};
+		7DDBE04827C0258F0045712A /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7DC206991A1547370032C01D /* Project object */;
 }
