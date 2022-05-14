@@ -1188,6 +1188,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -1213,6 +1214,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
