@@ -1,0 +1,78 @@
+opt_out_usage
+
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Release"
+  lane :release do
+    prepare
+    upload
+  end
+
+  desc "Prepare for release"
+  lane :prepare do
+    increment_version_number_in_xcodeproj
+    version = get_version_number
+    increment_build_number
+    commit_version_bump
+    add_git_tag(build_number: version)
+    push_to_git_remote(tags: true)
+  end
+
+  desc "Build and upload"
+  lane :upload do
+    setup_ci if ENV['CI']
+    unlock_keychain(
+      path: "fastlane_tmp_keychain",
+      password: "",
+      set_default: true
+    )
+    import_certificate(
+      certificate_path: "./certificate.p12",
+      certificate_password: ENV["CERTIFICATE_PASSWORD"],
+      keychain_name: "fastlane_tmp_keychain",
+      keychain_password: "",
+      log_output: true
+    )
+    api_key = app_store_connect_api_key(
+      key_id: "VG8XUGYMD6",
+      issuer_id: "69a6de85-d476-47e3-e053-5b8c7c11a4d1",
+      key_filepath: "./AuthKey_VG8XUGYMD6.p8",
+      duration: 1200, # optional (maximum 1200)
+      in_house: false # optional but may be required if using match/sigh
+    )
+    get_provisioning_profile(filename: "App.mobileprovision")
+    build_app(scheme: "MusicPimp")
+    # upload_to_testflight
+    upload_to_app_store(
+      force: true, 
+      submit_for_review: true, 
+      automatic_release: true, 
+      precheck_include_in_app_purchases: false,
+      submission_information: {
+        export_compliance_uses_encryption: false,
+        add_id_info_uses_idfa: false
+      }
+    )
+  end
+
+  lane :tests do
+  run_tests(project: "MusicPimp.xcodeproj",
+            devices: ["iPhone 12 mini"],
+            scheme: "MusicPimp")
+  end
+
+  desc "Build app"
+  lane :build do
+    build_app(scheme: "MusicPimp")
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    setup_ci if ENV['CI']
+    increment_build_number(xcodeproj: "MusicPimp.xcodeproj")
+    build_app(scheme: "MusicPimp")
+    upload_to_testflight
+  end
+end

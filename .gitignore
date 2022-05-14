@@ -18,3 +18,14 @@ DerivedData
 *.xcuserstate
 Pods
 .DS_Store
+
+MusicPimp/Credentials.plist
+MusicPimp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+MusicPimp.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+fastlane/report.xml
+fastlane/test_output
+fastlane/Preview.html
+
+AuthKey*
+certificate*

@@ -1,0 +1,32 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-11
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Prepare credentials
+        run: |
+          mkdir ~/.apple/
+          echo "$APPSTORE_CONNECT_API_KEY" > ~/.apple/AuthKey_VG8XUGYMD6.p8.b64
+          base64 -d -i ~/.apple/AuthKey_VG8XUGYMD6.p8.b64 > AuthKey_VG8XUGYMD6.p8
+          echo "$CERTIFICATE_P12" > ~/.apple/certificate.p12.b64
+          base64 -d -i ~/.apple/certificate.p12.b64 > certificate.p12
+          ls -al ~/.apple/
+        env:
+          APPSTORE_CONNECT_API_KEY: ${{ secrets.APPSTORE_CONNECT_API_KEY }}
+          CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
+          CREDENTIALS_PLIST: ${{ secrets.CREDENTIALS_PLIST }}
+          NETRC: ${{ secrets.NETRC }}
+      - name: Release
+        run: |
+          ls -al ~/.apple/
+          fastlane release
+        env:
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}

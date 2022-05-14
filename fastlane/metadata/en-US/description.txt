@@ -1,0 +1,15 @@
+Enjoy music with MusicPimp, the ultimate music app. Play music from your library on your phone, any PC, your home stereo system or in your car.  
+
+Enjoy MusicPimp in any of the following ways:
+
+- Make your library of MP3s on your PC available for playback on your phone. The music is streamed over mobile networks or WLAN.
+
+- Play music stored on your home PC on your Bluetooth-enabled car stereo system. Your music is streamed over mobile networks to your phone and to your car stereo over Bluetooth.
+
+- Stream music from your MusicPimp server through the cloud to your phone. No need to configure IP addresses or port forwarding.
+
+- Use the MusicPimp server as an alarm clock. Schedule any track in your library for playback every morning, then receive a push notification to your phone when the track plays. Tapping the notification stops playback.
+
+Tracks are automatically cached and can be downloaded locally to your phone for offline playback support.  
+
+Get the corresponding MusicPimp server software for your PC from www.musicpimp.org.
