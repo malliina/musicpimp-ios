@@ -1,11 +1,3 @@
-//
-//  FlipController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 24/09/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 /// A ViewController with a UISegmentedControl on top that flips between two child ViewControllers

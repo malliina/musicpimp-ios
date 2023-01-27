@@ -1,11 +1,3 @@
-//
-//  TopListController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 24/09/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
@@ -13,13 +5,13 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     let defaultCellKey = "PimpMusicItemCell"
     let itemsPerLoad = 100
     let minItemsRemainingBeforeLoadMore = 20
-    var loadingMessage: String { get { return "Loading..." } }
-    var emptyMessage: String { get { return "No tracks." } }
-    var failedToLoadMessage: String { get { return "Failed to load tracks."} }
-    var header: String { return "Top Tracks" }
+    var loadingMessage: String { "Loading..." }
+    var emptyMessage: String { "No tracks." }
+    var failedToLoadMessage: String { "Failed to load tracks." }
+    var header: String { "Top Tracks" }
     var entries: [T] = []
-    var tracks: [Track] { get { return entries.map { $0.entry } } }
-    override var musicItems: [MusicItem] { return tracks }
+    var tracks: [Track] { entries.map { $0.entry } }
+    override var musicItems: [MusicItem] { tracks }
     var showHeader: Bool = false
     // Unless this is used, the infinite scroll does not maintain proper scroll position when adding items to the bottom
     let cellHeight: CGFloat = MainSubCell.height
@@ -82,11 +74,11 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return PimpHeaderFooter.withText(header)
+        PimpHeaderFooter.withText(header)
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showHeader ? 36 : 0
+        showHeader ? 36 : 0
     }
     
     fileprivate func maybeLoadMore(_ currentRow: Int) {

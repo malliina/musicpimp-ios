@@ -1,11 +1,3 @@
-//
-//  PlayerParent.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 23/09/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class PlayerParent: FlipController {
@@ -13,8 +5,8 @@ class PlayerParent: FlipController {
 
     override var currentFooterHeight: CGFloat { get { return 66 } }
     override var preferredPlaybackFooterHeight: CGFloat { get { return 66 } }
-    override var firstTitle: String { return "Player" }
-    override var secondTitle: String { return "Playlist" }
+    override var firstTitle: String { "Player" }
+    override var secondTitle: String { "Playlist" }
     
     override func buildFirst() -> UIViewController {
         return PlayerController()

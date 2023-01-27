@@ -1,8 +1,3 @@
-//
-// Created by Michael Skogberg on 01/05/2017.
-// Copyright (c) 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class LibraryContainer: PlaybackContainer {
@@ -16,7 +11,7 @@ class LibraryContainer: PlaybackContainer {
         if let folder = folder {
             library.selected = folder
         }
-        self.init(title: folder?.title.uppercased() ?? "MUSIC", child: library)
+        self.init(title: folder?.title.uppercased() ?? "MUSIC", child: library, persistentFooter: false)
     }
     
     override func willMove(toParent parent: UIViewController?) {

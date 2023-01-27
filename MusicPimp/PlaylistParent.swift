@@ -1,11 +1,3 @@
-//
-//  PlaylistParent.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 03/08/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 fileprivate extension Selector {

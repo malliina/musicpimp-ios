@@ -1,11 +1,3 @@
-//
-//  ContainerParent.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 13/08/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import SnapKit
 
@@ -17,8 +9,8 @@ class ContainerParent: ListeningController, PlaybackDelegate {
             return traits.horizontalSizeClass == .regular && traits.verticalSizeClass == .regular
         }
     }
-    static var defaultFooterHeight: CGFloat { return ContainerParent.isIpad ? 66 : 44 }
-    let playbackFooter = SnapPlaybackFooter()
+    static var defaultFooterHeight: CGFloat { ContainerParent.isIpad ? 66 : 44 }
+    let playbackFooter: SnapPlaybackFooter
     var currentFooterHeight: CGFloat { get { return 0 } }
     
     let playbackFooterHeightValue: CGFloat
@@ -30,17 +22,19 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     }
     private var currentHeight: CGFloat = 0
     
-    convenience init() {
-        self.init(footerHeight: ContainerParent.defaultFooterHeight)
+    convenience init(persistent: Bool) {
+        self.init(footerHeight: ContainerParent.defaultFooterHeight, persistent: persistent)
     }
     
-    init(footerHeight: CGFloat) {
+    init(footerHeight: CGFloat, persistent: Bool) {
         self.playbackFooterHeightValue = footerHeight
+        self.playbackFooter = SnapPlaybackFooter(persistent: persistent)
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         self.playbackFooterHeightValue = ContainerParent.defaultFooterHeight
+        self.playbackFooter = SnapPlaybackFooter(persistent: false)
         super.init(coder: aDecoder)
     }
     
@@ -113,7 +107,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
         if footerHeight != currentHeight {
             currentHeight = footerHeight
             self.playbackFooter.snp.updateConstraints { make in
-                make.height.equalTo(footerHeight)
+                make.height.equalTo(currentHeight)
             }
         }
         super.updateViewConstraints()

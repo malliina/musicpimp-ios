@@ -1,11 +1,3 @@
-//
-//  PimpTabBarController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 20/06/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import RxSwift
@@ -16,21 +8,22 @@ class PimpTabBarController: UITabBarController {
     
     let tabItemTitleVerticalOffset: CGFloat = -3
     
-    let flippablePlayer: UIViewController = TabUtils.shared.attachTab(vc: PlayerParent(), title: "Player", fontAwesomeName: "play-circle")
-    let stackedPlayer: UIViewController = TabUtils.shared.attachTab(vc: SideBySidePlayer(), title: "Player", fontAwesomeName: "play-circle")
+    let flippablePlayer: UIViewController = TabUtils.shared.attachTab(vc: PlayerParent(persistent: true), title: "Player", fontAwesomeName: "play-circle")
+    let stackedPlayer: UIViewController = TabUtils.shared.attachTab(vc: SideBySidePlayer(persistent: true), title: "Player", fontAwesomeName: "play-circle")
     // most popular and recent
-    let flippableTopList: UIViewController = TabUtils.shared.attachTab(vc: TopFlipController(), title: "Playlists", fontAwesomeName: "list")
-    let sideBySideTopList: UIViewController = TabUtils.shared.attachTab(vc: SideBySideTopList(), title: "Playlists", fontAwesomeName: "list")
+    let flippableTopList: UIViewController = TabUtils.shared.attachTab(vc: TopFlipController(persistent: false), title: "Playlists", fontAwesomeName: "list")
+    let sideBySideTopList: UIViewController = TabUtils.shared.attachTab(vc: SideBySideTopList(persistent: false), title: "Playlists", fontAwesomeName: "list")
     
     let bag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let topList = UINavigationController(rootViewController: topListFor(traits: UIScreen.main.traitCollection))
+        let trait = UIScreen.main.traitCollection
+        let topList = UINavigationController(rootViewController: topListFor(traits: trait))
         var permanentTabs = [
             UINavigationController(rootViewController: utils.attachTab(vc: LibraryContainer(), title: "Music", fontAwesomeName: "music")),
-            UINavigationController(rootViewController: playerFor(traits: UIScreen.main.traitCollection)),
-            UINavigationController(rootViewController: utils.attachTab(vc: PlaybackContainer(title: "SETTINGS", child: SettingsController()), title: "Settings", fontAwesomeName: "cog"))
+            UINavigationController(rootViewController: playerFor(traits: trait)),
+            UINavigationController(rootViewController: utils.attachTab(vc: PlaybackContainer(title: "SETTINGS", child: SettingsController(), persistentFooter: false), title: "Settings", fontAwesomeName: "cog"))
         ]
         if !LibraryManager.sharedInstance.active.isLocal {
             permanentTabs.insert(topList, at: 2)

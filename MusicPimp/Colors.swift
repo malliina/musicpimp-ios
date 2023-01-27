@@ -1,11 +1,3 @@
-//
-//  Colors.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 27/08/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class Colors {

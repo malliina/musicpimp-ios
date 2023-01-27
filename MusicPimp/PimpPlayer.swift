@@ -12,15 +12,15 @@ import RxSwift
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     var isLocal: Bool { get { return false } }
     let stateSubject = PublishSubject<PlaybackState>()
-    var stateEvent: Observable<PlaybackState> { return stateSubject }
+    var stateEvent: Observable<PlaybackState> { stateSubject }
     let timeSubject = PublishSubject<Duration>()
-    var timeEvent: Observable<Duration> { return timeSubject }
+    var timeEvent: Observable<Duration> { timeSubject }
     let trackSubject = PublishSubject<Track?>()
-    var trackEvent: Observable<Track?> { return trackSubject }
+    var trackEvent: Observable<Track?> { trackSubject }
     let volumeSubject = PublishSubject<VolumeValue>()
-    var volumeEvent: Observable<VolumeValue> { return volumeSubject }
+    var volumeEvent: Observable<VolumeValue> { volumeSubject }
     let muteSubject = PublishSubject<Bool>()
-    var muteEvent: Observable<Bool> { return muteSubject }
+    var muteEvent: Observable<Bool> { muteSubject }
 
     let playlist: PlaylistType
     let socket: PimpSocket

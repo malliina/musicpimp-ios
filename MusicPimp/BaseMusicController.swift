@@ -1,11 +1,3 @@
-//
-//  BaseMusicController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 10/10/15.
-//  Copyright © 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import RxSwift
 
@@ -156,7 +148,7 @@ class BaseMusicController : PimpTableController, AccessoryDelegate {
     }
     
     func playTrack(_ track: Track) -> ErrorMessage? {
-        return playTracksChecked([track]).headOption()
+        playTracksChecked([track]).headOption()
     }
     
     func addFolder(_ id: FolderID) {

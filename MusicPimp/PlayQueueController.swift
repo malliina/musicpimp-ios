@@ -1,11 +1,3 @@
-//
-//  PlayQueueController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 23/09/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlaylistDelegate, PlaylistSelectDelegate {
@@ -13,8 +5,8 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let defaultCellKey = "PimpMusicItemCell"
     
     private var current: Playlist = Playlist.empty
-    private var tracks: [Track] { get { current.tracks } }
-    var emptyMessage: String { get { "The playlist is empty." } }
+    private var tracks: [Track] { current.tracks }
+    var emptyMessage: String { "The playlist is empty." }
     override var musicItems: [MusicItem] { tracks }
     let listener = PlaybackListener()
     

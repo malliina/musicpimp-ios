@@ -204,11 +204,13 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
     
     fileprivate func updatePosition(_ position: Duration) {
-        let isUserDragging = seek.isHighlighted
-        if !isUserDragging {
-            seek.value = position.secondsFloat
+        Util.onUiThread {
+            let isUserDragging = self.seek.isHighlighted
+            if !isUserDragging {
+                self.seek.value = position.secondsFloat
+            }
+            self.positionLabel.text = position.description
         }
-        positionLabel.text = position.description
     }
     
     override func onTimeUpdated(_ position: Duration) {

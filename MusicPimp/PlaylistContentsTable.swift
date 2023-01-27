@@ -1,11 +1,3 @@
-//
-//  PlaylistContentsTable.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 02/09/2018.
-//  Copyright © 2018 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class PlaylistContentsTable: BaseTableController {

@@ -1,11 +1,3 @@
-//
-//  SnapPlaybackFooter.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 01/05/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 fileprivate extension Selector {
@@ -33,8 +25,20 @@ class SnapPlaybackFooter: BaseView {
     
     var delegate: PlaybackDelegate? = nil
     
+    let persistent: Bool
+    
+    init(persistent: Bool) {
+        self.persistent = persistent
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func configureView() {
         self.backgroundColor = PimpColors.shared.background
+//        self.backgroundColor = UIColor.red
         ContainerParent.isIpad ? setBigSize() : setSmallSize()
         prevButton.setFontAwesomeTitle(prevIconName)
         playPauseButton.setFontAwesomeTitle(playIconName)
@@ -96,6 +100,11 @@ class SnapPlaybackFooter: BaseView {
     func updatePlayPause(isPlaying: Bool) {
         let iconName = isPlaying ? pauseIconName : playIconName
         playPauseButton.setFontAwesomeTitle(iconName)
+        if !persistent {
+            prevButton.isHidden = !isPlaying
+            playPauseButton.isHidden = !isPlaying
+            nextButton.isHidden = !isPlaying
+        }
     }
     
     private func initColor(buttons: [UIButton]) {

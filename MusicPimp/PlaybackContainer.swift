@@ -1,21 +1,13 @@
-//
-//  PlaybackContainer.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 01/10/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class PlaybackContainer: ContainerParent {
     let navTitle: String
     let child: UIViewController
     
-    required init(title: String, child: UIViewController) {
+    required init(title: String, child: UIViewController, persistentFooter: Bool) {
         self.navTitle = title
         self.child = child
-        super.init(footerHeight: ContainerParent.defaultFooterHeight)
+        super.init(footerHeight: ContainerParent.defaultFooterHeight, persistent: persistentFooter)
     }
     
     required init?(coder aDecoder: NSCoder) {

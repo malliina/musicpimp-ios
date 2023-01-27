@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 13/11/14.
-//  Copyright (c) 2014 Skogberg Labs. All rights reserved.
-//
-
 import UIKit
 import AudioToolbox
 import AVFoundation
