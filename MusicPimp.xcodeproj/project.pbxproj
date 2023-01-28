@@ -1178,7 +1178,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1186,11 +1186,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.11;
+				MARKETING_VERSION = 1.8.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
+				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1205,7 +1205,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1213,11 +1213,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.11;
+				MARKETING_VERSION = 1.8.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
+				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1238,7 +1238,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.11;
+				MARKETING_VERSION = 1.8.14;
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1256,7 +1256,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.11;
+				MARKETING_VERSION = 1.8.14;
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
