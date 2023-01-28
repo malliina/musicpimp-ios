@@ -827,9 +827,9 @@
 			);
 			mainGroup = 7DC206981A1547370032C01D;
 			packageReferences = (
-				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */,
-				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */,
-				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */,
+				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */,
+				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
+				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 7DC206A21A1547370032C01D /* Products */;
 			projectDirPath = "";
@@ -1186,7 +1186,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
+				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1213,7 +1213,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = MusicPimpProfile2022;
+				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1293,7 +1293,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */ = {
+		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
@@ -1301,7 +1301,7 @@
 				version = 6.5.0;
 			};
 		};
-		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */ = {
+		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
 			requirement = {
@@ -1309,7 +1309,7 @@
 				version = 4.4.1;
 			};
 		};
-		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */ = {
+		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -1322,27 +1322,27 @@
 /* Begin XCSwiftPackageProductDependency section */
 		7DDBE03E27C025580045712A /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
 		7DDBE04027C025580045712A /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
 		7DDBE04327C025790045712A /* AppCenterAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
 			productName = AppCenterAnalytics;
 		};
 		7DDBE04527C025790045712A /* AppCenterCrashes */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
 			productName = AppCenterCrashes;
 		};
 		7DDBE04827C0258F0045712A /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */;
+			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
