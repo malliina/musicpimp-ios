@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SwiftUI
 
 class RowSpec {
     static let empty = RowSpec(reuseIdentifier: "", text: "")
@@ -173,7 +174,7 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
             case aboutId:
                 return IAPViewController()
             case creditsId:
-                return Credits()
+                return UIHostingController(rootView: CreditsView())
             default:
                 return nil
             }

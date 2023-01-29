@@ -436,6 +436,7 @@
 			children = (
 				618ECD3A1EB7522C0018B309 /* BaseView.swift */,
 				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
+				B05F8C18298574A500279593 /* CreditsView.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
@@ -458,7 +459,6 @@
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
 				33498C6C27044382E317113E /* SnapTrackCell.swift */,
 				616EC57F1FAF8FE600C3EB91 /* ThreeLabelCell.swift */,
-				B05F8C18298574A500279593 /* CreditsView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";

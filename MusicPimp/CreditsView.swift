@@ -6,8 +6,11 @@ struct CreditsView: View {
         VStack(alignment: .center) {
             Spacer()
             Text("Developed by Michael Skogberg.")
+                .foregroundColor(colors.titles)
             Spacer()
-            Text("Design by Alisa.").padding(.bottom, 24)
+            Text("Design by Alisa.")
+                .padding(.bottom, 24)
+                .foregroundColor(colors.titles)
             if let bundleMeta = Bundle.main.infoDictionary,
                let appVersion = bundleMeta["CFBundleShortVersionString"] as? String,
                let buildId = bundleMeta["CFBundleVersion"] as? String {
@@ -17,7 +20,10 @@ struct CreditsView: View {
 //                Spacer(minLength: 20)
             }
             Spacer().frame(height: 20)
-        }.navigationTitle("CREDITS")
+        }
+        .frame(maxWidth: .infinity)
+        .background(colors.background)
+        .navigationTitle("CREDITS")
     }
 }
 
