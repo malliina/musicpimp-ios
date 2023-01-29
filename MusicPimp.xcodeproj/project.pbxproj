@@ -180,6 +180,7 @@
 		7DF7F6A9260F278000C4842B /* DisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */; };
 		7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */; };
 		B05F8C19298574A500279593 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F8C18298574A500279593 /* CreditsView.swift */; };
+		B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F8C1A2986EF4B00279593 /* PimpTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -376,6 +377,7 @@
 		7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureCell.swift; sourceTree = "<group>"; };
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
 		B05F8C18298574A500279593 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		B05F8C1A2986EF4B00279593 /* PimpTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PimpTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -450,6 +452,7 @@
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
 				7D62879F1D7C372D0053BF52 /* PimpSlider.swift */,
 				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
+				B05F8C1A2986EF4B00279593 /* PimpTabView.swift */,
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
@@ -930,6 +933,7 @@
 				7D62879C1D7C36930053BF52 /* PimpCell.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
+				B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */,
 				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,

@@ -41,3 +41,7 @@ class MusicColors {
 extension View {
     var colors: MusicColors { MusicColors.shared }
 }
+
+extension UIViewController {
+    var colors: PimpColors { PimpColors.shared }
+}

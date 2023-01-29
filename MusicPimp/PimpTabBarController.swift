@@ -18,6 +18,7 @@ class PimpTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         let trait = UIScreen.main.traitCollection
         let topList = UINavigationController(rootViewController: topListFor(traits: trait))
         var permanentTabs = [

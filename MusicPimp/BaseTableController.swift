@@ -6,7 +6,6 @@ class BaseTableController: UITableViewController {
     let settings = PimpSettings.sharedInstance
     
     let limiter = Limiter.sharedInstance
-    let colors = PimpColors.shared
     var currentFeedback: String? = nil
     let bag = DisposeBag()
     

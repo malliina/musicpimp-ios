@@ -1,18 +1,8 @@
-//
-//  PimpViewController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 01/09/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import RxSwift
 
 class PimpViewController: UIViewController {
     private let log = LoggerFactory.shared.vc(PimpViewController.self)
-    
-    let colors = PimpColors.shared
    
     let bag = DisposeBag()
     
