@@ -84,7 +84,6 @@ struct MusicPimpApp: App {
     }
 }
 
-//@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     let log = LoggerFactory.shared.pimp(AppDelegate.self)
     let settings = PimpSettings.sharedInstance
