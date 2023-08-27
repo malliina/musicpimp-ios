@@ -11,14 +11,14 @@ struct LibraryRepresentable: UIViewControllerRepresentable {
 }
 
 struct SettingsRepresentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> PlaybackContainer {
-        PlaybackContainer(title: "SETTINGS", child: SettingsController(), persistentFooter: false)
+    func makeUIViewController(context: Context) -> UINavigationController {
+        UINavigationController(rootViewController: PlaybackContainer(title: "SETTINGS", child: SettingsController(), persistentFooter: false))
     }
     
-    func updateUIViewController(_ uiViewController: PlaybackContainer, context: Context) {
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
     }
     
-    typealias UIViewControllerType = PlaybackContainer
+    typealias UIViewControllerType = UINavigationController
 }
 
 struct PhonePlayerRepresentable: UIViewControllerRepresentable {

@@ -27,8 +27,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let img = UIImage(named: "oval-32.png")
-//        let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
+        let img = UIImage(icon: "fa-volume-up", backgroundColor: UIColor.clear, iconColor: UIColor.blue, fontSize: 24)
         navigationItem.rightBarButtonItems = [ UIBarButtonItem(image: img, style: .plain, target: self, action: .volumeClicked) ]
         navigationItem.title = "PLAYER"
         initUI()

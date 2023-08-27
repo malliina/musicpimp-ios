@@ -30,6 +30,7 @@ struct MusicPimpApp: App {
     let bag = DisposeBag()
     
     init() {
+        log.info("PimpApp launching")
         AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
             Analytics.self,
             Crashes.self
@@ -90,20 +91,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let notifications = PimpNotifications.sharedInstance
     let colors = PimpColors.shared
     
-    var window: UIWindow?
+//    var window: UIWindow?
     
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     // Hack
     private var notification: [AnyHashable: Any]? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
-            Analytics.self,
-            Crashes.self
-        ])
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        window?.rootViewController = PimpTabBarController()
+        log.info("App launching")
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        window?.makeKeyAndVisible()
+//        window?.rootViewController = PimpTabBarController()
 //        window?.rootViewController = DemoView()
         
         // Override point for customization after application launch.
@@ -112,11 +110,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let _ = PlaylistPrefetcher.shared
 //        connectToPlayer()
 
-        if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
-            log.info("Launched app via remote notification, handling...")
-            notifications.handleNotification(application, window: window, data: payload)
-        }
-        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
+//        if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+//            log.info("Launched app via remote notification, handling...")
+//            notifications.handleNotification(application, window: window, data: payload)
+//        }
+//        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
 
 //        initTheme(application)
 //        test()
@@ -212,14 +210,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        log.info("Became active")
-        if let notification = notification {
-            notifications.handleNotification(application, window: window, data: notification)
-            self.notification = nil
-        }
-        if let viewController = window?.rootViewController {
-            Players.sharedInstance.suggestPlayerChangeIfNecessary(view: viewController)
-        }
+        log.info("Became active, TODO swiftui")
+//        if let notification = notification {
+//            notifications.handleNotification(application, window: window, data: notification)
+//            self.notification = nil
+//        }
+//        if let viewController = window?.rootViewController {
+//            Players.sharedInstance.suggestPlayerChangeIfNecessary(view: viewController)
+//        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

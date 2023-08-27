@@ -143,7 +143,6 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        log.info("selected row")
         if let dest = destinationFor(indexPath: indexPath) {
             if let navCtrl = navigationController {
                 navCtrl.pushViewController(dest, animated: true)
@@ -181,7 +180,9 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
             case aboutId:
                 return IAPViewController()
             case creditsId:
-                return UIHostingController(rootView: CreditsView())
+                let hc = UIHostingController(rootView: CreditsView())
+                hc.title = "CREDITS"
+                return hc
             default:
                 return nil
             }
