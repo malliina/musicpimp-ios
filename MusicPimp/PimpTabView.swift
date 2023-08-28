@@ -2,22 +2,20 @@ import Foundation
 import SwiftUI
 
 struct LibraryRepresentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> LibraryContainer {
-        LibraryContainer()
+    func makeUIViewController(context: Context) -> UINavigationController {
+        UINavigationController(rootViewController: LibraryContainer())
     }
-    func updateUIViewController(_ uiViewController: LibraryContainer, context: Context) {
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
     }
-    typealias UIViewControllerType = LibraryContainer
+    typealias UIViewControllerType = UINavigationController
 }
 
 struct SettingsRepresentable: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UINavigationController {
         UINavigationController(rootViewController: PlaybackContainer(title: "SETTINGS", child: SettingsController(), persistentFooter: false))
     }
-    
     func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
     }
-    
     typealias UIViewControllerType = UINavigationController
 }
 
@@ -25,10 +23,8 @@ struct PhonePlayerRepresentable: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> PlayerParent {
         PlayerParent(persistent: true)
     }
-    
     func updateUIViewController(_ uiViewController: PlayerParent, context: Context) {
     }
-    
     typealias UIViewControllerType = PlayerParent
 }
 
@@ -36,10 +32,8 @@ struct PhoneTopListRepresentable: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> TopFlipController {
         TopFlipController(persistent: false)
     }
-    
     func updateUIViewController(_ uiViewController: TopFlipController, context: Context) {
     }
-    
     typealias UIViewControllerType = TopFlipController
 }
 
@@ -61,6 +55,7 @@ struct PimpTabView: View {
                     .tabItem {
                         Label("Music", systemImage: "music.note.list")
                     }
+                    .ignoresSafeArea(.all)
 //            }
 //            .navigationViewStyle(.stack)
             PhonePlayerRepresentable()
@@ -75,6 +70,7 @@ struct PimpTabView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
+                .ignoresSafeArea(.all)
         }
         .environment(\.colorScheme, .dark)
     }

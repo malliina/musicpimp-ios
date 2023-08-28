@@ -21,14 +21,26 @@ struct AppRepresentable: UIViewControllerRepresentable {
     typealias UIViewControllerType = PimpTabBarController
 }
 
+struct ChangePlayerSuggestion {
+    let to: Endpoint
+    let title: String
+    let message: String
+    let handover: String
+    let changeNoHandover: String?
+    let cancel: String
+}
+
 @main
 struct MusicPimpApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     let log = LoggerFactory.shared.pimp(MusicPimpApp.self)
     let audioSession = AVAudioSession.sharedInstance()
-    let bag = DisposeBag()
-    
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var changePlayerSuggestion: ChangePlayerSuggestion?
+    @State private var suggestPlayerChange = false
+    var players: Players { Players.sharedInstance }
+
     init() {
         log.info("PimpApp launching")
         AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
@@ -38,7 +50,7 @@ struct MusicPimpApp: App {
         initAudio()
         BackgroundDownloader.musicDownloader.setup()
         let _ = PlaylistPrefetcher.shared
-        connectToPlayer()
+        delegate.connectToPlayer()
         SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
         delegate.initTheme()
     }
@@ -47,9 +59,35 @@ struct MusicPimpApp: App {
         WindowGroup {
             PimpTabView()
                 .ignoresSafeArea(.all)
-//            AppRepresentable()
-//
-//            .navigationViewStyle(.stack)
+                .onChange(of: scenePhase) { phase in
+                    if phase == .active {
+                        log.info("Active!")
+                        changePlayerSuggestion = Players.sharedInstance.playerChangeSuggestionIfNecessary()
+                        suggestPlayerChange = changePlayerSuggestion != nil
+                    }
+                }
+                .alert("Listening on \(players.settings.activePlayer().name)", isPresented: $suggestPlayerChange, presenting: changePlayerSuggestion) { suggestion in
+                    Button {
+                        players.performHandover(to: suggestion.to)
+                    } label: {
+                        Text(suggestion.handover)
+                    }
+                    if let changeOnly = suggestion.changeNoHandover {
+                        Button {
+                            players.changePlayer(to: suggestion.to)
+                        } label: {
+                            Text(changeOnly)
+                        }
+                    }
+                    Button(role: .cancel) {
+                        suggestPlayerChange = false
+                        changePlayerSuggestion = nil
+                    } label: {
+                        Text(suggestion.cancel)
+                    }
+                } message: { suggestion in
+                    Text(suggestion.message)
+                }
         }
     }
     
@@ -68,21 +106,6 @@ struct MusicPimpApp: App {
             log.info("Audio session initialized")
         }
     }
-    private func connectToPlayer() {
-        PlayerManager.sharedInstance.active.open().subscribe { (event) in
-            switch event {
-            case .next(_): ()
-            case .error(let err): self.onConnectionFailure(err)
-            case .completed: self.onConnectionOpened()
-            }
-        }.disposed(by: bag)
-    }
-    private func onConnectionOpened() {
-        log.info("Connected")
-    }
-    private func onConnectionFailure(_ error: Error) {
-        log.error("Unable to connect")
-    }
 }
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -90,34 +113,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     let colors = PimpColors.shared
-    
-//    var window: UIWindow?
-    
+    let bag = DisposeBag()
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     // Hack
     private var notification: [AnyHashable: Any]? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         log.info("App launching")
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.makeKeyAndVisible()
-//        window?.rootViewController = PimpTabBarController()
-//        window?.rootViewController = DemoView()
-        
-        // Override point for customization after application launch.
-//        initAudio()
-//        BackgroundDownloader.musicDownloader.setup()
-//        let _ = PlaylistPrefetcher.shared
-//        connectToPlayer()
 
-//        if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
-//            log.info("Launched app via remote notification, handling...")
-//            notifications.handleNotification(application, window: window, data: payload)
-//        }
-//        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
-
-//        initTheme(application)
-//        test()
+        if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+            log.info("Launched app via remote notification, handling...")
+            notifications.handleNotification(application, data: payload)
+        }
         log.info("App init complete")
         return true
     }
@@ -167,6 +174,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func connectToPlayer() {
+        PlayerManager.sharedInstance.active.open().subscribe { (event) in
+            switch event {
+            case .next(_): ()
+            case .error(let err): self.onConnectionFailure(err)
+            case .completed: self.onConnectionOpened()
+            }
+        }.disposed(by: bag)
+    }
+    
+    private func onConnectionOpened() {
+        log.info("Connected")
+    }
+    private func onConnectionFailure(_ error: Error) {
+        log.error("Unable to connect")
+    }
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         notifications.didRegister(deviceToken)
     }
@@ -203,21 +227,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         // However, this is not called when the app is first launched.
         
-        // TODO call this using swiftui
-//        connectToPlayer()
+        connectToPlayer()
         log.info("Entering foreground")
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        log.info("Became active, TODO swiftui")
-//        if let notification = notification {
-//            notifications.handleNotification(application, window: window, data: notification)
-//            self.notification = nil
-//        }
-//        if let viewController = window?.rootViewController {
-//            Players.sharedInstance.suggestPlayerChangeIfNecessary(view: viewController)
-//        }
+        if let notification = notification {
+            notifications.handleNotification(application, data: notification)
+            self.notification = nil
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
