@@ -1,11 +1,3 @@
-//
-//  AlarmEndpointController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 27/12/15.
-//  Copyright © 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 protocol AlarmEndpointDelegate {
@@ -35,8 +27,13 @@ class AlarmEndpointController: BaseTableController {
         selectedId = settings.defaultNotificationEndpoint()?.id
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        renderTable(endpoints.isEmpty ? "No eligible playback devices." : nil)
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        endpoints.count
+        return currentFeedback == nil ? endpoints.count : 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

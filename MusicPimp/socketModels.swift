@@ -1,11 +1,3 @@
-//
-//  socketModels.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 07/03/2019.
-//  Copyright © 2019 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 struct KeyedEvent: Codable {

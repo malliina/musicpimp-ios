@@ -1,11 +1,3 @@
-//
-//  PimpNotifications.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 29/03/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import UserNotifications
 import RxSwift
@@ -51,7 +43,7 @@ open class PimpNotifications {
         settings.notificationsAllowed = false
     }
     
-    func handleNotification(_ app: UIApplication, window: UIWindow?, data: [AnyHashable: Any]) {
+    func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
         do {
             guard let tag = data["tag"] as? String else {
                 throw PimpError.simple("Key 'tag' is not a String in payload.")

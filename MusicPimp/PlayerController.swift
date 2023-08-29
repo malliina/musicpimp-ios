@@ -1,11 +1,3 @@
-//
-//  PlaybackController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 12/04/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import UIKit
 

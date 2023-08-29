@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 class PimpColors {
     static let shared = PimpColors()
@@ -22,4 +23,25 @@ class PimpColors {
     let deletionHighlighted = Colors.rgb(139, green: 0, blue: 0)
     var placeholder: UIColor { separator }
     let titleFont = UIFont.boldSystemFont(ofSize: 13)
+}
+
+class MusicColors {
+    static let shared = MusicColors(PimpColors.shared)
+    
+    let ref: PimpColors
+    init(_ ref: PimpColors) {
+        self.ref = ref
+    }
+    
+    var background: Color { Color(uiColor: ref.background) }
+    var titles: Color { Color(uiColor: ref.titles) }
+    var subtitles: Color { Color(uiColor: ref.subtitles) }
+}
+
+extension View {
+    var colors: MusicColors { MusicColors.shared }
+}
+
+extension UIViewController {
+    var colors: PimpColors { PimpColors.shared }
 }

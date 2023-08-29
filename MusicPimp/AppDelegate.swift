@@ -7,47 +7,124 @@ import AppCenter
 import AppCenterAnalytics
 import AppCenterCrashes
 import RxSwift
+import SwiftUI
 
-@UIApplicationMain
+struct AppRepresentable: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> PimpTabBarController {
+        PimpTabBarController()
+    }
+    
+    func updateUIViewController(_ uiViewController: PimpTabBarController, context: Context) {
+        
+    }
+    
+    typealias UIViewControllerType = PimpTabBarController
+}
+
+struct ChangePlayerSuggestion {
+    let to: Endpoint
+    let title: String
+    let message: String
+    let handover: String
+    let changeNoHandover: String?
+    let cancel: String
+}
+
+@main
+struct MusicPimpApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    let log = LoggerFactory.shared.pimp(MusicPimpApp.self)
+    let audioSession = AVAudioSession.sharedInstance()
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var changePlayerSuggestion: ChangePlayerSuggestion?
+    @State private var suggestPlayerChange = false
+
+    var players: Players { Players.sharedInstance }
+
+    init() {
+        log.info("PimpApp launching")
+        AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
+            Analytics.self,
+            Crashes.self
+        ])
+        initAudio()
+        BackgroundDownloader.musicDownloader.setup()
+        let _ = PlaylistPrefetcher.shared
+        delegate.connectToPlayer()
+        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
+        delegate.initTheme()
+    }
+    
+    var body: some Scene {
+        WindowGroup {
+            PimpTabView()
+                .ignoresSafeArea(.all)
+                .onChange(of: scenePhase) { phase in
+                    if phase == .active {
+                        log.info("Active!")
+                        changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
+                        suggestPlayerChange = changePlayerSuggestion != nil
+                    }
+                }
+                .alert("Listening on \(players.settings.activePlayer().name)", isPresented: $suggestPlayerChange, presenting: changePlayerSuggestion) { suggestion in
+                    Button {
+                        players.performHandover(to: suggestion.to)
+                    } label: {
+                        Text(suggestion.handover)
+                    }
+                    if let changeOnly = suggestion.changeNoHandover {
+                        Button {
+                            players.changePlayer(to: suggestion.to)
+                        } label: {
+                            Text(changeOnly)
+                        }
+                    }
+                    Button(role: .cancel) {
+                        changePlayerSuggestion = nil
+                    } label: {
+                        Text(suggestion.cancel)
+                    }
+                } message: { suggestion in
+                    Text(suggestion.message)
+                }
+        }
+    }
+    
+    private func initAudio() {
+        let categorySuccess: Bool = (try? audioSession.setCategory(.playback, mode: .default)) != nil
+        if categorySuccess {
+            ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
+        } else {
+            log.info("Failed to initialize audio category")
+            return
+        }
+        let activationSuccess = (try? audioSession.setActive(true)) != nil
+        if !activationSuccess {
+            log.error("Failed to activate audio session")
+        } else {
+            log.info("Audio session initialized")
+        }
+    }
+}
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
     let log = LoggerFactory.shared.pimp(AppDelegate.self)
     let settings = PimpSettings.sharedInstance
     let notifications = PimpNotifications.sharedInstance
     let colors = PimpColors.shared
     let bag = DisposeBag()
-    
-    var window: UIWindow?
-    
-    let audioSession = AVAudioSession.sharedInstance()
-    
     var downloadCompletionHandlers: [String: () -> Void] = [:]
     // Hack
     private var notification: [AnyHashable: Any]? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        AppCenter.start(withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470", services: [
-            Analytics.self,
-            Crashes.self
-        ])
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        window?.rootViewController = PimpTabBarController()
-//        window?.rootViewController = DemoView()
-        
-        // Override point for customization after application launch.
-        initAudio()
-        BackgroundDownloader.musicDownloader.setup()
-        let _ = PlaylistPrefetcher.shared
-        connectToPlayer()
+        log.info("App launching")
 
         if let launchOptions = launchOptions, let payload = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
             log.info("Launched app via remote notification, handling...")
-            notifications.handleNotification(application, window: window, data: payload)
+            notifications.handleNotification(application, data: payload)
         }
-        SKPaymentQueue.default().add(TransactionObserver.sharedInstance)
-
-        initTheme(application)
-//        test()
         log.info("App init complete")
         return true
     }
@@ -67,8 +144,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.info("Dirs: \(dirs) files: \(files) size: \(size)")
     }
     
-    func initTheme(_ app: UIApplication) {
-        app.delegate?.window??.tintColor = colors.tintColor
+    func initTheme() {
+//        app.delegate?.window??.tintColor = colors.tintColor
         UINavigationBar.appearance().barStyle = colors.barStyle
         // UINavigationBar.appearance().tintColor = colors.tintColor
         UITabBar.appearance().barStyle = colors.barStyle
@@ -97,20 +174,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func initAudio() {
-        let categorySuccess: Bool = (try? audioSession.setCategory(.playback, mode: .default)) != nil
-        if categorySuccess {
-            ExternalCommandDelegate.sharedInstance.initialize(MPRemoteCommandCenter.shared())
-        } else {
-            log.info("Failed to initialize audio category")
-            return
-        }
-        let activationSuccess = (try? audioSession.setActive(true)) != nil
-        if !activationSuccess {
-            log.error("Failed to activate audio session")
-        } else {
-            log.info("Audio session initialized")
-        }
+    func connectToPlayer() {
+        PlayerManager.sharedInstance.active.open().subscribe { (event) in
+            switch event {
+            case .next(_): ()
+            case .error(let err): self.onConnectionFailure(err)
+            case .completed: self.onConnectionOpened()
+            }
+        }.disposed(by: bag)
+    }
+    
+    private func onConnectionOpened() {
+        log.info("Connected")
+    }
+    private func onConnectionFailure(_ error: Error) {
+        log.error("Unable to connect")
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -148,36 +226,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         // However, this is not called when the app is first launched.
+        
         connectToPlayer()
         log.info("Entering foreground")
-    }
-    
-    func connectToPlayer() {
-        PlayerManager.sharedInstance.active.open().subscribe { (event) in
-            switch event {
-            case .next(_): ()
-            case .error(let err): self.onConnectionFailure(err)
-            case .completed: self.onConnectionOpened()
-            }
-        }.disposed(by: bag)
-    }
-    
-    func onConnectionOpened() {
-        log.info("Connected")
-    }
-    func onConnectionFailure(_ error: Error) {
-        log.error("Unable to connect")
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        log.info("Became active")
         if let notification = notification {
-            notifications.handleNotification(application, window: window, data: notification)
+            notifications.handleNotification(application, data: notification)
             self.notification = nil
-        }
-        if let viewController = window?.rootViewController {
-            Players.sharedInstance.suggestPlayerChangeIfNecessary(view: viewController)
         }
     }
 

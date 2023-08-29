@@ -179,6 +179,8 @@
 		7DF5C00F1AF3853800F25B9B /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */; };
 		7DF7F6A9260F278000C4842B /* DisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */; };
 		7DF8BEAE1DE0E0F100EF4123 /* oval-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */; };
+		B05F8C19298574A500279593 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F8C18298574A500279593 /* CreditsView.swift */; };
+		B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F8C1A2986EF4B00279593 /* PimpTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -374,6 +376,8 @@
 		7DF5C00E1AF3853800F25B9B /* PlaylistController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 		7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureCell.swift; sourceTree = "<group>"; };
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
+		B05F8C18298574A500279593 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		B05F8C1A2986EF4B00279593 /* PimpTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PimpTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +438,7 @@
 			children = (
 				618ECD3A1EB7522C0018B309 /* BaseView.swift */,
 				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
+				B05F8C18298574A500279593 /* CreditsView.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
@@ -447,6 +452,7 @@
 				7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */,
 				7D62879F1D7C372D0053BF52 /* PimpSlider.swift */,
 				7DE7D7BB1D3EA9D100EE33A1 /* PimpSwitch.swift */,
+				B05F8C1A2986EF4B00279593 /* PimpTabView.swift */,
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
@@ -827,9 +833,9 @@
 			);
 			mainGroup = 7DC206981A1547370032C01D;
 			packageReferences = (
-				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */,
-				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */,
-				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */,
+				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */,
+				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
+				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 7DC206A21A1547370032C01D /* Products */;
 			projectDirPath = "";
@@ -905,6 +911,7 @@
 				6145018C1F782F5200D8721E /* PimpHeaderFooter.swift in Sources */,
 				616EC5801FAF8FE600C3EB91 /* ThreeLabelCell.swift in Sources */,
 				7DC891551D71B75800331A4D /* Colors.swift in Sources */,
+				B05F8C19298574A500279593 /* CreditsView.swift in Sources */,
 				7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */,
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
 				7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */,
@@ -926,6 +933,7 @@
 				7D62879C1D7C36930053BF52 /* PimpCell.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
+				B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */,
 				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
@@ -1172,21 +1180,23 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicPimp/MusicPimp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.14;
+				MARKETING_VERSION = 1.8.15;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = MusicPimpDevProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1203,17 +1213,19 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.14;
+				MARKETING_VERSION = 1.8.15;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "org.musicpimp.MusicPimp AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1293,7 +1305,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */ = {
+		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
@@ -1301,7 +1313,7 @@
 				version = 6.5.0;
 			};
 		};
-		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */ = {
+		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
 			requirement = {
@@ -1309,7 +1321,7 @@
 				version = 4.4.1;
 			};
 		};
-		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */ = {
+		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -1322,27 +1334,27 @@
 /* Begin XCSwiftPackageProductDependency section */
 		7DDBE03E27C025580045712A /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
 		7DDBE04027C025580045712A /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
 		7DDBE04327C025790045712A /* AppCenterAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
 			productName = AppCenterAnalytics;
 		};
 		7DDBE04527C025790045712A /* AppCenterCrashes */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple.git" */;
+			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
 			productName = AppCenterCrashes;
 		};
 		7DDBE04827C0258F0045712A /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit.git" */;
+			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */

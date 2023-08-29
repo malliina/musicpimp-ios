@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SwiftUI
 
 class RowSpec {
     static let empty = RowSpec(reuseIdentifier: "", text: "")
@@ -143,7 +144,13 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let dest = destinationFor(indexPath: indexPath) {
-            self.navigationController?.pushViewController(dest, animated: true)
+            if let navCtrl = navigationController {
+                navCtrl.pushViewController(dest, animated: true)
+            } else {
+                log.info("No nav controller, no navigation.")
+            }
+        } else {
+            log.info("Selected row at \(indexPath.row), but got no destination.")
         }
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.reloadRows(at: [indexPath], with: .none)
@@ -173,7 +180,9 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
             case aboutId:
                 return IAPViewController()
             case creditsId:
-                return Credits()
+                let hc = UIHostingController(rootView: CreditsView())
+                hc.title = "CREDITS"
+                return hc
             default:
                 return nil
             }

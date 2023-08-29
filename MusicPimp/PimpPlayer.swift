@@ -1,11 +1,3 @@
-//
-//  PimpPlayer.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 23/05/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import RxSwift
 
@@ -45,11 +37,11 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
     
     func current() -> PlayerState {
-        return currentState
+        currentState
     }
     
     func resetAndPlay(tracks: [Track]) -> ErrorMessage? {
-        return socket.send(PlayItems(tracks: tracks))
+        socket.send(PlayItems(tracks: tracks))
     }
     
     func play() -> ErrorMessage? {
@@ -57,35 +49,35 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
     
     func pause() -> ErrorMessage? {
-        return sendSimple(JsonKeys.STOP)
+        sendSimple(JsonKeys.STOP)
     }
     
     func seek(_ position: Duration) -> ErrorMessage? {
-        return sendValued(IntPayload(seek: position))
+        sendValued(IntPayload(seek: position))
     }
     
     func next() -> ErrorMessage? {
-        return sendSimple(JsonKeys.NEXT)
+        sendSimple(JsonKeys.NEXT)
     }
     
     func prev() -> ErrorMessage? {
-        return sendSimple(JsonKeys.PREV)
+        sendSimple(JsonKeys.PREV)
     }
     
     func skip(_ index: Int)  -> ErrorMessage? {
-        return sendValued(IntPayload(skip: index))
+        sendValued(IntPayload(skip: index))
     }
     
     func volume(_ newVolume: VolumeValue) -> ErrorMessage? {
-        return sendValued(IntPayload(volumeChanged: newVolume.volume))
+        sendValued(IntPayload(volumeChanged: newVolume.volume))
     }
     
     func sendValued<T: Encodable>(_ t: T) -> ErrorMessage? {
-        return socket.send(t)
+        socket.send(t)
     }
     
     func sendSimple(_ cmd: String) -> ErrorMessage? {
-        return socket.send(SimpleCommand(cmd: cmd))
+        socket.send(SimpleCommand(cmd: cmd))
     }
     
     func onTimeUpdated(_ pos: Duration) {

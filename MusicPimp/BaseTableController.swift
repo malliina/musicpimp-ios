@@ -1,20 +1,12 @@
-//
-//  BaseTableController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 14/05/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import RxSwift
 
 class BaseTableController: UITableViewController {
+    private let log = LoggerFactory.shared.vc(BaseTableController.self)
     let settings = PimpSettings.sharedInstance
     
     let limiter = Limiter.sharedInstance
-    let colors = PimpColors.shared
     var currentFeedback: String? = nil
     let bag = DisposeBag()
     
@@ -74,6 +66,7 @@ class BaseTableController: UITableViewController {
     }
     
     func reloadTable(feedback: String?) {
+        log.info("Reloading table...")
         if let feedback = feedback {
             self.setFeedback(feedback)
         } else {

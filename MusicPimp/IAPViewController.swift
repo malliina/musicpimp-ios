@@ -1,11 +1,3 @@
-//
-//  IAPViewController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 11/01/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import StoreKit
 import QuartzCore
@@ -128,6 +120,7 @@ class IAPViewController: PimpViewController {
     }
     
     @objc func restore() {
+        log.info("Restoring purchase...")
 //        statusLabel.text = "Restoring..."
         SKPaymentQueue.default().restoreCompletedTransactions()
     }

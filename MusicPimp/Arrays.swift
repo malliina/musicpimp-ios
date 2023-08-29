@@ -43,7 +43,7 @@ extension Array {
     }
     
     func headOption() -> Element? {
-        return self.first
+        self.first
     }
     
     func tail() -> [Element] {
@@ -64,19 +64,19 @@ extension Array {
     }
     
     func drop(_ n: Int) -> [Element] {
-        return Array(self[n..<self.count])
+        Array(self[n..<self.count])
     }
     
     func find(_ predicate: (Element) -> Bool) -> Element? {
-        return self.filter(predicate).headOption()
+        self.filter(predicate).headOption()
     }
     
     func exists(_ predicate: (Element) -> Bool) -> Bool {
-        return self.find(predicate) != nil
+        self.find(predicate) != nil
     }
     
     func howMany(_ predicate: (Element) -> Bool) -> Int {
-        return self.filter(predicate).count
+        self.filter(predicate).count
     }
     
     func indexOf(_ predicate: (Element) -> Bool) -> Int? {
@@ -135,7 +135,7 @@ extension Dictionary {
     }
 
     func filterKeys(_ includeElement: (Element) -> Bool) -> [Key: Value] {
-        return self.filter(includeElement)
+        self.filter(includeElement)
     }
     
     func addAll(_ other: [Key: Value]) -> [Key: Value] {
