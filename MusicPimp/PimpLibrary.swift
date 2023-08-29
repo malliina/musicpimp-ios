@@ -1,11 +1,3 @@
-//
-//  PimpLibrary.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 23/05/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import RxSwift
 

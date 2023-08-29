@@ -1,11 +1,3 @@
-//
-//  TransactionObserver.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 30/01/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import StoreKit
 import RxSwift
@@ -44,6 +36,10 @@ class TransactionObserver : NSObject, SKPaymentTransactionObserver {
                 finishTransaction(transaction)
             }
         }
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool {
+        false
     }
     
     func finishTransaction(_ transaction: SKPaymentTransaction) {

@@ -3,6 +3,7 @@ import UIKit
 import RxSwift
 
 class BaseTableController: UITableViewController {
+    private let log = LoggerFactory.shared.vc(BaseTableController.self)
     let settings = PimpSettings.sharedInstance
     
     let limiter = Limiter.sharedInstance
@@ -65,6 +66,7 @@ class BaseTableController: UITableViewController {
     }
     
     func reloadTable(feedback: String?) {
+        log.info("Reloading table...")
         if let feedback = feedback {
             self.setFeedback(feedback)
         } else {

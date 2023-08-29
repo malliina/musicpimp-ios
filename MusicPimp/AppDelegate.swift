@@ -39,6 +39,7 @@ struct MusicPimpApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var changePlayerSuggestion: ChangePlayerSuggestion?
     @State private var suggestPlayerChange = false
+
     var players: Players { Players.sharedInstance }
 
     init() {
@@ -62,7 +63,7 @@ struct MusicPimpApp: App {
                 .onChange(of: scenePhase) { phase in
                     if phase == .active {
                         log.info("Active!")
-                        changePlayerSuggestion = Players.sharedInstance.playerChangeSuggestionIfNecessary()
+                        changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
                         suggestPlayerChange = changePlayerSuggestion != nil
                     }
                 }
@@ -80,7 +81,6 @@ struct MusicPimpApp: App {
                         }
                     }
                     Button(role: .cancel) {
-                        suggestPlayerChange = false
                         changePlayerSuggestion = nil
                     } label: {
                         Text(suggestion.cancel)

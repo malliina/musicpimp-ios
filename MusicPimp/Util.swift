@@ -1,11 +1,3 @@
-//
-//  Util.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 28/03/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 
 class Util {
@@ -43,19 +35,19 @@ class Util {
     }
     
     class func urlEncodeHost(_ s: String) -> String {
-        return encodeWith(s, cs: .urlHostAllowed)
+        encodeWith(s, cs: .urlHostAllowed)
     }
     
     class func urlEncodePath(_ s: String) -> String {
-        return encodeWith(s, cs: .urlPathAllowed)
+        encodeWith(s, cs: .urlPathAllowed)
     }
     
     class func urlEncodeQueryString(_ s: String) -> String {
-        return encodeWith(s, cs: .urlQueryAllowed)
+        encodeWith(s, cs: .urlQueryAllowed)
     }
     
     fileprivate class func encodeWith(_ s: String, cs: CharacterSet) -> String {
-        return s.addingPercentEncoding(withAllowedCharacters: cs) ?? s
+        s.addingPercentEncoding(withAllowedCharacters: cs) ?? s
     }
         
     static func onError(_ error: Error) {
@@ -79,7 +71,7 @@ class Util {
 
 extension UIImage {
     func withSize(scaledToSize: CGSize) -> UIImage {
-        return Util.imageWithSize(image: self, scaledToSize: scaledToSize)
+        Util.imageWithSize(image: self, scaledToSize: scaledToSize)
     }
 }
 
