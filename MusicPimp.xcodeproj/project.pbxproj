@@ -378,6 +378,7 @@
 		7DF8BEAD1DE0E0F100EF4123 /* oval-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oval-32.png"; path = "MusicPimp/Assets/oval-32.png"; sourceTree = "<group>"; };
 		B05F8C18298574A500279593 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		B05F8C1A2986EF4B00279593 /* PimpTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PimpTabView.swift; sourceTree = "<group>"; };
+		B07DC3DA2A9FB85C007A3BA8 /* .github */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .github; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -609,6 +610,7 @@
 		7DC206981A1547370032C01D = {
 			isa = PBXGroup;
 			children = (
+				B07DC3DA2A9FB85C007A3BA8 /* .github */,
 				1A6A61E06A765CCD8765B423 /* .gitignore */,
 				7DC359551B35BDD8003B01B6 /* Assets */,
 				0CD472E30B85058D8F8A8666 /* Frameworks */,
