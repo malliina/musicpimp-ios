@@ -1,11 +1,3 @@
-//
-//  EditAlarmTableViewController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 30/11/15.
-//  Copyright © 2015 Skogberg Labs. All rights reserved.
-//
-
 import Foundation
 import RxSwift
 
@@ -76,10 +68,17 @@ class EditAlarmTableViewController: BaseTableController {
     func initUI() {
         datePicker.datePickerMode = .time
         datePicker.minuteInterval = 5
+        datePicker.preferredDatePickerStyle = .wheels
         // hack
         datePicker.setValue(colors.titles, forKey: "textColor")
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: .cancelClicked)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .saveClicked)
+//        if let navCtrl = navigationController {
+//            navCtrl.navigationBar.barStyle = PimpColors.shared.barStyle
+////            navCtrl.navigationBar.compactAppearance = UINavigationBarAppearance
+//        } else {
+//            log.info("No nav ctrl")
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -296,10 +295,10 @@ class EditAlarmTableViewController: BaseTableController {
         section > 0 ? 44 : 0
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let isDatePicker = indexPath.section == 0 && indexPath.row == 0
-        return isDatePicker ? 176 : super.tableView(tableView, heightForRowAt: indexPath)
-    }
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let isDatePicker = indexPath.section == 0 && indexPath.row == 0
+//        return isDatePicker ? 176 : super.tableView(tableView, heightForRowAt: indexPath)
+//    }
     
     func onConnectError(_ e: Error) {
         
