@@ -1,10 +1,3 @@
-//
-//  HttpResponse.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 28/04/2018.
-//  Copyright © 2018 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

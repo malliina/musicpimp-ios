@@ -13,9 +13,6 @@ class PimpEndpoint {
         self.client = client
     }
     
-//    func postPlayback(_ cmd: String) {
-//        postDict(SimpleCommand(cmd: cmd))
-//    }
     
     func postDict<T: Encodable>(_ json: T) {
         client.pimpPost(Endpoints.PLAYBACK, payload: json).subscribe { (event) in

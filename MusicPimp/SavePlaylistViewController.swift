@@ -1,10 +1,3 @@
-//
-//  SavePlaylistViewController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 17/10/15.
-//  Copyright © 2015 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

@@ -152,11 +152,6 @@ extension IAPViewController: SKProductsRequestDelegate {
             for invalidIdentifier in invalidIdentifiers {
                 log.error("Invalid product ID \(invalidIdentifier)")
             }
-//            if invalidIdentifiers.contains(premiumId) {
-//                let msg = "MusicPimp Premium is not available. Try again later."
-//                Log.error(msg)
-//                setStatus(msg)
-//            }
             premiumProduct = products.find { $0.productIdentifier == premiumId }
             if let premiumProduct = premiumProduct {
                 let price = formatPrice(premiumProduct) ?? "a price"

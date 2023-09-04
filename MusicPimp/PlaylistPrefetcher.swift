@@ -1,10 +1,3 @@
-//
-//  PlaylistPrefetcher.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 18/04/2018.
-//  Copyright © 2018 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 import RxSwift

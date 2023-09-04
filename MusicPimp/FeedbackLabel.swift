@@ -1,10 +1,3 @@
-//
-//  FeedbackLabel.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 07/02/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

@@ -56,6 +56,7 @@ class EditEndpointController: PimpViewController {
     }
     
     func initUI() {
+        self.navigationItem.title = "EDIT ENDPOINT"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: .cancelClicked)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .saveClicked)
         view.addSubview(scrollView)
@@ -78,11 +79,6 @@ class EditEndpointController: PimpViewController {
             make.leading.trailing.equalTo(content).inset(8)
         }
         typeControl.selectedSegmentIndex = 0
-//        if #available(iOS 13.0, *) {
-//            typeControl.selectedSegmentTintColor = PimpColors.shared.background
-//        } else {
-//            // Fallback on earlier versions
-//        }
         cloudIDLabel.text = "Cloud ID"
         cloudIDLabel.snp.makeConstraints { (make) in
             make.top.equalTo(typeControl.snp.bottom).offset(8)

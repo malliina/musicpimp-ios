@@ -1,10 +1,3 @@
-//
-//  ThreeLabelCell.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 05/11/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

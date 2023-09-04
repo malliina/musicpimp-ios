@@ -1,10 +1,3 @@
-//
-//  SearchableMusicController.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 25/12/15.
-//  Copyright © 2015 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

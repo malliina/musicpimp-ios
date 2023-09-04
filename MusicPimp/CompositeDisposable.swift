@@ -1,10 +1,3 @@
-//
-//  CompositeDisposable.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 30/10/2016.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

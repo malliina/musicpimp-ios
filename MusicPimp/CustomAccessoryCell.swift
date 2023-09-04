@@ -1,10 +1,3 @@
-//
-//  CustomAccessoryCell.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 17/07/16.
-//  Copyright © 2016 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

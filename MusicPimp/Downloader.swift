@@ -1,10 +1,3 @@
-//
-//  Downloader.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 21/05/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 import RxSwift
@@ -24,19 +17,6 @@ class Downloader {
         self.basePath = basePath
     }
     
-//    func download(_ url: URL, relativePath: RelativePath, replace: Bool = false) {
-//        download(
-//            url,
-//            relativePath: relativePath,
-//            replace: replace,
-//            onError: { (err: PimpError) -> Void in
-//                self.log.error(err.message)
-//            },
-//            onSuccess: { (destPath: String) -> Void in
-//            }
-//        )
-//    }
-//
     func download(_ url: URL, authValue: String?, relativePath: RelativePath, replace: Bool = false) -> Single<String> {
         let destPath = pathTo(relativePath)
         let subject: PublishSubject<String> = PublishSubject()

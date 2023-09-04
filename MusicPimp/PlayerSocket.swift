@@ -1,10 +1,3 @@
-//
-//  PimpSocket.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 24/05/15.
-//  Copyright (c) 2015 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 import RxSwift
@@ -54,14 +47,6 @@ class PlayerSocket: WebSocketMessageDelegate, OpenCloseDelegate {
         log.info("Error for connection to \(baseURL)")
     }
     
-//    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-//        isConnected = false
-//        log.info("Connection failed to \(baseURL)")
-//        if let observer = openObserver {
-//            observer.onError(error)
-//            openObserver = nil
-//        }
-//    }
     
     func close() {
         // disposes of any previous socket

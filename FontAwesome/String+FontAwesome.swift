@@ -1,10 +1,3 @@
-//
-//  NSString+FontAwesomeSwift.swift
-//  LaunchKit
-//
-//  Created by Rizwan Sattar on 3/31/15.
-//  Copyright (c) 2015 Cluster Labs, Inc. All rights reserved.
-//
 
 import Foundation
 

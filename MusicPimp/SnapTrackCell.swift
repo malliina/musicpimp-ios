@@ -1,7 +1,3 @@
-//
-// Created by Michael Skogberg on 30/04/2017.
-// Copyright (c) 2017 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

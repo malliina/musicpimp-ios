@@ -1,10 +1,3 @@
-//
-//  DemoView.swift
-//  MusicPimp
-//
-//  Created by Michael Skogberg on 29/06/2017.
-//  Copyright © 2017 Skogberg Labs. All rights reserved.
-//
 
 import Foundation
 

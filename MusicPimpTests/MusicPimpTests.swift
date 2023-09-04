@@ -1,10 +1,3 @@
-//
-//  MusicPimpTests.swift
-//  MusicPimpTests
-//
-//  Created by Michael Skogberg on 13/11/14.
-//  Copyright (c) 2014 Skogberg Labs. All rights reserved.
-//
 
 import UIKit
 import XCTest
@@ -23,18 +16,11 @@ class MusicPimpTests: XCTestCase {
         super.tearDown()
     }
     
-//    func testStringPathTest() {
-//        let s = "".lastPathComponent().stringByDeletingPathExtension.stringByDeletingLastPathComponent.lastPathComponent
-//        XCTAssert(s == "", "String methods should return the empty string if operating on one")
-//    }
     
     func testSubscript() {
         let root = "/root"
         //let startIdx = root.count + 1
         let input = "/root/abba"
-//        let out = input.dropFirst(root.count)
-//        let out = input[startIdx<..]
-//        let outStr = String(out)
         XCTAssertEqual(input.dropFirst(root.count), "/abba")
     }
     
