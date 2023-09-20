@@ -1,4 +1,3 @@
-
 import Foundation
 import RxSwift
 import RxCocoa
@@ -53,16 +52,14 @@ class Downloader {
                         return
                     }
                     //let size = Files.sharedInstance.fileSize(destPath) crashes
-                    self.log.info("Downloaded \(destPath)")
+//                    self.log.info("Downloaded \(destPath)")
                     subject.onNext(destPath)
                     subject.onCompleted()
                 }
             }
             task.resume()
         } else {
-            subject.onNext(destPath)
-            subject.onCompleted()
-            log.info("Already exists, not downloading \(relativePath)")
+            return Single.just(destPath)
         }
         return subject.asSingle()
     }
@@ -81,10 +78,10 @@ class Downloader {
     }
     
     func pathTo(_ relativePath: RelativePath) -> String {
-        return self.basePath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
+        self.basePath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
     }
     
     func simpleError(_ message: String) -> PimpError {
-        return PimpError.simpleError(ErrorMessage(message))
+        PimpError.simpleError(ErrorMessage(message))
     }
 }

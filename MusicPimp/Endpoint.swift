@@ -11,6 +11,10 @@ struct Endpoint: Codable, CustomStringConvertible {
         Endpoint(id: id, serverType: ServerType.cloud, name: cloudID, ssl: true, address: "cloud.musicpimp.org", port: 443, username: username, password: password)
     }
     
+    static func localCloud(id: String, cloudID: String, username: String, password: String) -> Endpoint {
+        Endpoint(id: id, serverType: ServerType.cloud, name: cloudID, ssl: false, address: "localhost", port: 9000, username: username, password: password)
+    }
+    
     let id: String
     let serverType: ServerType
     let name: String

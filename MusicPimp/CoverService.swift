@@ -3,11 +3,12 @@ import Foundation
 import RxSwift
 
 class CoverResult {
+    static let log = LoggerFactory.shared.network(CoverService.self)
     let artist: String
     let album: String
     let coverPath: String?
     let image: UIImage?
-    var imageOrDefault: UIImage? { return image ?? CoverService.defaultCover }
+    var imageOrDefault: UIImage? { image ?? CoverService.defaultCover }
     
     init(artist: String, album: String, coverPath: String?) {
         self.artist = artist
@@ -15,13 +16,17 @@ class CoverResult {
         self.coverPath = coverPath
         if let path = coverPath {
             image = UIImage(contentsOfFile: path)
+            if image == nil {
+                CoverResult.log.info("Got path at \(path) but failed to construct image.")
+            }
         } else {
+            CoverResult.log.info("No path, no image.")
             image = nil
         }
     }
     
     static func noCover(_ artist: String, album: String) -> CoverResult {
-        return CoverResult(artist: artist, album: album, coverPath: nil)
+        CoverResult(artist: artist, album: album, coverPath: nil)
     }
 }
 
@@ -44,8 +49,12 @@ class CoverService {
                 url,
                 authValue: nil,
                 relativePath: relativeCoverFilePath)
-                .map { CoverResult(artist: artist, album: album, coverPath: $0) }
-                .catch { err in Single.just(CoverResult.noCover(artist, album: album)) }
+                .map { path in
+//                    self.log.info("Got \(path)")
+                    return CoverResult(artist: artist, album: album, coverPath: path) }
+                .catch { err in 
+                    self.log.info("Failed to download cover. \(err)")
+                    return Single.just(CoverResult.noCover(artist, album: album)) }
         } else {
             return Single.just(CoverResult.noCover(artist, album: album))
         }
@@ -62,6 +71,6 @@ class CoverService {
     }
     
     func queryStringEncoded(s: String) -> String {
-        return s.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? s
+        s.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? s
     }
 }

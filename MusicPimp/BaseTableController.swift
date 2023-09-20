@@ -66,7 +66,7 @@ class BaseTableController: UITableViewController {
     }
     
     func reloadTable(feedback: String?) {
-        log.info("Reloading table...")
+//        log.info("Reloading table...")
         if let feedback = feedback {
             self.setFeedback(feedback)
         } else {
