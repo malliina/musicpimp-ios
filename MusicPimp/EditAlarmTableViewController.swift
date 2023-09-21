@@ -52,6 +52,7 @@ class EditAlarmTableViewController: BaseTableController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "EDIT ALARM"
+        self.navigationController?.navigationBar.backgroundColor = .black
         if self.mutableAlarm == nil {
             self.mutableAlarm = MutableAlarm()
         }

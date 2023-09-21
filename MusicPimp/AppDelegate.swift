@@ -168,14 +168,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        UIBarButtonItem.appearance()
 //            .setTitleTextAttributes([NSFontAttributeName : PimpColors.titleFont], forState: UIControlState.Normal)
         if #available(iOS 13.0, *) {
-            UISegmentedControl.appearance().selectedSegmentTintColor = PimpColors.shared.background
+            UISegmentedControl.appearance().selectedSegmentTintColor = colors.background
         } else {
             // Fallback on earlier versions
         }
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithOpaqueBackground()
+//        UINavigationBar.appearance().standardAppearance = appearance
+//        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+//        UINavigationBar.appearance().barTintColor
     }
     
     func connectToPlayer() {

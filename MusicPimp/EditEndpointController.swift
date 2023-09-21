@@ -57,6 +57,7 @@ class EditEndpointController: PimpViewController {
     
     func initUI() {
         self.navigationItem.title = "EDIT ENDPOINT"
+        self.navigationController?.navigationBar.backgroundColor = .black
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: .cancelClicked)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: .saveClicked)
         view.addSubview(scrollView)
