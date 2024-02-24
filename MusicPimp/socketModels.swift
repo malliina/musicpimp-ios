@@ -1,39 +1,39 @@
 import Foundation
 
 struct KeyedEvent: Codable {
-    let event: String
+  let event: String
 }
 
 struct TimeUpdated: Codable {
-    let position: Duration
+  let position: Duration
 }
 
 struct TrackChanged: Codable {
-    let track: Track
+  let track: Track
 }
 
 struct MuteToggled: Codable {
-    let mute: Bool
+  let mute: Bool
 }
 
 struct VolumeChanged: Codable {
-    let volume: Int
+  let volume: Int
 }
 
 struct PlayStateChanged: Codable {
-    let state: PlayStateJson
-    
-    var playbackState: PlaybackState { return PlaybackState.from(state: state) }
+  let state: PlayStateJson
+
+  var playbackState: PlaybackState { return PlaybackState.from(state: state) }
 }
 
 struct IndexChanged: Codable {
-    let index: Int
-    
-    private enum CodingKeys : String, CodingKey {
-        case index = "playlist_index"
-    }
+  let index: Int
+
+  private enum CodingKeys: String, CodingKey {
+    case index = "playlist_index"
+  }
 }
 
 struct PlaylistModified: Codable {
-    let playlist: [Track]
+  let playlist: [Track]
 }

@@ -1,9 +1,8 @@
-
 import Foundation
 
 // Move these closer to the metal
 class JsonKeys {
-    static let
+  static let
     TITLE = "title",
     FOLDER = "folder",
     FOLDERS = "folders",
@@ -33,7 +32,7 @@ class JsonKeys {
     PLAYLIST = "playlist",
     PLAYLISTS = "playlists",
     PLAYLIST_INDEX = "playlist_index",
-    INDEX="index",
+    INDEX = "index",
     ADD = "add",
     REMOVE = "remove",
     DELETE = "delete",
