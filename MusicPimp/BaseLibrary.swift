@@ -2,6 +2,7 @@ import Foundation
 import RxSwift
 
 open class BaseLibrary: LibraryType {
+  var id: String { "" }
   var isLocal: Bool { false }
   var rootFolderKey: String { "" }
   var authValue: String { "" }
@@ -11,86 +12,85 @@ open class BaseLibrary: LibraryType {
 
   let notImplementedError = PimpError.simpleError(ErrorMessage("Not implemented yet"))
 
-  func pingAuth() -> Single<Version> {
-    Single.error(notImplementedError)
+  func pingAuth() async throws -> Version {
+    throw notImplementedError
   }
 
-  func folder(_ id: FolderID) -> Single<MusicFolder> {
-    Single.error(notImplementedError)
+  func folder(_ id: FolderID) async throws -> MusicFolder {
+    throw notImplementedError
   }
 
-  func rootFolder() -> Single<MusicFolder> {
-    Single.error(notImplementedError)
+  func rootFolder() async throws -> MusicFolder {
+    throw notImplementedError
   }
 
-  func tracks(_ id: FolderID) -> Single<[Track]> {
-    tracksInner(id, others: [], acc: [])
+  func tracks(_ id: FolderID) async throws -> [Track] {
+    try await tracksInner(id, others: [], acc: [])
   }
 
   // the saved playlists
-  func playlists() -> Single<[SavedPlaylist]> {
-    Single.just([])
+  func playlists() async throws -> [SavedPlaylist] {
+    return []
   }
 
-  func playlist(_ id: PlaylistID) -> Single<SavedPlaylist> {
-    Single.error(notImplementedError)
+  func playlist(_ id: PlaylistID) async throws -> SavedPlaylist {
+    throw notImplementedError
   }
 
-  func popular(_ from: Int, until: Int) -> Single<[PopularEntry]> {
-    Single.error(notImplementedError)
+  func popular(_ from: Int, until: Int) async throws -> [PopularEntry] {
+    throw notImplementedError
   }
 
-  func recent(_ from: Int, until: Int) -> Single<[RecentEntry]> {
-    Single.error(notImplementedError)
+  func recent(_ from: Int, until: Int) async throws -> [RecentEntry] {
+    throw notImplementedError
   }
 
-  func savePlaylist(_ sp: SavedPlaylist) -> Single<PlaylistID> {
-    Single.error(notImplementedError)
+  func savePlaylist(_ sp: SavedPlaylist) async throws -> PlaylistID {
+    throw notImplementedError
   }
 
-  func deletePlaylist(_ id: PlaylistID) -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func deletePlaylist(_ id: PlaylistID) async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func search(_ term: String) -> Single<[Track]> {
-    Single.just([])
+  func search(_ term: String) async throws -> [Track] {
+    return []
   }
 
-  func alarms() -> Single<[Alarm]> {
-    Single.just([])
+  func alarms() async throws -> [Alarm] {
+    return []
   }
 
-  func saveAlarm(_ alarm: Alarm) -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func saveAlarm(_ alarm: Alarm) async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func deleteAlarm(_ id: AlarmID) -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func deleteAlarm(_ id: AlarmID) async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func stopAlarm() -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func stopAlarm() async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func registerNotifications(_ token: PushToken, tag: String) -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func registerNotifications(_ token: PushToken, tag: String) async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func unregisterNotifications(_ tag: String) -> Single<HttpResponse> {
-    Single.error(notImplementedError)
+  func unregisterNotifications(_ tag: String) async throws -> HttpResponse {
+    throw notImplementedError
   }
 
-  func tracksInner(_ id: FolderID, others: [FolderID], acc: [Track]) -> Single<[Track]> {
-    folder(id).flatMap { (result) -> Single<[Track]> in
-      let subIDs = result.folders.map { $0.id }
-      let remaining = others + subIDs
-      let newAcc = acc + result.tracks
-      if let head = remaining.first {
-        let tail = remaining.tail()
-        return self.tracksInner(head, others: tail, acc: newAcc)
-      } else {
-        return Single.just(newAcc)
-      }
+  func tracksInner(_ id: FolderID, others: [FolderID], acc: [Track]) async throws -> [Track] {
+    let result = try await folder(id)
+    let subIDs = result.folders.map { $0.id }
+    let remaining = others + subIDs
+    let newAcc = acc + result.tracks
+    if let head = remaining.first {
+      let tail = remaining.tail()
+      return try await self.tracksInner(head, others: tail, acc: newAcc)
+    } else {
+      return newAcc
     }
   }
 }

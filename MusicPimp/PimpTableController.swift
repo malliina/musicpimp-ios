@@ -7,12 +7,12 @@ class PimpTableController: FeedbackTable {
 
   var libraryManager: LibraryManager { LibraryManager.sharedInstance }
   var playerManager: PlayerManager { PlayerManager.sharedInstance }
-  var library: LibraryType { libraryManager.active }
-  var player: PlayerType { playerManager.active }
+  var library: LibraryType { libraryManager.libraryUpdated }
+  var player: PlayerType { playerManager.playerChanged }
 
   func onLoadError(_ error: Error) {
     clearItems()
-    renderTable(error.message)
+    reloadTable(feedback: error.message)
     onError(error)
   }
 
@@ -70,18 +70,18 @@ class PimpTableController: FeedbackTable {
 
   func downloadIfNeeded(_ tracks: [Track]) -> [ErrorMessage] {
     if !library.isLocal && player.isLocal && settings.cacheEnabled {
-      let newTracks = tracks.filter({ !LocalLibrary.sharedInstance.contains($0) })
+      let newTracks = tracks.filter { !LocalLibrary.sharedInstance.contains($0) }
       let tracksToDownload = newTracks.take(maxNewDownloads)
       log.info("Downloading \(tracksToDownload.count) tracks")
-      return tracksToDownload.flatMapOpt({ (track) -> ErrorMessage? in
+      return tracksToDownload.flatMapOpt { (track) -> ErrorMessage? in
         startDownload(track)
-      })
+      }
     } else {
       return []
     }
   }
 
   func startDownload(_ track: Track) -> ErrorMessage? {
-    return DownloadUpdater.instance.downloadIfNecessary(track: track, authValue: library.authValue)
+    DownloadUpdater.instance.downloadIfNecessary(track: track, authValue: library.authValue)
   }
 }

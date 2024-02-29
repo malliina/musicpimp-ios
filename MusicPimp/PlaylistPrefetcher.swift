@@ -15,11 +15,11 @@ class PlaylistPrefetcher {
   let bag = DisposeBag()
 
   init() {
-    playlist.indexEvent.subscribe(
-      onNext: { (index) in
-        self.onIndex(newIndex: index)
-      }, onError: nil
-    ).disposed(by: bag)
+    Task {
+      for await index in playlist.indexPublisher.values {
+        onIndex(newIndex: index)
+      }
+    }
   }
 
   func onIndex(newIndex: Int?) {

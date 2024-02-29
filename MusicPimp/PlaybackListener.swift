@@ -1,33 +1,43 @@
 import Foundation
-import RxSwift
 
-class BaseListener: Disposable {
-  var bag = DisposeBag()
-
+class BaseListener {
+  var task: Task<(), Never>? = nil
+  
   func unsubscribe() {
-    bag = DisposeBag()
-  }
-
-  func dispose() {
-    unsubscribe()
+    task?.cancel()
   }
 }
 
 protocol LibraryDelegate {
-  func onLibraryUpdated(to newLibrary: LibraryType)
+  func onLibraryUpdated(to newLibrary: LibraryType) async
 }
 
 class LibraryListener: BaseListener {
+  let log = LoggerFactory.shared.system(LibraryListener.self)
   var delegate: LibraryDelegate? = nil
 
+  static let library = LibraryListener()
+  static let playlists = LibraryListener()
+  
+  private var subscribed = false
+  
   func subscribe() {
-    LibraryManager.sharedInstance.libraryUpdated.subscribe(onNext: { (library) in
-      self.onLibraryUpdated(library)
-    }).disposed(by: bag)
+    if !subscribed {
+      subscribed = true
+      //    log.info("Subscribing to library listener...")
+      task = Task {
+        await subscribeEternally()
+      }
+    }
   }
-
-  func onLibraryUpdated(_ newLibrary: LibraryType) {
-    delegate?.onLibraryUpdated(to: newLibrary)
+  
+  private func subscribeEternally() async {
+    for await library in LibraryManager.sharedInstance.$libraryUpdated.dropFirst().removeDuplicates(by: { l1, l2 in
+      return l1.id == l2.id
+    }).values {
+//      log.info("Updated to library \(library.id).")
+      await delegate?.onLibraryUpdated(to: library)
+    }
   }
 }
 
@@ -40,16 +50,26 @@ protocol PlayerEndpointDelegate {
 }
 
 class EndpointsListener: BaseListener {
+  let log = LoggerFactory.shared.system(EndpointsListener.self)
   var libraries: LibraryEndpointDelegate? = nil
   var players: PlayerEndpointDelegate? = nil
 
   func subscribe() {
-    LibraryManager.sharedInstance.changed.subscribe(onNext: { (library) in
-      self.libraryUpdated(library)
-    }).disposed(by: bag)
-    PlayerManager.sharedInstance.changed.subscribe(onNext: { (player) in
-      self.playerChanged(player)
-    }).disposed(by: bag)
+    Task {
+      for await library in LibraryManager.sharedInstance.$changed.values {
+        if let library = library {
+//          log.info("Changing to library \(library)")
+          libraryUpdated(library)
+        }
+      }
+    }
+    Task {
+      for await player in PlayerManager.sharedInstance.$changed.values {
+        if let player = player {
+          playerChanged(player)
+        }
+      }
+    }
   }
 
   private func libraryUpdated(_ newLibrary: Endpoint) {
@@ -77,60 +97,60 @@ protocol PlaylistEventDelegate {
 }
 
 class PlaybackListener: BaseListener {
-  var playerManager: PlayerManager { return PlayerManager.sharedInstance }
-  var player: PlayerType { return playerManager.active }
-  var players: PlayersDelegate? = nil
+  let log = LoggerFactory.shared.system(PlaybackListener.self)
+  
+  var playerManager: PlayerManager { PlayerManager.sharedInstance }
+  var player: PlayerType { playerManager.playerChanged }
   var tracks: TrackEventDelegate? = nil
   var playbacks: PlaybackEventDelegate? = nil
   var playlists: PlaylistEventDelegate? = nil
 
   func subscribe() {
-    subscribe(to: player)
+//    log.info("Subscribing to playback events...")
+    Task {
+      for await player in playerManager.$playerChanged.dropFirst().removeDuplicates(by: { p1, p2 in
+        p1.id == p2.id
+      }).values {
+        subscribe(to: player)
+      }
+    }
   }
 
   private func subscribe(to newPlayer: PlayerType) {
+//    log.info("Subscribing to player \(newPlayer.id)...")
     unsubscribe()
-    subscribe(playerManager.playerChanged, self.onNewPlayer)
-    subscribe(player.playlist.playlistEvent) { playlist in self.onNewPlaylist(playlist) }
-    subscribe(player.playlist.indexEvent) { self.onIndexChanged($0) }
-    subscribe(newPlayer.trackEvent) { self.updateTrack($0) }
-    subscribe(newPlayer.timeEvent) { self.onTimeUpdated($0) }
-    subscribe(newPlayer.stateEvent) { self.onStateChanged($0) }
-  }
-
-  func subscribe<T>(_ o: Observable<T>, _ onNext: @escaping (T) -> Void) {
-    o.subscribe(onNext: { (t) in
-      onNext(t)
-    }).disposed(by: bag)
-  }
-
-  private func onNewPlayer(_ newPlayer: PlayerType) {
-    moveSubscriptions(to: newPlayer)
-    players?.onPlayerChanged(to: newPlayer)
-  }
-
-  private func moveSubscriptions(to newPlayer: PlayerType) {
-    subscribe(to: newPlayer)
-  }
-
-  private func onNewPlaylist(_ playlist: Playlist) {
-    playlists?.onNewPlaylist(playlist)
-  }
-
-  private func onIndexChanged(_ to: Int?) {
-    playlists?.onIndexChanged(to: to)
-  }
-
-  private func updateTrack(_ track: Track?) {
-    tracks?.onTrackChanged(track)
-    playbacks?.onTrackChanged(track)
-  }
-
-  private func onTimeUpdated(_ position: Duration) {
-    playbacks?.onTimeUpdated(position)
-  }
-
-  private func onStateChanged(_ state: PlaybackState) {
-    playbacks?.onStateChanged(state)
+    Task {
+      for await playlist in player.playlist.playlistPublisher.values {
+        if let playlist = playlist {
+          playlists?.onNewPlaylist(playlist)
+        }
+      }
+    }
+    Task {
+      for await index in player.playlist.indexPublisher.values {
+        playlists?.onIndexChanged(to: index)
+      }
+    }
+    Task {
+      for await track in newPlayer.trackEvent.values {
+        tracks?.onTrackChanged(track)
+        playbacks?.onTrackChanged(track)
+      }
+    }
+    Task {
+      for await time in newPlayer.timeEvent.values {
+        if let time = time {
+          playbacks?.onTimeUpdated(time)
+        }
+      }
+    }
+    Task {
+      for await state in newPlayer.stateEvent.values {
+        if let state = state {
+          playbacks?.onStateChanged(state)
+        }
+      }
+    }
+//    log.info("Subscribed to player \(newPlayer.id).")
   }
 }

@@ -4,12 +4,10 @@ import RxSwift
 // Intentionally does not implement PlaylistType because Swift sucks, but PlaylistType implementations
 // can still extend this for convenience
 class BasePlaylist {
-  let indexSubject = PublishSubject<Int?>()
-  var indexEvent: Observable<Int?> { return indexSubject }
-
-  let playlistSubject = PublishSubject<Playlist>()
-  var playlistEvent: Observable<Playlist> { return playlistSubject }
-
-  let trackSubject = PublishSubject<Track>()
-  var trackAdded: Observable<Track> { return trackSubject }
+  @Published var indexEvent: Int?
+  var indexPublisher: Published<Int?>.Publisher { $indexEvent }
+  @Published var playlistEvent: Playlist?
+  var playlistPublisher: Published<Playlist?>.Publisher { $playlistEvent }
+  @Published var trackAdded: Track?
+  var trackPublisher: Published<Track?>.Publisher { $trackAdded }
 }

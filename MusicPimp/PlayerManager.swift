@@ -7,15 +7,12 @@ class PlayerManager: EndpointManager {
   static let sharedInstance = PlayerManager()
   let players = Players.sharedInstance
 
-  fileprivate var activePlayer: PlayerType
-  var active: PlayerType { activePlayer }
-  private let playerSubject = PublishSubject<PlayerType>()
-  var playerChanged: Observable<PlayerType> { playerSubject }
+  @Published var playerChanged: PlayerType
   let bag = DisposeBag()
 
   init() {
     let settings = PimpSettings.sharedInstance
-    activePlayer = players.fromEndpoint(settings.activePlayer())
+    playerChanged = players.fromEndpoint(settings.activePlayer())
     super.init(key: PimpSettings.PLAYER, settings: settings)
   }
 
@@ -24,13 +21,13 @@ class PlayerManager: EndpointManager {
   }
 
   func use(endpoint: Endpoint, onOpen: @escaping (PlayerType) -> Void) {
-    activePlayer.close()
+    playerChanged.close()
     let _ = saveActive(endpoint)
     let p = players.fromEndpoint(endpoint)
-    activePlayer = p
+    playerChanged = p
     log.info("Player set to \(endpoint.name)")
     // async
-    activePlayer.open().subscribe { (event) in
+    playerChanged.open().subscribe { (event) in
       switch event {
       case .next(_): ()
       case .error(let err): self.onError(err)
@@ -39,7 +36,6 @@ class PlayerManager: EndpointManager {
         onOpen(p)
       }
     }.disposed(by: bag)
-    playerSubject.onNext(p)
   }
 
   func onOpened(_ player: PlayerType) {

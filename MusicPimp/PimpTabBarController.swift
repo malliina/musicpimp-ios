@@ -36,12 +36,12 @@ class PimpTabBarController: UITabBarController {
             title: "SETTINGS", child: SettingsController(), persistentFooter: false),
           title: "Settings", fontAwesomeName: "cog")),
     ]
-    if !LibraryManager.sharedInstance.active.isLocal {
+    if !LibraryManager.sharedInstance.libraryUpdated.isLocal {
       permanentTabs.insert(topList, at: 2)
     }
     viewControllers = permanentTabs
-    LibraryManager.sharedInstance.libraryUpdated.subscribe(
-      onNext: { (library) in
+    Task {
+      for await library in LibraryManager.sharedInstance.$libraryUpdated.values {
         Util.onUiThread {
           guard var vcs = self.viewControllers else { return }
           if vcs.count == 4 && library.isLocal {
@@ -52,8 +52,8 @@ class PimpTabBarController: UITabBarController {
           // https://stackoverflow.com/a/9908361
           self.setViewControllers(vcs, animated: true)
         }
-      }, onError: nil, onCompleted: nil, onDisposed: nil
-    ).disposed(by: bag)
+      }
+    }
   }
 
   // swaps between mobile and tablet viewcontrollers, as necessary, called when orientation changes
@@ -65,7 +65,7 @@ class PimpTabBarController: UITabBarController {
         playerNav.viewControllers = [playerFor(traits: newCollection)]
       }
       // Sets the top list VC according to screen size
-      if !LibraryManager.sharedInstance.active.isLocal,
+      if !LibraryManager.sharedInstance.libraryUpdated.isLocal,
         let listNav = vcs[2] as? UINavigationController
       {
         listNav.viewControllers = [topListFor(traits: newCollection)]

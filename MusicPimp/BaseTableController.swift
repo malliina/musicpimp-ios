@@ -60,13 +60,20 @@ class BaseTableController: UITableViewController {
 
   func renderTable(_ feedback: String?, _ afterData: @escaping () -> Void) {
     onUiThread {
-      self.reloadTable(feedback: feedback)
+      self.reloadTableData(feedback: feedback)
       afterData()
     }
   }
 
-  func reloadTable(feedback: String?) {
-    //        log.info("Reloading table...")
+  func reloadTable(feedback: String? = nil) {
+    onUiThread {
+      self.reloadTableData(feedback: feedback)
+    }
+  }
+  
+  @MainActor
+  private func reloadTableData(feedback: String? = nil) {
+    log.info("Reloading table...")
     if let feedback = feedback {
       self.setFeedback(feedback)
     } else {
@@ -89,6 +96,7 @@ class BaseTableController: UITableViewController {
     configureTable(background: nil, separatorStyle: .singleLine)
   }
 
+  @MainActor
   func configureTable(background: UIView?, separatorStyle: UITableViewCell.SeparatorStyle) {
     self.tableView.backgroundView = background
     self.tableView.separatorStyle = separatorStyle

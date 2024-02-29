@@ -8,97 +8,100 @@ open class PimpLibrary: BaseLibrary {
   override var authValue: String { endpoint.authHeader }
   override var authQuery: String { endpoint.authQueryString }
 
+  let identifier: String
+  override var id: String { identifier }
+  
   init(endpoint: Endpoint, client: PimpHttpClient) {
     self.endpoint = endpoint
     self.client = client
+    self.identifier = endpoint.id
   }
 
-  override func pingAuth() -> Single<Version> {
-    client.pingAuth()
+  override func pingAuth() async throws -> Version {
+    try await client.pingAuth()
   }
 
-  override func rootFolder() -> Single<MusicFolder> {
-    client.pimpGetParsed(Endpoints.FOLDERS, to: MusicFolder.self)
+  override func rootFolder() async throws -> MusicFolder {
+    try await client.pimpGetParsed(Endpoints.FOLDERS, to: MusicFolder.self)
   }
 
-  override func folder(_ id: FolderID) -> Single<MusicFolder> {
-    client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", to: MusicFolder.self)
+  override func folder(_ id: FolderID) async throws -> MusicFolder {
+    try await client.pimpGetParsed("\(Endpoints.FOLDERS)/\(id)", to: MusicFolder.self)
   }
 
-  override func tracks(_ id: FolderID) -> Single<[Track]> {
-    tracksInner(id, others: [], acc: [])
+  override func tracks(_ id: FolderID) async throws -> [Track] {
+    try await tracksInner(id, others: [], acc: [])
   }
 
-  override func playlists() -> Single<[SavedPlaylist]> {
-    client.pimpGetParsed("\(Endpoints.PLAYLISTS)", to: SavedPlaylists.self).map { $0.playlists }
+  override func playlists() async throws -> [SavedPlaylist] {
+    let res = try await client.pimpGetParsed("\(Endpoints.PLAYLISTS)", to: SavedPlaylists.self)
+    return res.playlists
   }
 
-  override func playlist(_ id: PlaylistID) -> Single<SavedPlaylist> {
-    client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", to: SavedPlaylistResponse.self).map {
-      $0.playlist
-    }
+  override func playlist(_ id: PlaylistID) async throws -> SavedPlaylist {
+    let res = try await client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", to: SavedPlaylistResponse.self)
+    return res.playlist
   }
 
-  override func popular(_ from: Int, until: Int) -> Single<[PopularEntry]> {
-    client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", to: Populars.self).map
-    { $0.populars }
+  override func popular(_ from: Int, until: Int) async throws -> [PopularEntry] {
+    let res = try await client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", to: Populars.self)
+    return res.populars
   }
 
-  override func recent(_ from: Int, until: Int) -> Single<[RecentEntry]> {
-    client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", to: Recents.self).map {
-      $0.recents
-    }
+  override func recent(_ from: Int, until: Int) async throws -> [RecentEntry] {
+    let res = try await client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", to: Recents.self)
+    return res.recents
   }
 
-  override func savePlaylist(_ sp: SavedPlaylist) -> Single<PlaylistID> {
-    client.pimpPostParsed(
+  override func savePlaylist(_ sp: SavedPlaylist) async throws -> PlaylistID {
+    let res = try await client.pimpPostParsed(
       Endpoints.PLAYLISTS, payload: SavePlaylistPayload(playlist: sp.strip()),
       to: PlaylistIdResponse.self
-    ).map { $0.id }
+    )
+    return res.id
   }
 
-  override func deletePlaylist(_ id: PlaylistID) -> Single<HttpResponse> {
-    client.pimpPostEmpty("\(Endpoints.PLAYLIST_DELETE)/\(id.id)")
+  override func deletePlaylist(_ id: PlaylistID) async throws -> HttpResponse {
+    try await client.pimpPostEmpty("\(Endpoints.PLAYLIST_DELETE)/\(id.id)")
   }
 
-  override func search(_ term: String) -> Single<[Track]> {
+  override func search(_ term: String) async throws -> [Track] {
     if let encodedTerm = term.addingPercentEncoding(
       withAllowedCharacters: CharacterSet.urlQueryAllowed)
     {
-      return client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", to: [Track].self)
+      return try await client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", to: [Track].self)
     } else {
-      return Single.error(PimpError.simple("Invalid search term: \(term)"))
+      throw PimpError.simple("Invalid search term: \(term)")
     }
   }
 
-  override func alarms() -> Single<[Alarm]> {
-    client.pimpGetParsed(Endpoints.ALARMS, to: [AlarmJson<AlarmJob>].self).map {
-      $0.map { $0.asAlarm() }
-    }
+  override func alarms() async throws -> [Alarm] {
+    let jobs = try await client.pimpGetParsed(Endpoints.ALARMS, to: [AlarmJson<AlarmJob>].self)
+    return jobs.map { $0.asAlarm() }
   }
 
-  override func saveAlarm(_ alarm: Alarm) -> Single<HttpResponse> {
-    client.pimpPost(
+  override func saveAlarm(_ alarm: Alarm) async throws -> HttpResponse {
+    try await client.pimpPost(
       Endpoints.ALARMS, payload: SaveAlarm(ap: alarm.asJson(), enabled: alarm.enabled))
   }
 
-  override func deleteAlarm(_ id: AlarmID) -> Single<HttpResponse> {
-    alarmsPost(DeleteAlarm(id: id))
+  override func deleteAlarm(_ id: AlarmID) async throws -> HttpResponse {
+    try await alarmsPost(DeleteAlarm(id: id))
   }
 
-  override func stopAlarm() -> Single<HttpResponse> {
-    alarmsPost(SimpleCommand(cmd: JsonKeys.STOP))
+  override func stopAlarm() async throws -> HttpResponse {
+    try await alarmsPost(SimpleCommand(cmd: JsonKeys.STOP))
   }
 
-  override func registerNotifications(_ token: PushToken, tag: String) -> Single<HttpResponse> {
-    alarmsPost(RegisterPush(id: token, tag: tag))
+  override func registerNotifications(_ token: PushToken, tag: String) async throws -> HttpResponse {
+    try await alarmsPost(RegisterPush(id: token, tag: tag))
   }
 
-  override func unregisterNotifications(_ tag: String) -> Single<HttpResponse> {
-    alarmsPost(UnregisterPush(id: tag))
+  override func unregisterNotifications(_ tag: String) async throws -> HttpResponse {
+    try await alarmsPost(UnregisterPush(id: tag))
   }
 
-  fileprivate func alarmsPost<T: Encodable>(_ payload: T) -> Single<HttpResponse> {
-    client.pimpPost(Endpoints.ALARMS, payload: payload)
+  fileprivate func alarmsPost<T: Encodable>(_ payload: T) async throws -> HttpResponse {
+    try await client.pimpPost(Endpoints.ALARMS, payload: payload)
   }
 }

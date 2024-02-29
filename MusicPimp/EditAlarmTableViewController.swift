@@ -87,9 +87,13 @@ class EditAlarmTableViewController: BaseTableController {
         case .next(_): ()
         case .error(let err): self.onConnectError(err)
         case .completed:
-          p.stateEvent.subscribe(onNext: { (newState) in
-            self.onPlayerState(newState)
-          }).disposed(by: self.playbackBag)
+          Task {
+            for await newState in p.stateEvent.values {
+              if let newState = newState {
+                self.onPlayerState(newState)
+              }
+            }
+          }
           self.onPlayerState(p.current().state)
         }
       }.disposed(by: playbackBag)
@@ -163,8 +167,13 @@ class EditAlarmTableViewController: BaseTableController {
     updateDate()
     if let endpoint = endpoint, let alarm = mutableAlarm?.toImmutable() {
       let library = Libraries.fromEndpoint(endpoint)
-      runSingle(library.saveAlarm(alarm)) { _ in
-        self.delegate?.alarmUpdated(a: alarm)
+      Task {
+        do {
+          let _ = try await library.saveAlarm(alarm)
+          delegate?.alarmUpdated(a: alarm)
+        } catch {
+          onError(error)
+        }
       }
     }
     goBack()
@@ -175,12 +184,12 @@ class EditAlarmTableViewController: BaseTableController {
   }
 
   func identifierFor(_ indexPath: IndexPath) -> String? {
-    switch indexPath.section {
-    case 0: return timePickerIdentifier
-    case 1: return indexPath.row == 0 ? trackIdentifier : repeatIdentifier
-    case 2: return playIdentifier
-    case 3: return deleteAlarmIdentifier
-    default: return nil
+    return switch indexPath.section {
+    case 0: timePickerIdentifier
+    case 1: indexPath.row == 0 ? trackIdentifier : repeatIdentifier
+    case 2: playIdentifier
+    case 3: deleteAlarmIdentifier
+    default: nil
     }
   }
 
@@ -255,10 +264,13 @@ class EditAlarmTableViewController: BaseTableController {
       case deleteAlarmIdentifier:
         if let alarmId = mutableAlarm?.id, let endpoint = endpoint {
           tableView.deselectRow(at: indexPath, animated: false)
-          runSingle(Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId)) { _ in
-            self.delegate?.alarmDeleted()
-            Util.onUiThread {
-              self.goBack()
+          Task {
+            do {
+              let _ = try await Libraries.fromEndpoint(endpoint).deleteAlarm(alarmId)
+              self.delegate?.alarmDeleted()
+              goBackMain()
+            } catch {
+              onError(error)
             }
           }
         }
@@ -303,6 +315,10 @@ class EditAlarmTableViewController: BaseTableController {
 }
 
 extension UIViewController {
+  @MainActor
+  func goBackMain() {
+    goBack()
+  }
   @objc func goBack() {
     let isAddMode = presentingViewController != nil
     if isAddMode {

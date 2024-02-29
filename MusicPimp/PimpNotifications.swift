@@ -44,6 +44,13 @@ open class PimpNotifications {
   }
 
   func handleNotification(_ app: UIApplication, data: [AnyHashable: Any]) {
+    Task {
+      await handleNotificationAsync(app, data: data)
+    }
+  }
+  
+  @MainActor
+  private func handleNotificationAsync(_ app: UIApplication, data: [AnyHashable: Any]) async {
     do {
       guard let tag = data["tag"] as? String else {
         throw PimpError.simple("Key 'tag' is not a String in payload.")
@@ -56,13 +63,12 @@ open class PimpNotifications {
       }
       if cmd == "stop" {
         let library = Libraries.fromEndpoint(endpoint)
-        library.stopAlarm().subscribe({ (event) in
-          switch event {
-          case .success(_): self.log.info("Stopped alarm playback.")
-          case .failure(let err):
-            self.log.info("Failed to stop alarm playback. \(err.localizedDescription)")
-          }
-        }).disposed(by: bag)
+        do {
+          let _ = try await library.stopAlarm()
+          log.info("Stopped alarm playback.")
+        } catch {
+          log.info("Failed to stop alarm playback. \(error.localizedDescription)")
+        }
         app.applicationIconBadgeNumber = 0
       } else {
         log.error("Unknown command in notification: '\(cmd)'.")

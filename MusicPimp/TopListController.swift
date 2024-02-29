@@ -27,14 +27,16 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.estimatedRowHeight = cellHeight
-    refresh()
+    Task {
+      await refresh()
+    }
     listener.delegate = self
     listener.subscribe()
   }
 
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
   {
-    return cellHeight
+    cellHeight
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -58,7 +60,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
   }
 
   func cellFor(track: T, indexPath: IndexPath) -> UITableViewCell {
-    return UITableViewCell()
+    UITableViewCell()
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -71,13 +73,15 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return self.tracks.count
+    tracks.count
   }
 
   override func tableView(
     _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
   ) {
-    maybeLoadMore(indexPath.row)
+    Task {
+      await maybeLoadMore(indexPath.row)
+    }
   }
 
   override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
@@ -91,10 +95,10 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     showHeader ? 36 : 0
   }
 
-  fileprivate func maybeLoadMore(_ currentRow: Int) {
+  fileprivate func maybeLoadMore(_ currentRow: Int) async {
     let trackCount = tracks.count
     if currentRow + minItemsRemainingBeforeLoadMore == trackCount {
-      loadMore()
+      await loadMore()
     }
   }
 
@@ -105,15 +109,15 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
   }
 
-  func onLibraryUpdated(to newLibrary: LibraryType) {
-    refresh()
+  func onLibraryUpdated(to newLibrary: LibraryType) async {
+    await refresh()
   }
 
   // Override this to load and render data
-  func refresh() {}
+  func refresh() async {}
 
   // Override to load more for infinite scroll
-  func loadMore() {}
+  func loadMore() async {}
 
   func onTopLoaded(_ results: [T]) {
     hasLoaded = true
@@ -139,7 +143,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
     }
   }
 
-  func appendConditionally<T>(_ src: [T], from: Int, newContent: [T]) -> [T] {
+  func appendConditionally(_ src: [T], from: Int, newContent: [T]) -> [T] {
     let oldSize = src.count
     if oldSize == from {
       return src + newContent

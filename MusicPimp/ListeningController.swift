@@ -1,20 +1,17 @@
 import Foundation
 
-class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDelegate {
+class ListeningController: PimpViewController, PlaybackEventDelegate {
   var playerManager: PlayerManager { PlayerManager.sharedInstance }
-  var player: PlayerType { playerManager.active }
+  var player: PlayerType { playerManager.playerChanged }
 
   var libraryManager: LibraryManager { LibraryManager.sharedInstance }
-  var library: LibraryType { libraryManager.active }
+  var library: LibraryType { libraryManager.libraryUpdated }
 
   let listener = PlaybackListener()
-  let libraryListener = LibraryListener()
 
   override func viewDidLoad() {
     super.viewDidLoad()
     listener.playbacks = self
-    libraryListener.delegate = self
-    libraryListener.subscribe()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -48,10 +45,6 @@ class ListeningController: PimpViewController, PlaybackEventDelegate, LibraryDel
   }
 
   func onStateChanged(_ state: PlaybackState) {
-
-  }
-
-  func onLibraryUpdated(to newLibrary: LibraryType) {
 
   }
 }

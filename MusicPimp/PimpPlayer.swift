@@ -2,24 +2,20 @@ import Foundation
 import RxSwift
 
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
-  var isLocal: Bool { return false }
-  let stateSubject = PublishSubject<PlaybackState>()
-  var stateEvent: Observable<PlaybackState> { stateSubject }
-  let timeSubject = PublishSubject<Duration>()
-  var timeEvent: Observable<Duration> { timeSubject }
-  let trackSubject = PublishSubject<Track?>()
-  var trackEvent: Observable<Track?> { trackSubject }
-  let volumeSubject = PublishSubject<VolumeValue>()
-  var volumeEvent: Observable<VolumeValue> { volumeSubject }
+  var isLocal: Bool { false }
+  
   let muteSubject = PublishSubject<Bool>()
   var muteEvent: Observable<Bool> { muteSubject }
 
-  let playlist: PlaylistType
+  var playlist: PlaylistType
   let socket: PimpSocket
 
   fileprivate var currentState = PlayerState.empty
 
+  let id: String
+  
   init(e: Endpoint) {
+    id = e.id
     let client = PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader)
     self.socket = PimpSocket(
       baseURL: URL(string: Endpoints.WS_PLAYBACK, relativeTo: e.wsBaseUrl)!, authValue: e.authHeader
@@ -34,7 +30,6 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
   }
 
   func close() {
-    //self.socket.delegate = nil
     self.socket.close()
   }
 
@@ -47,7 +42,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
   }
 
   func play() -> ErrorMessage? {
-    return sendSimple(JsonKeys.RESUME)
+    sendSimple(JsonKeys.RESUME)
   }
 
   func pause() -> ErrorMessage? {
@@ -84,12 +79,12 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
 
   func onTimeUpdated(_ pos: Duration) {
     currentState.position = pos
-    timeSubject.onNext(pos)
+    time = pos
   }
 
   func onTrackChanged(_ track: Track?) {
     currentState.track = track
-    trackSubject.onNext(track)
+    self.track = track
     if let _ = track {
       Limiter.sharedInstance.increment()
     }
@@ -102,22 +97,22 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
 
   func onVolumeChanged(_ volume: VolumeValue) {
     currentState.volume = volume
-    volumeSubject.onNext(volume)
+    self.volume = volume
   }
 
   func onStateChanged(_ state: PlaybackState) {
     currentState.state = state
-    stateSubject.onNext(state)
+    self.state = state
   }
 
   func onIndexChanged(_ index: Int?) {
     currentState.playlistIndex = index
-    playlist.indexSubject.onNext(index)
+    playlist.indexEvent = index
   }
 
   func onPlaylistModified(_ tracks: [Track]) {
     currentState.playlist = tracks
-    playlist.playlistSubject.onNext(Playlist(tracks: tracks, index: currentState.playlistIndex))
+    playlist.playlistEvent = Playlist(tracks: tracks, index: currentState.playlistIndex)
   }
 
   func onState(_ state: PlayerStateJson) {

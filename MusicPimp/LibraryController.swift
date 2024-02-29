@@ -16,7 +16,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
   fileprivate var downloadUpdates: RxSwift.Disposable? = nil
   private var reloadOnDidAppear = false
-
+  var reloadDataOnAppear = false
   let listener = PlaybackListener()
 
   var isFirstLoad = true
@@ -32,17 +32,34 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
       })
     setFeedback(loadingMessage)
     listener.tracks = self
-    if let folder = selected {
-      loadFolder(folder.id)
-    } else {
-      loadRoot()
+    Task {
+      await reloadData()
+    }
+  }
+  
+  private func reloadData() async {
+    do {
+      if let folder = selected {
+        try await loadFolder(folder.id)
+      } else {
+        try await loadRoot()
+      }
+    } catch {
+      onLoadError(error)
     }
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    log.info("viewDidAppear of \(selected?.title ?? "no selected") with reload \(reloadOnDidAppear) data \(reloadDataOnAppear)")
     if reloadOnDidAppear {
-      renderTable(computeMessage(folder))
+      reloadTable(feedback: computeMessage(folder))
+    }
+    if reloadDataOnAppear {
+      reloadDataOnAppear = false
+      Task {
+        await reloadData()
+      }
     }
     listener.subscribe()
   }
@@ -60,30 +77,25 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     downloadUpdates = nil
   }
 
+  @MainActor
   func onTrackChanged(_ track: Track?) {
     // updates any highlighted row
-    renderTable()
+    reloadTable(feedback: nil)
     // why?
-    onUiThread {
-      self.view.setNeedsUpdateConstraints()
-    }
+    view.setNeedsUpdateConstraints()
   }
 
-  func loadFolder(_ id: FolderID) {
-    let _ = library.folder(id).subscribe(handleFolderEvent)
+  func loadFolder(_ id: FolderID) async throws {
+    let folder = try await library.folder(id)
+    onFolder(folder)
   }
 
-  func loadRoot() {
-    let _ = library.rootFolder().subscribe(handleFolderEvent)
+  func loadRoot() async throws {
+    let root = try await library.rootFolder()
+    log.info("Loaded \(root.folders.count) root folders with library \(library.id)...")
+    onFolder(root)
   }
-
-  func handleFolderEvent(event: RxSwift.SingleEvent<MusicFolder>) {
-    switch event {
-    case .success(let folder): onFolder(folder)
-    case .failure(let error): onLoadError(error)
-    }
-  }
-
+  
   func suggestAddMusicSource() {
     let sheet = UIAlertController(
       title: "Connect to MusicPimp",
@@ -106,15 +118,15 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
   func onFolder(_ f: MusicFolder) {
     folder = f
-    self.renderTable(computeMessage(folder))
+    reloadTable(feedback: computeMessage(folder))
     if folder.items.isEmpty {
-      let hasRemoteSources = self.libraryManager.endpoints().exists { (e) -> Bool in
+      let hasRemoteSources = libraryManager.endpoints().exists { (e) -> Bool in
         e.id != Endpoint.Local.id
       }
       if !hasRemoteSources && isFirstLoad {
-        self.suggestAddMusicSource()
+        suggestAddMusicSource()
       } else {
-        self.log.info("Not suggesting music source configuration")
+        log.info("Not suggesting music source configuration")
       }
     }
     isFirstLoad = false
@@ -227,7 +239,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     if let item = itemAt(tableView, indexPath: indexPath) {
       if let folder = item as? Folder {
         let destination = LibraryContainer(folder: folder)
-        //                destination.folder = folder
         navigationController?.pushViewController(destination, animated: true)
       }
       if let track = item as? Track {

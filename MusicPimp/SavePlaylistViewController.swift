@@ -75,20 +75,25 @@ class SavePlaylistViewController: PimpViewController, UITextFieldDelegate {
 
   @objc func onSave(_ sender: UIBarButtonItem) {
     name = nameText.text ?? ""
-    savePlaylist(name: name ?? "")
+    Task {
+      await savePlaylist(name: name ?? "")
+    }
     goBack()
   }
 
-  fileprivate func savePlaylist(name: String) {
+  fileprivate func savePlaylist(name: String) async {
     // TODO check Duration.zero and length, why are these necessary?
     let playlist = SavedPlaylist(
       id: nil, name: name, trackCount: tracks.count, duration: Duration.Zero, tracks: tracks)
-    run(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
-      self.delegate?.onPlaylistSaved(
+    do {
+      let id = try await LibraryManager.sharedInstance.libraryUpdated.savePlaylist(playlist)
+      delegate?.onPlaylistSaved(
         saved: SavedPlaylist(
           id: id, name: playlist.name, trackCount: playlist.tracks.count,
           duration: playlist.duration, tracks: playlist.tracks))
-      self.log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
+      log.info("Saved playlist with name \(playlist.name) and ID \(id.id)")
+    } catch {
+      onError(error)
     }
   }
 }

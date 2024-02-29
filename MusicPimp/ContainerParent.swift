@@ -9,7 +9,7 @@ class ContainerParent: ListeningController, PlaybackDelegate {
   }
   static var defaultFooterHeight: CGFloat { ContainerParent.isIpad ? 66 : 44 }
   let playbackFooter: SnapPlaybackFooter
-  var currentFooterHeight: CGFloat { return 0 }
+  var currentFooterHeight: CGFloat { 0 }
 
   let playbackFooterHeightValue: CGFloat
   var preferredPlaybackFooterHeight: CGFloat {

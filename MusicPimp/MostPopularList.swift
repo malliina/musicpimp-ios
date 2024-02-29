@@ -20,25 +20,25 @@ class MostPopularList: TopListController<PopularEntry> {
     return cell
   }
 
-  override func refresh() {
-    renderTable("Loading popular tracks...") {
-      self.entries = []
+  @MainActor
+  override func refresh() async {
+    entries = []
+    reloadTable(feedback: "Loading popular tracks...")
+    do {
+      let rs = try await library.popular(0, until: itemsPerLoad)
+      onTopLoaded(rs)
+    } catch {
+      onTopError(error)
     }
-    library.popular(0, until: itemsPerLoad).subscribe { (event) in
-      switch event {
-      case .success(let rs): self.onTopLoaded(rs)
-      case .failure(let err): self.onTopError(err)
-      }
-    }.disposed(by: bag)
   }
 
-  override func loadMore() {
+  override func loadMore() async {
     let oldSize = entries.count
-    library.popular(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
-      switch event {
-      case .success(let rs): self.onMoreResults(oldSize, results: rs)
-      case .failure(let err): self.onTopError(err)
-      }
-    }.disposed(by: bag)
+    do {
+      let rs = try await library.popular(oldSize, until: oldSize + itemsPerLoad)
+      onMoreResults(oldSize, results: rs)
+    } catch {
+      onTopError(error)
+    }
   }
 }

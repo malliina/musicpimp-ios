@@ -4,10 +4,11 @@ extension Selector {
   fileprivate static let scopeChanged = #selector(PlaylistParent.scopeChanged(_:))
 }
 
-class PlaylistParent: ContainerParent {
+class PlaylistParent: ContainerParent, LibraryDelegate {
   private let log = LoggerFactory.shared.vc(PlaylistParent.self)
   let scopeSegment = UISegmentedControl(items: ["Popular", "Recent"])
   let table = PlaylistController()
+  let libraryListener = LibraryListener.playlists
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -15,6 +16,8 @@ class PlaylistParent: ContainerParent {
     // wtf?
     navigationController?.navigationBar.isTranslucent = true
     initUI()
+    libraryListener.delegate = self
+    libraryListener.subscribe()
   }
 
   func initUI() {
@@ -44,12 +47,12 @@ class PlaylistParent: ContainerParent {
     }
   }
 
-  override func onLibraryUpdated(to newLibrary: LibraryType) {
-    scopeChanged(scopeSegment)
+  func onLibraryUpdated(to newLibrary: LibraryType) async {
+    await scopeChanged(scopeSegment)
   }
 
-  @objc func scopeChanged(_ ctrl: UISegmentedControl) {
+  @objc func scopeChanged(_ ctrl: UISegmentedControl) async {
     let mode = ListMode(rawValue: ctrl.selectedSegmentIndex) ?? .popular
-    table.maybeRefresh(mode)
+    await table.maybeRefresh(mode)
   }
 }

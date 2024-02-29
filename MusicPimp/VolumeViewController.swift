@@ -14,7 +14,7 @@ class VolumeViewController: PimpViewController {
 
   var appearedBag = DisposeBag()
 
-  var player: PlayerType { PlayerManager.sharedInstance.active }
+  var player: PlayerType { PlayerManager.sharedInstance.playerChanged }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -94,9 +94,13 @@ class VolumeViewController: PimpViewController {
 
   fileprivate func listenWhenAppeared(_ targetPlayer: PlayerType) {
     unlistenWhenDisappeared()
-    targetPlayer.volumeEvent.subscribe(onNext: { (vol) in
-      self.onVolumeChanged(vol)
-    }).disposed(by: appearedBag)
+    Task {
+      for await vol in targetPlayer.volumeEvent.values {
+        if let vol = vol {
+          onVolumeChanged(vol)
+        }
+      }
+    }
   }
 
   fileprivate func unlistenWhenDisappeared() {

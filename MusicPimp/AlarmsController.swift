@@ -60,7 +60,9 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     }
     reloadAlarms()
     let onOff = PimpSwitch { (uiSwitch) in
-      self.didToggleNotifications(uiSwitch)
+      Task {
+        await self.didToggleNotifications(uiSwitch)
+      }
     }
     pushSwitch = onOff
     run(settings.defaultAlarmEndpointChanged, onResult: self.didChangeDefaultAlarmEndpoint)
@@ -99,25 +101,25 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     reloadAlarms()
   }
 
-  func didToggleNotifications(_ uiSwitch: UISwitch) {
+  func didToggleNotifications(_ uiSwitch: UISwitch) async {
     let isOn = uiSwitch.isOn
     if let endpoint = endpoint {
       let toggleRegistration = isOn ? registerNotifications : unregisterNotifications
-      toggleRegistration(endpoint)
+      await toggleRegistration(endpoint)
     }
   }
 
-  func registerNotifications(_ endpoint: Endpoint) {
+  func registerNotifications(_ endpoint: Endpoint) async {
     if let token = settings.pushToken {
       log.info("Registering with previously saved push token...")
-      registerWithToken(token: token, endpoint: endpoint)
+      await registerWithToken(token: token, endpoint: endpoint)
     } else {
       log.info("No saved push token. Asking for permission...")
       askUserForPermission { (accessGranted) in
         if accessGranted {
           if let token = self.settings.pushToken {
             self.log.info("Permission granted, registering with \(endpoint.address)")
-            self.registerWithToken(token: token, endpoint: endpoint)
+            await self.registerWithToken(token: token, endpoint: endpoint)
           } else {
             self.log.info("Access granted, but no token available.")
           }
@@ -133,18 +135,25 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     }
   }
 
-  func registerWithToken(token: PushToken, endpoint: Endpoint) {
+  func registerWithToken(token: PushToken, endpoint: Endpoint) async {
     let alarmLibrary = Libraries.fromEndpoint(endpoint)
-    alarmLibrary.registerNotifications(token, tag: endpoint.id).subscribe { (event) in
-      switch event {
-      case .success(_): let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: true)
-      case .failure(let err): self.onRegisterError(error: err, endpoint: endpoint)
-      }
-    }.disposed(by: bag)
+    
+    do {
+      let _ = try await alarmLibrary.registerNotifications(token, tag: endpoint.id)
+      let _ = settings.saveNotificationsEnabled(endpoint, enabled: true)
+    } catch {
+      onRegisterError(error: error, endpoint: endpoint)
+    }
   }
 
-  func askUserForPermission(onResult: @escaping (Bool) -> Void) {
-    run(PimpSettings.sharedInstance.notificationPermissionChanged.take(1), onResult: onResult)
+  func askUserForPermission(onResult: @escaping (Bool) async -> Void) {
+    Task {
+      for await bool in PimpSettings.sharedInstance.$notificationPermissionChanged.first().values {
+        if let bool = bool {
+          await onResult(bool)
+        }
+      }
+    }
     PimpNotifications.sharedInstance.initNotifications(UIApplication.shared)
   }
 
@@ -152,11 +161,14 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     log.error(error.message)
   }
 
-  func unregisterNotifications(_ endpoint: Endpoint) {
+  func unregisterNotifications(_ endpoint: Endpoint) async {
     log.info("Unregistering from \(endpoint.address)...")
     let alarmLibrary = Libraries.fromEndpoint(endpoint)
-    runSingle(alarmLibrary.unregisterNotifications(endpoint.id)) { _ in
+    do {
+      let _ = try await alarmLibrary.unregisterNotifications(endpoint.id)
       let _ = self.settings.saveNotificationsEnabled(endpoint, enabled: false)
+    } catch {
+      onError(error)
     }
   }
 
@@ -176,42 +188,49 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     feedbackMessage = "Loading alarms..."
     endpoint = settings.defaultNotificationEndpoint()
     if let endpoint = endpoint {
-      loadAlarms(endpoint)
+      Task {
+        await loadAlarms(endpoint)
+      }
     } else {
       feedbackMessage = "Please configure a MusicPimp endpoint to continue."
     }
   }
 
-  func loadAlarms(_ endpoint: Endpoint) {
-    loadAlarms(Libraries.fromEndpoint(endpoint))
+  func loadAlarms(_ endpoint: Endpoint) async {
+    await loadAlarms(Libraries.fromEndpoint(endpoint))
   }
 
-  func loadAlarms(_ library: LibraryType) {
-    runSingle(library.alarms()) { alarms in
-      self.onAlarms(alarms)
+  func loadAlarms(_ library: LibraryType) async {
+    do {
+      let alarms = try await library.alarms()
+      onAlarms(alarms)
+    } catch {
+      onError(error)
     }
   }
 
-  func saveAndReload(_ alarm: Alarm) {
+  func saveAndReload(_ alarm: Alarm) async {
     if let endpoint = endpoint {
       let library = Libraries.fromEndpoint(endpoint)
-      runSingle(library.saveAlarm(alarm)) { _ in
-        self.loadAlarms(library)
+      do {
+        let _ = try await library.saveAlarm(alarm)
+        await loadAlarms(endpoint)
+      } catch {
+        onError(error)
       }
     }
   }
 
+  @MainActor
   func onAlarms(_ alarms: [Alarm]) {
     feedbackMessage = nil
-    onUiThread {
-      self.alarms = alarms
-      self.reloadTable(feedback: nil)
-    }
+    self.alarms = alarms
+    self.reloadTable(feedback: nil)
   }
 
   func onAlarmError(_ error: PimpError) {
     feedbackMessage = error.message
-    renderTable()
+    reloadTable()
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -260,7 +279,9 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
         alarmCell.main.text = item.track.title + " at " + when.time.formatted()
         alarmCell.sub.text = Day.describeDays(Set(when.days))
         let uiSwitch = PimpSwitch { (uiSwitch) in
-          self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
+          Task {
+            await self.onAlarmOnOffToggled(item, uiSwitch: uiSwitch)
+          }
         }
         uiSwitch.isOn = item.enabled
         alarmCell.accessoryView = uiSwitch
@@ -368,20 +389,30 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
     let index = indexPath.row
     let alarm = alarms[index]
     if let id = alarm.id {
-      runSingle(library.deleteAlarm(id)) { _ in
-        self.alarms.remove(at: index)
-        self.renderTable()
+      Task {
+        do {
+          try await deleteAndRender(id: id, index: index)
+        } catch {
+          onError(error)
+        }
       }
     }
   }
+  
+  @MainActor
+  private func deleteAndRender(id: AlarmID, index: Int) async throws {
+    let _ = try await library.deleteAlarm(id)
+    alarms.remove(at: index)
+    reloadTable()
+  }
 
-  func onAlarmOnOffToggled(_ alarm: Alarm, uiSwitch: UISwitch) {
+  func onAlarmOnOffToggled(_ alarm: Alarm, uiSwitch: UISwitch) async {
     let isEnabled = uiSwitch.isOn
     log.info("Toggled switch, is on: \(isEnabled) for \(alarm.track.title)")
     let mutable = MutableAlarm(alarm)
     mutable.enabled = isEnabled
     if let updated = mutable.toImmutable() {
-      saveAndReload(updated)
+      await saveAndReload(updated)
     }
   }
 

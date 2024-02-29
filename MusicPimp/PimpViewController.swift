@@ -29,15 +29,6 @@ class PimpViewController: UIViewController {
     }
   }
 
-  func run<T>(_ o: Single<T>, onResult: @escaping (T) -> Void) {
-    o.subscribe { (event) in
-      switch event {
-      case .success(let t): onResult(t)
-      case .failure(let err): self.onError(err)
-      }
-    }.disposed(by: bag)
-  }
-
   func onError(_ error: Error) {
     log.error(error.message)
   }

@@ -38,40 +38,33 @@ class PimpHttpClient: HttpClient {
     self.postHeaders = postHeaders
   }
 
-  func pingAuth() -> Single<Version> {
-    return pimpGetParsed(Endpoints.PING_AUTH, to: Version.self)
+  func pingAuth() async throws -> Version {
+    try await pimpGetParsed(Endpoints.PING_AUTH, to: Version.self)
   }
 
-  func pimpGetParsed<T: Decodable>(_ resource: String, to: T.Type) -> Single<T> {
+  func pimpGetParsed<T: Decodable>(_ resource: String, to: T.Type) async throws -> T {
     let req = buildGet(url: urlTo(resource), headers: defaultHeaders)
-    return executeParsed(req, to: to)
+    return try await executeParsed(req, to: to)
   }
 
-  func pimpPostParsed<W: Encodable, R: Decodable>(_ resource: String, payload: W, to: R.Type)
-    -> Single<R>
+  func pimpPostParsed<W: Encodable, R: Decodable>(_ resource: String, payload: W, to: R.Type) async throws
+    -> R
   {
-    return pimpPost(resource, payload: payload).flatMap { response in
-      self.recovered { () -> R in
-        try response.decode(to)
-      }
-    }
+    let response = try await pimpPost(resource, payload: payload)
+    return try response.decode(to)
   }
 
-  func pimpPostEmpty(_ resource: String) -> Single<HttpResponse> {
+  func pimpPostEmpty(_ resource: String) async throws -> HttpResponse {
     let req = buildRequest(url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders)
-    return executeChecked(req)
+    return try await executeChecked(req)
   }
 
-  func pimpPost<T: Encodable>(_ resource: String, payload: T) -> Single<HttpResponse> {
+  func pimpPost<T: Encodable>(_ resource: String, payload: T) async throws -> HttpResponse {
     let encoder = JSONEncoder()
-    do {
-      let body = try encoder.encode(payload)
-      let req = buildRequestWithBody(
-        url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders, body: body)
-      return executeChecked(req)
-    } catch let err {
-      return Single.error(err)
-    }
+    let body = try encoder.encode(payload)
+    let req = buildRequestWithBody(
+      url: urlTo(resource), httpMethod: HttpClient.POST, headers: postHeaders, body: body)
+    return try await executeChecked(req)
   }
 
   func urlTo(_ resource: String) -> URL {

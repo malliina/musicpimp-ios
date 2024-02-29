@@ -130,7 +130,9 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
     let playAction = accessoryAction("Play", action: { _ in self.playFolder(id) })
     let addAction = accessoryAction("Add", action: { _ in self.addFolder(id) })
     let downloadAction = accessoryAction("Download") { _ in
-      self.withTracks(id: id, f: self.downloadIfNeeded)
+      Task {
+        await self.withTracks(id: id, f: self.downloadIfNeeded)
+      }
     }
     let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
 
@@ -150,7 +152,9 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
   }
 
   func playFolder(_ id: FolderID) {
-    withTracks(id: id, f: self.playTracksChecked)
+    Task {
+      await withTracks(id: id, f: self.playTracksChecked)
+    }
   }
 
   func playTrack(_ track: Track) -> ErrorMessage? {
@@ -158,20 +162,22 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
   }
 
   func addFolder(_ id: FolderID) {
-    withTracks(id: id, f: self.addTracksChecked)
+    Task {
+      await withTracks(id: id, f: self.addTracksChecked)
+    }
   }
 
-  func withTracks(id: FolderID, f: @escaping ([Track]) -> [ErrorMessage]) {
-    library.tracks(id).subscribe { (event) in
-      switch event {
-      case .success(let ts): let _ = f(ts)
-      case .failure(let err): self.onError(err)
-      }
-    }.disposed(by: bag)
+  func withTracks(id: FolderID, f: @escaping ([Track]) -> [ErrorMessage]) async {
+    do {
+      let ts = try await library.tracks(id)
+      let _ = f(ts)
+    } catch {
+      onError(error)
+    }
   }
 
   func addTrack(_ track: Track) -> ErrorMessage? {
-    return addTracksChecked([track]).headOption()
+    addTracksChecked([track]).headOption()
   }
 
   func reload(_ emptyText: String) {

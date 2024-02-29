@@ -19,17 +19,20 @@ class SavedPlaylistsTableViewController: PimpTableController {
     navigationItem.rightBarButtonItem = UIBarButtonItem(
       barButtonSystemItem: .done, target: self, action: #selector(self.goBack))
     self.tableView.register(SavedPlaylistCell.self, forCellReuseIdentifier: playlistCell)
-    loadPlaylists()
+    Task {
+      await loadPlaylists()
+    }
   }
 
-  func loadPlaylists() {
+  @MainActor
+  func loadPlaylists() async {
     setFeedback(loadingMessage)
-    library.playlists().subscribe { (event) in
-      switch event {
-      case .success(let ps): self.onPlaylists(ps)
-      case .failure(let err): self.onLoadError(err)
-      }
-    }.disposed(by: bag)
+    do {
+      let ps = try await library.playlists()
+      onPlaylists(ps)
+    } catch {
+      onLoadError(error)
+    }
   }
 
   func onPlaylists(_ sps: [SavedPlaylist]) {
@@ -75,14 +78,22 @@ class SavedPlaylistsTableViewController: PimpTableController {
     let index = indexPath.row
     let playlist = playlists[index]
     if let id = playlist.id {
-      runSingle(library.deletePlaylist(id)) { _ in
-        self.log.info("Deleted playlist with ID \(id)")
-        self.onUiThread {
-          self.playlists.remove(at: index)
-          self.reloadTable(feedback: nil)
+      Task {
+        do {
+          let _ = try await library.deletePlaylist(id)
+          log.info("Deleted playlist with ID \(id)")
+          rem(at: index)
+        } catch {
+          onError(error)
         }
       }
     }
+  }
+  
+  @MainActor
+  private func rem(at: Int) {
+    playlists.remove(at: at)
+    reloadTable(feedback: nil)
   }
 
   override func tableView(

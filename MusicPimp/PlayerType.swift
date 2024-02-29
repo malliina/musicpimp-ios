@@ -1,12 +1,24 @@
 import Foundation
 import RxSwift
 
+class BasePlayer: NSObject {
+  @Published var state: PlaybackState?
+  var stateEvent: Published<PlaybackState?>.Publisher { $state }
+  @Published var time: Duration?
+  var timeEvent: Published<Duration?>.Publisher { $time }
+  @Published var volume: VolumeValue?
+  var volumeEvent: Published<VolumeValue?>.Publisher { $volume }
+  @Published var track: Track?
+  var trackEvent: Published<Track?>.Publisher { $track }
+}
+
 protocol PlayerType {
+  var id: String { get }
   var isLocal: Bool { get }
-  var stateEvent: Observable<PlaybackState> { get }
-  var timeEvent: Observable<Duration> { get }
-  var volumeEvent: Observable<VolumeValue> { get }
-  var trackEvent: Observable<Track?> { get }
+  var stateEvent: Published<PlaybackState?>.Publisher { get }
+  var timeEvent: Published<Duration?>.Publisher { get }
+  var volumeEvent: Published<VolumeValue?>.Publisher { get }
+  var trackEvent: Published<Track?>.Publisher { get }
   var playlist: PlaylistType { get }
 
   func open() -> Observable<Void>

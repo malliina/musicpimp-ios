@@ -67,6 +67,12 @@ struct MusicPimpApp: App {
             log.info("Active!")
             changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
             suggestPlayerChange = changePlayerSuggestion != nil
+            delegate.connectToPlayer()
+          }
+          if phase == .background {
+            PlayerManager.sharedInstance.playerChanged.close()
+            PimpSettings.sharedInstance.trackHistory = Limiter.sharedInstance.history
+            log.info("Entered background")
           }
         }
         .alert(
@@ -195,7 +201,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func connectToPlayer() {
-    PlayerManager.sharedInstance.active.open().subscribe { (event) in
+    do {
+      
+    } catch {
+      onConnectionFailure(error)
+    }
+    PlayerManager.sharedInstance.playerChanged.open().subscribe { (event) in
       switch event {
       case .next(_): ()
       case .error(let err): self.onConnectionFailure(err)
@@ -247,17 +258,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationDidEnterBackground(_ application: UIApplication) {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    PlayerManager.sharedInstance.active.close()
-    settings.trackHistory = Limiter.sharedInstance.history
-    log.info("Entered background")
   }
 
   func applicationWillEnterForeground(_ application: UIApplication) {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     // However, this is not called when the app is first launched.
-
-    connectToPlayer()
-    log.info("Entering foreground")
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
@@ -270,8 +275,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func applicationWillTerminate(_ application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    settings.trackHistory = Limiter.sharedInstance.history
-    log.info("Terminating")
   }
 
   //    override func remoteControlReceivedWithEvent(event: UIEvent) {

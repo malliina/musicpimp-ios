@@ -6,7 +6,7 @@ enum PimpError: Error {
   case networkFailure(RequestFailure)
   case simpleError(ErrorMessage)
 
-  var message: String { return PimpError.stringify(error: self) }
+  var message: String { PimpError.stringify(error: self) }
 
   static func simple(_ message: String) -> PimpError {
     PimpError.simpleError(ErrorMessage(message))
@@ -26,10 +26,10 @@ enum PimpError: Error {
       case 404:
         return "Resource not found: \(details.resource)."
       default:
-        if let message = details.message {
-          return "Error code: \(code), message: \(message)"
+        return if let message = details.message {
+          "Error code: \(code), message: \(message)"
         } else {
-          return "Error code: \(code)."
+          "Error code: \(code)."
         }
       }
     case .networkFailure(_):

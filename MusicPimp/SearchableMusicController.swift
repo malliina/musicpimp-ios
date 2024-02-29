@@ -101,7 +101,9 @@ extension SearchableMusicController: UISearchBarDelegate, UISearchControllerDele
     let whitespaceCharacterSet = CharacterSet.whitespaces
     let strippedString =
       searchController.searchBar.text?.trimmingCharacters(in: whitespaceCharacterSet) ?? ""
-    self.resultsController.search(strippedString)
+    Task {
+      await resultsController.search(strippedString)
+    }
   }
 
   override func encodeRestorableState(with coder: NSCoder) {

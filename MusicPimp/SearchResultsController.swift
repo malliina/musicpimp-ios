@@ -23,26 +23,24 @@ class SearchResultsController: BaseMusicController {
     return cell!
   }
 
-  func search(_ term: String) {
+  func search(_ term: String) async {
     let characters = term.count
     if characters >= 2 {
       latestSearchTerm = term
       withMessage("Searching for \(term)...") {
         self.results = []
       }
-      library.search(term).subscribe { (event) in
-        switch event {
-        case .success(let results):
-          // only updates the UI if the response represents the latest search
-          if self.latestSearchTerm == term {
-            self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
-              self.results = results
-            }
+      do {
+        let results = try await library.search(term)
+        // only updates the UI if the response represents the latest search
+        if self.latestSearchTerm == term {
+          self.withMessage(results.isEmpty ? "No results for \(term)" : nil) {
+            self.results = results
           }
-        case .failure(let err):
-          self.onSearchFailure(term, error: err)
         }
-      }.disposed(by: bag)
+      } catch {
+        onSearchFailure(term, error: error)
+      }
     } else {
       withMessage(characters == 1 ? "Input one more character..." : "Input two or more characters")
       {

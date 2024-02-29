@@ -29,7 +29,7 @@ class AlarmEndpointController: BaseTableController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    renderTable(endpoints.isEmpty ? "No eligible playback devices." : nil)
+    reloadTable(feedback: endpoints.isEmpty ? "No eligible playback devices." : nil)
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

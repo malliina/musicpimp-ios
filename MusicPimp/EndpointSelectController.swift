@@ -38,7 +38,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
     log.info("Endpoint added or updated, re-rendering endpoints table.")
     endpoints = settings.endpoints()
     updateSelected(loadActive())
-    renderTable()
+    reloadTable(feedback: nil)
     delegate?.endpointAddedOrUpdated(endpoint)
   }
 

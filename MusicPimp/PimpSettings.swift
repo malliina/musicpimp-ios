@@ -27,13 +27,13 @@ open class PimpSettings {
   let defaultAlarmEndpointSubject = PublishSubject<Endpoint>()
   var defaultAlarmEndpointChanged: Observable<Endpoint> { defaultAlarmEndpointSubject }
 
-  let notificationPermissionSubject = PublishSubject<Bool>()
-  var notificationPermissionChanged: Observable<Bool> { notificationPermissionSubject }
+  @Published var notificationPermissionChanged: Bool?
 
   let impl: Persistence
 
   init(impl: Persistence) {
     self.impl = impl
+    notificationPermissionChanged = nil
   }
 
   var trackHistory: [Date] {
@@ -70,7 +70,7 @@ open class PimpSettings {
     set(allowed) {
       let errors = impl.saveBool(allowed, key: PimpSettings.NotificationsAllowed)
       if errors == nil {
-        notificationPermissionSubject.onNext(allowed)
+        notificationPermissionChanged = allowed
       }
     }
   }

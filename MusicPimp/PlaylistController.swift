@@ -33,7 +33,9 @@ class PlaylistController: BaseMusicController {
     super.viewDidLoad()
     self.tableView?.register(
       SnapMainSubCell.self, forCellReuseIdentifier: FeedbackTable.mainAndSubtitleCellKey)
-    maybeRefresh(mode)
+    Task {
+      await maybeRefresh(mode)
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -78,62 +80,64 @@ class PlaylistController: BaseMusicController {
     maybeLoadMore(indexPath.row)
   }
 
-  fileprivate func maybeLoadMore(_ currentRow: Int) {
+  func maybeLoadMore(_ currentRow: Int) {
     let trackCount = tracks.count
     if currentRow + minItemsRemainingBeforeLoadMore == trackCount {
-      loadMore()
+      Task {
+        await loadMore()
+      }
     }
   }
 
-  func loadMore() {
+  func loadMore() async {
     // TODO DRY by refactoring recent and popular handling into reusable modules
     switch mode {
     case .popular:
       let from = popular.count
-      fetchPopular(from: from, maxItems: itemsPerLoad) { ps in
+      await fetchPopular(from: from, maxItems: itemsPerLoad) { ps in
         self.onMorePopulars(from, populars: ps)
       }
     case .recent:
       let from = recent.count
-      fetchRecent(from: from, maxItems: itemsPerLoad) { rs in
+      await fetchRecent(from: from, maxItems: itemsPerLoad) { rs in
         self.onMoreRecents(from, recents: rs)
       }
     }
   }
 
   // parent calls this one
-  func maybeRefresh(_ targetMode: ListMode) {
+  func maybeRefresh(_ targetMode: ListMode) async {
     mode = targetMode
     switch targetMode {
     case .popular:
       withMessage("Loading popular tracks...") {
         self.popular = []
       }
-      fetchPopular(from: 0, maxItems: itemsPerLoad, onPopulars: onPopularsLoaded)
+      await fetchPopular(from: 0, maxItems: itemsPerLoad, onPopulars: onPopularsLoaded)
     case .recent:
       withMessage("Loading recent tracks...") {
         self.recent = []
       }
-      fetchRecent(from: 0, maxItems: itemsPerLoad, onRecents: onRecentsLoaded)
+      await fetchRecent(from: 0, maxItems: itemsPerLoad, onRecents: onRecentsLoaded)
     }
   }
 
-  func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) {
-    library.popular(from, until: from + maxItems).subscribe { (event) in
-      switch event {
-      case .success(let pops): onPopulars(pops)
-      case .failure(let err): self.onPopularError(err)
-      }
-    }.disposed(by: bag)
+  func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) async {
+    do {
+      let pops = try await library.popular(from, until: from + maxItems)
+      onPopulars(pops)
+    } catch {
+      onPopularError(error)
+    }
   }
 
-  func fetchRecent(from: Int, maxItems: Int, onRecents: @escaping ([RecentEntry]) -> Void) {
-    library.recent(from, until: from + maxItems).subscribe { (event) in
-      switch event {
-      case .success(let recents): onRecents(recents)
-      case .failure(let err): self.onRecentError(err)
-      }
-    }.disposed(by: bag)
+  func fetchRecent(from: Int, maxItems: Int, onRecents: @escaping ([RecentEntry]) -> Void) async {
+    do {
+      let recents = try await library.recent(from, until: from + maxItems)
+      onRecents(recents)
+    } catch {
+      onRecentError(error)
+    }
   }
 
   func decorateRecentCell(_ cell: SnapMainSubCell, track: RecentEntry) {

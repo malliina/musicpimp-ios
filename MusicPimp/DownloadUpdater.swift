@@ -56,7 +56,6 @@ class DownloadUpdater {
   }
 
   private func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
-    // TODO use Rx to throttle this instead
     let path = dpu.relativePath
     if let trackProgress = downloadState[path] {
       let track = trackProgress.track
@@ -67,7 +66,6 @@ class DownloadUpdater {
         progressSubject.onNext(newProgress)
       } else {
         downloadState[path] = newProgress
-        //                progressSubject.onNext(newProgress)
         let now = DispatchTime.now()
         let shouldUpdate = enoughTimePassed(now: now)
         if shouldUpdate {

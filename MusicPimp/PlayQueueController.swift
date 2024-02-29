@@ -142,7 +142,9 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let sheet = UIAlertController(
       title: "Save Playlist", message: message, preferredStyle: .actionSheet)
     let saveAction = UIAlertAction(title: "Save Current", style: .default) { (a) -> Void in
-      self.savePlaylist(playlist)
+      Task {
+        await self.savePlaylist(playlist)
+      }
     }
     let newAction = UIAlertAction(title: "Create New", style: .default) { (a) -> Void in
       self.newPlaylistAction()
@@ -198,11 +200,13 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     dragButton.title = title
   }
 
-  fileprivate func savePlaylist(_ playlist: SavedPlaylist) {
-    runSingle(LibraryManager.sharedInstance.active.savePlaylist(playlist)) { id in
-      self.log.info(
-        "Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
-      self.savedPlaylist = playlist
+  fileprivate func savePlaylist(_ playlist: SavedPlaylist) async {
+    do {
+      let id = try await LibraryManager.sharedInstance.libraryUpdated.savePlaylist(playlist)
+      log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
+      savedPlaylist = playlist
+    } catch {
+      onError(error)
     }
   }
 

@@ -25,12 +25,9 @@ class HttpClient {
 
   let session = URLSession.shared
 
-  func executeParsed<T: Decodable>(_ req: URLRequest, to: T.Type) -> Single<T> {
-    return executeChecked(req).flatMap { (response) -> Single<T> in
-      self.recovered { () -> T in
-        try response.decode(to)
-      }
-    }
+  func executeParsed<T: Decodable>(_ req: URLRequest, to: T.Type) async throws -> T {
+    let checked = try await executeChecked(req)
+    return try checked.decode(to)
   }
 
   func recovered<T>(code: () throws -> T) -> Single<T> {
@@ -41,29 +38,30 @@ class HttpClient {
     }
   }
 
-  func executeChecked(_ req: URLRequest) -> Single<HttpResponse> {
+  func executeChecked(_ req: URLRequest) async throws -> HttpResponse {
     // Fix
     let url = req.url ?? URL(string: "https://www.musicpimp.org")!
-    return executeHttp(req).flatMap { self.statusChecked(url, response: $0) }
+    let response = try await executeHttp(req)
+    return try statusChecked(url, response: response)
   }
 
-  func executeHttp(_ req: URLRequest) -> Single<HttpResponse> {
-    return session.rx.response(request: req).asSingle().flatMap {
-      (result) -> Single<HttpResponse> in
-      let (response, data) = result
-      return Single.just(HttpResponse(http: response, data: data))
+  func executeHttp(_ req: URLRequest) async throws -> HttpResponse {
+    let (data, response) = try await session.data(for: req)
+    if let response = response as? HTTPURLResponse {
+      return HttpResponse(http: response, data: data)
+    } else {
+      throw PimpError.simple(
+        "Non-HTTP response received from \(req.url?.absoluteString ?? "no url").")
     }
   }
 
-  func statusChecked(_ url: URL, response: HttpResponse) -> Single<HttpResponse> {
+  func statusChecked(_ url: URL, response: HttpResponse) throws -> HttpResponse {
     if response.isStatusOK {
-      return Single.just(response)
+      return response
     } else {
       self.log.error("Request to '\(url)' failed with status '\(response.statusCode)'.")
       let errorMessage = try? response.decode(FailReason.self).reason
-      return Single.error(
-        PimpError.responseFailure(
-          ResponseDetails(resource: url, code: response.statusCode, message: errorMessage)))
+      throw PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: errorMessage))
     }
   }
 

@@ -226,12 +226,14 @@ class EditEndpointController: PimpViewController {
       log.info("Testing \(endpoint.httpBaseUrl)")
       feedback("Connecting...")
       let client = Libraries.fromEndpoint(endpoint)
-      let _ = client.pingAuth().subscribe { (event) in
-        switch event {
-        case .success(let version): self.onTestSuccess(endpoint, v: version)
-        case .failure(let error): self.onTestFailure(endpoint, error: error)
+      Task {
+        do {
+          let version = try await client.pingAuth()
+          onTestSuccess(endpoint, v: version)
+        } catch {
+          onTestFailure(endpoint, error: error)
         }
-      }.disposed(by: disposeBag)
+      }
     } else {
       feedback("Please ensure that all the fields are filled in properly.")
     }

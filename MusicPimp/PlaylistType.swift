@@ -2,12 +2,12 @@ import Foundation
 import RxSwift
 
 protocol PlaylistType {
-  var indexSubject: PublishSubject<Int?> { get }
-  var indexEvent: Observable<Int?> { get }
-  var playlistSubject: PublishSubject<Playlist> { get }
-  var playlistEvent: Observable<Playlist> { get }
-  var trackSubject: PublishSubject<Track> { get }
-  var trackAdded: Observable<Track> { get }
+  var indexPublisher: Published<Int?>.Publisher { get }
+  var indexEvent: Int? { get set }
+  var playlistPublisher: Published<Playlist?>.Publisher { get }
+  var playlistEvent: Playlist? { get set }
+  var trackPublisher: Published<Track?>.Publisher { get }
+  var trackAdded: Track? { get set }
 
   func add(_ track: Track) -> ErrorMessage?
 

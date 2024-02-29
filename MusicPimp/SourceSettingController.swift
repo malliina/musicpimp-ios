@@ -24,7 +24,7 @@ class SourceSettingController: EndpointSelectController, LibraryEndpointDelegate
 
   func onLibraryUpdated(to newLibrary: Endpoint) {
     updateSelected(newLibrary)
-    renderTable()
+    reloadTable()
   }
 
   override func use(endpoint: Endpoint) {

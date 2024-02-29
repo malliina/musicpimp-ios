@@ -28,24 +28,24 @@ class MostRecentList: TopListController<RecentEntry> {
     cell.fill(main: track.track.title, subLeft: track.track.artist, subRight: formattedDate)
   }
 
-  override func refresh() {
+  override func refresh() async {
     entries = []
-    renderTable("Loading recent tracks...")
-    library.recent(0, until: itemsPerLoad).subscribe { (event) in
-      switch event {
-      case .success(let rs): self.onTopLoaded(rs)
-      case .failure(let err): self.onTopError(err)
-      }
-    }.disposed(by: bag)
+    reloadTable(feedback: "Loading recent tracks...")
+    do {
+      let rs = try await library.recent(0, until: itemsPerLoad)
+      onTopLoaded(rs)
+    } catch {
+      onTopError(error)
+    }
   }
 
-  override func loadMore() {
+  override func loadMore() async {
     let oldSize = entries.count
-    library.recent(oldSize, until: oldSize + itemsPerLoad).subscribe { (event) in
-      switch event {
-      case .success(let rs): self.onMoreResults(oldSize, results: rs)
-      case .failure(let err): self.onTopError(err)
-      }
-    }.disposed(by: bag)
+    do {
+      let rs = try await library.recent(oldSize, until: oldSize + itemsPerLoad)
+      onMoreResults(oldSize, results: rs)
+    } catch {
+      onTopError(error)
+    }
   }
 }

@@ -6,8 +6,7 @@ class EndpointManager {
   fileprivate var log: Logger { EndpointManager.endpointLog }
   let key: String
   let settings: PimpSettings
-  private let changedSubject = PublishSubject<Endpoint>()
-  var changed: Observable<Endpoint> { changedSubject }
+  @Published var changed: Endpoint?
 
   init(key: String, settings: PimpSettings) {
     self.key = key
@@ -19,7 +18,7 @@ class EndpointManager {
     if let err = err {
       log.error("Failed to save \(e.name) as active to key \(key), error was \(err.message)")
     } else {
-      changedSubject.onNext(e)
+      changed = e
     }
     return err
   }

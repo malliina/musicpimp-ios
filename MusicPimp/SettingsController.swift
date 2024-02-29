@@ -51,23 +51,23 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
   }
 
   func endpointAddedOrUpdated(_ endpoint: Endpoint) {
-    renderTable()
+    reloadTable()
   }
 
   func onLibraryUpdated(to newLibrary: Endpoint) {
-    renderTable()
+    reloadTable()
   }
 
   func onPlayerUpdated(to newPlayer: Endpoint) {
-    renderTable()
+    reloadTable()
   }
 
   fileprivate func onCacheEnabledChanged(_ newEnabled: Bool) {
-    renderTable()
+    reloadTable()
   }
 
   override func onCacheLimitChanged(_ newLimit: StorageSize) {
-    renderTable()
+    reloadTable()
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
@@ -102,11 +102,11 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
   }
 
   fileprivate func textForIdentifier(_ reuseIdentifier: String) -> String {
-    switch reuseIdentifier {
-    case musicSourceId: return activeLibrary.name
-    case playbackDeviceId: return activePlayer.name
-    case cacheId: return settings.cacheEnabled ? currentLimitDescription : "off"
-    default: return ""
+    return switch reuseIdentifier {
+    case musicSourceId: activeLibrary.name
+    case playbackDeviceId: activePlayer.name
+    case cacheId: settings.cacheEnabled ? currentLimitDescription : "off"
+    default: ""
     }
   }
 
@@ -115,23 +115,23 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch section {
-    case 0: return 2
-    case 1: return 1
-    case 2: return 1
-    case 3: return 2
-    default: return 0
+    return switch section {
+    case 0: 2
+    case 1: 1
+    case 2: 1
+    case 3: 2
+    default: 0
     }
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
   {
-    switch section {
-    case 0: return "PLAYBACK"
-    case 1: return "STORAGE"
-    case 2: return "ALARM CLOCK"
-    case 3: return "ABOUT"
-    default: return nil
+    return switch section {
+    case 0: "PLAYBACK"
+    case 1: "STORAGE"
+    case 2: "ALARM CLOCK"
+    case 3: "ABOUT"
+    default: nil
     }
   }
 

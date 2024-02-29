@@ -5,14 +5,12 @@ class LibraryManager: EndpointManager {
   let log = LoggerFactory.shared.pimp(LibraryManager.self)
   static let sharedInstance = LibraryManager()
 
-  fileprivate var activeLibrary: LibraryType
-  var active: LibraryType { activeLibrary }
-  private let librarySubject = PublishSubject<LibraryType>()
-  var libraryUpdated: Observable<LibraryType> { librarySubject }
+  @Published var libraryUpdated: LibraryType
 
   init() {
+    log.info("Init library manager")
     let settings = PimpSettings.sharedInstance
-    activeLibrary = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
+    libraryUpdated = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
     super.init(key: PimpSettings.LIBRARY, settings: settings)
   }
 
@@ -22,10 +20,8 @@ class LibraryManager: EndpointManager {
 
   func use(endpoint: Endpoint) -> LibraryType {
     let _ = saveActive(endpoint)
-    let client = Libraries.fromEndpoint(endpoint)
-    activeLibrary = client
+    libraryUpdated = Libraries.fromEndpoint(endpoint)
     log.info("Library set to \(endpoint.name)")
-    librarySubject.onNext(client)
-    return client
+    return libraryUpdated
   }
 }

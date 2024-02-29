@@ -16,7 +16,7 @@ class CacheLimitController: BaseTableController {
   }
 
   func onCacheLimitChanged(_ newLimit: StorageSize) {
-    renderTable()
+    reloadTable()
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
