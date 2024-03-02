@@ -64,11 +64,10 @@ extension PlayerType {
   }
 
   private func restoreIndex(idx: Int?) -> ErrorMessage? {
-    if let idx = idx {
-      return skip(idx)
+    return if let idx = idx {
+      skip(idx)
     } else {
-      return nil
+      nil
     }
   }
-
 }

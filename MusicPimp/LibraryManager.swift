@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class LibraryManager: EndpointManager {
   let log = LoggerFactory.shared.pimp(LibraryManager.self)

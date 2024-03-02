@@ -1,7 +1,6 @@
 import AVFoundation
 import AudioToolbox
 import Foundation
-import RxSwift
 
 class LocalLibrary: BaseLibrary {
   let log = LoggerFactory.shared.pimp(LocalLibrary.self)
@@ -90,14 +89,10 @@ class LocalLibrary: BaseLibrary {
     self.musicRootPath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
   }
 
-  func deleteContents() -> Single<Bool> {
-    return Observable<Bool>.create { observer in
-      let outcome = self.deleteContentsSync()
-      observer.onNext(outcome)
-      observer.onCompleted()
-      return Disposables.create()
-    }.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-      .observe(on: MainScheduler.asyncInstance).asSingle()
+  func deleteContents() async -> Bool {
+    return await Task(priority: .background) {
+      self.deleteContentsSync()
+    }.value
   }
 
   private func deleteContentsSync() -> Bool {
@@ -116,7 +111,7 @@ class LocalLibrary: BaseLibrary {
     } catch _ {
       dirRecreateSuccess = false
     }
-    contentsSubject.onNext(nil)
+    contentsUpdated = nil
     return deleteSuccess && dirRecreateSuccess
   }
 

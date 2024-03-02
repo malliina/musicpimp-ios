@@ -9,7 +9,11 @@ class CacheLimitController: BaseTableController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    run(settings.cacheLimitChanged, onResult: self.onCacheLimitChanged)
+    Task {
+      for await limit in settings.$cacheLimitChanged.nonNilValues() {
+        onCacheLimitChanged(limit)
+      }
+    }
     [currentCacheCell, cacheCell].forEach { (id) in
       registerCell(reuseIdentifier: id)
     }

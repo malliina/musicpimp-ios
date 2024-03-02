@@ -1,6 +1,5 @@
 import Foundation
 import QuartzCore
-import RxSwift
 import StoreKit
 
 extension Selector {
@@ -15,7 +14,6 @@ class IAPViewController: PimpViewController {
   let purchaseButton = PimpButton.with(title: "Purchase MusicPimp Premium")
   let alreadyPurchasedLabel = PimpLabel.centered(text: "Already purchased?")
   let restoreButton = PimpButton.with(title: "Restore MusicPimp Premium")
-  var disposable: RxSwift.Disposable? = nil
 
   var products: [SKProduct] = []
   var premiumProduct: SKProduct? = nil
@@ -28,9 +26,11 @@ class IAPViewController: PimpViewController {
     purchaseButton.addTarget(self, action: .purchaseClicked, for: .touchUpInside)
     restoreButton.addTarget(self, action: .restoreClicked, for: .touchUpInside)
     togglePurchaseViews(true)
-    disposable = TransactionObserver.sharedInstance.events.subscribe(onNext: { (transaction) in
-      self.onTransactionUpdate(transaction)
-    })
+    Task {
+      for await transaction in TransactionObserver.sharedInstance.$events.nonNilValues() {
+        onTransactionUpdate(transaction)
+      }
+    }
     initUI()
   }
 

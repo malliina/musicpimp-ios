@@ -192,14 +192,11 @@ class CacheTableController: CacheInfoController {
     }
   }
 
-  fileprivate func deleteCache() {
-    let _ = library.deleteContents().subscribe { (bool) in
-      self.log.info("Done")
-      self.calculateCacheUsage()
-    } onFailure: { (err) in
-      self.log.info("Failed to delete contents: '\(err)'.")
-    } onDisposed: {
-      ()
+  private func deleteCache() {
+    Task {
+      let _ = await library.deleteContents()
+      log.info("Done")
+      calculateCacheUsage()
     }
   }
 }

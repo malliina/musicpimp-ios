@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class EndpointManager {
   static let endpointLog = LoggerFactory.shared.system(EndpointManager.self)

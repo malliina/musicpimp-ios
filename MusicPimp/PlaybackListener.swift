@@ -56,18 +56,14 @@ class EndpointsListener: BaseListener {
 
   func subscribe() {
     Task {
-      for await library in LibraryManager.sharedInstance.$changed.values {
-        if let library = library {
+      for await library in LibraryManager.sharedInstance.$changed.nonNilValues() {
 //          log.info("Changing to library \(library)")
-          libraryUpdated(library)
-        }
+        libraryUpdated(library)
       }
     }
     Task {
-      for await player in PlayerManager.sharedInstance.$changed.values {
-        if let player = player {
-          playerChanged(player)
-        }
+      for await player in PlayerManager.sharedInstance.$changed.nonNilValues() {
+        playerChanged(player)
       }
     }
   }
@@ -85,7 +81,7 @@ protocol PlayersDelegate {
   func onPlayerChanged(to newPlayer: PlayerType)
 }
 protocol TrackEventDelegate {
-  func onTrackChanged(_ track: Track?)
+  func onTrackChanged(_ track: Track?) async
 }
 protocol PlaybackEventDelegate: TrackEventDelegate {
   func onTimeUpdated(_ position: Duration)
@@ -108,7 +104,7 @@ class PlaybackListener: BaseListener {
   func subscribe() {
 //    log.info("Subscribing to playback events...")
     Task {
-      for await player in playerManager.$playerChanged.dropFirst().removeDuplicates(by: { p1, p2 in
+      for await player in playerManager.$playerChanged.removeDuplicates(by: { p1, p2 in
         p1.id == p2.id
       }).values {
         subscribe(to: player)
@@ -117,13 +113,11 @@ class PlaybackListener: BaseListener {
   }
 
   private func subscribe(to newPlayer: PlayerType) {
-//    log.info("Subscribing to player \(newPlayer.id)...")
+    log.info("Subscribing to player \(newPlayer.id)...")
     unsubscribe()
     Task {
-      for await playlist in player.playlist.playlistPublisher.values {
-        if let playlist = playlist {
-          playlists?.onNewPlaylist(playlist)
-        }
+      for await playlist in player.playlist.playlistPublisher.nonNilValues() {
+        playlists?.onNewPlaylist(playlist)
       }
     }
     Task {
@@ -133,22 +127,18 @@ class PlaybackListener: BaseListener {
     }
     Task {
       for await track in newPlayer.trackEvent.values {
-        tracks?.onTrackChanged(track)
-        playbacks?.onTrackChanged(track)
+        await tracks?.onTrackChanged(track)
+        await playbacks?.onTrackChanged(track)
       }
     }
     Task {
-      for await time in newPlayer.timeEvent.values {
-        if let time = time {
-          playbacks?.onTimeUpdated(time)
-        }
+      for await time in newPlayer.timeEvent.nonNilValues() {
+        playbacks?.onTimeUpdated(time)
       }
     }
     Task {
-      for await state in newPlayer.stateEvent.values {
-        if let state = state {
-          playbacks?.onStateChanged(state)
-        }
+      for await state in newPlayer.stateEvent.nonNilValues() {
+        playbacks?.onStateChanged(state)
       }
     }
 //    log.info("Subscribed to player \(newPlayer.id).")

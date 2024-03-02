@@ -26,12 +26,12 @@ public class DownloadProgressUpdate {
   }
 
   func copy(_ newTotalExpected: StorageSize) -> DownloadProgressUpdate {
-    return DownloadProgressUpdate(
+    DownloadProgressUpdate(
       info: info, writtenDelta: writtenDelta, written: written, totalExpected: newTotalExpected)
   }
 
   static func initial(info: DownloadTask, size: StorageSize) -> DownloadProgressUpdate {
-    return DownloadProgressUpdate(
+    DownloadProgressUpdate(
       info: info, writtenDelta: StorageSize.Zero, written: StorageSize.Zero, totalExpected: size)
   }
 }
@@ -42,7 +42,7 @@ struct DownloadInfo: Codable {
   let authValue: String
 
   func toTask(id: Int) -> DownloadTask {
-    return DownloadTask(
+    DownloadTask(
       taskId: id, relativePath: relativePath, destinationURL: destinationURL, authValue: authValue)
   }
 }
@@ -95,11 +95,11 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
   }
 
   fileprivate func stringify(_ state: URLSessionTask.State) -> String {
-    switch state {
-    case .completed: return "Completed"
-    case .running: return "Running"
-    case .canceling: return "Canceling"
-    case .suspended: return "Suspended"
+    return switch state {
+    case .completed: "Completed"
+    case .running: "Running"
+    case .canceling: "Canceling"
+    case .suspended: "Suspended"
     }
   }
 
@@ -198,15 +198,15 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
   }
 
   func pathTo(_ relativePath: RelativePath) -> String {
-    return self.basePath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
+    self.basePath + "/" + relativePath.replacingOccurrences(of: "\\", with: "/")
   }
 
   func urlTo(_ relativePath: RelativePath) -> URL? {
-    return URL(fileURLWithPath: pathTo(relativePath))
+    URL(fileURLWithPath: pathTo(relativePath))
   }
 
   func simpleError(_ message: String) -> PimpError {
-    return PimpError.simpleError(ErrorMessage(message))
+    PimpError.simpleError(ErrorMessage(message))
   }
 
   func urlSession(

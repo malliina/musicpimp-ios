@@ -81,7 +81,7 @@ class VolumeViewController: PimpViewController {
     dismiss(animated: true, completion: nil)
   }
 
-  fileprivate func onVolumeChanged(_ volume: VolumeValue) {
+  private func onVolumeChanged(_ volume: VolumeValue) {
     let value = sliderValue(volume)
     Util.onUiThread {
       self.volumeSlider.value = value
@@ -92,18 +92,16 @@ class VolumeViewController: PimpViewController {
     volume.toFloat() * (volumeSlider.maximumValue - volumeSlider.minimumValue)
   }
 
-  fileprivate func listenWhenAppeared(_ targetPlayer: PlayerType) {
+  private func listenWhenAppeared(_ targetPlayer: PlayerType) {
     unlistenWhenDisappeared()
     Task {
-      for await vol in targetPlayer.volumeEvent.values {
-        if let vol = vol {
-          onVolumeChanged(vol)
-        }
+      for await vol in targetPlayer.volumeEvent.nonNilValues() {
+        onVolumeChanged(vol)
       }
     }
   }
 
-  fileprivate func unlistenWhenDisappeared() {
+  private func unlistenWhenDisappeared() {
     appearedBag = DisposeBag()
   }
 }

@@ -88,10 +88,8 @@ class EditAlarmTableViewController: BaseTableController {
         case .error(let err): self.onConnectError(err)
         case .completed:
           Task {
-            for await newState in p.stateEvent.values {
-              if let newState = newState {
-                self.onPlayerState(newState)
-              }
+            for await newState in p.stateEvent.nonNilValues() {
+              self.onPlayerState(newState)
             }
           }
           self.onPlayerState(p.current().state)

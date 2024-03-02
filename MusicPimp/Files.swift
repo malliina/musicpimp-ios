@@ -35,7 +35,7 @@ class File: Path {
   }
 
   static func fromPath(_ absolutePath: String) -> File {
-    return File(url: URL(fileURLWithPath: absolutePath))
+    File(url: URL(fileURLWithPath: absolutePath))
   }
 }
 
@@ -58,13 +58,13 @@ class FolderContents {
 
 extension URL {
   var isDirectory: Bool {
-    return Files.booleanKey(self, key: URLResourceKey.isDirectoryKey.rawValue)
+    Files.booleanKey(self, key: URLResourceKey.isDirectoryKey.rawValue)
   }
   var isFile: Bool {
-    return Files.booleanKey(self, key: URLResourceKey.isRegularFileKey.rawValue)
+    Files.booleanKey(self, key: URLResourceKey.isRegularFileKey.rawValue)
   }
   var name: String {
-    return Files.localize(self)
+    Files.localize(self)
   }
 }
 

@@ -15,18 +15,10 @@ open class PimpSettings {
 
   public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
 
-  let endpointsSubject = PublishSubject<[Endpoint]>()
-  var endpointsEvent: Observable<[Endpoint]> { endpointsSubject }
-
-  let cacheLimitSubject = PublishSubject<StorageSize>()
-  var cacheLimitChanged: Observable<StorageSize> { cacheLimitSubject }
-
-  let cacheEnabledSubject = PublishSubject<Bool>()
-  var cacheEnabledChanged: Observable<Bool> { cacheEnabledSubject }
-
-  let defaultAlarmEndpointSubject = PublishSubject<Endpoint>()
-  var defaultAlarmEndpointChanged: Observable<Endpoint> { defaultAlarmEndpointSubject }
-
+  @Published var endpointsEvent: [Endpoint] = []
+  @Published var cacheLimitChanged: StorageSize?
+  @Published var cacheEnabledChanged: Bool?
+  @Published var defaultAlarmEndpointChanged: Endpoint?
   @Published var notificationPermissionChanged: Bool?
 
   let impl: Persistence
@@ -47,7 +39,7 @@ open class PimpSettings {
     }
   }
 
-  var changes: Observable<Setting> { return impl.changes }
+  var changes: Observable<Setting> { impl.changes }
 
   var pushToken: PushToken? {
     get {
@@ -80,7 +72,7 @@ open class PimpSettings {
     set(value) {
       let errors = impl.saveBool(value, key: PimpSettings.CACHE_ENABLED)
       if errors == nil {
-        cacheEnabledSubject.onNext(value)
+        cacheEnabledChanged = value
       }
     }
   }
@@ -98,12 +90,12 @@ open class PimpSettings {
     get {
       impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
     }
-    set(newLimit) {
+    set (newLimit) {
       if let error = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT) {
         log.error("Failed to save cache limit: \(error.message)")
       } else {
         log.info("Saved cache limit to \(newLimit)")
-        cacheLimitSubject.onNext(newLimit)
+        cacheLimitChanged = newLimit
       }
     }
   }
@@ -130,7 +122,7 @@ open class PimpSettings {
   func saveDefaultNotificationsEndpoint(_ e: Endpoint, publish: Bool) {
     let errors = impl.save(e.id, key: PimpSettings.defaultAlarmEndpoint)
     if errors == nil && publish {
-      defaultAlarmEndpointSubject.onNext(e)
+      defaultAlarmEndpointChanged = e
     }
   }
 
@@ -179,7 +171,7 @@ open class PimpSettings {
   func saveAll(_ es: [Endpoint]) {
     if impl.save(EndpointsContainer(endpoints: es), key: PimpSettings.ENDPOINTS) == nil {
       let esAfter = endpoints()
-      endpointsSubject.onNext(esAfter)
+      endpointsEvent = esAfter
     } else {
       log.error("Unable to save endpoints")
     }

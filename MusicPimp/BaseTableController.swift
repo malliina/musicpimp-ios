@@ -72,7 +72,7 @@ class BaseTableController: UITableViewController {
   }
   
   @MainActor
-  private func reloadTableData(feedback: String? = nil) {
+  func reloadTableData(feedback: String? = nil) {
     log.info("Reloading table...")
     if let feedback = feedback {
       self.setFeedback(feedback)
@@ -125,7 +125,7 @@ class BaseTableController: UITableViewController {
   }
 
   func clickedRow(_ touchEvent: AnyObject) -> Int? {
-    return clickedIndexPath(touchEvent)?.row
+    clickedIndexPath(touchEvent)?.row
   }
 
   // TODO add link to source (SO?)

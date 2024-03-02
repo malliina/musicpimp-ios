@@ -41,24 +41,22 @@ class CoverService {
 
   let downloader = Downloader(basePath: coversDir)
 
-  func cover(_ artist: String, album: String) -> Single<CoverResult> {
+  func cover(_ artist: String, album: String) async -> CoverResult {
     if let url = coverURL(artist, album: album) {
       let relativeCoverFilePath = "\(artist)-\(album).jpg"
-      return downloader.download(
-        url,
-        authValue: nil,
-        relativePath: relativeCoverFilePath
-      )
-      .map { path in
-        //                    self.log.info("Got \(path)")
+      do {
+        let path = try await downloader.download(
+          url,
+          authValue: nil,
+          relativePath: relativeCoverFilePath
+        )
         return CoverResult(artist: artist, album: album, coverPath: path)
-      }
-      .catch { err in
-        self.log.info("Failed to download cover. \(err)")
-        return Single.just(CoverResult.noCover(artist, album: album))
+      } catch {
+        self.log.info("Failed to download cover. \(error)")
+        return CoverResult.noCover(artist, album: album)
       }
     } else {
-      return Single.just(CoverResult.noCover(artist, album: album))
+      return CoverResult.noCover(artist, album: album)
     }
   }
 

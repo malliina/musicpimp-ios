@@ -16,10 +16,10 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
   fileprivate var downloadUpdates: RxSwift.Disposable? = nil
   private var reloadOnDidAppear = false
-  var reloadDataOnAppear = false
   let listener = PlaybackListener()
 
   var isFirstLoad = true
+  private var libraryIdOnDisappear: String = LibraryManager.sharedInstance.libraryUpdated.id
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -36,7 +36,34 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
       await reloadData()
     }
   }
-  
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    if reloadOnDidAppear {
+      reloadTable(feedback: computeMessage(folder))
+    }
+    listener.subscribe()
+    if libraryIdOnDisappear != libraryManager.libraryUpdated.id {
+      Task {
+        await reloadData()
+      }
+    }
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    listener.unsubscribe()
+    if !DownloadUpdater.instance.isEmpty {
+      reloadOnDidAppear = true
+    }
+    libraryIdOnDisappear = libraryManager.libraryUpdated.id
+  }
+
+  func stopUpdates() {
+    downloadUpdates?.dispose()
+    downloadUpdates = nil
+  }
+
   private func reloadData() async {
     do {
       if let folder = selected {
@@ -48,41 +75,15 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
       onLoadError(error)
     }
   }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    log.info("viewDidAppear of \(selected?.title ?? "no selected") with reload \(reloadOnDidAppear) data \(reloadDataOnAppear)")
-    if reloadOnDidAppear {
-      reloadTable(feedback: computeMessage(folder))
-    }
-    if reloadDataOnAppear {
-      reloadDataOnAppear = false
-      Task {
-        await reloadData()
-      }
-    }
-    listener.subscribe()
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    listener.unsubscribe()
-    if !DownloadUpdater.instance.isEmpty {
-      reloadOnDidAppear = true
-    }
-  }
-
-  func stopUpdates() {
-    downloadUpdates?.dispose()
-    downloadUpdates = nil
-  }
-
+  
   @MainActor
   func onTrackChanged(_ track: Track?) {
-    // updates any highlighted row
-    reloadTable(feedback: nil)
-    // why?
-    view.setNeedsUpdateConstraints()
+    onUiThread {
+      // updates any highlighted row
+      self.reloadTableData()
+      // why?
+      self.view.setNeedsUpdateConstraints()
+    }
   }
 
   func loadFolder(_ id: FolderID) async throws {

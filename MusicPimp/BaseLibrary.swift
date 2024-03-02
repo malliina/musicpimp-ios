@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 open class BaseLibrary: LibraryType {
   var id: String { "" }
@@ -7,9 +6,9 @@ open class BaseLibrary: LibraryType {
   var rootFolderKey: String { "" }
   var authValue: String { "" }
   var authQuery: String { "" }
-  let contentsSubject = PublishSubject<MusicFolder?>()
-  var contentsUpdated: Observable<MusicFolder?> { contentsSubject }
-
+  @Published var contentsUpdated: MusicFolder?
+  var contentsUpdatedPublisher: Published<MusicFolder?>.Publisher { $contentsUpdated }
+  
   let notImplementedError = PimpError.simpleError(ErrorMessage("Not implemented yet"))
 
   func pingAuth() async throws -> Version {
@@ -30,7 +29,7 @@ open class BaseLibrary: LibraryType {
 
   // the saved playlists
   func playlists() async throws -> [SavedPlaylist] {
-    return []
+    []
   }
 
   func playlist(_ id: PlaylistID) async throws -> SavedPlaylist {
@@ -54,11 +53,11 @@ open class BaseLibrary: LibraryType {
   }
 
   func search(_ term: String) async throws -> [Track] {
-    return []
+    []
   }
 
   func alarms() async throws -> [Alarm] {
-    return []
+    []
   }
 
   func saveAlarm(_ alarm: Alarm) async throws -> HttpResponse {

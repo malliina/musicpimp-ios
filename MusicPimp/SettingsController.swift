@@ -40,7 +40,11 @@ class SettingsController: CacheInfoController, EditEndpointDelegate, PlayerEndpo
     [playbackDeviceId, musicSourceId, cacheId, alarmId, aboutId, creditsId].forEach { id in
       self.tableView?.register(DisclosureCell.self, forCellReuseIdentifier: id)
     }
-    run(settings.cacheEnabledChanged, onResult: self.onCacheEnabledChanged)
+    Task {
+      for await enabled in settings.$cacheEnabledChanged.nonNilValues() {
+        onCacheEnabledChanged(enabled)
+      }
+    }
     listener.players = self
     listener.libraries = self
     listener.subscribe()

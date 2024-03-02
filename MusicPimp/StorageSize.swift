@@ -48,16 +48,16 @@ struct StorageSize: CustomStringConvertible, Comparable, LargeIntCodable {
   fileprivate func describe(
     _ bytes: String, kilos: String, megas: String, gigas: String, teras: String
   ) -> String {
-    if toTeras >= 10 {
-      return "\(toTeras) \(teras)"
+    return if toTeras >= 10 {
+      "\(toTeras) \(teras)"
     } else if toGigs >= 10 {
-      return "\(toGigs) \(gigas)"
+      "\(toGigs) \(gigas)"
     } else if toMegs >= 10 {
-      return "\(toMegs) \(megas)"
+      "\(toMegs) \(megas)"
     } else if toKilos >= 10 {
-      return "\(toKilos) \(kilos)"
+      "\(toKilos) \(kilos)"
     } else {
-      return "\(toBytes) \(bytes)"
+      "\(toBytes) \(bytes)"
     }
   }
 

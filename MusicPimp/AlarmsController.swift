@@ -65,7 +65,11 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
       }
     }
     pushSwitch = onOff
-    run(settings.defaultAlarmEndpointChanged, onResult: self.didChangeDefaultAlarmEndpoint)
+    Task {
+      for await e in settings.$defaultAlarmEndpointChanged.nonNilValues() {
+        didChangeDefaultAlarmEndpoint(e)
+      }
+    }
   }
 
   /// Keeps the header margins synced with the cells' margins.
@@ -148,10 +152,8 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
 
   func askUserForPermission(onResult: @escaping (Bool) async -> Void) {
     Task {
-      for await bool in PimpSettings.sharedInstance.$notificationPermissionChanged.first().values {
-        if let bool = bool {
-          await onResult(bool)
-        }
+      for await bool in PimpSettings.sharedInstance.$notificationPermissionChanged.first().nonNilValues() {
+        await onResult(bool)
       }
     }
     PimpNotifications.sharedInstance.initNotifications(UIApplication.shared)
@@ -234,7 +236,7 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 3
+    3
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

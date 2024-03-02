@@ -1,15 +1,11 @@
 import Foundation
 import MediaPlayer
-import RxSwift
 
 class ExternalCommandDelegate: NSObject {
   static let sharedInstance = ExternalCommandDelegate()
 
   let log = LoggerFactory.shared.pimp(ExternalCommandDelegate.self)
-  var player: PlayerType { return PlayerManager.sharedInstance.playerChanged }
-  private var disposable: Disposable? = nil
-
-  let bag = DisposeBag()
+  var player: PlayerType { PlayerManager.sharedInstance.playerChanged }
 
   func initialize(_ commandCenter: MPRemoteCommandCenter) {
     commandCenter.playCommand.addTarget(self, action: #selector(ExternalCommandDelegate.onPlay))
@@ -37,24 +33,21 @@ class ExternalCommandDelegate: NSObject {
   func onLocalTrackChanged(_ track: Track?) {
     let center = MPNowPlayingInfoCenter.default()
     if let track = track {
-      var info: [String: AnyObject] = [
-        MPMediaItemPropertyTitle: track.title as AnyObject,
-        MPMediaItemPropertyArtist: track.artist as AnyObject,
-        MPMediaItemPropertyAlbumTitle: track.album as AnyObject,
-        MPMediaItemPropertyMediaType: MPMediaType.music.rawValue as AnyObject,
-        MPMediaItemPropertyPlaybackDuration: TimeInterval(track.duration.seconds) as AnyObject,
-      ]
-      let _ = CoverService.sharedInstance.cover(track.artist, album: track.album).subscribe {
-        (result) in
+      
+      Task {
+        var info: [String: AnyObject] = [
+          MPMediaItemPropertyTitle: track.title as AnyObject,
+          MPMediaItemPropertyArtist: track.artist as AnyObject,
+          MPMediaItemPropertyAlbumTitle: track.album as AnyObject,
+          MPMediaItemPropertyMediaType: MPMediaType.music.rawValue as AnyObject,
+          MPMediaItemPropertyPlaybackDuration: TimeInterval(track.duration.seconds) as AnyObject,
+        ]
+        let result = await CoverService.sharedInstance.cover(track.artist, album: track.album)
         if let image = result.imageOrDefault {
           info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(
             boundsSize: image.size, requestHandler: { size in image.withSize(scaledToSize: size) })
         }
         center.nowPlayingInfo = info
-      } onFailure: { (err) in
-        self.log.error("Failed to fetch cover for '\(track.artist) - \(track.album). \(err)")
-      } onDisposed: {
-        ()
       }
     } else {
       center.nowPlayingInfo = nil

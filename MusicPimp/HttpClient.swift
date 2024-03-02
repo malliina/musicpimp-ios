@@ -19,7 +19,7 @@ class HttpClient {
   }
 
   static func encodeBase64(_ unencoded: String) -> String {
-    return unencoded.data(using: String.Encoding.utf8)!.base64EncodedString(
+    unencoded.data(using: String.Encoding.utf8)!.base64EncodedString(
       options: NSData.Base64EncodingOptions())
   }
 

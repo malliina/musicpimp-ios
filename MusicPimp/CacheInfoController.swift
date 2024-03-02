@@ -8,7 +8,11 @@ class CacheInfoController: BaseTableController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    run(settings.cacheLimitChanged, onResult: self.onCacheLimitChanged)
+    Task {
+      for await limit in settings.$cacheLimitChanged.nonNilValues() {
+        onCacheLimitChanged(limit)
+      }
+    }
   }
 
   func onCacheLimitChanged(_ newSize: StorageSize) {

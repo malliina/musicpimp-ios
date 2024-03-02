@@ -48,7 +48,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     let current = player.current()
-    onTrackChanged(current.track)
+    Task {
+      await onTrackChanged(current.track)
+    }
     if current.track != nil {
       updatePosition(current.position)
     }
@@ -158,7 +160,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
     self.navigationController?.setNavigationBarHidden(isHidden, animated: true)
   }
 
-  override func updateNoMedia() {
+  override func updateNoMedia() async {
     Util.onUiThread {
       self.updateDuration(self.defaultDuration)
       self.updatePosition(self.defaultPosition)
@@ -168,46 +170,40 @@ class PlayerController: ListeningController, PlaybackDelegate {
     }
   }
 
-  override func updateMedia(_ track: Track) {
+  override func updateMedia(_ track: Track) async {
     Util.onUiThread {
       self.updateDuration(track.duration)
       self.titleLabel.text = track.title
       self.albumLabel.text = track.album
       self.artistLabel.text = track.artist
-      self.updateCover(track)
+    }
+    await self.updateCover(track)
+  }
+
+  private func updateCover(_ track: Track) async {
+    let result = await CoverService.sharedInstance.cover(track.artist, album: track.album)
+    var image = CoverService.defaultCover
+    // the track may have changed between the time the cover was requested and received
+    if let imageResult = result.image, self.player.current().track?.title == track.title {
+      image = imageResult
+    }
+    if let image = image {
+      Util.onUiThread {
+        //                    self.log.info("Setting cover of \(image) for \(track.title)")
+        self.coverImage.image = image
+      }
+    } else {
+      self.log.warn("No image. This is most likely an error.")
     }
   }
 
-  fileprivate func updateCover(_ track: Track) {
-    let _ = CoverService.sharedInstance.cover(track.artist, album: track.album).subscribe {
-      (result) in
-      //            self.log.info("Got \(result.image)")
-      var image = CoverService.defaultCover
-      // the track may have changed between the time the cover was requested and received
-      if let imageResult = result.image, self.player.current().track?.title == track.title {
-        image = imageResult
-      }
-      if let image = image {
-        Util.onUiThread {
-          //                    self.log.info("Setting cover of \(image) for \(track.title)")
-          self.coverImage.image = image
-        }
-      } else {
-        self.log.warn("No image. This is most likely an error.")
-      }
-    } onFailure: { (err) in
-      self.log.error("Failed to update cover for \(track.artist) - \(track.album).")
-    } onDisposed: {
-      ()
-    }
-  }
-
-  fileprivate func updateDuration(_ duration: Duration) {
+  private func updateDuration(_ duration: Duration) {
     seek.maximumValue = duration.secondsFloat
     durationLabel.text = duration.description
   }
 
-  fileprivate func updatePosition(_ position: Duration) {
+  private func updatePosition(_ position: Duration) {
+//    log.info("Updating position to \(position)")
     Util.onUiThread {
       let isUserDragging = self.seek.isHighlighted
       if !isUserDragging {
@@ -222,6 +218,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   override func onStateChanged(_ state: PlaybackState) {
+//    updatePlay
     //        updatePlayPause(state == .Playing)
   }
 

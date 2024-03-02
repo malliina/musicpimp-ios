@@ -13,6 +13,7 @@ extension UIButton {
 }
 
 class SnapPlaybackFooter: BaseView {
+  private let log = LoggerFactory.shared.vc(SnapPlaybackFooter.self)
   let pauseIconName = "fa-pause"
   let playIconName = "fa-play"
   let prevIconName = "fa-step-backward"
@@ -72,6 +73,7 @@ class SnapPlaybackFooter: BaseView {
   }
 
   @objc func onPlayPauseClicked(_ button: UIButton) {
+    log.info("onPlayPauseClicked delegate \(delegate)")
     delegate?.onPlayPause()
   }
 

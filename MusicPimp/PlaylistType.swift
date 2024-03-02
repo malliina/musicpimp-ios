@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 protocol PlaylistType {
   var indexPublisher: Published<Int?>.Publisher { get }

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 // Intentionally does not implement PlaylistType because Swift sucks, but PlaylistType implementations
 // can still extend this for convenience

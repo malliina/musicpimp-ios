@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 class Util {
@@ -88,5 +89,17 @@ extension Data {
     let hexBytes = bytes.map { String(format: "%02hhx", $0) }
     // Concatenates all hex strings
     return hexBytes.joined(separator: "")
+  }
+}
+
+extension Publisher where Self.Failure == Never {
+  public func removeNils<T>() -> Publishers.CompactMap<Self, T> where Self.Output == T? {
+    self.compactMap { out in
+      out
+    }
+  }
+  
+  public func nonNilValues<T>() -> AsyncPublisher<Publishers.CompactMap<Self, T>> where Self.Output == T? {
+    removeNils().values
   }
 }

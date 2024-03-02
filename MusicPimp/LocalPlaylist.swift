@@ -8,23 +8,23 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
   fileprivate var index: Int? = nil
 
   static func newPlaylistIndex(_ current: Int, src: Int, dest: Int) -> Int {
-    if src == current {
-      return dest
+    return if src == current {
+      dest
     } else if src < current && dest >= current {
-      return current - 1
+      current - 1
     } else if src > current && dest <= current {
-      return current + 1
+      current + 1
     } else {
-      return current
+      current
     }
   }
 
   func current() -> Playlist {
-    return Playlist(tracks: ts, index: index)
+    Playlist(tracks: ts, index: index)
   }
 
   func position() -> Int? {
-    return index
+    index
   }
 
   func currentTrack() -> Track? {

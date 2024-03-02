@@ -5,8 +5,7 @@ import StoreKit
 class TransactionObserver: NSObject, SKPaymentTransactionObserver {
   let log = LoggerFactory.shared.pimp(TransactionObserver.self)
   static let sharedInstance = TransactionObserver()
-  private let subject = PublishSubject<SKPaymentTransaction>()
-  var events: Observable<SKPaymentTransaction> { return subject }
+  @Published var events: SKPaymentTransaction?
 
   func paymentQueue(
     _ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]
@@ -33,7 +32,7 @@ class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         log.error("Unexpected transactions state \(transaction.transactionState)")
         break
       }
-      subject.onNext(transaction)
+      events = transaction
       if state == .purchased || state == .failed || state == .restored {
         finishTransaction(transaction)
       }

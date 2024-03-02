@@ -24,19 +24,19 @@ class ListeningController: PimpViewController, PlaybackEventDelegate {
     listener.unsubscribe()
   }
 
-  func onTrackChanged(_ track: Track?) {
+  func onTrackChanged(_ track: Track?) async {
     if let track = track {
-      updateMedia(track)
+      await updateMedia(track)
     } else {
-      updateNoMedia()
+      await updateNoMedia()
     }
   }
 
-  func updateMedia(_ track: Track) {
+  func updateMedia(_ track: Track) async {
 
   }
 
-  func updateNoMedia() {
+  func updateNoMedia() async {
 
   }
 

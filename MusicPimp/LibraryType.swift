@@ -1,12 +1,11 @@
 import Foundation
-import RxSwift
 
 protocol LibraryType {
   var id: String { get }
   var isLocal: Bool { get }
   var authValue: String { get }
   var authQuery: String { get }
-  var contentsUpdated: Observable<MusicFolder?> { get }
+  var contentsUpdatedPublisher: Published<MusicFolder?>.Publisher { get }
   var rootFolderKey: String { get }
 
   func pingAuth() async throws -> Version
