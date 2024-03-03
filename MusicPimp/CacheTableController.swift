@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class CacheTableController: CacheInfoController {
   private let log = LoggerFactory.shared.pimp(CacheTableController.self)
@@ -19,9 +18,7 @@ class CacheTableController: CacheInfoController {
 
   var library: LocalLibrary { LocalLibrary.sharedInstance }
 
-  let disposeBag = DisposeBag()
-  let usedStorage = BehaviorSubject<StorageSize>(value: StorageSize.Zero)
-  private var latestStorage: StorageSize = StorageSize.Zero
+  @Published var usedStorage = StorageSize.Zero
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -39,12 +36,13 @@ class CacheTableController: CacheInfoController {
       self, action: #selector(CacheTableController.didToggleCache(_:)),
       for: UIControl.Event.valueChanged)
     onOffSwitch.isOn = settings.cacheEnabled
-    usedStorage.observe(on: MainScheduler.asyncInstance).subscribe(
-      onNext: { (size) in
-        self.latestStorage = size
-        self.tableView.reloadData()
-      }, onError: nil, onCompleted: nil, onDisposed: nil
-    ).disposed(by: disposeBag)
+    Task {
+      for await storage in $usedStorage.values {
+        onUiThread {
+          self.tableView.reloadData()
+        }
+      }
+    }
     calculateCacheUsage()
   }
 
@@ -73,7 +71,7 @@ class CacheTableController: CacheInfoController {
 
   fileprivate func calculateCacheUsage() {
     DispatchQueue.global(qos: .background).async {
-      self.usedStorage.onNext(self.library.size)
+      self.usedStorage = self.library.size
     }
   }
 
@@ -93,7 +91,7 @@ class CacheTableController: CacheInfoController {
       return cell
     case CurrentUsageCell:
       let cell = basicCell(spec: spec, indexPath: indexPath)
-      cell.detailTextLabel?.text = latestStorage.shortDescription
+      cell.detailTextLabel?.text = usedStorage.shortDescription
       return cell
     case DeleteCustom:
       let cell = basicCell(spec: spec, indexPath: indexPath)
@@ -117,43 +115,43 @@ class CacheTableController: CacheInfoController {
 
   func specForRow(indexPath: IndexPath) -> RowSpec? {
     let row = indexPath.row
-    switch indexPath.section {
+    return switch indexPath.section {
     case 0:
       switch row {
-      case 0: return RowSpec(reuseIdentifier: CacheEnabledCell, text: "Automatic Offline Storage")
-      default: return nil
+      case 0: RowSpec(reuseIdentifier: CacheEnabledCell, text: "Automatic Offline Storage")
+      default: nil
       }
     case 1:
       switch row {
-      case 0: return RowSpec(reuseIdentifier: CacheSizeCell, text: "Size Limit")
-      case 1: return RowSpec(reuseIdentifier: CurrentUsageCell, text: "Current Usage")
-      default: return nil
+      case 0: RowSpec(reuseIdentifier: CacheSizeCell, text: "Size Limit")
+      case 1: RowSpec(reuseIdentifier: CurrentUsageCell, text: "Current Usage")
+      default: nil
       }
     case 2:
       switch row {
-      case 0: return RowSpec(reuseIdentifier: DeleteCustom, text: "Delete Offline Storage")
-      default: return nil
+      case 0: RowSpec(reuseIdentifier: DeleteCustom, text: "Delete Offline Storage")
+      default: nil
       }
     default:
-      return nil
+      nil
     }
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch section {
-    case 0: return 1
-    case 1: return 2
-    case 2: return 1
-    default: return 0
+    return switch section {
+    case 0: 1
+    case 1: 2
+    case 2: 1
+    default: 0
     }
   }
 
   override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
   {
-    if section == 0 {
-      return footerView(identifier: sectionFooterIdentifier, content: headerLabel)
+    return if section == 0 {
+      footerView(identifier: sectionFooterIdentifier, content: headerLabel)
     } else {
-      return super.tableView(tableView, viewForFooterInSection: section)
+      super.tableView(tableView, viewForFooterInSection: section)
     }
   }
 

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 /// Downloads upcoming tracks in advance whenever the local track changes
 class PlaylistPrefetcher {
@@ -11,8 +10,6 @@ class PlaylistPrefetcher {
   //    let playlist = LocalPlayer.sharedInstance.playlist
   let playlist = LocalPlaylist.sharedInstance
   let library = LocalLibrary.sharedInstance
-  var disposable: Disposable? = nil
-  let bag = DisposeBag()
 
   init() {
     Task {

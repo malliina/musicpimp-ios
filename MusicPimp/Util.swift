@@ -98,8 +98,9 @@ extension Publisher where Self.Failure == Never {
       out
     }
   }
-  
-  public func nonNilValues<T>() -> AsyncPublisher<Publishers.CompactMap<Self, T>> where Self.Output == T? {
+
+  public func nonNilValues<T>() -> AsyncPublisher<Publishers.CompactMap<Self, T>>
+  where Self.Output == T? {
     removeNils().values
   }
 }

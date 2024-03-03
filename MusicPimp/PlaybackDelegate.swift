@@ -1,7 +1,7 @@
 import Foundation
 
 protocol PlaybackDelegate {
-  func onPlayPause()
-  func onPrev()
-  func onNext()
+  func onPlayPause() async
+  func onPrev() async
+  func onNext() async
 }

@@ -17,7 +17,7 @@ class LibraryManager: EndpointManager {
     settings.endpoints()
   }
 
-  func use(endpoint: Endpoint) -> LibraryType {
+  func use(endpoint: Endpoint) async -> LibraryType {
     let _ = saveActive(endpoint)
     libraryUpdated = Libraries.fromEndpoint(endpoint)
     log.info("Library set to \(endpoint.name)")

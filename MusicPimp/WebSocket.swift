@@ -1,7 +1,7 @@
 import Foundation
 
 protocol WebSocketMessageDelegate {
-  func on(message: String)
+  func on(message: String) async
 }
 
 protocol OpenCloseDelegate {
@@ -44,19 +44,14 @@ class WebSocket: NSObject, URLSessionWebSocketDelegate {
     task?.resume()
   }
 
-  func send(_ msg: String) -> Bool {
-    if let task = task {
-      task.send(
-        .string(msg),
-        completionHandler: { error in
-          if let error = error {
-            self.log.warn("Failed to send '\(msg)' over socket \(self.baseURL). \(error)")
-          }
-        })
-      return true
-    } else {
-      return false
+  func send(_ msg: String) async -> Bool {
+    guard let task = task else { return false }
+    do {
+      try await task.send(.string(msg))
+    } catch {
+      log.warn("Failed to send '\(msg)' over socket \(self.baseURL). \(error)")
     }
+    return true
   }
 
   /** Fucking Christ Swift sucks. "Authorization" is a "reserved header" where iOS chooses not to send its value even when set, it seems. So we set it in two ways anyway and hope that either works: both to the request and the session configuration.
@@ -78,7 +73,9 @@ class WebSocket: NSObject, URLSessionWebSocketDelegate {
     openCloseDelegate?.onOpen(task: webSocketTask)
     log.info("Connected to \(urlString).")
     isConnected = true
-    receive()
+    Task {
+      await receive()
+    }
   }
 
   func urlSession(
@@ -90,21 +87,19 @@ class WebSocket: NSObject, URLSessionWebSocketDelegate {
     isConnected = false
   }
 
-  private func receive() {
-    task?.receive { result in
+  private func receive() async {
+    guard let task = task else { return }
+    do {
+      let result = try await task.receive()
       switch result {
-      case .success(let message):
-        switch message {
-        case .data(let data):
-          self.log.warn("Data received \(data)")
-        case .string(let text):
-          //            self.log.debug("Text received \(text)")
-          self.delegate?.on(message: text)
-          self.receive()
-        }
-      case .failure(let error):
-        self.log.error("Error when receiving \(error)")
+      case .data(let data):
+        log.warn("Data received \(data)")
+      case .string(let text):
+        await delegate?.on(message: text)
+        await receive()
       }
+    } catch {
+      log.error("Error when receiving \(error)")
     }
   }
 

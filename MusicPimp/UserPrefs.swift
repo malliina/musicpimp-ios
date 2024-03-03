@@ -17,14 +17,13 @@ struct Wrapped<T: Codable>: Codable {
   }
 }
 
-open class UserPrefs: Persistence {
+class UserPrefs: Persistence {
   let log = LoggerFactory.shared.system(UserPrefs.self)
   static let sharedInstance = UserPrefs()
 
   let prefs = UserDefaults.standard
-  let subject = PublishSubject<Setting>()
 
-  var changes: Observable<Setting> { return subject }
+  @Published var changes: Setting?
 
   let encoder = JSONEncoder()
   let decoder = JSONDecoder()
@@ -36,10 +35,10 @@ open class UserPrefs: Persistence {
         return ErrorMessage("Unable to encode data for key '\(key)' to String.")
       }
       prefs.set(asString, forKey: key)
-      subject.onNext(Setting(key: key, contents: asString))
+      changes = Setting(key: key, contents: asString)
       return nil
-    } catch let err {
-      return ErrorMessage("Unable to encode to key '\(key)'. \(err)")
+    } catch {
+      return ErrorMessage("Unable to encode to key '\(key)'. \(error)")
     }
   }
 

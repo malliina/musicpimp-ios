@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class BaseMusicController: PimpTableController, AccessoryDelegate {
   private let log = LoggerFactory.shared.vc(BaseMusicController.self)
@@ -10,9 +9,6 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
 
   var musicItems: [MusicItem] { [] }
 
-  // generic listeners
-  var listeners: [RxSwift.Disposable] = []
-
   override func viewDidLoad() {
     super.viewDidLoad()
     self.tableView?.register(SnapTrackCell.self, forCellReuseIdentifier: trackCellId)
@@ -20,19 +16,7 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return currentFeedback == nil ? musicItems.count : 0
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    stopListening()
-  }
-
-  func stopListening() {
-    for listener in listeners {
-      listener.dispose()
-    }
-    listeners = []
+    currentFeedback == nil ? musicItems.count : 0
   }
 
   func trackCell(_ item: Track, index: IndexPath) -> SnapTrackCell? {
@@ -108,11 +92,11 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
   }
 
   func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
-    return accessoryAction("Play", action: { _ in _ = self.playTrack(track) })
+    accessoryAction("Play", action: { _ in _ = Task { await self.playTrack(track) } })
   }
 
   func addTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
-    return accessoryAction("Add", action: { _ in _ = self.addTrack(track) })
+    accessoryAction("Add", action: { _ in _ = Task { await self.addTrack(track) } })
   }
 
   func displayActionsForFolder(_ folder: Folder, row: Int) {
@@ -127,8 +111,8 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
     let message = ""
     let sheet = UIAlertController(
       title: title, message: message, preferredStyle: UIAlertController.Style.actionSheet)
-    let playAction = accessoryAction("Play", action: { _ in self.playFolder(id) })
-    let addAction = accessoryAction("Add", action: { _ in self.addFolder(id) })
+    let playAction = accessoryAction("Play", action: { _ in await self.playFolder(id) })
+    let addAction = accessoryAction("Add", action: { _ in await self.addFolder(id) })
     let downloadAction = accessoryAction("Download") { _ in
       Task {
         await self.withTracks(id: id, f: self.downloadIfNeeded)
@@ -146,38 +130,39 @@ class BaseMusicController: PimpTableController, AccessoryDelegate {
     self.present(sheet, animated: true, completion: nil)
   }
 
-  func accessoryAction(_ title: String, action: @escaping (UIAlertAction) -> Void) -> UIAlertAction
+  func accessoryAction(_ title: String, action: @escaping (UIAlertAction) async -> Void)
+    -> UIAlertAction
   {
-    return UIAlertAction(title: title, style: UIAlertAction.Style.default, handler: action)
-  }
-
-  func playFolder(_ id: FolderID) {
-    Task {
-      await withTracks(id: id, f: self.playTracksChecked)
+    UIAlertAction(title: title, style: UIAlertAction.Style.default) { uiaa in
+      Task {
+        await action(uiaa)
+      }
     }
   }
 
-  func playTrack(_ track: Track) -> ErrorMessage? {
-    playTracksChecked([track]).headOption()
+  func playFolder(_ id: FolderID) async {
+    await withTracks(id: id, f: self.playTracksChecked)
   }
 
-  func addFolder(_ id: FolderID) {
-    Task {
-      await withTracks(id: id, f: self.addTracksChecked)
-    }
+  func playTrack(_ track: Track) async -> ErrorMessage? {
+    await playTracksChecked([track]).headOption()
   }
 
-  func withTracks(id: FolderID, f: @escaping ([Track]) -> [ErrorMessage]) async {
+  func addFolder(_ id: FolderID) async {
+    await withTracks(id: id, f: self.addTracksChecked)
+  }
+
+  func withTracks(id: FolderID, f: @escaping ([Track]) async -> [ErrorMessage]) async {
     do {
       let ts = try await library.tracks(id)
-      let _ = f(ts)
+      let _ = await f(ts)
     } catch {
       onError(error)
     }
   }
 
-  func addTrack(_ track: Track) -> ErrorMessage? {
-    addTracksChecked([track]).headOption()
+  func addTrack(_ track: Track) async -> ErrorMessage? {
+    await addTracksChecked([track]).headOption()
   }
 
   func reload(_ emptyText: String) {

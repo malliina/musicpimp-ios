@@ -48,9 +48,9 @@ class PlayerController: ListeningController, PlaybackDelegate {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     let current = player.current()
-    Task {
-      await onTrackChanged(current.track)
-    }
+//    Task {
+//      await onTrackChanged(current.track)
+//    }
     if current.track != nil {
       updatePosition(current.position)
     }
@@ -171,6 +171,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   override func updateMedia(_ track: Track) async {
+    log.info("Updating media \(track.title)")
     Util.onUiThread {
       self.updateDuration(track.duration)
       self.titleLabel.text = track.title
@@ -203,7 +204,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   private func updatePosition(_ position: Duration) {
-//    log.info("Updating position to \(position)")
+    //    log.info("Updating position to \(position)")
     Util.onUiThread {
       let isUserDragging = self.seek.isHighlighted
       if !isUserDragging {
@@ -218,32 +219,32 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   override func onStateChanged(_ state: PlaybackState) {
-//    updatePlay
+    //    updatePlay
     //        updatePlayPause(state == .Playing)
   }
 
-  func onPrev() {
-    _ = limitChecked {
-      self.player.prev()
+  func onPrev() async {
+    _ = await limitChecked {
+      await self.player.prev()
     }
   }
 
-  func onPlayPause() {
-    playOrPause()
+  func onPlayPause() async {
+    await playOrPause()
   }
 
-  func onNext() {
-    _ = limitChecked {
-      self.player.next()
+  func onNext() async {
+    _ = await limitChecked {
+      await self.player.next()
     }
   }
 
-  fileprivate func playOrPause() {
+  fileprivate func playOrPause() async {
     if player.current().isPlaying {
-      _ = self.player.pause()
+      _ = await self.player.pause()
     } else {
-      _ = limitChecked {
-        self.player.play()
+      _ = await limitChecked {
+        await self.player.play()
       }
     }
   }
@@ -252,8 +253,10 @@ class PlayerController: ListeningController, PlaybackDelegate {
     let seekValue = seek.value
     // TODO throttle
     if let pos = seekValue.seconds {
-      _ = limitChecked {
-        self.player.seek(pos)
+      Task {
+        _ = await limitChecked {
+          await self.player.seek(pos)
+        }
       }
     } else {
       log.info("Unable to convert value to Duration: \(seekValue)")

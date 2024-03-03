@@ -80,13 +80,17 @@ struct MusicPimpApp: App {
           presenting: changePlayerSuggestion
         ) { suggestion in
           Button {
-            players.performHandover(to: suggestion.to)
+            Task {
+              await players.performHandover(to: suggestion.to)
+            }
           } label: {
             Text(suggestion.handover)
           }
           if let changeOnly = suggestion.changeNoHandover {
             Button {
-              players.changePlayer(to: suggestion.to)
+              Task {
+                await players.changePlayer(to: suggestion.to)
+              }
             } label: {
               Text(changeOnly)
             }
@@ -201,18 +205,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func connectToPlayer() {
-    do {
-      
-    } catch {
-      onConnectionFailure(error)
+    Task {
+      _ = await PlayerManager.sharedInstance.playerChanged.open()
+      onConnectionOpened()
     }
-    PlayerManager.sharedInstance.playerChanged.open().subscribe { (event) in
-      switch event {
-      case .next(_): ()
-      case .error(let err): self.onConnectionFailure(err)
-      case .completed: self.onConnectionOpened()
-      }
-    }.disposed(by: bag)
   }
 
   private func onConnectionOpened() {

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import UIKit
 
 class BaseTableController: UITableViewController {
@@ -8,7 +7,6 @@ class BaseTableController: UITableViewController {
 
   let limiter = Limiter.sharedInstance
   var currentFeedback: String? = nil
-  let bag = DisposeBag()
 
   init() {
     super.init(style: UITableView.Style.plain)
@@ -70,10 +68,9 @@ class BaseTableController: UITableViewController {
       self.reloadTableData(feedback: feedback)
     }
   }
-  
+
   @MainActor
   func reloadTableData(feedback: String? = nil) {
-    log.info("Reloading table...")
     if let feedback = feedback {
       self.setFeedback(feedback)
     } else {
@@ -140,20 +137,6 @@ class BaseTableController: UITableViewController {
   func onError(_ error: Error) {
     Util.onError(error)
   }
-
-  func runSingle<T>(_ o: Single<T>, onResult: @escaping (T) -> Void) {
-    run(o.asObservable(), onResult: onResult)
-  }
-
-  func run<T>(_ o: Observable<T>, onResult: @escaping (T) -> Void) {
-    o.subscribe { (event) in
-      switch event {
-      case .next(let t): onResult(t)
-      case .error(let err): self.onError(err)
-      case .completed: ()
-      }
-    }.disposed(by: bag)
-  }
 }
 
 class IAPConstants {
@@ -165,9 +148,9 @@ class IAPConstants {
 }
 
 extension UIViewController {
-  func limitChecked<T>(_ code: () -> T) -> T? {
+  func limitChecked<T>(_ code: () async -> T) async -> T? {
     if Limiter.sharedInstance.isWithinLimit() {
-      return code()
+      return await code()
     } else {
       suggestPremium()
       return nil

@@ -15,7 +15,7 @@ class PimpSocket: PlayerSocket {
     super.init(baseURL: baseURL, headers: headers)
   }
 
-  func send<T: Encodable>(_ json: T) -> ErrorMessage? {
+  func send<T: Encodable>(_ json: T) async -> ErrorMessage? {
     if let socket = socket {
       let encoder = JSONEncoder()
       do {
@@ -23,11 +23,11 @@ class PimpSocket: PlayerSocket {
         guard let asString = String(data: data, encoding: .utf8) else {
           return ErrorMessage("JSON-to-String conversion failed.")
         }
-        let ret = socket.send(asString)
+        let ret = await socket.send(asString)
         log.info("Sent \(asString) to \(baseURL)) return value \(ret)")
         return nil
-      } catch let err {
-        return failWith("Unable to send payload, encountered non-JSON payload: '\(err)'.")
+      } catch {
+        return failWith("Unable to send payload, encountered non-JSON payload: '\(error)'.")
       }
     } else {
       return failWith("Unable to send payload, socket not available.")
@@ -39,7 +39,7 @@ class PimpSocket: PlayerSocket {
     return ErrorMessage(message)
   }
 
-  override func on(message: String) {
+  override func on(message: String) async {
     guard let data = message.data(using: String.Encoding.utf8, allowLossyConversion: false) else {
       log.error("Cannot read message data from: '\(message)'.")
       return
@@ -75,7 +75,7 @@ class PimpSocket: PlayerSocket {
         delegate.onState(try decoder.decode(PlayerStateJson.self, from: data))
         break
       case JsonKeys.WELCOME:
-        if let err = send(SimpleCommand(cmd: JsonKeys.STATUS)) {
+        if let err = await send(SimpleCommand(cmd: JsonKeys.STATUS)) {
           log.error("Unable to send welcome message over socket: '\(err.message)'.")
         }
         break

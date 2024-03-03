@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class Endpoints {
   static let
@@ -47,7 +46,8 @@ class PimpHttpClient: HttpClient {
     return try await executeParsed(req, to: to)
   }
 
-  func pimpPostParsed<W: Encodable, R: Decodable>(_ resource: String, payload: W, to: R.Type) async throws
+  func pimpPostParsed<W: Encodable, R: Decodable>(_ resource: String, payload: W, to: R.Type)
+    async throws
     -> R
   {
     let response = try await pimpPost(resource, payload: payload)

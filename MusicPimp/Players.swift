@@ -70,19 +70,19 @@ class Players {
       cancel: "Continue on \(player.name)")
   }
 
-  func changePlayer(to: Endpoint) {
-    pauseCurrent()
-    playerManager.use(endpoint: to)
+  func changePlayer(to: Endpoint) async {
+    await pauseCurrent()
+    await playerManager.use(endpoint: to)
   }
 
-  func performHandover(to: Endpoint) {
+  func performHandover(to: Endpoint) async {
     let currentState = playerManager.playerChanged.current()
-    pauseCurrent()
-    playerManager.use(endpoint: to) { p in let _ = p.handover(state: currentState) }
+    await pauseCurrent()
+    await playerManager.use(endpoint: to) { p in let _ = await p.handover(state: currentState) }
   }
 
-  func pauseCurrent() {
-    if let error = playerManager.playerChanged.pause() {
+  func pauseCurrent() async {
+    if let error = await playerManager.playerChanged.pause() {
       self.log.warn("Unable to pause player: \(error)")
     }
   }

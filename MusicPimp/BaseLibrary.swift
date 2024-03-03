@@ -8,7 +8,7 @@ open class BaseLibrary: LibraryType {
   var authQuery: String { "" }
   @Published var contentsUpdated: MusicFolder?
   var contentsUpdatedPublisher: Published<MusicFolder?>.Publisher { $contentsUpdated }
-  
+
   let notImplementedError = PimpError.simpleError(ErrorMessage("Not implemented yet"))
 
   func pingAuth() async throws -> Version {

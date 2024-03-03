@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 extension Selector {
   fileprivate static let saveClicked = #selector(EditAlarmTableViewController.onSave(_:))
@@ -27,8 +26,6 @@ class EditAlarmTableViewController: BaseTableController {
   private var player: PlayerType? = nil
   private var delegate: EditAlarmDelegate? = nil
   private var isPlaying: Bool = false
-
-  var playbackBag = DisposeBag()
 
   let datePicker = UIDatePicker()
 
@@ -82,19 +79,15 @@ class EditAlarmTableViewController: BaseTableController {
     reloadTable(feedback: nil)
     if let endpoint = endpoint {
       let p = Players.sharedInstance.fromEndpoint(endpoint)
-      p.open().subscribe { (event) in
-        switch event {
-        case .next(_): ()
-        case .error(let err): self.onConnectError(err)
-        case .completed:
-          Task {
-            for await newState in p.stateEvent.nonNilValues() {
-              self.onPlayerState(newState)
-            }
+      Task {
+        let _ = await p.open()
+        Task {
+          for await newState in p.stateEvent.nonNilValues() {
+            self.onPlayerState(newState)
           }
-          self.onPlayerState(p.current().state)
         }
-      }.disposed(by: playbackBag)
+        self.onPlayerState(p.current().state)
+      }
       player = p
     }
   }
@@ -110,17 +103,16 @@ class EditAlarmTableViewController: BaseTableController {
   override func viewWillDisappear(_ animated: Bool) {
     updateDate()
     player?.close()
-    playbackBag = DisposeBag()
     super.viewWillDisappear(animated)
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    switch section {
-    case 0: return 1
-    case 1: return 2
-    case 2: return 1
-    case 3: return 1
-    default: return 0
+    return switch section {
+    case 0: 1
+    case 1: 2
+    case 2: 1
+    case 3: 1
+    default: 0
     }
   }
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -128,7 +120,7 @@ class EditAlarmTableViewController: BaseTableController {
   }
 
   func initEditAlarm(_ alarm: Alarm, endpoint: Endpoint) {
-    self.mutableAlarm = MutableAlarm(alarm)
+    mutableAlarm = MutableAlarm(alarm)
     self.endpoint = endpoint
   }
 
@@ -276,12 +268,14 @@ class EditAlarmTableViewController: BaseTableController {
       case playIdentifier:
         tableView.deselectRow(at: indexPath, animated: false)
         if let track = mutableAlarm?.track, let _ = endpoint, let player = player {
-          if isPlaying {
-            let _ = player.pause()
-          } else {
-            let _ = player.resetAndPlay(tracks: [track])
+          Task {
+            if isPlaying {
+              let _ = await player.pause()
+            } else {
+              let _ = await player.resetAndPlay(tracks: [track])
+            }
+            // self.log.debug("Playing \(track.title): \(success)")
           }
-          // self.log.debug("Playing \(track.title): \(success)")
         } else {
           let desc = mutableAlarm?.track?.title ?? "no alarm or track"
           log.error("Cannot play track, \(desc)")

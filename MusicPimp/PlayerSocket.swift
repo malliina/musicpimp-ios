@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 
 // Web socket that supports reconnects
-class PlayerSocket: WebSocketMessageDelegate, OpenCloseDelegate {
+class PlayerSocket: WebSocketMessageDelegate {
   private let log = LoggerFactory.shared.network(PlayerSocket.self)
   var socket: WebSocket? = nil
   let baseURL: URL
@@ -16,34 +16,36 @@ class PlayerSocket: WebSocketMessageDelegate, OpenCloseDelegate {
     self.headers = headers
   }
 
-  func open() -> Observable<Void> {
+  func open() async -> URL {
     close()
     let webSocket = WebSocket(baseURL: baseURL, headers: headers)
     webSocket.delegate = self
-    webSocket.openCloseDelegate = self
     self.socket = webSocket
-    return Observable<Void>.create { observer in
-      self.openObserver = observer
+    return await withCheckedContinuation { cont in
+      class OpenClose: OpenCloseDelegate {
+        let cont: CheckedContinuation<URL, Never>
+        let url: URL
+        let log: Logger
+        init(cont: CheckedContinuation<URL, Never>, url: URL, log: Logger) {
+          self.cont = cont
+          self.url = url
+          self.log = log
+        }
+        func onOpen(task: URLSessionWebSocketTask) {
+          cont.resume(returning: url)
+        }
+        func onClose(task: URLSessionWebSocketTask) {
+          log.info("Closed connection to '\(url)'.")
+        }
+      }
+      webSocket.openCloseDelegate = OpenClose(cont: cont, url: baseURL, log: log)
       self.log.info("Connecting to '\(self.baseURL)'...")
       webSocket.connect()
-      return Disposables.create()
     }
   }
 
-  func on(message: String) {
+  func on(message: String) async {
     log.info("Got message \(message)")
-  }
-
-  func onOpen(task: URLSessionWebSocketTask) {
-    log.info("Socket opened to \(baseURL)")
-    if let observer = openObserver {
-      observer.onCompleted()
-      openObserver = nil
-    }
-  }
-
-  func onClose(task: URLSessionWebSocketTask) {
-    log.info("Error for connection to \(baseURL)")
   }
 
   func close() {

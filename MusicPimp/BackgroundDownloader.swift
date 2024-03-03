@@ -68,8 +68,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
     basePath: LocalLibrary.sharedInstance.musicRootPath, sessionID: "org.musicpimp.downloads.tracks"
   )
 
-  private let subject = PublishSubject<DownloadProgressUpdate>()
-  var events: Observable<DownloadProgressUpdate> { return subject }
+  @Published var events: DownloadProgressUpdate?
   fileprivate let fileManager = FileManager.default
   let basePath: String
 
@@ -115,11 +114,11 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
         return "\(t.taskIdentifier): \(stateDescribed)"
       })
       self.synchronized {
-        let actualTasks = self.tasks.filterKeys({ (taskID, value) -> Bool in
-          downloads.exists({ (task) -> Bool in
+        let actualTasks = self.tasks.filterKeys { (taskID, value) -> Bool in
+          downloads.exists { (task) -> Bool in
             return task.taskIdentifier == taskID
-          })
-        })
+          }
+        }
         if !taskIDs.isEmpty {
           self.log.info("Restoring \(actualTasks.count) tasks, system had tasks \(taskIDs)")
         }
@@ -141,7 +140,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
       let destURL = URL(fileURLWithPath: destPath)
       let info = DownloadInfo(
         relativePath: relativePath, destinationURL: destURL, authValue: authValue)
-      self.log.info("Download \(url) to dest path \(destPath) with url \(destURL)")
+      log.info("Download \(url) to dest path \(destPath) with url \(destURL)")
       return download(url, info: info)
     } else {
       log.error("Unable to prepare destination URL \(relativePath)")
@@ -254,7 +253,7 @@ class BackgroundDownloader: NSObject, URLSessionDownloadDelegate, URLSessionTask
       let update = DownloadProgressUpdate(
         info: info, writtenDelta: writtenDelta, written: written, totalExpected: expectedSize)
       //            log.info("Task \(taskID) wrote \(writtenDelta) written \(written) expected \(expectedSize)")
-      subject.onNext(update)
+      events = update
     } else {
       if taskOpt == nil {
         //info("Download task not found: \(taskID)")

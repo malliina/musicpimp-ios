@@ -10,7 +10,7 @@ open class PimpLibrary: BaseLibrary {
 
   let identifier: String
   override var id: String { identifier }
-  
+
   init(endpoint: Endpoint, client: PimpHttpClient) {
     self.endpoint = endpoint
     self.client = client
@@ -39,17 +39,20 @@ open class PimpLibrary: BaseLibrary {
   }
 
   override func playlist(_ id: PlaylistID) async throws -> SavedPlaylist {
-    let res = try await client.pimpGetParsed("\(Endpoints.PLAYLISTS)\(id.id)", to: SavedPlaylistResponse.self)
+    let res = try await client.pimpGetParsed(
+      "\(Endpoints.PLAYLISTS)\(id.id)", to: SavedPlaylistResponse.self)
     return res.playlist
   }
 
   override func popular(_ from: Int, until: Int) async throws -> [PopularEntry] {
-    let res = try await client.pimpGetParsed("\(Endpoints.Popular)?from=\(from)&until=\(until)", to: Populars.self)
+    let res = try await client.pimpGetParsed(
+      "\(Endpoints.Popular)?from=\(from)&until=\(until)", to: Populars.self)
     return res.populars
   }
 
   override func recent(_ from: Int, until: Int) async throws -> [RecentEntry] {
-    let res = try await client.pimpGetParsed("\(Endpoints.Recent)?from=\(from)&until=\(until)", to: Recents.self)
+    let res = try await client.pimpGetParsed(
+      "\(Endpoints.Recent)?from=\(from)&until=\(until)", to: Recents.self)
     return res.recents
   }
 
@@ -69,7 +72,8 @@ open class PimpLibrary: BaseLibrary {
     if let encodedTerm = term.addingPercentEncoding(
       withAllowedCharacters: CharacterSet.urlQueryAllowed)
     {
-      return try await client.pimpGetParsed("\(Endpoints.SEARCH)?term=\(encodedTerm)", to: [Track].self)
+      return try await client.pimpGetParsed(
+        "\(Endpoints.SEARCH)?term=\(encodedTerm)", to: [Track].self)
     } else {
       throw PimpError.simple("Invalid search term: \(term)")
     }
@@ -93,7 +97,8 @@ open class PimpLibrary: BaseLibrary {
     try await alarmsPost(SimpleCommand(cmd: JsonKeys.STOP))
   }
 
-  override func registerNotifications(_ token: PushToken, tag: String) async throws -> HttpResponse {
+  override func registerNotifications(_ token: PushToken, tag: String) async throws -> HttpResponse
+  {
     try await alarmsPost(RegisterPush(id: token, tag: tag))
   }
 

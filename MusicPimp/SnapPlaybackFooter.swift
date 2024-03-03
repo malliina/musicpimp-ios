@@ -69,16 +69,21 @@ class SnapPlaybackFooter: BaseView {
   }
 
   @objc func onPrevClicked(_ button: UIButton) {
-    delegate?.onPrev()
+    Task {
+      await delegate?.onPrev()
+    }
   }
 
   @objc func onPlayPauseClicked(_ button: UIButton) {
-    log.info("onPlayPauseClicked delegate \(delegate)")
-    delegate?.onPlayPause()
+    Task {
+      await delegate?.onPlayPause()
+    }
   }
 
   @objc func onNextClicked(_ button: UIButton) {
-    delegate?.onNext()
+    Task {
+      await delegate?.onNext()
+    }
   }
 
   func setBigSize() {

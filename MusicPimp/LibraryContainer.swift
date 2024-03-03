@@ -26,7 +26,7 @@ class LibraryContainer: PlaybackContainer, LibraryDelegate {
     let willPop = parent == nil
     if willPop {
       guard let library = child as? LibraryController else { return }
-      library.stopListening()
+      //      library.stopListening()
       library.stopUpdates()
     }
   }

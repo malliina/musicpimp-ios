@@ -1,15 +1,14 @@
+import Combine
 import Foundation
-import RxSwift
 
 class DownloadUpdater {
   static let instance = DownloadUpdater(downloader: BackgroundDownloader.musicDownloader)
   let log = LoggerFactory.shared.network(DownloadUpdater.self)
-  let progressSubject = PublishSubject<TrackProgress>()
-  var progress: Observable<TrackProgress> { progressSubject }
-  var slowProgress: Observable<[TrackProgress]> {
-    progress.buffer(
-      timeSpan: .seconds(1), count: 100,
-      scheduler: ConcurrentDispatchQueueScheduler(qos: .background))
+  @Published var progress: TrackProgress?
+  private let q = DispatchQueue(label: "DownloadUpdater")
+
+  var slowProgress: Publishers.CollectByTime<Published<TrackProgress?>.Publisher, DispatchQueue> {
+    $progress.collect(.byTimeOrCount(q, 1.0, 100))
   }
 
   fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
@@ -18,16 +17,16 @@ class DownloadUpdater {
   let fps: UInt64 = 1
 
   let downloader: BackgroundDownloader
-  //    let innerDisposable: Disposable
-  let bag = DisposeBag()
 
   var isEmpty: Bool { downloadState.isEmpty }
 
   init(downloader: BackgroundDownloader) {
     self.downloader = downloader
-    downloader.events.subscribe(onNext: { (update) in
-      self.onDownloadProgressUpdate(update)
-    }).disposed(by: bag)
+    Task {
+      for await update in downloader.$events.nonNilValues() {
+        onDownloadProgressUpdate(update)
+      }
+    }
   }
 
   func progressFor(track: Track) -> TrackProgress? {
@@ -63,14 +62,14 @@ class DownloadUpdater {
       let isDownloadComplete = newProgress.isCompleted
       if isDownloadComplete {
         downloadState.removeValue(forKey: path)
-        progressSubject.onNext(newProgress)
+        progress = newProgress
       } else {
         downloadState[path] = newProgress
         let now = DispatchTime.now()
         let shouldUpdate = enoughTimePassed(now: now)
         if shouldUpdate {
           lastDownloadUpdate = now
-          progressSubject.onNext(newProgress)
+          progress = newProgress
         }
       }
     }

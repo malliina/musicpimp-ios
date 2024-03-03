@@ -8,30 +8,41 @@ class PimpPlaylist: BasePlaylist, PlaylistType {
     self.socket = socket
   }
 
-  func skip(_ index: Int) -> ErrorMessage? {
-    socket.send(IntPayload(skip: index))
+  func skip(_ index: Int) async -> ErrorMessage? {
+    await socket.send(IntPayload(skip: index))
   }
 
-  func add(_ track: Track) -> ErrorMessage? {
-    return socket.send(AddTrackPayload(cmd: JsonKeys.ADD, track: track.id))
+  func add(_ track: Track) async -> ErrorMessage? {
+    await socket.send(AddTrackPayload(cmd: JsonKeys.ADD, track: track.id))
   }
 
-  func add(_ tracks: [Track]) -> [ErrorMessage] {
-    tracks.flatMapOpt { (track) -> ErrorMessage? in
-      add(track)
-    }
+  func add(_ tracks: [Track]) async -> [ErrorMessage] {
+    await tracks.traverse { track in
+      await add(track)
+    }.compactMap({ $0 })
   }
 
-  func removeIndex(_ index: Int) -> ErrorMessage? {
-    socket.send(IntPayload(removeAt: index))
+  func removeIndex(_ index: Int) async -> ErrorMessage? {
+    await socket.send(IntPayload(removeAt: index))
   }
 
-  func move(_ src: Int, dest: Int) -> ErrorMessage? {
-    socket.send(MoveTrack(cmd: JsonKeys.Move, from: src, to: dest))
+  func move(_ src: Int, dest: Int) async -> ErrorMessage? {
+    await socket.send(MoveTrack(cmd: JsonKeys.Move, from: src, to: dest))
   }
 
-  func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage? {
-    socket.send(
+  func reset(_ index: Int?, tracks: [Track]) async -> ErrorMessage? {
+    await socket.send(
       ResetPlaylistPayload(cmd: ResetPlaylist, index: index ?? -1, tracks: tracks.map { $0.id }))
+  }
+}
+
+extension Sequence {
+  func traverse<T>(_ f: (Element) async -> T) async -> [T] {
+    var values = [T]()
+    for e in self {
+      let t = await f(e)
+      values.append(t)
+    }
+    return values
   }
 }

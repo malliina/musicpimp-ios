@@ -14,7 +14,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
 
   var header: UIView? = nil
 
-  fileprivate var downloadUpdates: RxSwift.Disposable? = nil
+  fileprivate var downloadUpdates: Task<(), Never>? = nil
   private var reloadOnDidAppear = false
   let listener = PlaybackListener()
 
@@ -26,10 +26,11 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     self.tableView.tableHeaderView = self.searchController.searchBar
     self.tableView.contentOffset = CGPoint(
       x: 0, y: self.searchController.searchBar.frame.size.height)
-    downloadUpdates = DownloadUpdater.instance.progress.observe(on: MainScheduler.asyncInstance)
-      .subscribe(onNext: { (trackProgress) in
-        self.onProgress(track: trackProgress)
-      })
+    downloadUpdates = Task {
+      for await trackProgress in DownloadUpdater.instance.$progress.nonNilValues() {
+        onProgress(track: trackProgress)
+      }
+    }
     setFeedback(loadingMessage)
     listener.tracks = self
     Task {
@@ -60,7 +61,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
   }
 
   func stopUpdates() {
-    downloadUpdates?.dispose()
+    downloadUpdates?.cancel()
     downloadUpdates = nil
   }
 
@@ -75,7 +76,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
       onLoadError(error)
     }
   }
-  
+
   @MainActor
   func onTrackChanged(_ track: Track?) {
     onUiThread {
@@ -96,7 +97,7 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     log.info("Loaded \(root.folders.count) root folders with library \(library.id)...")
     onFolder(root)
   }
-  
+
   func suggestAddMusicSource() {
     let sheet = UIAlertController(
       title: "Connect to MusicPimp",
@@ -178,20 +179,6 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     }
   }
 
-  func sheetAction(
-    _ title: String, item: MusicItem, onTrack: @escaping (Track) -> Void,
-    onFolder: @escaping (Folder) -> Void
-  ) -> UIAlertAction {
-    return UIAlertAction(title: title, style: .default) { (a) -> Void in
-      if let track = item as? Track {
-        onTrack(track)
-      }
-      if let folder = item as? Folder {
-        onFolder(folder)
-      }
-    }
-  }
-
   // When this method is defined, cells become swipeable
   override func tableView(
     _ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
@@ -205,30 +192,32 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     let playAction = musicItemAction(
       tableView,
       title: "Play",
-      onTrack: { (t) -> Void in _ = self.playTrack(t) },
-      onFolder: { (f) -> Void in self.playFolder(f.id) }
+      onTrack: { (t) -> Void in _ = await self.playTrack(t) },
+      onFolder: { (f) -> Void in await self.playFolder(f.id) }
     )
     let addAction = musicItemAction(
       tableView,
       title: "Add",
-      onTrack: { (t) -> Void in _ = self.addTrack(t) },
-      onFolder: { (f) -> Void in self.addFolder(f.id) }
+      onTrack: { (t) -> Void in _ = await self.addTrack(t) },
+      onFolder: { (f) -> Void in await self.addFolder(f.id) }
     )
     return [playAction, addAction]
   }
 
   func musicItemAction(
-    _ tableView: UITableView, title: String, onTrack: @escaping (Track) -> Void,
-    onFolder: @escaping (Folder) -> Void
+    _ tableView: UITableView, title: String, onTrack: @escaping (Track) async -> Void,
+    onFolder: @escaping (Folder) async -> Void
   ) -> UITableViewRowAction {
     UITableViewRowAction(style: .default, title: title) {
       (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
       if let tappedItem = self.itemAt(tableView, indexPath: indexPath) {
-        if let track = tappedItem as? Track {
-          onTrack(track)
-        }
-        if let folder = tappedItem as? Folder {
-          onFolder(folder)
+        Task {
+          if let track = tappedItem as? Track {
+            await onTrack(track)
+          }
+          if let folder = tappedItem as? Folder {
+            await onFolder(folder)
+          }
         }
       }
       tableView.setEditing(false, animated: true)
@@ -243,7 +232,9 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
         navigationController?.pushViewController(destination, animated: true)
       }
       if let track = item as? Track {
-        _ = playAndDownloadCheckedSingle(track)
+        Task {
+          _ = await playAndDownloadCheckedSingle(track)
+        }
       }
     }
     tableView.deselectRow(at: indexPath, animated: false)
@@ -255,16 +246,13 @@ extension LibraryController {
     if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in
       item.idStr.description == track.track.idStr.description
     }) {
-      //            log.info("Updating \(track.progress)")
+      log.info("Updating \(track.progress)")
       updateRows(row: index, p: track)
     }
   }
 
   private func updateRows(row: Int, p: TrackProgress) {
     let itemIndexPath = IndexPath(row: row, section: 0)
-    //        onUiThread {
     self.tableView.reloadRows(at: [itemIndexPath], with: .none)
-    //            self.log.info("Scheduled \(row) for \(p.progress)")
-    //        }
   }
 }

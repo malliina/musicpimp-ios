@@ -189,17 +189,19 @@ class EditEndpointController: PimpViewController {
   }
 
   @objc func onSave(_ item: UIBarButtonItem) {
-    saveChanges()
+    Task {
+      await saveChanges()
+    }
     goBack()
   }
 
-  func saveChanges() {
+  func saveChanges() async {
     if let endpoint = parseEndpoint() {
       PimpSettings.sharedInstance.save(endpoint)
       let active = LibraryManager.sharedInstance.loadActive()
       if activateSwitch.isOn || endpoint.id == active.id {
         log.info("Activating \(endpoint.name)")
-        let _ = LibraryManager.sharedInstance.use(endpoint: endpoint)
+        let _ = await LibraryManager.sharedInstance.use(endpoint: endpoint)
       }
       delegate?.endpointAddedOrUpdated(endpoint)
     }

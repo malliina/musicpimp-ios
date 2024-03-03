@@ -3,9 +3,8 @@ import RxSwift
 
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
   var isLocal: Bool { false }
-  
-  let muteSubject = PublishSubject<Bool>()
-  var muteEvent: Observable<Bool> { muteSubject }
+
+  @Published var muteEvent: Bool?
 
   var playlist: PlaylistType
   let socket: PimpSocket
@@ -13,7 +12,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
   fileprivate var currentState = PlayerState.empty
 
   let id: String
-  
+
   init(e: Endpoint) {
     id = e.id
     let client = PimpHttpClient(baseURL: e.httpBaseUrl, authValue: e.authHeader)
@@ -24,9 +23,9 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     super.init(endpoint: e, client: client)
   }
 
-  func open() -> Observable<Void> {
-    self.socket.delegate = self
-    return self.socket.open()
+  func open() async -> URL {
+    socket.delegate = self
+    return await socket.open()
   }
 
   func close() {
@@ -37,44 +36,44 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     currentState
   }
 
-  func resetAndPlay(tracks: [Track]) -> ErrorMessage? {
-    socket.send(PlayItems(tracks: tracks))
+  func resetAndPlay(tracks: [Track]) async -> ErrorMessage? {
+    await socket.send(PlayItems(tracks: tracks))
   }
 
-  func play() -> ErrorMessage? {
-    sendSimple(JsonKeys.RESUME)
+  func play() async -> ErrorMessage? {
+    await sendSimple(JsonKeys.RESUME)
   }
 
-  func pause() -> ErrorMessage? {
-    sendSimple(JsonKeys.STOP)
+  func pause() async -> ErrorMessage? {
+    await sendSimple(JsonKeys.STOP)
   }
 
-  func seek(_ position: Duration) -> ErrorMessage? {
-    sendValued(IntPayload(seek: position))
+  func seek(_ position: Duration) async -> ErrorMessage? {
+    await sendValued(IntPayload(seek: position))
   }
 
-  func next() -> ErrorMessage? {
-    sendSimple(JsonKeys.NEXT)
+  func next() async -> ErrorMessage? {
+    await sendSimple(JsonKeys.NEXT)
   }
 
-  func prev() -> ErrorMessage? {
-    sendSimple(JsonKeys.PREV)
+  func prev() async -> ErrorMessage? {
+    await sendSimple(JsonKeys.PREV)
   }
 
-  func skip(_ index: Int) -> ErrorMessage? {
-    sendValued(IntPayload(skip: index))
+  func skip(_ index: Int) async -> ErrorMessage? {
+    await sendValued(IntPayload(skip: index))
   }
 
-  func volume(_ newVolume: VolumeValue) -> ErrorMessage? {
-    sendValued(IntPayload(volumeChanged: newVolume.volume))
+  func volume(_ newVolume: VolumeValue) async -> ErrorMessage? {
+    await sendValued(IntPayload(volumeChanged: newVolume.volume))
   }
 
-  func sendValued<T: Encodable>(_ t: T) -> ErrorMessage? {
-    socket.send(t)
+  func sendValued<T: Encodable>(_ t: T) async -> ErrorMessage? {
+    await socket.send(t)
   }
 
-  func sendSimple(_ cmd: String) -> ErrorMessage? {
-    socket.send(SimpleCommand(cmd: cmd))
+  func sendSimple(_ cmd: String) async -> ErrorMessage? {
+    await socket.send(SimpleCommand(cmd: cmd))
   }
 
   func onTimeUpdated(_ pos: Duration) {
@@ -92,7 +91,7 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
 
   func onMuteToggled(_ mute: Bool) {
     currentState.mute = mute
-    muteSubject.onNext(mute)
+    muteEvent = mute
   }
 
   func onVolumeChanged(_ volume: VolumeValue) {

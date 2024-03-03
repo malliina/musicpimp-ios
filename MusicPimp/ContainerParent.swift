@@ -110,24 +110,24 @@ class ContainerParent: ListeningController, PlaybackDelegate {
     super.updateViewConstraints()
   }
 
-  func onPrev() {
-    _ = player.prev()
+  func onPrev() async {
+    _ = await player.prev()
   }
 
-  func onPlayPause() {
-    self.playOrPause()
+  func onPlayPause() async {
+    await playOrPause()
   }
 
-  func onNext() {
-    _ = player.next()
+  func onNext() async {
+    _ = await player.next()
   }
 
-  fileprivate func playOrPause() {
+  fileprivate func playOrPause() async {
     if player.current().isPlaying {
-      _ = self.player.pause()
+      _ = await player.pause()
     } else {
-      _ = limitChecked {
-        self.player.play()
+      _ = await limitChecked {
+        await self.player.play()
       }
     }
   }

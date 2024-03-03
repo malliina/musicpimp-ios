@@ -33,7 +33,7 @@ class ExternalCommandDelegate: NSObject {
   func onLocalTrackChanged(_ track: Track?) {
     let center = MPNowPlayingInfoCenter.default()
     if let track = track {
-      
+
       Task {
         var info: [String: AnyObject] = [
           MPMediaItemPropertyTitle: track.title as AnyObject,
@@ -55,41 +55,53 @@ class ExternalCommandDelegate: NSObject {
   }
 
   @objc func onPlay() -> MPRemoteCommandHandlerStatus {
-    _ = player.play()
+    Task {
+      _ = await player.play()
+    }
     info("onPlay")
     return .success
   }
 
   @objc func onPause() -> MPRemoteCommandHandlerStatus {
-    _ = player.pause()
+    Task {
+      _ = await player.pause()
+    }
     info("onPause")
     return .success
   }
 
   @objc func onTogglePlayPause() -> MPRemoteCommandHandlerStatus {
-    if player.current().isPlaying {
-      _ = player.pause()
-    } else {
-      _ = player.play()
+    Task {
+      if player.current().isPlaying {
+        _ = await player.pause()
+      } else {
+        _ = await player.play()
+      }
     }
     info("onTogglePlayPause")
     return .success
   }
 
   @objc func onStop() -> MPRemoteCommandHandlerStatus {
-    _ = player.pause()
+    Task {
+      _ = await player.pause()
+    }
     info("onStop")
     return .success
   }
 
   @objc func next() -> MPRemoteCommandHandlerStatus {
-    _ = player.next()
+    Task {
+      _ = await player.next()
+    }
     info("next")
     return .success
   }
 
   @objc func prev() -> MPRemoteCommandHandlerStatus {
-    _ = player.prev()
+    Task {
+      _ = await player.prev()
+    }
     info("prev")
     return .success
   }

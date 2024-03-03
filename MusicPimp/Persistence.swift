@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 
 protocol Persistence {
-  var changes: Observable<Setting> { get }
+  var changes: Setting? { get }
 
   func save<T: Encodable>(_ contents: T, key: String) -> ErrorMessage?
 

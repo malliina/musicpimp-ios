@@ -20,28 +20,28 @@ class PimpTableController: FeedbackTable {
 
   }
 
-  func playTracksChecked(_ tracks: [Track]) -> [ErrorMessage] {
-    return limitChecked {
-      self.playTracks(tracks)
+  func playTracksChecked(_ tracks: [Track]) async -> [ErrorMessage] {
+    await limitChecked {
+      await self.playTracks(tracks)
     } ?? []
   }
 
-  fileprivate func playTracks(_ tracks: [Track]) -> [ErrorMessage] {
-    let playResult = player.resetAndPlay(tracks: tracks)
+  fileprivate func playTracks(_ tracks: [Track]) async -> [ErrorMessage] {
+    let playResult = await player.resetAndPlay(tracks: tracks)
     let downloadResult = downloadIfNeeded(tracks.take(3))
     let result = playResult.map { [$0] } ?? []
     return downloadResult + result
   }
 
-  func addTracksChecked(_ tracks: [Track]) -> [ErrorMessage] {
-    return limitChecked {
-      self.addTracks(tracks)
+  func addTracksChecked(_ tracks: [Track]) async -> [ErrorMessage] {
+    await limitChecked {
+      await self.addTracks(tracks)
     } ?? []
   }
 
-  fileprivate func addTracks(_ tracks: [Track]) -> [ErrorMessage] {
+  fileprivate func addTracks(_ tracks: [Track]) async -> [ErrorMessage] {
     if !tracks.isEmpty {
-      let errors = player.playlist.add(tracks)
+      let errors = await player.playlist.add(tracks)
       if errors.isEmpty {
         return downloadIfNeeded(tracks.take(3))
       } else {
@@ -52,15 +52,15 @@ class PimpTableController: FeedbackTable {
     }
   }
 
-  func playAndDownloadCheckedSingle(_ track: Track) -> ErrorMessage? {
-    let error = limitChecked {
-      return self.playAndDownload(track)
+  func playAndDownloadCheckedSingle(_ track: Track) async -> ErrorMessage? {
+    let error = await limitChecked {
+      return await self.playAndDownload(track)
     }
     return error ?? nil
   }
 
-  fileprivate func playAndDownload(_ track: Track) -> ErrorMessage? {
-    let error = player.resetAndPlay(tracks: [track])
+  fileprivate func playAndDownload(_ track: Track) async -> ErrorMessage? {
+    let error = await player.resetAndPlay(tracks: [track])
     if error == nil {
       return downloadIfNeeded([track]).headOption()
     } else {

@@ -1,10 +1,13 @@
 import Foundation
 
 class BaseListener {
-  var task: Task<(), Never>? = nil
-  
+  var tasks: [Task<(), Never>] = []
+
   func unsubscribe() {
-    task?.cancel()
+    tasks.forEach { task in
+      task.cancel()
+    }
+    tasks = []
   }
 }
 
@@ -18,24 +21,27 @@ class LibraryListener: BaseListener {
 
   static let library = LibraryListener()
   static let playlists = LibraryListener()
-  
+
   private var subscribed = false
-  
+
   func subscribe() {
     if !subscribed {
       subscribed = true
       //    log.info("Subscribing to library listener...")
-      task = Task {
+      let task = Task {
         await subscribeEternally()
       }
+      tasks = [task]
     }
   }
-  
+
   private func subscribeEternally() async {
-    for await library in LibraryManager.sharedInstance.$libraryUpdated.dropFirst().removeDuplicates(by: { l1, l2 in
-      return l1.id == l2.id
-    }).values {
-//      log.info("Updated to library \(library.id).")
+    for await library in LibraryManager.sharedInstance.$libraryUpdated.dropFirst().removeDuplicates(
+      by: { l1, l2 in
+        return l1.id == l2.id
+      }).values
+    {
+      //      log.info("Updated to library \(library.id).")
       await delegate?.onLibraryUpdated(to: library)
     }
   }
@@ -55,17 +61,18 @@ class EndpointsListener: BaseListener {
   var players: PlayerEndpointDelegate? = nil
 
   func subscribe() {
-    Task {
+    let t1 = Task {
       for await library in LibraryManager.sharedInstance.$changed.nonNilValues() {
-//          log.info("Changing to library \(library)")
+        //          log.info("Changing to library \(library)")
         libraryUpdated(library)
       }
     }
-    Task {
+    let t2 = Task {
       for await player in PlayerManager.sharedInstance.$changed.nonNilValues() {
         playerChanged(player)
       }
     }
+    tasks.append(contentsOf: [t1, t2])
   }
 
   private func libraryUpdated(_ newLibrary: Endpoint) {
@@ -94,53 +101,66 @@ protocol PlaylistEventDelegate {
 
 class PlaybackListener: BaseListener {
   let log = LoggerFactory.shared.system(PlaybackListener.self)
-  
+
   var playerManager: PlayerManager { PlayerManager.sharedInstance }
   var player: PlayerType { playerManager.playerChanged }
   var tracks: TrackEventDelegate? = nil
   var playbacks: PlaybackEventDelegate? = nil
   var playlists: PlaylistEventDelegate? = nil
 
+  private var playbackTasks: [Task<(), Never>] = []
+  
   func subscribe() {
-//    log.info("Subscribing to playback events...")
-    Task {
+    unsubscribe()
+    //    log.info("Subscribing to playback events...")
+    let task = Task {
       for await player in playerManager.$playerChanged.removeDuplicates(by: { p1, p2 in
         p1.id == p2.id
       }).values {
-        subscribe(to: player)
+        playbackTasks.forEach { task in
+          task.cancel()
+        }
+        playbackTasks = subscribe(to: player)
       }
     }
+    tasks.append(task)
+  }
+  
+  override func unsubscribe() {
+    super.unsubscribe()
+    playbackTasks.forEach { task in
+      task.cancel()
+    }
+    playbackTasks = []
   }
 
-  private func subscribe(to newPlayer: PlayerType) {
-    log.info("Subscribing to player \(newPlayer.id)...")
-    unsubscribe()
-    Task {
+  private func subscribe(to newPlayer: PlayerType) -> [Task<(), Never>] {
+    let t1 = Task {
       for await playlist in player.playlist.playlistPublisher.nonNilValues() {
         playlists?.onNewPlaylist(playlist)
       }
     }
-    Task {
+    let t2 = Task {
       for await index in player.playlist.indexPublisher.values {
         playlists?.onIndexChanged(to: index)
       }
     }
-    Task {
+    let t3 = Task {
       for await track in newPlayer.trackEvent.values {
         await tracks?.onTrackChanged(track)
         await playbacks?.onTrackChanged(track)
       }
     }
-    Task {
+    let t4 = Task {
       for await time in newPlayer.timeEvent.nonNilValues() {
         playbacks?.onTimeUpdated(time)
       }
     }
-    Task {
+    let t5 = Task {
       for await state in newPlayer.stateEvent.nonNilValues() {
         playbacks?.onStateChanged(state)
       }
     }
-//    log.info("Subscribed to player \(newPlayer.id).")
+    return [t1, t2, t3, t4, t5]
   }
 }

@@ -39,7 +39,7 @@ open class PimpSettings {
     }
   }
 
-  var changes: Observable<Setting> { impl.changes }
+  //  var changes: Observable<Setting> { impl.changes }
 
   var pushToken: PushToken? {
     get {
@@ -90,7 +90,7 @@ open class PimpSettings {
     get {
       impl.load(PimpSettings.CACHE_LIMIT, Wrapped<StorageSize>.self)?.value ?? defaultLimit
     }
-    set (newLimit) {
+    set(newLimit) {
       if let error = impl.save(Wrapped(newLimit), key: PimpSettings.CACHE_LIMIT) {
         log.error("Failed to save cache limit: \(error.message)")
       } else {

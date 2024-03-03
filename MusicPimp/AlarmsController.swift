@@ -141,7 +141,7 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
 
   func registerWithToken(token: PushToken, endpoint: Endpoint) async {
     let alarmLibrary = Libraries.fromEndpoint(endpoint)
-    
+
     do {
       let _ = try await alarmLibrary.registerNotifications(token, tag: endpoint.id)
       let _ = settings.saveNotificationsEnabled(endpoint, enabled: true)
@@ -152,7 +152,9 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
 
   func askUserForPermission(onResult: @escaping (Bool) async -> Void) {
     Task {
-      for await bool in PimpSettings.sharedInstance.$notificationPermissionChanged.first().nonNilValues() {
+      for await bool in PimpSettings.sharedInstance.$notificationPermissionChanged.first()
+        .nonNilValues()
+      {
         await onResult(bool)
       }
     }
@@ -400,7 +402,7 @@ class AlarmsController: PimpTableController, EditAlarmDelegate, AlarmEndpointDel
       }
     }
   }
-  
+
   @MainActor
   private func deleteAndRender(id: AlarmID, index: Int) async throws {
     let _ = try await library.deleteAlarm(id)

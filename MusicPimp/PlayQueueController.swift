@@ -15,6 +15,8 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
   // non-nil if the playlist is server-loaded
   var savedPlaylist: SavedPlaylist? = nil
 
+  private var downloadsDisposable: Task<(), Never>? = nil
+
   override func viewDidLoad() {
     super.viewDidLoad()
     self.tableView?.register(SnapTrackCell.self, forCellReuseIdentifier: defaultCellKey)
@@ -28,15 +30,17 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let state = player.current()
     let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
     onNewPlaylist(currentPlaylist)
-    let downloadDisposable = DownloadUpdater.instance.progress.subscribe(onNext: { (progress) in
-      self.onProgress(track: progress)
-    })
-    listeners = [downloadDisposable]
+    downloadsDisposable = Task {
+      for await progress in DownloadUpdater.instance.$progress.nonNilValues() {
+        onProgress(track: progress)
+      }
+    }
   }
 
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     listener.unsubscribe()
+    downloadsDisposable?.cancel()
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
@@ -56,8 +60,10 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let index = indexPath.row
-    limitChecked {
-      _ = self.player.skip(index)
+    Task {
+      await limitChecked {
+        _ = await self.player.skip(index)
+      }
     }
     tableView.deselectRow(at: indexPath, animated: false)
   }
@@ -72,8 +78,10 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
   ) {
     let index = indexPath.row
     tableView.reloadRows(at: [indexPath], with: .none)
-    _ = limitChecked {
-      self.player.playlist.removeIndex(index)
+    Task {
+      _ = await limitChecked {
+        await self.player.playlist.removeIndex(index)
+      }
     }
   }
 
@@ -90,7 +98,9 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let newTracks = Arrays.move(sourceRow, destIndex: destinationRow, xs: current.tracks)
     let newIndex = computeNewIndex(sourceRow, dest: destinationRow)
     current = Playlist(tracks: newTracks, index: newIndex)
-    _ = player.playlist.move(sourceRow, dest: destinationRow)
+    Task {
+      _ = await player.playlist.move(sourceRow, dest: destinationRow)
+    }
   }
 
   func computeNewIndex(_ src: Int, dest: Int) -> Int? {
@@ -203,7 +213,8 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
   fileprivate func savePlaylist(_ playlist: SavedPlaylist) async {
     do {
       let id = try await LibraryManager.sharedInstance.libraryUpdated.savePlaylist(playlist)
-      log.info("Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
+      log.info(
+        "Saved playlist \(id.id) with name \(playlist.name) and \(playlist.tracks.count) tracks")
       savedPlaylist = playlist
     } catch {
       onError(error)
@@ -211,19 +222,18 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
   }
 
   func onPlaylistSaved(saved: SavedPlaylist) {
-    self.savedPlaylist = saved
+    savedPlaylist = saved
   }
 
   func playlistActivated(_ playlist: SavedPlaylist) {
-    self.savedPlaylist = playlist
+    savedPlaylist = playlist
   }
 }
 
 extension PlayQueueController {
   func onProgress(track: TrackProgress) {
     if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in item.idStr == track.track.idStr
-      })
-    {
+    }) {
       updateRows(row: index)
     }
   }

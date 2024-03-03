@@ -1,6 +1,4 @@
 import Foundation
-import RxCocoa
-import RxSwift
 
 class HttpClient {
   private let log = LoggerFactory.shared.network(HttpClient.self)
@@ -30,14 +28,6 @@ class HttpClient {
     return try checked.decode(to)
   }
 
-  func recovered<T>(code: () throws -> T) -> Single<T> {
-    do {
-      return try Single.just(code())
-    } catch let e {
-      return Single.error(e)
-    }
-  }
-
   func executeChecked(_ req: URLRequest) async throws -> HttpResponse {
     // Fix
     let url = req.url ?? URL(string: "https://www.musicpimp.org")!
@@ -61,7 +51,8 @@ class HttpClient {
     } else {
       self.log.error("Request to '\(url)' failed with status '\(response.statusCode)'.")
       let errorMessage = try? response.decode(FailReason.self).reason
-      throw PimpError.responseFailure(ResponseDetails(resource: url, code: response.statusCode, message: errorMessage))
+      throw PimpError.responseFailure(
+        ResponseDetails(resource: url, code: response.statusCode, message: errorMessage))
     }
   }
 

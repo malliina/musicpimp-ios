@@ -122,7 +122,8 @@ class PlaylistController: BaseMusicController {
     }
   }
 
-  func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) async {
+  func fetchPopular(from: Int, maxItems: Int, onPopulars: @escaping ([PopularEntry]) -> Void) async
+  {
     do {
       let pops = try await library.popular(from, until: from + maxItems)
       onPopulars(pops)
@@ -160,9 +161,11 @@ class PlaylistController: BaseMusicController {
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let index = indexPath.row
-    limitChecked {
-      let track = self.tracks[index]
-      _ = self.playTrack(track)
+    Task {
+      await limitChecked {
+        let track = self.tracks[index]
+        _ = await self.playTrack(track)
+      }
     }
     tableView.deselectRow(at: indexPath, animated: false)
   }
@@ -174,7 +177,7 @@ class PlaylistController: BaseMusicController {
   override func playTrackAccessoryAction(_ track: Track, row: Int) -> UIAlertAction {
     // starts playback of the selected track, and appends the rest to the playlist
     accessoryAction("Start Playback Here") { _ in
-      _ = self.playTracksChecked(self.tracks.drop(row))
+      _ = await self.playTracksChecked(self.tracks.drop(row))
     }
   }
 

@@ -21,7 +21,7 @@ protocol PlayerType {
   var trackEvent: Published<Track?>.Publisher { get }
   var playlist: PlaylistType { get }
 
-  func open() -> Observable<Void>
+  func open() async -> URL
 
   func close()
 
@@ -32,21 +32,21 @@ protocol PlayerType {
   /// - parameter track: track to play
   ///
   /// - returns: an error message, if any
-  func resetAndPlay(tracks: [Track]) -> ErrorMessage?
+  func resetAndPlay(tracks: [Track]) async -> ErrorMessage?
 
-  func play() -> ErrorMessage?
+  func play() async -> ErrorMessage?
 
-  func pause() -> ErrorMessage?
+  func pause() async -> ErrorMessage?
 
-  func seek(_ position: Duration) -> ErrorMessage?
+  func seek(_ position: Duration) async -> ErrorMessage?
 
-  func next() -> ErrorMessage?
+  func next() async -> ErrorMessage?
 
-  func prev() -> ErrorMessage?
+  func prev() async -> ErrorMessage?
 
-  func skip(_ index: Int) -> ErrorMessage?
+  func skip(_ index: Int) async -> ErrorMessage?
 
-  func volume(_ newVolume: VolumeValue) -> ErrorMessage?
+  func volume(_ newVolume: VolumeValue) async -> ErrorMessage?
 }
 
 extension PlayerType {
@@ -54,18 +54,18 @@ extension PlayerType {
   /// maintaining the state of the previous player.
   ///
   /// - parameter state: player state to restore, including the track and any playlist
-  func handover(state: PlayerState) -> [ErrorMessage] {
-    let pauseResult = pause()
-    let resetResult = playlist.reset(state.playlistIndex, tracks: state.playlist)
-    let skipResult = restoreIndex(idx: state.playlistIndex)
-    let seekResult = seek(state.position)
-    let playResult = state.isPlaying ? play() : pause()
+  func handover(state: PlayerState) async -> [ErrorMessage] {
+    let pauseResult = await pause()
+    let resetResult = await playlist.reset(state.playlistIndex, tracks: state.playlist)
+    let skipResult = await restoreIndex(idx: state.playlistIndex)
+    let seekResult = await seek(state.position)
+    let playResult = state.isPlaying ? await play() : await pause()
     return [pauseResult, resetResult, skipResult, seekResult, playResult].flatMapOpt { $0 }
   }
 
-  private func restoreIndex(idx: Int?) -> ErrorMessage? {
+  private func restoreIndex(idx: Int?) async -> ErrorMessage? {
     return if let idx = idx {
-      skip(idx)
+      await skip(idx)
     } else {
       nil
     }

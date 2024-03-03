@@ -64,7 +64,9 @@ class SavedPlaylistsTableViewController: PimpTableController {
     let row = indexPath.row
     if playlists.count > 0 && playlists.count > row {
       let item = playlists[row]
-      _ = playTracksChecked(item.tracks)
+      Task {
+        _ = await playTracksChecked(item.tracks)
+      }
       delegate?.playlistActivated(item)
     }
     tableView.deselectRow(at: indexPath, animated: false)
@@ -89,7 +91,7 @@ class SavedPlaylistsTableViewController: PimpTableController {
       }
     }
   }
-  
+
   @MainActor
   private func rem(at: Int) {
     playlists.remove(at: at)

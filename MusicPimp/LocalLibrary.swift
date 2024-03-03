@@ -15,7 +15,7 @@ class LocalLibrary: BaseLibrary {
   override var isLocal: Bool { true }
 
   override var id: String { Endpoint.Local.id }
-  
+
   let supportedExtensions = ["mp3"]
 
   let fileManager = FileManager.default

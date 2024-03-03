@@ -48,7 +48,7 @@ open class PimpNotifications {
       await handleNotificationAsync(app, data: data)
     }
   }
-  
+
   @MainActor
   private func handleNotificationAsync(_ app: UIApplication, data: [AnyHashable: Any]) async {
     do {

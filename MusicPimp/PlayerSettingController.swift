@@ -9,8 +9,8 @@ class PlayerSettingController: EndpointSelectController {
     navigationItem.title = "PLAYERS"
   }
 
-  override func use(endpoint: Endpoint) {
-    let _ = manager.use(endpoint: endpoint)
+  override func use(endpoint: Endpoint) async {
+    let _ = await manager.use(endpoint: endpoint)
   }
 
   override func loadActive() -> Endpoint {

@@ -28,8 +28,8 @@ class LocalPlayer: BasePlayer, PlayerType {
   let noPlayerError = ErrorMessage("No player")
   let noTrackError = ErrorMessage("No track")
 
-  func open() -> Observable<Void> {
-    Observable.empty()
+  func open() async -> URL {
+    URL(string: "https://localhost")!
   }
 
   func close() {

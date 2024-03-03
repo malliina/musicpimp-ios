@@ -13,7 +13,7 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
   var selectedIndex: Int? = nil
   var delegate: EditEndpointDelegate? = nil
 
-  func use(endpoint: Endpoint) {
+  func use(endpoint: Endpoint) async {
   }
 
   func loadActive() -> Endpoint {
@@ -81,8 +81,9 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
       return
     }
     let endpoint = endpointForIndex(index)
-    use(endpoint: endpoint)
-
+    Task {
+      await use(endpoint: endpoint)
+    }
     let cell = tableView.cellForRow(at: indexPath)
     cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
 
@@ -130,7 +131,9 @@ class EndpointSelectController: BaseTableController, EditEndpointDelegate {
         let removed = self.endpoints.remove(at: index)
         self.settings.saveAll(self.endpoints)
         if active.id == removed.id {
-          let _ = self.use(endpoint: Endpoint.Local)
+          Task {
+            let _ = await self.use(endpoint: Endpoint.Local)
+          }
         }
         let visualIndex = IndexPath(row: index + 1, section: 0)
         tableView.deleteRows(at: [visualIndex], with: UITableView.RowAnimation.fade)

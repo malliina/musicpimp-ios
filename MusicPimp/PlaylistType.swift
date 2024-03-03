@@ -8,13 +8,13 @@ protocol PlaylistType {
   var trackPublisher: Published<Track?>.Publisher { get }
   var trackAdded: Track? { get set }
 
-  func add(_ track: Track) -> ErrorMessage?
+  func add(_ track: Track) async -> ErrorMessage?
 
-  func add(_ tracks: [Track]) -> [ErrorMessage]
+  func add(_ tracks: [Track]) async -> [ErrorMessage]
 
-  func removeIndex(_ index: Int) -> ErrorMessage?
+  func removeIndex(_ index: Int) async -> ErrorMessage?
 
-  func move(_ src: Int, dest: Int) -> ErrorMessage?
+  func move(_ src: Int, dest: Int) async -> ErrorMessage?
 
-  func reset(_ index: Int?, tracks: [Track]) -> ErrorMessage?
+  func reset(_ index: Int?, tracks: [Track]) async -> ErrorMessage?
 }

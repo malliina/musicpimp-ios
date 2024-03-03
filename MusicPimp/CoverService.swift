@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class CoverResult {
   static let log = LoggerFactory.shared.network(CoverService.self)
@@ -51,8 +50,11 @@ class CoverService {
           relativePath: relativeCoverFilePath
         )
         return CoverResult(artist: artist, album: album, coverPath: path)
+      } catch let err as PimpError {
+        log.info("Failed to download cover of \(artist) - \(album). \(err.message)")
+        return CoverResult.noCover(artist, album: album)
       } catch {
-        self.log.info("Failed to download cover. \(error)")
+        log.info("Failed to download cover, error. \(error)")
         return CoverResult.noCover(artist, album: album)
       }
     } else {
