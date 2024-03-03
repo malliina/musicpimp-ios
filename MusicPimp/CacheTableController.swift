@@ -69,7 +69,7 @@ class CacheTableController: CacheInfoController {
     }
   }
 
-  fileprivate func calculateCacheUsage() {
+  private func calculateCacheUsage() {
     DispatchQueue.global(qos: .background).async {
       self.usedStorage = self.library.size
     }

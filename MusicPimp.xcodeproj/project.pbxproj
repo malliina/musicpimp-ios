@@ -164,8 +164,6 @@
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
 		7DDBE03C27C021080045712A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBE03B27C021080045712A /* WebSocket.swift */; };
-		7DDBE03F27C025580045712A /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE03E27C025580045712A /* RxCocoa */; };
-		7DDBE04127C025580045712A /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04027C025580045712A /* RxSwift */; };
 		7DDBE04427C025790045712A /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04327C025790045712A /* AppCenterAnalytics */; };
 		7DDBE04627C025790045712A /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04527C025790045712A /* AppCenterCrashes */; };
 		7DDBE04927C0258F0045712A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04827C0258F0045712A /* SnapKit */; };
@@ -387,11 +385,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DDBE03F27C025580045712A /* RxCocoa in Frameworks */,
 				7DDBE04627C025790045712A /* AppCenterCrashes in Frameworks */,
 				7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */,
 				7DDBE04927C0258F0045712A /* SnapKit in Frameworks */,
-				7DDBE04127C025580045712A /* RxSwift in Frameworks */,
 				7DDBE04427C025790045712A /* AppCenterAnalytics in Frameworks */,
 				7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */,
 			);
@@ -768,8 +764,6 @@
 			);
 			name = MusicPimp;
 			packageProductDependencies = (
-				7DDBE03E27C025580045712A /* RxCocoa */,
-				7DDBE04027C025580045712A /* RxSwift */,
 				7DDBE04327C025790045712A /* AppCenterAnalytics */,
 				7DDBE04527C025790045712A /* AppCenterCrashes */,
 				7DDBE04827C0258F0045712A /* SnapKit */,
@@ -837,7 +831,6 @@
 			);
 			mainGroup = 7DC206981A1547370032C01D;
 			packageReferences = (
-				7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */,
 				7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
@@ -1311,14 +1304,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
-			requirement = {
-				kind = exactVersion;
-				version = 6.5.0;
-			};
-		};
 		7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
@@ -1338,16 +1323,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7DDBE03E27C025580045712A /* RxCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
-		};
-		7DDBE04027C025580045712A /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE03D27C025580045712A /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
 		7DDBE04327C025790045712A /* AppCenterAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7DDBE04227C025790045712A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;

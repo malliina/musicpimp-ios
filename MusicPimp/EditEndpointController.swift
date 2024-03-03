@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import SnapKit
 import UIKit
 
@@ -42,8 +41,6 @@ class EditEndpointController: PimpViewController {
 
   var pimpConstraint: Constraint? = nil
   var cloudConstraint: Constraint? = nil
-
-  let disposeBag = DisposeBag()
 
   override func viewDidLoad() {
     super.viewDidLoad()

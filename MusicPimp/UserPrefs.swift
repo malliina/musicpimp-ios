@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 // Wrapper for Strings because Encodable cannot encode a primitive String
 struct PimpString: Codable {

@@ -1,7 +1,6 @@
 import AVFoundation
 import AudioToolbox
 import Foundation
-import RxSwift
 
 class LocalPlayer: BasePlayer, PlayerType {
   let log = LoggerFactory.shared.pimp(LocalPlayer.self)
@@ -23,8 +22,6 @@ class LocalPlayer: BasePlayer, PlayerType {
   fileprivate static var playerStatusContext = 1
   fileprivate let notificationCenter = NotificationCenter.default
 
-  let muteSubject = PublishSubject<Bool>()
-  var muteEvent: Observable<Bool> { muteSubject }
   let noPlayerError = ErrorMessage("No player")
   let noTrackError = ErrorMessage("No track")
 

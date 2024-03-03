@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import UIKit
 
 class PimpTabBarController: UITabBarController {
@@ -17,8 +16,6 @@ class PimpTabBarController: UITabBarController {
     vc: TopFlipController(persistent: false), title: "Playlists", fontAwesomeName: "list")
   let sideBySideTopList: UIViewController = TabUtils.shared.attachTab(
     vc: SideBySideTopList(persistent: false), title: "Playlists", fontAwesomeName: "list")
-
-  let bag = DisposeBag()
 
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
   var isLocal: Bool { false }

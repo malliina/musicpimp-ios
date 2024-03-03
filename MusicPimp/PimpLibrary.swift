@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 open class PimpLibrary: BaseLibrary {
   static let log = LoggerFactory.shared.pimp(PimpLibrary.self)

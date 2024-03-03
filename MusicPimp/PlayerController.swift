@@ -171,7 +171,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   override func updateMedia(_ track: Track) async {
-    log.info("Updating media \(track.title)")
     Util.onUiThread {
       self.updateDuration(track.duration)
       self.titleLabel.text = track.title
@@ -204,7 +203,6 @@ class PlayerController: ListeningController, PlaybackDelegate {
   }
 
   private func updatePosition(_ position: Duration) {
-    //    log.info("Updating position to \(position)")
     Util.onUiThread {
       let isUserDragging = self.seek.isHighlighted
       if !isUserDragging {

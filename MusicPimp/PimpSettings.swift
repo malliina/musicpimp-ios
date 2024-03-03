@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 struct TrackPlaybackHistory: Codable {
   let history: [Date]

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 extension Selector {
   fileprivate static let volumeChanged = #selector(VolumeViewController.userDidChangeVolume(_:))
@@ -11,8 +10,6 @@ class VolumeViewController: PimpViewController {
   let highVolumeButton = UIButton()
 
   let volumeSlider = UISlider()
-
-  var appearedBag = DisposeBag()
 
   var player: PlayerType { PlayerManager.sharedInstance.playerChanged }
 
@@ -94,9 +91,11 @@ class VolumeViewController: PimpViewController {
     volume.toFloat() * (volumeSlider.maximumValue - volumeSlider.minimumValue)
   }
 
+  private var task: Task<(), Never>? = nil
+  
   private func listenWhenAppeared(_ targetPlayer: PlayerType) {
     unlistenWhenDisappeared()
-    Task {
+    task = Task {
       for await vol in targetPlayer.volumeEvent.nonNilValues() {
         onVolumeChanged(vol)
       }
@@ -104,6 +103,6 @@ class VolumeViewController: PimpViewController {
   }
 
   private func unlistenWhenDisappeared() {
-    appearedBag = DisposeBag()
+    task?.cancel()
   }
 }

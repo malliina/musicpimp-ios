@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class BasePlayer: NSObject {
   @Published var state: PlaybackState?

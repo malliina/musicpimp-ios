@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 typealias SessionID = String
 public typealias RelativePath = String

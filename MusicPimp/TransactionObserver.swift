@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import StoreKit
 
 class TransactionObserver: NSObject, SKPaymentTransactionObserver {

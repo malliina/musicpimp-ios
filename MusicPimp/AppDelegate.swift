@@ -4,7 +4,6 @@ import AppCenterAnalytics
 import AppCenterCrashes
 import AudioToolbox
 import MediaPlayer
-import RxSwift
 import StoreKit
 import SwiftUI
 import UIKit
@@ -128,7 +127,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   let settings = PimpSettings.sharedInstance
   let notifications = PimpNotifications.sharedInstance
   let colors = PimpColors.shared
-  let bag = DisposeBag()
   var downloadCompletionHandlers: [String: () -> Void] = [:]
   // Hack
   private var notification: [AnyHashable: Any]? = nil

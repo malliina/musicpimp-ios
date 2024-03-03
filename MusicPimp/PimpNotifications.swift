@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import UserNotifications
 
 open class PimpNotifications {
@@ -7,8 +6,6 @@ open class PimpNotifications {
   static let sharedInstance = PimpNotifications()
 
   let settings = PimpSettings.sharedInstance
-
-  let bag = DisposeBag()
 
   func initNotifications(_ application: UIApplication) {
     // the playback notification is displayed as an alert to the user, so we must call this

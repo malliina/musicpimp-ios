@@ -1,10 +1,7 @@
 import Foundation
-import RxSwift
 
 class PimpViewController: UIViewController {
   private let log = LoggerFactory.shared.vc(PimpViewController.self)
-
-  let bag = DisposeBag()
 
   override func viewDidLoad() {
     super.viewDidLoad()

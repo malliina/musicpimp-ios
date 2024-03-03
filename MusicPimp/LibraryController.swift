@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 import UIKit
 
 class LibraryController: SearchableMusicController, TrackEventDelegate {
@@ -246,7 +245,6 @@ extension LibraryController {
     if let index = musicItems.indexOf({ (item: MusicItem) -> Bool in
       item.idStr.description == track.track.idStr.description
     }) {
-      log.info("Updating \(track.progress)")
       updateRows(row: index, p: track)
     }
   }

@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 class MostRecentList: TopListController<RecentEntry> {
   let MostRecentCellKey = "MostRecentCell"

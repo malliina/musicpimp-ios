@@ -1,5 +1,4 @@
 import Foundation
-import RxSwift
 
 // Web socket that supports reconnects
 class PlayerSocket: WebSocketMessageDelegate {
@@ -8,8 +7,6 @@ class PlayerSocket: WebSocketMessageDelegate {
   let baseURL: URL
   let headers: [String: String]
   var isConnected: Bool { socket?.isConnected ?? false }
-
-  private var openObserver: AnyObserver<Void>? = nil
 
   init(baseURL: URL, headers: [String: String]) {
     self.baseURL = baseURL
