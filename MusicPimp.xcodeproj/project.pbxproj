@@ -1197,8 +1197,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PimpAdHoc;
+				PROVISIONING_PROFILE_SPECIFIER = "MusicPimp Store";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
@@ -1226,8 +1225,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "org.musicpimp.MusicPimp AppStore";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PimpAdHoc;
+				PROVISIONING_PROFILE_SPECIFIER = "MusicPimp Store";
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPimp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "";
