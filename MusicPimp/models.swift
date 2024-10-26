@@ -107,7 +107,7 @@ struct Track: MusicItem, Codable {
   var idStr: String { id.id }
 
   public static func == (lhs: Track, rhs: Track) -> Bool {
-    return lhs.id == rhs.id
+    lhs.id == rhs.id
   }
 }
 
@@ -137,4 +137,6 @@ struct MusicFolder: Codable {
     let ts: [MusicItem] = tracks
     return fs + ts
   }
+  
+  var isEmpty: Bool { items.isEmpty }
 }

@@ -1,7 +1,4 @@
 import AVFoundation
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
 import AudioToolbox
 import MediaPlayer
 import StoreKit
@@ -43,12 +40,6 @@ struct MusicPimpApp: App {
 
   init() {
     log.info("PimpApp launching")
-    AppCenter.start(
-      withAppSecret: "bfa6d43e-d1f3-42e2-823a-920a16965470",
-      services: [
-        Analytics.self,
-        Crashes.self,
-      ])
     initAudio()
     BackgroundDownloader.musicDownloader.setup()
     let _ = PlaylistPrefetcher.shared
@@ -64,8 +55,8 @@ struct MusicPimpApp: App {
         .onChange(of: scenePhase) { phase in
           if phase == .active {
             log.info("Active!")
-            changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
-            suggestPlayerChange = changePlayerSuggestion != nil
+//            changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
+//            suggestPlayerChange = changePlayerSuggestion != nil
             delegate.connectToPlayer()
           }
           if phase == .background {

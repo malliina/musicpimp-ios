@@ -1,6 +1,24 @@
 import Foundation
 import SwiftUI
 
+struct PlaybackFooterRepresentable: UIViewRepresentable {
+  func makeUIView(context: Context) -> SnapPlaybackFooter {
+    SnapPlaybackFooter(persistent: true)
+  }
+  func updateUIView(_ uiView: SnapPlaybackFooter, context: Context) {
+  }
+  typealias UIViewType = SnapPlaybackFooter
+}
+
+struct IAPRepresentable: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> IAPViewController {
+    IAPViewController()
+  }
+  func updateUIViewController(_ uiViewController: IAPViewController, context: Context) {
+  }
+  typealias UIViewControllerType = IAPViewController
+}
+
 struct LibraryRepresentable: UIViewControllerRepresentable {
   func makeUIViewController(context: Context) -> UINavigationController {
     UINavigationController(rootViewController: LibraryContainer())
@@ -22,12 +40,12 @@ struct SettingsRepresentable: UIViewControllerRepresentable {
 }
 
 struct PhonePlayerRepresentable: UIViewControllerRepresentable {
-  func makeUIViewController(context: Context) -> PlayerParent {
-    PlayerParent(persistent: true)
+  func makeUIViewController(context: Context) -> UINavigationController {
+    UINavigationController(rootViewController: PlayerParent(persistent: true))
   }
-  func updateUIViewController(_ uiViewController: PlayerParent, context: Context) {
+  func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
   }
-  typealias UIViewControllerType = PlayerParent
+  typealias UIViewControllerType = UINavigationController
 }
 
 struct PhoneTopListRepresentable: UIViewControllerRepresentable {
@@ -44,13 +62,13 @@ struct PimpTabView: View {
 
   var body: some View {
     TabView {
-      //            NavigationView {
-      LibraryRepresentable()
+      NavigationView {
+        LibraryList(id: nil)
+      }
         .toolbar {
           ToolbarItem(placement: .principal) {
             Text("MUSIC")
               .font(.headline)
-            //                                .foregroundColor(titleColor)
           }
         }
         .navigationTitle("MUSIC")
@@ -58,12 +76,11 @@ struct PimpTabView: View {
           Label("Music", systemImage: "music.note.list")
         }
         .ignoresSafeArea(.all)
-      //            }
-      //            .navigationViewStyle(.stack)
       PhonePlayerRepresentable()
         .tabItem {
           Label("Player", systemImage: "play.circle")
         }
+        .ignoresSafeArea(.all)
       PhoneTopListRepresentable()
         .tabItem {
           Label("Playlists", systemImage: "list.star")

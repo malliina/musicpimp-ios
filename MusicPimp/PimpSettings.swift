@@ -38,8 +38,6 @@ open class PimpSettings {
     }
   }
 
-  //  var changes: Observable<Setting> { impl.changes }
-
   var pushToken: PushToken? {
     get {
       let token = impl.load(PimpSettings.PushTokenKey, Wrapped<PushToken>.self)?.value

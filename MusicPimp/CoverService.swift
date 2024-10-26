@@ -41,6 +41,9 @@ class CoverService {
   let downloader = Downloader(basePath: coversDir)
 
   func cover(_ artist: String, album: String) async -> CoverResult {
+    if artist.isEmpty && album.isEmpty {
+      return CoverResult.noCover(artist, album: album)
+    }
     if let url = coverURL(artist, album: album) {
       let relativeCoverFilePath = "\(artist)-\(album).jpg"
       do {

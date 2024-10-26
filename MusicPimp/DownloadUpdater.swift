@@ -1,15 +1,17 @@
 import Combine
 import Foundation
 
-class DownloadUpdater {
+protocol DownloaderLike: ObservableObject {
+  var trackProgress: [TrackID: any ProgressLike] { get }
+}
+
+class DownloadUpdater: DownloaderLike {
   static let instance = DownloadUpdater(downloader: BackgroundDownloader.musicDownloader)
   let log = LoggerFactory.shared.network(DownloadUpdater.self)
-  @Published var progress: TrackProgress?
+  @Published var progress: [TrackID: TrackProgress] = [:]
+  @Published var slowProgress: [TrackID: TrackProgress] = [:]
+  var trackProgress: [TrackID : any ProgressLike] { slowProgress }
   private let q = DispatchQueue(label: "DownloadUpdater")
-
-  var slowProgress: Publishers.CollectByTime<Published<TrackProgress?>.Publisher, DispatchQueue> {
-    $progress.collect(.byTimeOrCount(q, 1.0, 100))
-  }
 
   fileprivate var downloadState: [RelativePath: TrackProgress] = [:]
 
@@ -19,12 +21,17 @@ class DownloadUpdater {
   let downloader: BackgroundDownloader
 
   var isEmpty: Bool { downloadState.isEmpty }
-
+  
   init(downloader: BackgroundDownloader) {
     self.downloader = downloader
     Task {
       for await update in downloader.$events.nonNilValues() {
-        onDownloadProgressUpdate(update)
+        await onDownloadProgressUpdate(update)
+      }
+    }
+    Task {
+      for await latest in $progress.throttle(for: 0.04, scheduler: q, latest: true).values {
+        await update(slow: latest)
       }
     }
   }
@@ -54,7 +61,7 @@ class DownloadUpdater {
     }
   }
 
-  private func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) {
+  private func onDownloadProgressUpdate(_ dpu: DownloadProgressUpdate) async {
     let path = dpu.relativePath
     if let trackProgress = downloadState[path] {
       let track = trackProgress.track
@@ -62,17 +69,31 @@ class DownloadUpdater {
       let isDownloadComplete = newProgress.isCompleted
       if isDownloadComplete {
         downloadState.removeValue(forKey: path)
-        progress = newProgress
       } else {
         downloadState[path] = newProgress
         let now = DispatchTime.now()
         let shouldUpdate = enoughTimePassed(now: now)
         if shouldUpdate {
           lastDownloadUpdate = now
-          progress = newProgress
         }
       }
+      await update(trackProgress: newProgress)
     }
+  }
+  
+  @MainActor func update(trackProgress: TrackProgress) {
+    let id = trackProgress.track.id
+    var updated = progress
+    if trackProgress.isCompleted {
+      updated.removeValue(forKey: id)
+    } else {
+      updated.updateValue(trackProgress, forKey: id)
+    }
+    progress = updated
+  }
+  
+  @MainActor func update(slow: [TrackID: TrackProgress]) {
+    slowProgress = slow
   }
 
   private func enoughTimePassed(now: DispatchTime) -> Bool {

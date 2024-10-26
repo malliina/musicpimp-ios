@@ -22,9 +22,9 @@ class LocalLibrary: BaseLibrary {
 
   let musicRootPath = documentsPath + "/music"
 
-  var musicRootURL: URL { return URL(fileURLWithPath: musicRootPath, isDirectory: true) }
+  var musicRootURL: URL { URL(fileURLWithPath: musicRootPath, isDirectory: true) }
 
-  var size: StorageSize { return Files.sharedInstance.folderSize(musicRootURL) }
+  var size: StorageSize { Files.sharedInstance.folderSize(musicRootURL) }
 
   override func pingAuth() async throws -> Version {
     LocalLibrary.currentVersion

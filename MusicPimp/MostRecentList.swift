@@ -1,6 +1,7 @@
 import Foundation
 
 class MostRecentList: TopListController<RecentEntry> {
+  let log = LoggerFactory.shared.system(MostRecentList.self)
   let MostRecentCellKey = "MostRecentCell"
   override var header: String { "Most Recent" }
   override var emptyMessage: String { "No recent tracks." }

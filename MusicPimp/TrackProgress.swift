@@ -1,6 +1,10 @@
 import Foundation
 
-class TrackProgress {
+protocol ProgressLike {
+  var progress: Float { get }
+}
+
+class TrackProgress: ProgressLike {
   let track: Track
   let dpu: DownloadProgressUpdate
 

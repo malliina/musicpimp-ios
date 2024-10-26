@@ -31,8 +31,10 @@ class PlayQueueController: BaseMusicController, PlaylistEventDelegate, SavePlayl
     let currentPlaylist = Playlist(tracks: state.playlist, index: state.playlistIndex)
     onNewPlaylist(currentPlaylist)
     downloadsDisposable = Task {
-      for await progress in DownloadUpdater.instance.$progress.nonNilValues() {
-        onProgress(track: progress)
+      for await progress in DownloadUpdater.instance.$progress.values {
+        progress.values.forEach { trackProgress in
+          onProgress(track: trackProgress)
+        }
       }
     }
   }

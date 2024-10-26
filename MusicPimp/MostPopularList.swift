@@ -1,6 +1,7 @@
 import Foundation
 
 class MostPopularList: TopListController<PopularEntry> {
+  let log = LoggerFactory.shared.system(MostPopularList.self)
   let MostPopularCellKey = "MostPopularCell"
   override var header: String { "Most Popular" }
   override var emptyMessage: String { "No popular tracks." }

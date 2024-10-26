@@ -26,8 +26,10 @@ class LibraryController: SearchableMusicController, TrackEventDelegate {
     self.tableView.contentOffset = CGPoint(
       x: 0, y: self.searchController.searchBar.frame.size.height)
     downloadUpdates = Task {
-      for await trackProgress in DownloadUpdater.instance.$progress.nonNilValues() {
-        onProgress(track: trackProgress)
+      for await trackProgress in DownloadUpdater.instance.$progress.values {
+        trackProgress.values.forEach { progress in
+          onProgress(track: progress)
+        }
       }
     }
     setFeedback(loadingMessage)

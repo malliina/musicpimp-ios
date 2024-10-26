@@ -125,7 +125,7 @@ class TopListController<T: TopEntry>: BaseMusicController, LibraryDelegate {
 
   func onTopLoaded(_ results: [T]) {
     hasLoaded = true
-    withMessage(nil) {
+    withMessage(results.isEmpty ? emptyMessage : nil) {
       self.entries = results
     }
   }
