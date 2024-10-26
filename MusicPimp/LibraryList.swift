@@ -33,6 +33,10 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
           ()
         }
       }
+      .task(id: vm.searchText) {
+        let term = vm.searchText
+        await vm.search(term: term)
+      }
   }
   
   @ViewBuilder
@@ -61,7 +65,7 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
   
   @ViewBuilder
   private func folderView(folder: MusicFolder) -> some View {
-    if let search = vm.search.value() {
+    if let search = vm.searchResult.value() {
       if search.tracks.isEmpty {
         fullSizeText("No results for '\(search.term)'.")
       } else {

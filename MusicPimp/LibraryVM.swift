@@ -7,10 +7,11 @@ protocol LibraryVMLike: ObservableObject {
   var appearAction: AppearAction { get }
   var isRoot: Bool { get }
   var folder: Outcome<MusicFolder> { get }
-  var search: Outcome<SearchResult> { get }
+  var searchResult: Outcome<SearchResult> { get }
   var searchText: String { get set }
   
   func load() async
+  func search(term: String) async
   
   func play(_ item: MusicItem) async
   func add(_ item: MusicItem) async
@@ -62,7 +63,6 @@ class PremiumState: ObservableObject {
 }
 
 class LibraryVM: LibraryVMLike {
-  static let progressQueue = DispatchQueue(label: "downloads")
   let log = LoggerFactory.shared.pimp(LibraryVM.self)
   let id: FolderID?
   
@@ -74,48 +74,59 @@ class LibraryVM: LibraryVMLike {
   var player: PlayerType { playerManager.playerChanged }
   
   @Published var folder: Outcome<MusicFolder> = Outcome.Idle
-  @Published var search: Outcome<SearchResult> = Outcome.Idle
+  @Published var searchResult: Outcome<SearchResult> = Outcome.Idle
   @Published var searchText: String = ""
+  
   var isLocalLibrary: Bool { library.isLocal }
-  var appearAction: AppearAction = .Reload
+  private var loaded: Date? = nil
   var isRoot: Bool { id == nil }
+  var appearAction: AppearAction {
+    if let loaded = loaded {
+      if loaded > libraryManager.latestUpdate {
+        .Noop
+      } else if isRoot {
+        .Reload
+      } else {
+        .Dismiss
+      }
+    } else {
+      .Reload
+    }
+  }
   
   var premium: PremiumState { PremiumState.shared }
   
   init(id: FolderID?) {
     self.id = id
-    // TODO should cancel these at some point
-    Task {
-      for await term in $searchText.removeDuplicates().values {
-        if term.isEmpty {
-          await update(search: Outcome.Idle)
-        } else {
-          log.info("Searching '\(term)'...")
-          do {
-            let results = try await library.search(term)
-            await update(search: .Loaded(data: SearchResult(term: term, tracks: results)))
-          } catch {
-            log.error("Search of '\(term)' failed. \(error)")
-          }
-        }
+  }
+  
+  func search(term: String) async {
+    let results =
+      if term.isEmpty {
+        Outcome<SearchResult>.Idle
+      } else {
+        await fetch(term: term)
       }
-    }
-    let contentUpdates = libraryManager.$libraryUpdated.flatMap { lib in
-      lib.contentsUpdatedPublisher
-    }
-    Task {
-      for await _ in contentUpdates.dropFirst().values {
-        if id == nil {
-          appearAction = .Reload
-        } else {
-          appearAction = .Dismiss
-        }
+    await update(search: results)
+  }
+  
+  private func fetch(term: String) async -> Outcome<SearchResult> {
+    if term.isEmpty {
+      return Outcome.Idle
+    } else {
+//      log.info("Searching '\(term)'...")
+      do {
+        let results = try await library.search(term)
+        return .Loaded(data: SearchResult(term: term, tracks: results))
+      } catch {
+        log.error("Search of '\(term)' failed. \(error)")
+        return Outcome.Err(error: error)
       }
     }
   }
   
   func load() async {
-    appearAction = .Noop
+    loaded = Date.now
     await load(id)
   }
   
@@ -143,7 +154,7 @@ class LibraryVM: LibraryVMLike {
   }
   
   @MainActor func update(search: Outcome<SearchResult>) {
-    self.search = search
+    self.searchResult = search
   }
   
   func play(_ item: MusicItem) async {
@@ -234,7 +245,6 @@ class PreviewLibrary: LibraryVMLike {
   var searchText: String = ""
   var searchResults: [Track]? = nil
   var isLocalLibrary: Bool { true }
-  
   static let track1 = Track(id: TrackID(id: "t1"), title: "Best track", album: "Album x", artist: "Artist x", duration: 13.seconds, path: "f1/t1", size: 123.bytes!, url: URL(string: "https://www.google.com")!)
   static let track2 = Track(id: TrackID(id: "t2"), title: "Best track 2", album: "Album y", artist: "Artist y", duration: 14.seconds, path: "f1/t2", size: 1213.bytes!, url: URL(string: "https://www.google2.com")!)
   static let musicFolder = MusicFolder(folder: Folder(id: FolderID(id: "id"), title: "root", path: "root"), folders: [
@@ -242,9 +252,10 @@ class PreviewLibrary: LibraryVMLike {
     Folder(id: FolderID(id: "id2"), title: "Folder 2", path: "f2")
   ], tracks: [ track1, track2 ])
   let folder = Outcome.Loaded(data: musicFolder)
-  let search: Outcome<SearchResult> = Outcome.Idle
+  let searchResult: Outcome<SearchResult> = Outcome.Idle
   
   func load() async {}
+  func search(term: String) async {}
   
   func play(_ item: MusicItem) async {}
   func add(_ item: MusicItem) async {}
