@@ -34,7 +34,9 @@ struct TopListsInternal: View {
           if entries.isEmpty {
             fullSizeText("No popular tracks.")
           } else {
-            populars(entries: entries)
+            topList(entries: entries, vm: popularsVM) { popular in
+              "\(popular.playbackCount) plays"
+            }
           }
         }
       case .recent:
@@ -42,7 +44,9 @@ struct TopListsInternal: View {
           if entries.isEmpty {
             fullSizeText("No recent tracks.")
           } else {
-            recents(entries: entries)
+            topList(entries: entries, vm: recentsVM) { recent in
+              formatter.string(from: recent.timestamp)
+            }
           }
         }
       }
@@ -89,50 +93,29 @@ struct TopListsInternal: View {
     }
   }
   
-  func populars(entries: [PopularEntry]) -> some View {
+  func topList<T>(entries: [T], vm: TopData<T>, subRight: @escaping (T) -> String) -> some View where T: TopEntry {
     List {
-      ForEach(entries, id: \.track.id) { popular in
+      ForEach(entries, id: \.entry.idStr) { recent in
         Button {
           Task {
-            await controls.play(popular.track)
+            await controls.play(recent.entry)
           }
         } label: {
-          ThreeLabelRow(label: popular.track.title, subLeft: popular.track.artist, subRight: "\(popular.playbackCount) plays", track: popular.track)
+          ThreeLabelRow(label: recent.entry.title, subLeft: recent.entry.artist, subRight: subRight(recent), track: recent.entry)
         }
       }
       .listRowBackground(colors.background)
-      loadMoreProgress(id: entries.last?.track.idStr ?? "id", vm: popularsVM)
-    }.listStyle(.plain)
-  }
-  
-  func recents(entries: [RecentEntry]) -> some View {
-    List {
-      ForEach(entries, id: \.track.id) { recent in
-        Button {
-          Task {
-            await controls.play(recent.track)
+      if vm.hasMore {
+        ProgressView()
+          .id(entries.last?.entry.idStr ?? "id") // Otherwise it shows only once?
+          .frame(maxWidth: .infinity)
+          .listRowSeparator(.hidden)
+          .listRowBackground(colors.background)
+          .task {
+            await vm.loadBatch()
           }
-        } label: {
-          ThreeLabelRow(label: recent.track.title, subLeft: recent.track.artist, subRight: formatter.string(from: recent.timestamp), track: recent.track)
-        }
       }
-      .listRowBackground(colors.background)
-      loadMoreProgress(id: entries.last?.track.idStr ?? "id", vm: recentsVM)
     }.listStyle(.plain)
-  }
-  
-  @ViewBuilder
-  private func loadMoreProgress<T>(id: String, vm: TopData<T>) -> some View {
-    if vm.hasMore {
-      ProgressView()
-        .id(id) // Otherwise it shows only once?
-        .frame(maxWidth: .infinity)
-        .listRowSeparator(.hidden)
-        .listRowBackground(colors.background)
-        .task {
-          await vm.loadBatch()
-        }
-    }
   }
   
   static func makeFormatter() -> DateFormatter {

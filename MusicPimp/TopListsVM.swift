@@ -13,7 +13,7 @@ class RecentData: TopData<RecentEntry> {
 }
 
 class TopData<T>: ObservableObject {
-  let itemsPerLoad = 20
+  let itemsPerLoad = 100
   var libraryManager: LibraryManager { LibraryManager.sharedInstance }
   var library: LibraryType { libraryManager.libraryUpdated }
 
