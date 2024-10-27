@@ -8,7 +8,6 @@ class LibraryManager: EndpointManager {
 
   var latestUpdate: Date = Date.now
   
-  
   init() {
     log.info("Init library manager")
     let settings = PimpSettings.sharedInstance

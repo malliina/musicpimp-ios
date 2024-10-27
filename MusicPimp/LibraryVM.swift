@@ -2,7 +2,7 @@ enum AppearAction {
   case Dismiss, Reload, Noop
 }
 
-protocol LibraryVMLike: ObservableObject {
+protocol LibraryVMLike: ObservableObject, Playbacks {
   var isLocalLibrary: Bool { get }
   var appearAction: AppearAction { get }
   var isRoot: Bool { get }
@@ -12,10 +12,6 @@ protocol LibraryVMLike: ObservableObject {
   
   func load() async
   func search(term: String) async
-  
-  func play(_ item: MusicItem) async
-  func add(_ item: MusicItem) async
-  func download(_ item: MusicItem) async
 }
 
 enum Outcome<T> {
@@ -66,12 +62,10 @@ class LibraryVM: LibraryVMLike {
   let log = LoggerFactory.shared.pimp(LibraryVM.self)
   let id: FolderID?
   
-  let maxNewDownloads = 300
-  let settings = PimpSettings.sharedInstance
+  let controls = PlaybackControls.shared
+  
   var libraryManager: LibraryManager { LibraryManager.sharedInstance }
   var library: LibraryType { libraryManager.libraryUpdated }
-  var playerManager: PlayerManager { PlayerManager.sharedInstance }
-  var player: PlayerType { playerManager.playerChanged }
   
   @Published var folder: Outcome<MusicFolder> = Outcome.Idle
   @Published var searchResult: Outcome<SearchResult> = Outcome.Idle
@@ -93,8 +87,6 @@ class LibraryVM: LibraryVMLike {
       .Reload
     }
   }
-  
-  var premium: PremiumState { PremiumState.shared }
   
   init(id: FolderID?) {
     self.id = id
@@ -158,83 +150,13 @@ class LibraryVM: LibraryVMLike {
   }
   
   func play(_ item: MusicItem) async {
-    let _ = await premium.limitChecked {
-      let ts = await fetchTracks(item: item)
-      let _ = await self.playTracks(ts)
-    }
+    await controls.play(item)
   }
   func add(_ item: MusicItem) async {
-    let _ = await premium.limitChecked {
-      let ts = await fetchTracks(item: item)
-      let _ = await addTracks(ts)
-    }
+    await controls.add(item)
   }
   func download(_ item: MusicItem) async {
-    let _ = await premium.limitChecked {
-      let ts = await fetchTracks(item: item)
-      let _ = downloadIfNeeded(ts)
-    }
-  }
-  
-  private func fetchTracks(item: MusicItem) async -> [Track] {
-    do {
-      return if let folder = item as? Folder {
-        try await library.tracks(folder.id)
-      } else if let track = item as? Track {
-        [track]
-      } else {
-        []
-      }
-    } catch {
-      log.error("Failed to fetch tracks of item \(item.idStr). \(error)")
-      return []
-    }
-  }
-  
-  private func playAndDownload(_ track: Track) async -> ErrorMessage? {
-    let error = await player.resetAndPlay(tracks: [track])
-    if error == nil {
-      return downloadIfNeeded([track]).headOption()
-    } else {
-      return error
-    }
-  }
-  
-  private func playTracks(_ tracks: [Track]) async -> [ErrorMessage] {
-    let playResult = await player.resetAndPlay(tracks: tracks)
-    let downloadResult = downloadIfNeeded(tracks.take(3))
-    let result = playResult.map { [$0] } ?? []
-    return downloadResult + result
-  }
-  
-  private func addTracks(_ tracks: [Track]) async -> [ErrorMessage] {
-    if !tracks.isEmpty {
-      let errors = await player.playlist.add(tracks)
-      if errors.isEmpty {
-        return downloadIfNeeded(tracks.take(3))
-      } else {
-        return errors
-      }
-    } else {
-      return []
-    }
-  }
-  
-  private func downloadIfNeeded(_ tracks: [Track]) -> [ErrorMessage] {
-    if !library.isLocal && player.isLocal && settings.cacheEnabled {
-      let newTracks = tracks.filter { !LocalLibrary.sharedInstance.contains($0) }
-      let tracksToDownload = newTracks.take(maxNewDownloads)
-      log.info("Downloading \(tracksToDownload.count) tracks")
-      return tracksToDownload.flatMapOpt { (track) -> ErrorMessage? in
-        startDownload(track)
-      }
-    } else {
-      return []
-    }
-  }
-  
-  private func startDownload(_ track: Track) -> ErrorMessage? {
-    DownloadUpdater.instance.downloadIfNecessary(track: track, authValue: library.authValue)
+    await controls.download(item)
   }
 }
 
@@ -245,8 +167,11 @@ class PreviewLibrary: LibraryVMLike {
   var searchText: String = ""
   var searchResults: [Track]? = nil
   var isLocalLibrary: Bool { true }
-  static let track1 = Track(id: TrackID(id: "t1"), title: "Best track", album: "Album x", artist: "Artist x", duration: 13.seconds, path: "f1/t1", size: 123.bytes!, url: URL(string: "https://www.google.com")!)
-  static let track2 = Track(id: TrackID(id: "t2"), title: "Best track 2", album: "Album y", artist: "Artist y", duration: 14.seconds, path: "f1/t2", size: 1213.bytes!, url: URL(string: "https://www.google2.com")!)
+  static let track1 = makeTrack(num: 1)
+  static let track2 = makeTrack(num: 2)
+  static func makeTrack(num: Int) -> Track {
+    Track(id: TrackID(id: "t\(num)"), title: "Best track \(num)", album: "Album \(num)", artist: "Artist \(num)", duration: 14.seconds, path: "f1/t\(num)", size: 1213.bytes!, url: URL(string: "https://www.google.com/\(num)")!)
+  }
   static let musicFolder = MusicFolder(folder: Folder(id: FolderID(id: "id"), title: "root", path: "root"), folders: [
     Folder(id: FolderID(id: "id1"), title: "Folder 1", path: "f1"),
     Folder(id: FolderID(id: "id2"), title: "Folder 2", path: "f2")

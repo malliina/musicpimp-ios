@@ -81,7 +81,7 @@ struct PimpTabView: View {
           Label("Player", systemImage: "play.circle")
         }
         .ignoresSafeArea(.all)
-      PhoneTopListRepresentable()
+      TopLists()
         .tabItem {
           Label("Playlists", systemImage: "list.star")
         }

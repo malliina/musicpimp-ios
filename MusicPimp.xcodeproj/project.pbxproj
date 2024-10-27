@@ -114,6 +114,10 @@
 		7D6756D91B0A6AEE00BC0CA9 /* LocalLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */; };
 		7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */; };
 		7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DC1B0BB95900BC0CA9 /* Players.swift */; };
+		7D6800E72CCE324500C4B692 /* PimpViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E62CCE323A00C4B692 /* PimpViews.swift */; };
+		7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E82CCEB53E00C4B692 /* Extensions.swift */; };
+		7D6800EB2CCEB7B000C4B692 /* PlaybackControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */; };
+		7D6800ED2CCECF5300C4B692 /* TopListsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */; };
 		7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */; };
 		7D748D1D1AC724B5009B0401 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D748D1C1AC724B5009B0401 /* Util.swift */; };
 		7D74F3581BF902DA0004506B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D74F3571BF902DA0004506B /* Media.xcassets */; };
@@ -123,6 +127,9 @@
 		7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */; };
 		7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */; };
 		7D8754812CC556FF00BDCE49 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */; };
+		7D8754832CCE18E200BDCE49 /* TopLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754822CCE18DC00BDCE49 /* TopLists.swift */; };
+		7D8754852CCE194700BDCE49 /* Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754842CCE194500BDCE49 /* Previews.swift */; };
+		7D8754872CCE1F8200BDCE49 /* ThreeLabelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754862CCE1F7100BDCE49 /* ThreeLabelRow.swift */; };
 		7D9096D21CAADA0000A5C359 /* PimpNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */; };
 		7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A61AD972A800D5CDDF /* Log.swift */; };
 		7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */; };
@@ -307,6 +314,10 @@
 		7D6756D81B0A6AEE00BC0CA9 /* LocalLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalLibrary.swift; sourceTree = "<group>"; };
 		7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libraries.swift; sourceTree = "<group>"; };
 		7D6756DC1B0BB95900BC0CA9 /* Players.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
+		7D6800E62CCE323A00C4B692 /* PimpViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PimpViews.swift; sourceTree = "<group>"; };
+		7D6800E82CCEB53E00C4B692 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControls.swift; sourceTree = "<group>"; };
+		7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopListsVM.swift; sourceTree = "<group>"; };
 		7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadUpdater.swift; sourceTree = "<group>"; };
 		7D748D1C1AC724B5009B0401 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		7D74F3571BF902DA0004506B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
@@ -316,6 +327,9 @@
 		7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAlarmTableViewController.swift; sourceTree = "<group>"; };
 		7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionObserver.swift; sourceTree = "<group>"; };
 		7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
+		7D8754822CCE18DC00BDCE49 /* TopLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLists.swift; sourceTree = "<group>"; };
+		7D8754842CCE194500BDCE49 /* Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previews.swift; sourceTree = "<group>"; };
+		7D8754862CCE1F7100BDCE49 /* ThreeLabelRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeLabelRow.swift; sourceTree = "<group>"; };
 		7D9096D11CAADA0000A5C359 /* PimpNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpNotifications.swift; sourceTree = "<group>"; };
 		7D9E48A61AD972A800D5CDDF /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPlayer.swift; sourceTree = "<group>"; };
@@ -444,8 +458,10 @@
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D60FDD22CC187EA0059B272 /* LibraryList.swift */,
+				7D6800E82CCEB53E00C4B692 /* Extensions.swift */,
 				7D60FDD42CC38A730059B272 /* LibraryVM.swift */,
 				6167B10F1F6D993200FF002F /* MainSubCell.swift */,
+				7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */,
 				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
 				7D62879D1D7C37190053BF52 /* PimpButton.swift */,
 				7D62879B1D7C36930053BF52 /* PimpCell.swift */,
@@ -458,13 +474,18 @@
 				7D6287A11D7C38960053BF52 /* PimpTextField.swift */,
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
+				7D6800E62CCE323A00C4B692 /* PimpViews.swift */,
 				610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */,
 				7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */,
+				7D8754842CCE194500BDCE49 /* Previews.swift */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
 				33498C6C27044382E317113E /* SnapTrackCell.swift */,
 				616EC57F1FAF8FE600C3EB91 /* ThreeLabelCell.swift */,
+				7D8754862CCE1F7100BDCE49 /* ThreeLabelRow.swift */,
+				7D8754822CCE18DC00BDCE49 /* TopLists.swift */,
+				7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -934,6 +955,7 @@
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
 				B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */,
+				7D8754832CCE18E200BDCE49 /* TopLists.swift in Sources */,
 				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
 				7D31C14B1BC81D4500189687 /* DBImageColorPicker.m in Sources */,
@@ -953,10 +975,13 @@
 				7DC891571D71B8C400331A4D /* PimpColors.swift in Sources */,
 				7D0CA9921AF6999E008F72EC /* Protocol.swift in Sources */,
 				7DF5C00C1AED50B300F25B9B /* Arrays.swift in Sources */,
+				7D8754872CCE1F8200BDCE49 /* ThreeLabelRow.swift in Sources */,
+				7D6800E72CCE324500C4B692 /* PimpViews.swift in Sources */,
 				7D6756CB1B08B24A00BC0CA9 /* PlayerManager.swift in Sources */,
 				7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */,
 				614221C02233006C00FD1FF3 /* models.swift in Sources */,
 				7DB430DF1C4186C700CF22DC /* PurchaseHelper.swift in Sources */,
+				7D6800ED2CCECF5300C4B692 /* TopListsVM.swift in Sources */,
 				61BE40911F76ABF100A0EEC5 /* PlayerParent.swift in Sources */,
 				7D0660081B1B712100C6DB15 /* PlayerEventDelegate.swift in Sources */,
 				7DB1B3A91B10C0990012B8AE /* PimpPlayer.swift in Sources */,
@@ -989,10 +1014,12 @@
 				7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */,
 				7D28D4271C2D8D5200B3F62F /* SearchAlarmTrackController.swift in Sources */,
 				7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */,
+				7D6800EB2CCEB7B000C4B692 /* PlaybackControls.swift in Sources */,
 				616DB9A81EC8718900B23BE9 /* DetailedCell.swift in Sources */,
 				7D6756CD1B08B25400BC0CA9 /* LibraryManager.swift in Sources */,
 				7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */,
 				7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */,
+				7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,
 				7D6756B31AF94BE100BC0CA9 /* ServerType.swift in Sources */,
@@ -1030,6 +1057,7 @@
 				7DC2FB721D56104A00A6FADD /* ListeningController.swift in Sources */,
 				7D6287A01D7C372D0053BF52 /* PimpSlider.swift in Sources */,
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,
+				7D8754852CCE194700BDCE49 /* Previews.swift in Sources */,
 				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,

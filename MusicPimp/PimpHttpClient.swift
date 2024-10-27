@@ -42,6 +42,7 @@ class PimpHttpClient: HttpClient {
   }
 
   func pimpGetParsed<T: Decodable>(_ resource: String, to: T.Type) async throws -> T {
+    log.info("GET \(resource)...")
     let req = buildGet(url: urlTo(resource), headers: defaultHeaders)
     return try await executeParsed(req, to: to)
   }

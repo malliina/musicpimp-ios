@@ -28,8 +28,8 @@ struct CreditsView: View {
   }
 }
 
-struct CreditsPreview: PreviewProvider {
-  static var previews: some View {
+struct CreditsPreview: PimpPreviewProvider, PreviewProvider {
+  static var preview: some View {
     CreditsView()
   }
 }

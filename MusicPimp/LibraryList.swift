@@ -94,12 +94,6 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
     }
   }
   
-  private func fullSizeText(_ text: String) -> some View {
-    Text(text)
-      .padding(.horizontal, 12)
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-  }
-  
   func nonEmptyBody(folder: MusicFolder) -> some View {
     let title = folder.folder.title
     return nonEmptyBody(title: title.isEmpty ? "MUSICPIMP" : title, tracks: folder.tracks, folders: folder.folders)
@@ -159,21 +153,9 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
     }
     .listStyle(.plain)
     .navigationBarTitleDisplayMode(.inline)
-    .alert(IAPConstants.Title, isPresented: $premium.isPremiumSuggestion, actions: {
-      Button {
-        iapLinkActive = true
-      } label: {
-        Text(IAPConstants.OkText)
-      }
-      Button {
-        // cancel
-      } label: {
-        Text(IAPConstants.CancelText)
-      }
-
-    }, message: {
-      Text(IAPConstants.Message)
-    })
+    .iapAlert(isPresented: $premium.isPremiumSuggestion) {
+      iapLinkActive = true
+    }
   }
 }
 
@@ -217,34 +199,13 @@ struct TrackItem<T>: View where T: LibraryVMLike {
       } label: {
         Image(systemName: "ellipsis")
           .tint(.gray)
-      }.confirmationDialog("Actions", isPresented: $isAction) {
-        Button {
-          Task {
-            await vm.play(track)
-          }
-        } label: {
-          Text("Play")
-        }
-        Button {
-          Task {
-            await vm.add(track)
-          }
-        } label: {
-          Text("Add")
-        }
-        Button {
-          Task {
-            await vm.download(track)
-          }
-        } label: {
-          Text("Download")
-        }
       }
+      .musicConfirmationDialog(isPresented: $isAction, track: track)
     }
   }
 }
 
-struct LibraryListPreviews: PreviewProvider {
+struct LibraryListPreviews: PimpPreviewProvider, PreviewProvider {
   class PreviewDownloads: DownloaderLike {
     struct PreviewProgress: ProgressLike {
       var progress: Float
@@ -253,12 +214,7 @@ struct LibraryListPreviews: PreviewProvider {
       [PreviewLibrary.track1.id : PreviewProgress(progress: 0.3)]
     }
   }
-  static var previews: some View {
-    ForEach(["iPhone 13 mini", "iPad Pro (11-inch) (4th generation)"], id: \.self) { deviceName in
-      LibraryListInternal(vm: PreviewLibrary(), downloads: PreviewDownloads())
-        .preferredColorScheme(.dark)
-        .previewDevice(PreviewDevice(rawValue: deviceName))
-        .previewDisplayName(deviceName)
-    }
+  static var preview: some View {
+    LibraryListInternal(vm: PreviewLibrary(), downloads: PreviewDownloads())
   }
 }

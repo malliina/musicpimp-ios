@@ -88,12 +88,8 @@ struct PlaybackFooter: View {
   }
 }
 
-struct PlaybackFooterPreviews: PreviewProvider {
-  static var previews: some View {
-    ForEach(["iPhone 13 mini", "iPad Pro (11-inch) (4th generation)"], id: \.self) { deviceName in
-      PlaybackFooter(vm: PlaybackVM.shared)
-        .previewDevice(PreviewDevice(rawValue: deviceName))
-        .previewDisplayName(deviceName)
-    }
+struct PlaybackFooterPreviews: PimpPreviewProvider {
+  static var preview: some View {
+    PlaybackFooter(vm: PlaybackVM.shared)
   }
 }
