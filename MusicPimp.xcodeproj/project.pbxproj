@@ -118,6 +118,7 @@
 		7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E82CCEB53E00C4B692 /* Extensions.swift */; };
 		7D6800EB2CCEB7B000C4B692 /* PlaybackControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */; };
 		7D6800ED2CCECF5300C4B692 /* TopListsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */; };
+		7D6800EF2CCED57500C4B692 /* VolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EE2CCED57200C4B692 /* VolumeView.swift */; };
 		7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */; };
 		7D748D1D1AC724B5009B0401 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D748D1C1AC724B5009B0401 /* Util.swift */; };
 		7D74F3581BF902DA0004506B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D74F3571BF902DA0004506B /* Media.xcassets */; };
@@ -318,6 +319,7 @@
 		7D6800E82CCEB53E00C4B692 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControls.swift; sourceTree = "<group>"; };
 		7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopListsVM.swift; sourceTree = "<group>"; };
+		7D6800EE2CCED57200C4B692 /* VolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeView.swift; sourceTree = "<group>"; };
 		7D6A93341DC3C29D00A24D45 /* DownloadUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadUpdater.swift; sourceTree = "<group>"; };
 		7D748D1C1AC724B5009B0401 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		7D74F3571BF902DA0004506B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
@@ -456,12 +458,11 @@
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
+				7D6800E82CCEB53E00C4B692 /* Extensions.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D60FDD22CC187EA0059B272 /* LibraryList.swift */,
-				7D6800E82CCEB53E00C4B692 /* Extensions.swift */,
 				7D60FDD42CC38A730059B272 /* LibraryVM.swift */,
 				6167B10F1F6D993200FF002F /* MainSubCell.swift */,
-				7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */,
 				7DC8914C1D607D7F00331A4D /* PimpBarButton.swift */,
 				7D62879D1D7C37190053BF52 /* PimpButton.swift */,
 				7D62879B1D7C36930053BF52 /* PimpCell.swift */,
@@ -475,6 +476,7 @@
 				7D6287A51D7C61990053BF52 /* PimpTextView.swift */,
 				7D6287A31D7C5C1B0053BF52 /* PimpView.swift */,
 				7D6800E62CCE323A00C4B692 /* PimpViews.swift */,
+				7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */,
 				610350481EAB9F1C00F85F04 /* PlaybackDelegate.swift */,
 				7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */,
 				7D8754842CCE194500BDCE49 /* Previews.swift */,
@@ -486,6 +488,7 @@
 				7D8754862CCE1F7100BDCE49 /* ThreeLabelRow.swift */,
 				7D8754822CCE18DC00BDCE49 /* TopLists.swift */,
 				7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */,
+				7D6800EE2CCED57200C4B692 /* VolumeView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -968,6 +971,7 @@
 				7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */,
 				7D9E48B01ADAE8CB00D5CDDF /* PlayerController.swift in Sources */,
 				7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */,
+				7D6800EF2CCED57500C4B692 /* VolumeView.swift in Sources */,
 				7DB1B3B61B11D0590012B8AE /* PimpEndpoint.swift in Sources */,
 				7D0CA9841AF505E3008F72EC /* PlaybackState.swift in Sources */,
 				7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */,

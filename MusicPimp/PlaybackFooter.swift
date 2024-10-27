@@ -74,18 +74,6 @@ struct PlaybackFooter: View {
     }
     .padding(.vertical, 12)
   }
-  
-  @ViewBuilder
-  func faButton(name: String, action: @escaping () async -> ()) -> some View {
-    Button {
-      Task {
-        await action()
-      }
-    } label: {
-      Text(String.fontAwesomeIconStringForIconIdentifier(name))
-        .font(Font(UIFont(awesomeFontOfSize: 24)))
-    }
-  }
 }
 
 struct PlaybackFooterPreviews: PimpPreviewProvider {

@@ -55,7 +55,6 @@ struct TopListsInternal: View {
     .background(colors.background)
   }
   
-  @ViewBuilder
   func topView<R, A>(vm: TopData<R>, @ViewBuilder dataView: ([R]) -> A) -> some View where A: View {
     topData(outcome: vm.results) { r in
       dataView(r)
@@ -128,13 +127,12 @@ struct TopListsInternal: View {
 }
 
 struct TopListsPreviews: PimpPreviewProvider, PreviewProvider {
-  static let ps = [
-    PopularEntry(track: PreviewLibrary.track1, playbackCount: 4),
-    PopularEntry(track: PreviewLibrary.track2, playbackCount: 3)
-  ]
   class PopularPreview: TopData<PopularEntry> {
     override func fetch(from: Int) async throws -> [PopularEntry] {
-      await TopListsPreviews.ps
+      [
+        PopularEntry(track: PreviewLibrary.track1, playbackCount: 4),
+        PopularEntry(track: PreviewLibrary.track2, playbackCount: 3)
+      ]
     }
   }
   class RecentPreview: TopData<RecentEntry> {
