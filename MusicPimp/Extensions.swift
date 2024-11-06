@@ -46,3 +46,10 @@ extension View {
     }
   }
 }
+
+extension ObservableObject {
+  var libraryManager: LibraryManager { LibraryManager.sharedInstance }
+  var playerManager: PlayerManager { PlayerManager.sharedInstance }
+  var library: LibraryType { libraryManager.libraryUpdated }
+  var player: PlayerType { playerManager.playerChanged }
+}

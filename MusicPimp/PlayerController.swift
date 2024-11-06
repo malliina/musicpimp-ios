@@ -59,9 +59,7 @@ class PlayerController: ListeningController, PlaybackDelegate {
 
   @objc func onVolumeBarButtonClicked() {
     // presents volume viewcontroller modally
-    let dest = UIHostingController(rootView: VolumeView(vm: VolumeVM.shared) {
-      self.dismiss(animated: true)
-    })
+    let dest = UIHostingController(rootView: VolumeView(vm: VolumeVM.shared))
 //    let dest = VolumeViewController()
     self.present(UINavigationController(rootViewController: dest), animated: true, completion: nil)
   }

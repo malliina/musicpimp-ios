@@ -118,6 +118,7 @@ class LocalPlaylist: BasePlaylist, PlaylistType {
     if let track = trackAt(nextPos) {
       index = nextPos
       indexEvent = index
+      playlistUpdated()
       return track
     } else {
       log.error("Invalid playlist position \(nextPos)")

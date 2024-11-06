@@ -36,6 +36,7 @@ class MusicColors {
   var background: Color { Color(uiColor: ref.background) }
   var titles: Color { Color(uiColor: ref.titles) }
   var subtitles: Color { Color(uiColor: ref.subtitles) }
+  var tint: Color { Color(uiColor: ref.tintColor) }
 }
 
 extension View {

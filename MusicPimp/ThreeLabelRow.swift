@@ -5,12 +5,14 @@ struct ThreeLabelRow: View {
   let subLeft: String
   let subRight: String
   let track: Track?
+  
   @State private var isAction = false
   
   var body: some View {
     HStack(spacing: 12) {
       VStack(alignment: .leading, spacing: 6) {
         Text(label)
+          .foregroundColor(colors.titles)
         HStack(spacing: 6) {
           subtitle(subLeft)
           Spacer()

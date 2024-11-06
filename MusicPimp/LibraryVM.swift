@@ -2,7 +2,7 @@ enum AppearAction {
   case Dismiss, Reload, Noop
 }
 
-protocol LibraryVMLike: ObservableObject, Playbacks {
+protocol LibraryVMLike: ObservableObject {
   var isLocalLibrary: Bool { get }
   var appearAction: AppearAction { get }
   var isRoot: Bool { get }

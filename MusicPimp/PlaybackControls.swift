@@ -2,6 +2,7 @@ protocol Playbacks {
   func play(_ item: MusicItem) async
   func add(_ item: MusicItem) async
   func download(_ item: MusicItem) async
+  func playChecked(_ tracks: [Track]) async
 }
 
 class PlaybackControls: Playbacks {
@@ -35,6 +36,12 @@ class PlaybackControls: Playbacks {
     let _ = await premium.limitChecked {
       let ts = await fetchTracks(item: item)
       let _ = downloadIfNeeded(ts)
+    }
+  }
+  
+  func playChecked(_ tracks: [Track]) async {
+    let _ = await premium.limitChecked {
+      let _ = await playTracks(tracks)
     }
   }
   

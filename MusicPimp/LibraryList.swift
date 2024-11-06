@@ -41,13 +41,7 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
   
   @ViewBuilder
   func contentView() -> some View {
-    switch vm.folder {
-    case .Idle:
-      fullSizeText("")
-    case .Loading:
-      ProgressView()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    case .Loaded(let folder):
+    outcomeView(outcome: vm.folder) { folder in
       let title = folder.folder.title
       ZStack {
         // Hack to navigate programmatically to the IAP page in an .alert action
@@ -58,8 +52,6 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
           .navigationTitle(title.isEmpty ? "MUSICPIMP" : title)
           .searchable(text: $vm.searchText, prompt: "Search track or artist")
       }
-    case .Err(let error):
-      fullSizeText("Error. \(error)")
     }
   }
   
@@ -105,18 +97,18 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
         NavigationLink {
           LibraryList(id: item.id)
         } label: {
-          FolderItem(vm: vm, folder: item)
+          FolderItem(folder: item)
             .swipeActions {
               Button {
                 Task {
-                  await vm.play(item)
+                  await controls.play(item)
                 }
               } label: {
                 Text("Play")
               }
               Button {
                 Task {
-                  await vm.add(item)
+                  await controls.add(item)
                 }
               } label: {
                 Text("Add")
@@ -128,21 +120,21 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
       ForEach(tracks, id: \.idStr) { item in
         Button {
           Task {
-            await vm.play(item)
+            await controls.play(item)
           }
         } label: {
-          TrackItem(vm: vm, track: item, progress: downloads.trackProgress[item.id])
+          TrackItem(track: item, isActive: false, progress: downloads.trackProgress[item.id])
         }.swipeActions {
           Button {
             Task {
-              await vm.play(item)
+              await controls.play(item)
             }
           } label: {
             Text("Play")
           }
           Button {
             Task {
-              await vm.add(item)
+              await controls.add(item)
             }
           } label: {
             Text("Add")
@@ -159,8 +151,7 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
   }
 }
 
-struct FolderItem<T>: View where T: LibraryVMLike {
-  let vm: T
+struct FolderItem: View {
   let folder: Folder
   
   var body: some View {
@@ -172,9 +163,9 @@ struct FolderItem<T>: View where T: LibraryVMLike {
   }
 }
 
-struct TrackItem<T>: View where T: LibraryVMLike {
-  let vm: T
+struct TrackItem: View {
   let track: Track
+  let isActive: Bool
   let progress: ProgressLike?
   var progressValue: Float? {
     progress?.progress
@@ -187,7 +178,7 @@ struct TrackItem<T>: View where T: LibraryVMLike {
       VStack(alignment: .leading, spacing: 2) {
         Text(track.title)
           .font(.title2)
-          .foregroundColor(.primary)
+          .foregroundColor(isActive ? colors.tint : colors.titles)
           .padding(.top, 2)
         ProgressView(value: progressValue ?? 0.0)
           .progressViewStyle(.linear)

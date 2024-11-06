@@ -76,11 +76,18 @@ struct PimpTabView: View {
           Label("Music", systemImage: "music.note.list")
         }
         .ignoresSafeArea(.all)
-      PhonePlayerRepresentable()
-        .tabItem {
-          Label("Player", systemImage: "play.circle")
-        }
-        .ignoresSafeArea(.all)
+      NavigationView {
+        PlayerView()
+      }
+      .tabItem {
+        Label("Player", systemImage: "play.circle")
+      }
+      .ignoresSafeArea(.all)
+//      PhonePlayerRepresentable()
+//        .tabItem {
+//          Label("Player", systemImage: "play.circle")
+//        }
+//        .ignoresSafeArea(.all)
       TopLists()
         .tabItem {
           Label("Playlists", systemImage: "list.star")

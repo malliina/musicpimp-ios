@@ -20,7 +20,7 @@ struct Version: Codable {
   let version: String
 }
 
-struct VolumeValue: IntCodable {
+struct VolumeValue: IntCodable, Equatable {
   static let Min = VolumeValue(volume: 0)
   static let Max = VolumeValue(volume: 100)
   static let Default = VolumeValue(volume: 40)
@@ -80,7 +80,11 @@ struct PlaylistID: IntCodable, CustomStringConvertible {
   var description: String { "\(id)" }
 }
 
-struct Playlist {
+struct Playlist: Equatable {
+  static func == (lhs: Playlist, rhs: Playlist) -> Bool {
+    lhs.tracks == rhs.tracks && lhs.index == rhs.index
+  }
+  
   static let empty = Playlist(tracks: [], index: nil)
 
   let tracks: [Track]
@@ -92,7 +96,7 @@ protocol MusicItem {
   var title: String { get }
 }
 
-struct Track: MusicItem, Codable {
+struct Track: MusicItem, Codable, Equatable {
   static let empty = Track(
     id: TrackID(id: ""), title: "", album: "", artist: "", duration: Duration.Zero, path: "",
     size: StorageSize.Zero, url: URL(string: "https://www.musicpimp.org")!)

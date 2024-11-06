@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 protocol PlaylistType {
   var indexPublisher: Published<Int?>.Publisher { get }
@@ -17,4 +18,10 @@ protocol PlaylistType {
   func move(_ src: Int, dest: Int) async -> ErrorMessage?
 
   func reset(_ index: Int?, tracks: [Track]) async -> ErrorMessage?
+}
+
+extension PlaylistType {
+  var updates: AnyPublisher<Playlist?, Never> {
+    playlistPublisher.eraseToAnyPublisher()
+  }
 }

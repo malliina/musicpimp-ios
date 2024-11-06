@@ -15,6 +15,10 @@ struct SavedPlaylist: Codable {
   let duration: Duration
   let tracks: [Track]
 
+  static func from(id: PlaylistID?, name: String, tracks: [Track]) -> SavedPlaylist {
+    SavedPlaylist(id: id, name: name, trackCount: tracks.count, duration: Duration.Zero, tracks: tracks)
+  }
+  
   func strip() -> SavedPlaylistStripped {
     SavedPlaylistStripped(
       id: id, name: name, trackCount: trackCount, duration: duration, tracks: tracks.map { $0.id })

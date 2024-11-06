@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 class BasePlayer: NSObject {
   @Published var state: PlaybackState?
@@ -9,6 +10,20 @@ class BasePlayer: NSObject {
   var volumeEvent: Published<VolumeValue?>.Publisher { $volume }
   @Published var track: Track?
   var trackEvent: Published<Track?>.Publisher { $track }
+}
+
+struct PlayerMeta: Equatable {
+  static func == (lhs: PlayerMeta, rhs: PlayerMeta) -> Bool {
+    lhs.track == rhs.track && lhs.state == rhs.state && lhs.time == rhs.time && lhs.volume == rhs.volume && lhs.playlist == rhs.playlist
+  }
+  
+  static let empty = PlayerMeta(track: nil, state: nil, time: nil, volume: nil, playlist: nil)
+  
+  let track: Track?
+  let state: PlaybackState?
+  let time: Duration?
+  let volume: VolumeValue?
+  let playlist: Playlist?
 }
 
 protocol PlayerType {
@@ -49,6 +64,17 @@ protocol PlayerType {
 }
 
 extension PlayerType {
+  var playerUpdates: Publishers.Map<Publishers.CombineLatest4<Published<Track?>.Publisher, Published<PlaybackState?>.Publisher, Published<Duration?>.Publisher, Published<VolumeValue?>.Publisher>, PlayerMeta> {
+    trackEvent.combineLatest(stateEvent, timeEvent, volumeEvent) { track, state, time, volume in
+      PlayerMeta(track: track, state: state, time: time, volume: volume, playlist: nil)
+    }
+  }
+  var updates: Publishers.Map<Publishers.CombineLatest<Publishers.Map<Publishers.CombineLatest4<Published<Track?>.Publisher, Published<PlaybackState?>.Publisher, Published<Duration?>.Publisher, Published<VolumeValue?>.Publisher>, PlayerMeta>, AnyPublisher<Playlist?, Never>>, PlayerMeta> {
+    playerUpdates.combineLatest(playlist.updates) { meta, list in
+      PlayerMeta(track: meta.track, state: meta.state, time: meta.time, volume: meta.volume, playlist: list)
+    }
+  }
+  
   /// Restores this player with the given state. Used to switch from one listening device to another (e.g. remote to local),
   /// maintaining the state of the previous player.
   ///

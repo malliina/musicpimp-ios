@@ -13,7 +13,7 @@ class PlayerStateClass {
   let playlist: [Track]
   let playlistIndex: Int?
 
-  var isPlaying: Bool { return state == .Playing }
+  var isPlaying: Bool { state == .Playing }
 
   init(
     track: Track?, state: PlaybackState, position: Int, volume: Int, mute: Bool, playlist: [Track],
@@ -64,5 +64,5 @@ struct PlayerState {
   var mute: Bool
   var playlist: [Track]
   var playlistIndex: Int?
-  var isPlaying: Bool { return state == .Playing }
+  var isPlaying: Bool { state == .Playing }
 }

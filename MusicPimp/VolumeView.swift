@@ -2,13 +2,9 @@ import SwiftUI
 import Combine
 
 struct VolumeView: View {
-  
-  
   let log = LoggerFactory.shared.view(VolumeView.self)
   @ObservedObject var vm: VolumeVM
-  // @Environment(\.dismiss) private var dismiss
-  // UIKit compat, the above doesn't work
-  var dismissAction: (() -> Void)
+  @Environment(\.dismiss) private var dismiss
   
   var body: some View {
     HStack {
@@ -47,7 +43,7 @@ struct VolumeView: View {
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
         Button("Done") {
-          dismissAction()
+          dismiss()
         }
       }
     }
@@ -56,9 +52,7 @@ struct VolumeView: View {
 
 struct VolumePreviews: PimpPreviewProvider, PreviewProvider {
   static var preview: some View {
-    VolumeView(vm: VolumeVM.shared) {
-      
-    }
+    VolumeView(vm: VolumeVM.shared)
   }
 }
 
