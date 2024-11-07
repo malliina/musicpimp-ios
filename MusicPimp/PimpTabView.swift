@@ -1,6 +1,39 @@
 import Foundation
 import SwiftUI
 
+struct SourceSettingRepresentable: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> SourceSettingController {
+    SourceSettingController()
+  }
+  func updateUIViewController(_ uiViewController: SourceSettingController, context: Context) {
+  }
+  typealias UIViewControllerType = SourceSettingController
+}
+struct PlayerSettingRepresentable: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> PlayerSettingController {
+    PlayerSettingController()
+  }
+  func updateUIViewController(_ uiViewController: PlayerSettingController, context: Context) {
+  }
+  typealias UIViewControllerType = PlayerSettingController
+}
+struct CacheTableRepresentable: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> CacheTableController {
+    CacheTableController()
+  }
+  func updateUIViewController(_ uiViewController: CacheTableController, context: Context) {
+  }
+  typealias UIViewControllerType = CacheTableController
+}
+struct AlarmsRepresentable: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> AlarmsController {
+    AlarmsController()
+  }
+  func updateUIViewController(_ uiViewController: AlarmsController, context: Context) {
+  }
+  typealias UIViewControllerType = AlarmsController
+}
+
 struct PlaybackFooterRepresentable: UIViewRepresentable {
   func makeUIView(context: Context) -> SnapPlaybackFooter {
     SnapPlaybackFooter(persistent: true)
@@ -65,38 +98,37 @@ struct PimpTabView: View {
       NavigationView {
         LibraryList(id: nil)
       }
-        .toolbar {
-          ToolbarItem(placement: .principal) {
-            Text("MUSIC")
-              .font(.headline)
-          }
+      .toolbar {
+        ToolbarItem(placement: .principal) {
+          Text("MUSIC")
+            .font(.headline)
         }
-        .navigationTitle("MUSIC")
-        .tabItem {
-          Label("Music", systemImage: "music.note.list")
-        }
-        .ignoresSafeArea(.all)
+      }
+      .navigationTitle("MUSIC")
+      .tabItem {
+        Label("Music", systemImage: "music.note.list")
+      }
+      .ignoresSafeArea(.all)
       NavigationView {
         PlayerView()
       }
       .tabItem {
         Label("Player", systemImage: "play.circle")
       }
-      .ignoresSafeArea(.all)
-//      PhonePlayerRepresentable()
-//        .tabItem {
-//          Label("Player", systemImage: "play.circle")
-//        }
-//        .ignoresSafeArea(.all)
+//      .ignoresSafeArea(.all)
       TopLists()
-        .tabItem {
-          Label("Playlists", systemImage: "list.star")
-        }
-      SettingsRepresentable()
-        .tabItem {
-          Label("Settings", systemImage: "gearshape.fill")
-        }
-        .ignoresSafeArea(.all)
+      .tabItem {
+        Label("Playlists", systemImage: "list.star")
+      }
+      NavigationView {
+        SettingsView()
+          .background(colors.background)
+      }
+      .tabItem {
+        Label("Settings", systemImage: "gearshape.fill")
+      }
+      .background(colors.background)
+//        .ignoresSafeArea(.all)
     }
     .environment(\.colorScheme, .dark)
   }

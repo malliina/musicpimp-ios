@@ -42,16 +42,22 @@ struct PlayerViewInternal<T>: View where T: PlayerVMLike {
       switch segment {
       case .player:
         VStack {
+          Spacer()
           Image(uiImage: vm.cover)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .padding(.vertical, 12)
+          Spacer()
           Text(vm.track?.title ?? "No track")
             .font(.system(size: 28))
           if let track = vm.track {
+            Spacer()
+              .frame(height: 4)
             Text(track.album)
               .font(.title3)
               .foregroundStyle(colors.subtitles)
+            Spacer()
+              .frame(height: 4)
             Text(track.artist)
               .font(.title2)
           }

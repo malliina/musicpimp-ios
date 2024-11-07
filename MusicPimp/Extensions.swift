@@ -52,4 +52,5 @@ extension ObservableObject {
   var playerManager: PlayerManager { PlayerManager.sharedInstance }
   var library: LibraryType { libraryManager.libraryUpdated }
   var player: PlayerType { playerManager.playerChanged }
+  var settings: PimpSettings { PimpSettings.sharedInstance }
 }

@@ -76,6 +76,8 @@
 		7D32B8021D4E5F7800869703 /* PimpSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */; };
 		7D406B081BD2789600EE6609 /* SavePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */; };
 		7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */; };
+		7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */; };
+		7D45E7B52CDBFA2B00338D38 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */; };
 		7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557A1D1EC95300F6141D /* RecentEntry.swift */; };
 		7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557C1D1EC96100F6141D /* PopularEntry.swift */; };
 		7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */; };
@@ -281,6 +283,8 @@
 		7D32B8011D4E5F7800869703 /* PimpSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpSegmentedControl.swift; sourceTree = "<group>"; };
 		7D406B071BD2789600EE6609 /* SavePlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavePlaylistViewController.swift; sourceTree = "<group>"; };
 		7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylistsTableViewController.swift; sourceTree = "<group>"; };
+		7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
 		7D46557A1D1EC95300F6141D /* RecentEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentEntry.swift; sourceTree = "<group>"; };
 		7D46557C1D1EC96100F6141D /* PopularEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularEntry.swift; sourceTree = "<group>"; };
 		7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAccessoryCell.swift; sourceTree = "<group>"; };
@@ -492,6 +496,8 @@
 				7D8754842CCE194500BDCE49 /* Previews.swift */,
 				7DBE87342CD68C5A00FA128F /* SavePlaylistView.swift */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
+				7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */,
+				7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */,
 				7D31F7F22CDA88AD0098B77B /* SavedPlaylistsView.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
@@ -968,6 +974,7 @@
 				7D62879E1D7C37190053BF52 /* PimpButton.swift in Sources */,
 				7D0CA9861AF50F15008F72EC /* PlayerInfo.swift in Sources */,
 				7D62879C1D7C36930053BF52 /* PimpCell.swift in Sources */,
+				7D45E7B52CDBFA2B00338D38 /* SettingsVM.swift in Sources */,
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
 				B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */,
@@ -1041,6 +1048,7 @@
 				7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,
+				7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */,
 				7DBE87352CD68C5D00FA128F /* SavePlaylistView.swift in Sources */,
 				7D6756B31AF94BE100BC0CA9 /* ServerType.swift in Sources */,
 				7DB1B3BA1B12013A0012B8AE /* BaseLibrary.swift in Sources */,
