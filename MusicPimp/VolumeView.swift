@@ -26,16 +26,6 @@ struct VolumeView: View {
         }
       }
     }
-    .onReceive(vm.updates) { vol in
-      if let vol = vol {
-        vm.update(to: vol)
-      }
-    }
-    .onReceive(vm.userChanges) { vol in
-      Task {
-        await vm.onEdited(to: vol)
-      }
-    }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .padding(.horizontal, 12)
     .background(colors.background)
@@ -65,7 +55,7 @@ class VolumeVM: ObservableObject {
   @Published var volume: Float = Float(playerStatic.current().volume.value)
   @Published var isEditing: Bool = false
   let maximum: Float = 100.0
-  var cancellable: AnyCancellable? = nil
+  private var cancellables: Set<Task<(), Never>> = []
 
   var updates: Published<VolumeValue?>.Publisher {
     player.volumeEvent
@@ -74,9 +64,25 @@ class VolumeVM: ObservableObject {
     $volume.throttle(for: 0.2, scheduler: DispatchQueue.main, latest: true)
   }
   
+  init() {
+    let task1 = Task {
+      for await vol in updates.removeDuplicates().values {
+        if let vol = vol {
+          await update(to: vol)
+        }
+      }
+    }
+    let task2 = Task {
+      for await change in userChanges.values {
+        await onEdited(to: change)
+      }
+    }
+    cancellables = [task1, task2]
+  }
+  
   func onEdited(to: Float) async {
     if isEditing {
-      await updatePlayer(to: to)
+      let _ = await player.volume(VolumeValue(volume: Int(to)))
     }
   }
   
@@ -90,10 +96,6 @@ class VolumeVM: ObservableObject {
     Task {
 //      await updatePlayer(to: max(volume - 10, 0))
     }
-  }
-  
-  private func updatePlayer(to: Float) async {
-    let _ = await player.volume(VolumeValue(volume: Int(to)))
   }
   
   @MainActor func update(to: VolumeValue) {

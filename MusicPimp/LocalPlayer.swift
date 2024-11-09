@@ -208,7 +208,6 @@ class LocalPlayer: BasePlayer, PlayerType {
     forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?,
     context: UnsafeMutableRawPointer?
   ) {
-    log.info("Observing value...")
     if context == &LocalPlayer.itemStatusContext {
       if let item = object as? AVPlayerItem {
         switch item.status {

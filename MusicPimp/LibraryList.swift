@@ -123,7 +123,7 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
             await controls.play(item)
           }
         } label: {
-          TrackItem(track: item, isActive: false, progress: downloads.trackProgress[item.id])
+          TrackItem(track: item, isActive: vm.track?.id == item.id, progress: downloads.trackProgress[item.id])
         }.swipeActions {
           Button {
             Task {

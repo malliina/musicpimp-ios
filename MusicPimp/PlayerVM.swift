@@ -53,6 +53,16 @@ class PlayerVM: PlayerVMLike {
     }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
   }
   
+  private var cancellable: Task<(), Never>? = nil
+  
+  init() {
+    cancellable = Task {
+      for await meta in updates.values {
+        await on(update: meta)
+      }
+    }
+  }
+  
   func skip(to: Int) async {
     let _ = await player.skip(to)
   }

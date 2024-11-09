@@ -1,3 +1,5 @@
+import Combine
+
 enum AppearAction {
   case Dismiss, Reload, Noop
 }
@@ -9,9 +11,12 @@ protocol LibraryVMLike: ObservableObject {
   var folder: Outcome<MusicFolder> { get }
   var searchResult: Outcome<SearchResult> { get }
   var searchText: String { get set }
+  var track: Track? { get }
+  var trackUpdates: AnyPublisher<Track?, Never> { get }
   
   func load() async
   func search(term: String) async
+  func on(track: Track?) async
 }
 
 enum Outcome<T> {
@@ -70,9 +75,15 @@ class LibraryVM: LibraryVMLike {
   @Published var folder: Outcome<MusicFolder> = Outcome.Idle
   @Published var searchResult: Outcome<SearchResult> = Outcome.Idle
   @Published var searchText: String = ""
-  
+  @Published var track: Track? = nil
+  var trackUpdates: AnyPublisher<Track?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      player.trackEvent
+    }.removeDuplicates().eraseToAnyPublisher()
+  }
   var isLocalLibrary: Bool { library.isLocal }
   private var loaded: Date? = nil
+  private var cancellable: Task<(), Never>? = nil
   var isRoot: Bool { id == nil }
   var appearAction: AppearAction {
     if let loaded = loaded {
@@ -90,6 +101,11 @@ class LibraryVM: LibraryVMLike {
   
   init(id: FolderID?) {
     self.id = id
+    cancellable = Task {
+      for await track in trackUpdates.values {
+        await on(track: track)
+      }
+    }
   }
   
   func search(term: String) async {
@@ -100,6 +116,11 @@ class LibraryVM: LibraryVMLike {
         await fetch(term: term)
       }
     await update(search: results)
+  }
+  
+  @MainActor
+  func on(track: Track?) async {
+    self.track = track
   }
   
   private func fetch(term: String) async -> Outcome<SearchResult> {
@@ -161,6 +182,12 @@ class LibraryVM: LibraryVMLike {
 }
 
 class PreviewLibrary: LibraryVMLike {
+  var track: Track? = PreviewLibrary.track1
+  
+  var trackUpdates: AnyPublisher<Track?, Never> {
+    [track].publisher.eraseToAnyPublisher()
+  }
+  
   var appearAction: AppearAction = .Noop
   var isRoot: Bool = true
   var isPremiumSuggestion: Bool = false
@@ -185,4 +212,6 @@ class PreviewLibrary: LibraryVMLike {
   func play(_ item: MusicItem) async {}
   func add(_ item: MusicItem) async {}
   func download(_ item: MusicItem) async {}
+  
+  func on(track: Track?) async {}
 }

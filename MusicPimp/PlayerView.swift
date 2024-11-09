@@ -200,9 +200,6 @@ struct PlayerViewInternal<T>: View where T: PlayerVMLike {
       if !isSeeking && timeHasPassed {
         playbackPosition = meta.time?.secondsFloat ?? 0
       }
-      Task {
-        await vm.on(update: meta)
-      }
     }
     .navigationTitle("PLAYER")
     .navigationBarTitleDisplayMode(.inline)
