@@ -1,6 +1,6 @@
 import Foundation
 
-struct StorageSize: CustomStringConvertible, Comparable, LargeIntCodable {
+struct StorageSize: CustomStringConvertible, Comparable, LargeIntCodable, Identifiable, Hashable {
   static let Zero = StorageSize(bytes: 0)
   static let k: Int = 1024
   static let k64 = Int64(StorageSize.k)
@@ -28,6 +28,7 @@ struct StorageSize: CustomStringConvertible, Comparable, LargeIntCodable {
     self.init(bytes: Int64(gigs) * StorageSize.k64 * StorageSize.k64 * StorageSize.k64)
   }
 
+  var id: String { "\(bytes)" }
   var toBytes: Int64 { bytes }
   var toKilos: Int64 { toBytes / StorageSize.k64 }
   var toMegs: Int64 { toKilos / StorageSize.k64 }

@@ -78,6 +78,10 @@
 		7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */; };
 		7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */; };
 		7D45E7B52CDBFA2B00338D38 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */; };
+		7D45E7B72CDF514800338D38 /* PremiumState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B62CDF514500338D38 /* PremiumState.swift */; };
+		7D45E7B92CDF524C00338D38 /* IAPVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B82CDF524A00338D38 /* IAPVM.swift */; };
+		7D45E7BB2CDFAF9100338D38 /* IAPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */; };
+		7D45E7BD2CDFB71B00338D38 /* CacheView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7BC2CDFB71900338D38 /* CacheView.swift */; };
 		7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557A1D1EC95300F6141D /* RecentEntry.swift */; };
 		7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557C1D1EC96100F6141D /* PopularEntry.swift */; };
 		7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */; };
@@ -118,7 +122,7 @@
 		7D6756DB1B0A6FCB00BC0CA9 /* Libraries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */; };
 		7D6756DD1B0BB95900BC0CA9 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6756DC1B0BB95900BC0CA9 /* Players.swift */; };
 		7D6800E72CCE324500C4B692 /* PimpViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E62CCE323A00C4B692 /* PimpViews.swift */; };
-		7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E82CCEB53E00C4B692 /* Extensions.swift */; };
+		7D6800E92CCEB54000C4B692 /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800E82CCEB53E00C4B692 /* common.swift */; };
 		7D6800EB2CCEB7B000C4B692 /* PlaybackControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */; };
 		7D6800ED2CCECF5300C4B692 /* TopListsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */; };
 		7D6800EF2CCED57500C4B692 /* VolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6800EE2CCED57200C4B692 /* VolumeView.swift */; };
@@ -285,6 +289,10 @@
 		7D406B091BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
+		7D45E7B62CDF514500338D38 /* PremiumState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumState.swift; sourceTree = "<group>"; };
+		7D45E7B82CDF524A00338D38 /* IAPVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPVM.swift; sourceTree = "<group>"; };
+		7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPView.swift; sourceTree = "<group>"; };
+		7D45E7BC2CDFB71900338D38 /* CacheView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheView.swift; sourceTree = "<group>"; };
 		7D46557A1D1EC95300F6141D /* RecentEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentEntry.swift; sourceTree = "<group>"; };
 		7D46557C1D1EC96100F6141D /* PopularEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularEntry.swift; sourceTree = "<group>"; };
 		7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAccessoryCell.swift; sourceTree = "<group>"; };
@@ -325,7 +333,7 @@
 		7D6756DA1B0A6FCB00BC0CA9 /* Libraries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libraries.swift; sourceTree = "<group>"; };
 		7D6756DC1B0BB95900BC0CA9 /* Players.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		7D6800E62CCE323A00C4B692 /* PimpViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PimpViews.swift; sourceTree = "<group>"; };
-		7D6800E82CCEB53E00C4B692 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		7D6800E82CCEB53E00C4B692 /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
 		7D6800EA2CCEB7AC00C4B692 /* PlaybackControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControls.swift; sourceTree = "<group>"; };
 		7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopListsVM.swift; sourceTree = "<group>"; };
 		7D6800EE2CCED57200C4B692 /* VolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeView.swift; sourceTree = "<group>"; };
@@ -465,13 +473,16 @@
 			isa = PBXGroup;
 			children = (
 				618ECD3A1EB7522C0018B309 /* BaseView.swift */,
+				7D45E7BC2CDFB71900338D38 /* CacheView.swift */,
+				7D6800E82CCEB53E00C4B692 /* common.swift */,
 				7DC2FB731D57693600A6FADD /* ConstraintToggle.swift */,
 				B05F8C18298574A500279593 /* CreditsView.swift */,
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
-				7D6800E82CCEB53E00C4B692 /* Extensions.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
+				7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */,
+				7D45E7B82CDF524A00338D38 /* IAPVM.swift */,
 				7D60FDD22CC187EA0059B272 /* LibraryList.swift */,
 				7D60FDD42CC38A730059B272 /* LibraryVM.swift */,
 				6167B10F1F6D993200FF002F /* MainSubCell.swift */,
@@ -493,12 +504,13 @@
 				7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */,
 				7D6800F02CD012E700C4B692 /* PlayerView.swift */,
 				7D6800F22CD01DC300C4B692 /* PlayerVM.swift */,
+				7D45E7B62CDF514500338D38 /* PremiumState.swift */,
 				7D8754842CCE194500BDCE49 /* Previews.swift */,
+				7D31F7F22CDA88AD0098B77B /* SavedPlaylistsView.swift */,
 				7DBE87342CD68C5A00FA128F /* SavePlaylistView.swift */,
-				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */,
 				7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */,
-				7D31F7F22CDA88AD0098B77B /* SavedPlaylistsView.swift */,
+				612731721EB8F9FE0032788A /* SnapCell.swift */,
 				618ECD3E1EB7A04B0018B309 /* SnapMainSubCell.swift */,
 				618ECD3C1EB752870018B309 /* SnapPlaybackFooter.swift */,
 				33498C6C27044382E317113E /* SnapTrackCell.swift */,
@@ -932,6 +944,7 @@
 				610350491EAB9F1C00F85F04 /* PlaybackDelegate.swift in Sources */,
 				7DB1B3B21B1102270012B8AE /* PimpPlaylist.swift in Sources */,
 				7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */,
+				7D45E7BB2CDFAF9100338D38 /* IAPView.swift in Sources */,
 				7D748D1D1AC724B5009B0401 /* Util.swift in Sources */,
 				7D60FDD32CC187EE0059B272 /* LibraryList.swift in Sources */,
 				7D31C1521BC9A76000189687 /* BaseMusicController.swift in Sources */,
@@ -951,6 +964,7 @@
 				7DC359641B35E853003B01B6 /* UIFont+FontAwesome.m in Sources */,
 				7D6756C91B07CDD500BC0CA9 /* PlayerSettingController.swift in Sources */,
 				619BE4A31F81304A00586A9B /* PlaybackContainer.swift in Sources */,
+				7D45E7BD2CDFB71B00338D38 /* CacheView.swift in Sources */,
 				6145018C1F782F5200D8721E /* PimpHeaderFooter.swift in Sources */,
 				616EC5801FAF8FE600C3EB91 /* ThreeLabelCell.swift in Sources */,
 				7DC891551D71B75800331A4D /* Colors.swift in Sources */,
@@ -978,6 +992,7 @@
 				7D6756D31B091EFE00BC0CA9 /* PlayerType.swift in Sources */,
 				7DE7D7BC1D3EA9D100EE33A1 /* PimpSwitch.swift in Sources */,
 				B05F8C1B2986EF4B00279593 /* PimpTabView.swift in Sources */,
+				7D45E7B92CDF524C00338D38 /* IAPVM.swift in Sources */,
 				7D8754832CCE18E200BDCE49 /* TopLists.swift in Sources */,
 				7DC2FB6E1D526DB300A6FADD /* PlaylistParent.swift in Sources */,
 				7D6686401B49AC34003C92E4 /* CacheInfoController.swift in Sources */,
@@ -1045,7 +1060,7 @@
 				7D6756CD1B08B25400BC0CA9 /* LibraryManager.swift in Sources */,
 				7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */,
 				7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */,
-				7D6800E92CCEB54000C4B692 /* Extensions.swift in Sources */,
+				7D6800E92CCEB54000C4B692 /* common.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,
 				7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */,
@@ -1087,6 +1102,7 @@
 				7DB1B3BC1B12056E0012B8AE /* PimpTableController.swift in Sources */,
 				7D8754852CCE194700BDCE49 /* Previews.swift in Sources */,
 				7D4FF8E41B48637D00C2D634 /* CacheTableController.swift in Sources */,
+				7D45E7B72CDF514800338D38 /* PremiumState.swift in Sources */,
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,

@@ -28,9 +28,9 @@ struct SettingsViewInternal<T: SettingsVMLike>: View {
       .listRowBackground(colors.background)
       Section("STORAGE") {
         NavigationLink {
-          CacheTableRepresentable()
+          CacheView()
         } label: {
-          horizontalTexts(title: "Cache", detail: vm.currentLimitDescription)
+          horizontalTexts(title: "Cache", detail: vm.currentLimitText)
         }
       }
       .listRowBackground(colors.background)
@@ -44,7 +44,7 @@ struct SettingsViewInternal<T: SettingsVMLike>: View {
       .listRowBackground(colors.background)
       Section("ABOUT") {
         NavigationLink {
-          IAPRepresentable()
+          IAPView()
         } label: {
           Text("MusicPimp Premium")
         }
@@ -56,7 +56,9 @@ struct SettingsViewInternal<T: SettingsVMLike>: View {
       }
       .listRowBackground(colors.background)
     }
-    
+    .task {
+      await vm.load()
+    }
     .listStyle(.plain)
     .background(colors.background)
     .navigationTitle("SETTINGS")

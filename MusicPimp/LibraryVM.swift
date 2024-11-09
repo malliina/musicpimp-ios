@@ -1,9 +1,5 @@
 import Combine
 
-enum AppearAction {
-  case Dismiss, Reload, Noop
-}
-
 protocol LibraryVMLike: ObservableObject {
   var isLocalLibrary: Bool { get }
   var appearAction: AppearAction { get }
@@ -19,20 +15,6 @@ protocol LibraryVMLike: ObservableObject {
   func on(track: Track?) async
 }
 
-enum Outcome<T> {
-  case Idle
-  case Loading
-  case Loaded(data: T)
-  case Err(error: Error)
-  
-  func value() -> T? {
-    switch self {
-    case .Loaded(let data): return data
-    default: return nil
-    }
-  }
-}
-
 struct SearchResult {
   let term: String
   let tracks: [Track]
@@ -41,26 +23,6 @@ struct SearchResult {
 struct MusicData {
   let folder: MusicFolder
   let search: SearchResult?
-}
-
-class PremiumState: ObservableObject {
-  static let shared = PremiumState()
-  
-  @Published var isPremiumSuggestion: Bool = false
-  
-  func limitChecked<T>(_ code: () async -> T) async -> T? {
-    if Limiter.sharedInstance.isWithinLimit() {
-      return await code()
-    } else {
-      await suggestPremium()
-      return nil
-    }
-  }
-  
-  @MainActor
-  private func suggestPremium() {
-    isPremiumSuggestion = true
-  }
 }
 
 class LibraryVM: LibraryVMLike {
@@ -168,16 +130,6 @@ class LibraryVM: LibraryVMLike {
   
   @MainActor func update(search: Outcome<SearchResult>) {
     self.searchResult = search
-  }
-  
-  func play(_ item: MusicItem) async {
-    await controls.play(item)
-  }
-  func add(_ item: MusicItem) async {
-    await controls.add(item)
-  }
-  func download(_ item: MusicItem) async {
-    await controls.download(item)
   }
 }
 

@@ -115,7 +115,6 @@ struct PimpTabView: View {
       .tabItem {
         Label("Player", systemImage: "play.circle")
       }
-//      .ignoresSafeArea(.all)
       TopLists()
       .tabItem {
         Label("Playlists", systemImage: "list.star")
@@ -128,7 +127,6 @@ struct PimpTabView: View {
         Label("Settings", systemImage: "gearshape.fill")
       }
       .background(colors.background)
-//        .ignoresSafeArea(.all)
     }
     .environment(\.colorScheme, .dark)
   }

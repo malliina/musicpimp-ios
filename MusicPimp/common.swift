@@ -1,6 +1,24 @@
 import SwiftUI
 import Combine
 
+enum AppearAction {
+  case Dismiss, Reload, Noop
+}
+
+enum Outcome<T> {
+  case Idle
+  case Loading
+  case Loaded(data: T)
+  case Err(error: Error)
+  
+  func value() -> T? {
+    switch self {
+    case .Loaded(let data): return data
+    default: return nil
+    }
+  }
+}
+
 extension View {
   var controls: Playbacks { PlaybackControls.shared }
   
