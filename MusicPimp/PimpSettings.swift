@@ -14,7 +14,7 @@ open class PimpSettings {
 
   public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
 
-  @Published var endpointsEvent: [Endpoint] = []
+  @Published var endpointsEvent: [Endpoint]
   @Published var cacheLimitChanged: StorageSize?
   @Published var cacheEnabledChanged: Bool?
   @Published var defaultAlarmEndpointChanged: Endpoint?
@@ -25,6 +25,7 @@ open class PimpSettings {
   init(impl: Persistence) {
     self.impl = impl
     notificationPermissionChanged = nil
+    endpointsEvent = impl.load(PimpSettings.ENDPOINTS, EndpointsContainer.self)?.endpoints ?? []
   }
 
   var trackHistory: [Date] {
@@ -172,6 +173,13 @@ open class PimpSettings {
     } else {
       log.error("Unable to save endpoints")
     }
+  }
+  
+  func activate(id: String, key: String) -> ErrorMessage? {
+//    let key = endpoint == .player ? PimpSettings.PLAYER : PimpSettings.LIBRARY
+    let err = impl.saveString(id, key: key)
+    endpointsEvent = endpoints()
+    return err
   }
 
   func tasks(_ sid: String) -> DownloadTasks {

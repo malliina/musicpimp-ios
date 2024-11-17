@@ -1,6 +1,6 @@
 import Foundation
 
-class PlayerManager: EndpointManager {
+class PlayerManager: EndpointManager, EndpointSource {
   static let playerLog = LoggerFactory.shared.pimp(PlayerManager.self)
   private var log: Logger { PlayerManager.playerLog }
   static let sharedInstance = PlayerManager()
@@ -36,5 +36,24 @@ class PlayerManager: EndpointManager {
 
   func onError(_ error: Error) {
     log.error("Player error \(error)")
+  }
+}
+
+extension EndpointSource {
+  func endpoints() -> [Endpoint] {
+    settings.endpoints()
+  }
+  
+  func remove(id: String) async -> [Endpoint] {
+    let active = loadActive()
+    var es = endpoints()
+    if let idx = es.indexOf({$0.id == id}) {
+      let removed = es.remove(at: idx)
+      settings.saveAll(es)
+      if active.id == removed.id {
+        await use(endpoint: Endpoint.Local)
+      }
+    }
+    return es
   }
 }

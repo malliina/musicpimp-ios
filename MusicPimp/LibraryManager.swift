@@ -1,6 +1,6 @@
 import Foundation
 
-class LibraryManager: EndpointManager {
+class LibraryManager: EndpointManager, EndpointSource {
   let log = LoggerFactory.shared.pimp(LibraryManager.self)
   static let sharedInstance = LibraryManager()
 
@@ -9,7 +9,6 @@ class LibraryManager: EndpointManager {
   var latestUpdate: Date = Date.now
   
   init() {
-    log.info("Init library manager")
     let settings = PimpSettings.sharedInstance
     libraryUpdated = Libraries.fromEndpoint(settings.activeEndpoint(PimpSettings.LIBRARY))
     super.init(key: PimpSettings.LIBRARY, settings: settings)
@@ -22,15 +21,10 @@ class LibraryManager: EndpointManager {
       }
     }
   }
-
-  func endpoints() -> [Endpoint] {
-    settings.endpoints()
-  }
-
-  func use(endpoint: Endpoint) async -> LibraryType {
+  
+  func use(endpoint: Endpoint) async {
     let _ = saveActive(endpoint)
     libraryUpdated = Libraries.fromEndpoint(endpoint)
     log.info("Library set to \(endpoint.name)")
-    return libraryUpdated
   }
 }

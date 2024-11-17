@@ -6,6 +6,34 @@ func fullSizeText(_ text: String) -> some View {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
 }
 
+func textField(_ placeholder: String, text: Binding<String>) -> some View {
+  TextField(placeholder, text: text)
+    .padding(6)
+    .background(MusicColors.shared.lighterBackground)
+}
+
+struct PimpTextFieldModifier: ViewModifier {
+  func body(content: Content) -> some View {
+    content
+      .padding(6)
+      .background(MusicColors.shared.lighterBackground)
+  }
+}
+
+extension View {
+  func pimpTextField() -> some View {
+    modifier(PimpTextFieldModifier())
+  }
+}
+
+struct PimpTextFieldStyle: TextFieldStyle {
+  func _body(configuration: TextField<Self._Label>) -> some View {
+    configuration
+      .pimpTextField()
+      .textInputAutocapitalization(.never)
+  }
+}
+
 @ViewBuilder
 func faButton(name: String, action: @escaping () async -> ()) -> some View {
   Button {

@@ -15,12 +15,12 @@ struct SettingsViewInternal<T: SettingsVMLike>: View {
     List {
       Section("PLAYBACK") {
         NavigationLink {
-          SourceSettingRepresentable()
+          SelectEndpointView(title: "Sources", endpointType: .source, vm: SelectEndpointVM.libraries)
         } label: {
           horizontalTexts(title: "Music source", detail: vm.libraryName)
         }
         NavigationLink {
-          PlayerSettingRepresentable()
+          SelectEndpointView(title: "Players", endpointType: .player, vm: SelectEndpointVM.players)
         } label: {
           horizontalTexts(title: "Play music on", detail: vm.playerName)
         }

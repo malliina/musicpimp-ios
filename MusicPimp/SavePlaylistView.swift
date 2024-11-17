@@ -13,6 +13,7 @@ struct SavePlaylistView: View {
       Text("Playlist Name")
       TextField("Name here", text: $name)
         .focused($nameFieldFocused)
+        .pimpTextField()
     }
     .padding()
     .navigationTitle("NEW PLAYLIST")

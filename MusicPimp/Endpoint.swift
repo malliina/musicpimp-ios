@@ -4,7 +4,7 @@ struct EndpointsContainer: Codable {
   let endpoints: [Endpoint]
 }
 
-struct Endpoint: Codable, CustomStringConvertible {
+struct Endpoint: Codable, CustomStringConvertible, Identifiable {
   static let Local = Endpoint(
     id: "local", serverType: ServerType.local, name: "this device", ssl: false,
     address: "localhost", port: 1234, username: "top", password: "secret")

@@ -82,6 +82,7 @@
 		7D45E7B92CDF524C00338D38 /* IAPVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7B82CDF524A00338D38 /* IAPVM.swift */; };
 		7D45E7BB2CDFAF9100338D38 /* IAPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */; };
 		7D45E7BD2CDFB71B00338D38 /* CacheView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7BC2CDFB71900338D38 /* CacheView.swift */; };
+		7D45E7BF2CE11BCD00338D38 /* SelectEndpointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D45E7BE2CE11BC900338D38 /* SelectEndpointView.swift */; };
 		7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557A1D1EC95300F6141D /* RecentEntry.swift */; };
 		7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46557C1D1EC96100F6141D /* PopularEntry.swift */; };
 		7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */; };
@@ -184,6 +185,9 @@
 		7DC8915B1D78AD0600331A4D /* PimpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8915A1D78AD0600331A4D /* PimpViewController.swift */; };
 		7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */; };
 		7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */; };
+		7DD7DA272CE8A7CB00D841A9 /* EditEndpointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */; };
+		7DD7DA292CE8DDC200D841A9 /* SelectEndpointVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA282CE8DDBF00D841A9 /* SelectEndpointVM.swift */; };
+		7DD7DA2B2CE8E76000D841A9 /* EditEndpointVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */; };
 		7DDBE03C27C021080045712A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBE03B27C021080045712A /* WebSocket.swift */; };
 		7DDBE04927C0258F0045712A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04827C0258F0045712A /* SnapKit */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
@@ -293,6 +297,7 @@
 		7D45E7B82CDF524A00338D38 /* IAPVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPVM.swift; sourceTree = "<group>"; };
 		7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPView.swift; sourceTree = "<group>"; };
 		7D45E7BC2CDFB71900338D38 /* CacheView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheView.swift; sourceTree = "<group>"; };
+		7D45E7BE2CE11BC900338D38 /* SelectEndpointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectEndpointView.swift; sourceTree = "<group>"; };
 		7D46557A1D1EC95300F6141D /* RecentEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentEntry.swift; sourceTree = "<group>"; };
 		7D46557C1D1EC96100F6141D /* PopularEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularEntry.swift; sourceTree = "<group>"; };
 		7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAccessoryCell.swift; sourceTree = "<group>"; };
@@ -402,6 +407,9 @@
 		7DC8915A1D78AD0600331A4D /* PimpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpViewController.swift; sourceTree = "<group>"; };
 		7DD4918B1ABDA0F4002FD31C /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		7DD4918D1ABDC358002FD31C /* PimpHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpHttpClient.swift; sourceTree = "<group>"; };
+		7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEndpointView.swift; sourceTree = "<group>"; };
+		7DD7DA282CE8DDBF00D841A9 /* SelectEndpointVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectEndpointVM.swift; sourceTree = "<group>"; };
+		7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEndpointVM.swift; sourceTree = "<group>"; };
 		7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPimp.entitlements; sourceTree = "<group>"; };
 		7DDBE03B27C021080045712A /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
@@ -480,6 +488,8 @@
 				7D4655861D3C135400F6141D /* CustomAccessoryCell.swift */,
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
+				7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */,
+				7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */,
 				7D45E7B82CDF524A00338D38 /* IAPVM.swift */,
@@ -508,6 +518,8 @@
 				7D8754842CCE194500BDCE49 /* Previews.swift */,
 				7D31F7F22CDA88AD0098B77B /* SavedPlaylistsView.swift */,
 				7DBE87342CD68C5A00FA128F /* SavePlaylistView.swift */,
+				7D45E7BE2CE11BC900338D38 /* SelectEndpointView.swift */,
+				7DD7DA282CE8DDBF00D841A9 /* SelectEndpointVM.swift */,
 				7D45E7B22CDBF9FF00338D38 /* SettingsView.swift */,
 				7D45E7B42CDBFA2900338D38 /* SettingsVM.swift */,
 				612731721EB8F9FE0032788A /* SnapCell.swift */,
@@ -973,6 +985,7 @@
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
 				7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */,
 				7D6756D11B08E5ED00BC0CA9 /* EndpointSelectController.swift in Sources */,
+				7DD7DA292CE8DDC200D841A9 /* SelectEndpointVM.swift in Sources */,
 				7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */,
 				61602F361F780BE0009C4C2E /* FlipController.swift in Sources */,
 				7D6066E51AEC0EEA0057A67B /* LocalPlaylist.swift in Sources */,
@@ -1033,6 +1046,7 @@
 				613761331F7049BE0070C9CA /* PlaybackListener.swift in Sources */,
 				7D6287A21D7C38960053BF52 /* PimpTextField.swift in Sources */,
 				7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */,
+				7D45E7BF2CE11BCD00338D38 /* SelectEndpointView.swift in Sources */,
 				7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */,
 				7DB1B3AC1B10CDD00012B8AE /* PimpLibrary.swift in Sources */,
 				7D6287A41D7C5C1B0053BF52 /* PimpView.swift in Sources */,
@@ -1041,6 +1055,7 @@
 				61BE40931F77E70200A0EEC5 /* SideBySidePlayer.swift in Sources */,
 				614221BA2231B5FE00FD1FF3 /* socketModels.swift in Sources */,
 				618ECD3D1EB752870018B309 /* SnapPlaybackFooter.swift in Sources */,
+				7DD7DA272CE8A7CB00D841A9 /* EditEndpointView.swift in Sources */,
 				7DC2FB741D57693600A6FADD /* ConstraintToggle.swift in Sources */,
 				7DB1B3B41B1102C50012B8AE /* PlayerState.swift in Sources */,
 				61AB2C83213C1342009774DC /* PlaylistContentsTable.swift in Sources */,
@@ -1061,6 +1076,7 @@
 				7D288ED21C4435FF00A08109 /* FeedbackTable.swift in Sources */,
 				7DD4918E1ABDC358002FD31C /* PimpHttpClient.swift in Sources */,
 				7D6800E92CCEB54000C4B692 /* common.swift in Sources */,
+				7DD7DA2B2CE8E76000D841A9 /* EditEndpointVM.swift in Sources */,
 				7D6756C71B07CDCA00BC0CA9 /* SourceSettingController.swift in Sources */,
 				7D28D42D1C2F484100B3F62F /* AlarmEndpointController.swift in Sources */,
 				7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */,
