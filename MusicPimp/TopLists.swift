@@ -53,6 +53,7 @@ struct TopListsInternal: View {
       PlaybackFooter(vm: PlaybackVM.shared)
     }
     .background(colors.background)
+    .navigationTitle("HISTORY")
   }
   
   func topView<R, A>(vm: TopData<R>, @ViewBuilder dataView: ([R]) -> A) -> some View where A: View {

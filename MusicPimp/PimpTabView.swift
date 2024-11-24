@@ -90,8 +90,33 @@ struct PhoneTopListRepresentable: UIViewControllerRepresentable {
   typealias UIViewControllerType = TopFlipController
 }
 
+class PimpTabVM: ObservableObject {
+  private var cancellables: Set<Task<(), Never>> = []
+  
+  @Published var library: LibraryType = LibraryManager.sharedInstance.libraryUpdated
+  
+  var isLocalLibrary: Bool {
+    library.isLocal
+  }
+  
+  init() {
+    let task = Task {
+      for await newLibrary in LibraryManager.sharedInstance.$libraryUpdated.values {
+        await on(library: newLibrary)
+      }
+    }
+    cancellables = [ task ]
+  }
+  
+  @MainActor private func on(library: LibraryType) {
+    self.library = library
+  }
+}
+
 struct PimpTabView: View {
   let tabIconFontSize: Int32 = 24
+  
+  @StateObject var vm: PimpTabVM = PimpTabVM()
 
   var body: some View {
     TabView {
@@ -115,9 +140,13 @@ struct PimpTabView: View {
       .tabItem {
         Label("Player", systemImage: "play.circle")
       }
-      TopLists()
-      .tabItem {
-        Label("Playlists", systemImage: "list.star")
+      if !vm.isLocalLibrary {
+        NavigationView {
+          TopLists()
+        }
+        .tabItem {
+          Label("Playlists", systemImage: "list.star")
+        }
       }
       NavigationView {
         SettingsView()

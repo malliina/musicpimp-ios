@@ -7,9 +7,11 @@ open class PimpNotifications {
 
   let settings = PimpSettings.sharedInstance
 
+  let center = UNUserNotificationCenter.current()
+  
   func initNotifications(_ application: UIApplication) {
     // the playback notification is displayed as an alert to the user, so we must call this
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
+    center.requestAuthorization(options: [.alert, .sound, .badge]) {
       (granted, error) in
       if !granted {
         self.log.info("The user did not grant permission to send notifications")
@@ -20,6 +22,34 @@ open class PimpNotifications {
     log.info("Registering with APNs...")
     // registers with APNs
     application.registerForRemoteNotifications()
+  }
+  
+  func request() async -> Bool {
+    let settings = await center.notificationSettings()
+    switch settings.authorizationStatus {
+    case .denied: return false
+    case .notDetermined:
+      do {
+        let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
+        if granted {
+          log.info("Authorization to send notifications granted.")
+        } else {
+          log.info("Authorization to send notifications denied.")
+        }
+        return granted
+      } catch {
+        log.error("Failed to request authorization to send notifications. \(error)")
+        return false
+      }
+    case .authorized:
+      return true
+    case .provisional:
+      return true
+    case .ephemeral:
+      return true
+    default:
+      return false
+    }
   }
 
   func didRegister(_ deviceToken: Data) {
@@ -46,7 +76,6 @@ open class PimpNotifications {
     }
   }
 
-  @MainActor
   private func handleNotificationAsync(_ app: UIApplication, data: [AnyHashable: Any]) async {
     do {
       guard let tag = data["tag"] as? String else {
@@ -66,7 +95,7 @@ open class PimpNotifications {
         } catch {
           log.info("Failed to stop alarm playback. \(error.localizedDescription)")
         }
-        app.applicationIconBadgeNumber = 0
+        await on(badge: 0, app: app)
       } else {
         log.error("Unknown command in notification: '\(cmd)'.")
       }
@@ -77,6 +106,11 @@ open class PimpNotifications {
     } catch {
       log.error("Failed to handle notification, unknown error.")
     }
+  }
+  
+  @MainActor
+  private func on(badge: Int, app: UIApplication) {
+    app.applicationIconBadgeNumber = badge
   }
 
   func onAlarmError(_ error: PimpError) {

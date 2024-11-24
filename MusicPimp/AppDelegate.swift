@@ -40,6 +40,7 @@ struct MusicPimpApp: App {
 
   init() {
     log.info("PimpApp launching")
+    PimpSettings.sharedInstance.initialize()
     initAudio()
     BackgroundDownloader.musicDownloader.setup()
     let _ = PlaylistPrefetcher.shared

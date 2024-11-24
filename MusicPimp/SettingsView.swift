@@ -36,7 +36,7 @@ struct SettingsViewInternal<T: SettingsVMLike>: View {
       .listRowBackground(colors.background)
       Section("ALARM CLOCK") {
         NavigationLink {
-          AlarmsRepresentable()
+          AlarmsView(vm: AlarmsVM.shared)
         } label: {
           Text("Alarms")
         }

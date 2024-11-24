@@ -27,4 +27,21 @@ class LibraryManager: EndpointManager, EndpointSource {
     libraryUpdated = Libraries.fromEndpoint(endpoint)
     log.info("Library set to \(endpoint.name)")
   }
+  
+  func endpoints() -> [Endpoint] {
+    settings.endpoints()
+  }
+  
+  func remove(id: String) async -> [Endpoint] {
+    let active = loadActive()
+    var es = settings.endpoints()
+    if let idx = es.indexOf({$0.id == id}) {
+      let removed = es.remove(at: idx)
+      settings.saveAll(es)
+      if active.id == removed.id {
+        await use(endpoint: Endpoint.Local)
+      }
+    }
+    return es
+  }
 }

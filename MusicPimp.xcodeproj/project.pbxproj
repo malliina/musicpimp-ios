@@ -136,6 +136,9 @@
 		7D74F35C1BFA70E00004506B /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35B1BFA70E00004506B /* Alarm.swift */; };
 		7D74F3601C0CD89D0004506B /* RepeatDaysController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */; };
 		7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */; };
+		7D792F972CF200B2009A5F3B /* WeekDaysSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D792F962CF200AF009A5F3B /* WeekDaysSelector.swift */; };
+		7D792F992CF33A50009A5F3B /* EditAlarmVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D792F982CF33A4E009A5F3B /* EditAlarmVM.swift */; };
+		7D792F9B2CF3731A009A5F3B /* AlarmNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D792F9A2CF37316009A5F3B /* AlarmNotifications.swift */; };
 		7D7978D91C5D50FA002F0775 /* TransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */; };
 		7D8754812CC556FF00BDCE49 /* PlaybackFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */; };
 		7D8754832CCE18E200BDCE49 /* TopLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8754822CCE18DC00BDCE49 /* TopLists.swift */; };
@@ -188,6 +191,10 @@
 		7DD7DA272CE8A7CB00D841A9 /* EditEndpointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */; };
 		7DD7DA292CE8DDC200D841A9 /* SelectEndpointVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA282CE8DDBF00D841A9 /* SelectEndpointVM.swift */; };
 		7DD7DA2B2CE8E76000D841A9 /* EditEndpointVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */; };
+		7DD7DA2D2CEA2D8500D841A9 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA2C2CEA2D8200D841A9 /* AlarmsView.swift */; };
+		7DD7DA2F2CEA2DE000D841A9 /* AlarmsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA2E2CEA2DDE00D841A9 /* AlarmsVM.swift */; };
+		7DD7DA312CEA3A3C00D841A9 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA302CEA3A3A00D841A9 /* PreviewData.swift */; };
+		7DD7DA332CEA509F00D841A9 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA322CEA509C00D841A9 /* EditAlarmView.swift */; };
 		7DDBE03C27C021080045712A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBE03B27C021080045712A /* WebSocket.swift */; };
 		7DDBE04927C0258F0045712A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04827C0258F0045712A /* SnapKit */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
@@ -351,6 +358,9 @@
 		7D74F35B1BFA70E00004506B /* Alarm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		7D74F35F1C0CD89D0004506B /* RepeatDaysController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatDaysController.swift; sourceTree = "<group>"; };
 		7D74F3611C0CDFB70004506B /* EditAlarmTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAlarmTableViewController.swift; sourceTree = "<group>"; };
+		7D792F962CF200AF009A5F3B /* WeekDaysSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDaysSelector.swift; sourceTree = "<group>"; };
+		7D792F982CF33A4E009A5F3B /* EditAlarmVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmVM.swift; sourceTree = "<group>"; };
+		7D792F9A2CF37316009A5F3B /* AlarmNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmNotifications.swift; sourceTree = "<group>"; };
 		7D7978D81C5D50FA002F0775 /* TransactionObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionObserver.swift; sourceTree = "<group>"; };
 		7D8754802CC556FB00BDCE49 /* PlaybackFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackFooter.swift; sourceTree = "<group>"; };
 		7D8754822CCE18DC00BDCE49 /* TopLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLists.swift; sourceTree = "<group>"; };
@@ -410,6 +420,10 @@
 		7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEndpointView.swift; sourceTree = "<group>"; };
 		7DD7DA282CE8DDBF00D841A9 /* SelectEndpointVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectEndpointVM.swift; sourceTree = "<group>"; };
 		7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEndpointVM.swift; sourceTree = "<group>"; };
+		7DD7DA2C2CEA2D8200D841A9 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
+		7DD7DA2E2CEA2DDE00D841A9 /* AlarmsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsVM.swift; sourceTree = "<group>"; };
+		7DD7DA302CEA3A3A00D841A9 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
+		7DD7DA322CEA509C00D841A9 /* EditAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmView.swift; sourceTree = "<group>"; };
 		7DDABE191DCFA49F00BD4934 /* MusicPimp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPimp.entitlements; sourceTree = "<group>"; };
 		7DDBE03B27C021080045712A /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalCommandDelegate.swift; sourceTree = "<group>"; };
@@ -480,6 +494,8 @@
 		7D31A32F1C679B750035E9D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7DD7DA2C2CEA2D8200D841A9 /* AlarmsView.swift */,
+				7DD7DA2E2CEA2DDE00D841A9 /* AlarmsVM.swift */,
 				618ECD3A1EB7522C0018B309 /* BaseView.swift */,
 				7D45E7BC2CDFB71900338D38 /* CacheView.swift */,
 				7D6800E82CCEB53E00C4B692 /* common.swift */,
@@ -489,6 +505,8 @@
 				616DB9A71EC8718900B23BE9 /* DetailedCell.swift */,
 				7DF7F6A8260F277F00C4842B /* DisclosureCell.swift */,
 				7DD7DA262CE8A7C700D841A9 /* EditEndpointView.swift */,
+				7DD7DA322CEA509C00D841A9 /* EditAlarmView.swift */,
+				7D792F982CF33A4E009A5F3B /* EditAlarmVM.swift */,
 				7DD7DA2A2CE8E75D00D841A9 /* EditEndpointVM.swift */,
 				7D31A3301C679B9A0035E9D0 /* FeedbackLabel.swift */,
 				7D45E7BA2CDFAF8F00338D38 /* IAPView.swift */,
@@ -516,6 +534,7 @@
 				7D6800F22CD01DC300C4B692 /* PlayerVM.swift */,
 				7D45E7B62CDF514500338D38 /* PremiumState.swift */,
 				7D8754842CCE194500BDCE49 /* Previews.swift */,
+				7DD7DA302CEA3A3A00D841A9 /* PreviewData.swift */,
 				7D31F7F22CDA88AD0098B77B /* SavedPlaylistsView.swift */,
 				7DBE87342CD68C5A00FA128F /* SavePlaylistView.swift */,
 				7D45E7BE2CE11BC900338D38 /* SelectEndpointView.swift */,
@@ -531,6 +550,7 @@
 				7D8754822CCE18DC00BDCE49 /* TopLists.swift */,
 				7D6800EC2CCECF5100C4B692 /* TopListsVM.swift */,
 				7D6800EE2CCED57200C4B692 /* VolumeView.swift */,
+				7D792F962CF200AF009A5F3B /* WeekDaysSelector.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -623,6 +643,7 @@
 		7DBCD7A31B28B547006460D1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				7D792F9A2CF37316009A5F3B /* AlarmNotifications.swift */,
 				7D28D42C1C2F484100B3F62F /* AlarmEndpointController.swift */,
 				7D74F3591BFA6FFE0004506B /* AlarmsController.swift */,
 				7D31C1511BC9A76000189687 /* BaseMusicController.swift */,
@@ -985,6 +1006,7 @@
 				7D6756CF1B08B26200BC0CA9 /* EndpointManager.swift in Sources */,
 				7D74F3621C0CDFB70004506B /* EditAlarmTableViewController.swift in Sources */,
 				7D6756D11B08E5ED00BC0CA9 /* EndpointSelectController.swift in Sources */,
+				7D792F9B2CF3731A009A5F3B /* AlarmNotifications.swift in Sources */,
 				7DD7DA292CE8DDC200D841A9 /* SelectEndpointVM.swift in Sources */,
 				7D4FF8DF1B4068E400C2D634 /* HTTPExtensions.swift in Sources */,
 				61602F361F780BE0009C4C2E /* FlipController.swift in Sources */,
@@ -1047,6 +1069,7 @@
 				7D6287A21D7C38960053BF52 /* PimpTextField.swift in Sources */,
 				7D6A93351DC3C29D00A24D45 /* DownloadUpdater.swift in Sources */,
 				7D45E7BF2CE11BCD00338D38 /* SelectEndpointView.swift in Sources */,
+				7DD7DA332CEA509F00D841A9 /* EditAlarmView.swift in Sources */,
 				7D4655871D3C135400F6141D /* CustomAccessoryCell.swift in Sources */,
 				7DB1B3AC1B10CDD00012B8AE /* PimpLibrary.swift in Sources */,
 				7D6287A41D7C5C1B0053BF52 /* PimpView.swift in Sources */,
@@ -1061,6 +1084,7 @@
 				61AB2C83213C1342009774DC /* PlaylistContentsTable.swift in Sources */,
 				618ECD3B1EB7522C0018B309 /* BaseView.swift in Sources */,
 				7D46557D1D1EC96100F6141D /* PopularEntry.swift in Sources */,
+				7DD7DA312CEA3A3C00D841A9 /* PreviewData.swift in Sources */,
 				7D6756D71B0A64E100BC0CA9 /* LibraryType.swift in Sources */,
 				7D4FF8DD1B40412200C2D634 /* CoverService.swift in Sources */,
 				7D31C14E1BC9A63500189687 /* SearchResultsController.swift in Sources */,
@@ -1069,6 +1093,7 @@
 				61602F321F780242009C4C2E /* TopListController.swift in Sources */,
 				7D406B0A1BD2950F00EE6609 /* SavedPlaylistsTableViewController.swift in Sources */,
 				7D28D4271C2D8D5200B3F62F /* SearchAlarmTrackController.swift in Sources */,
+				7DD7DA2D2CEA2D8500D841A9 /* AlarmsView.swift in Sources */,
 				7D0CA98C1AF6940B008F72EC /* SettingsController.swift in Sources */,
 				7D6800EB2CCEB7B000C4B692 /* PlaybackControls.swift in Sources */,
 				616DB9A81EC8718900B23BE9 /* DetailedCell.swift in Sources */,
@@ -1082,6 +1107,7 @@
 				7D45E7B32CDBFA0200338D38 /* SettingsView.swift in Sources */,
 				7DBE87352CD68C5D00FA128F /* SavePlaylistView.swift in Sources */,
 				7D6756B31AF94BE100BC0CA9 /* ServerType.swift in Sources */,
+				7D792F992CF33A50009A5F3B /* EditAlarmVM.swift in Sources */,
 				7DB1B3BA1B12013A0012B8AE /* BaseLibrary.swift in Sources */,
 				61602F2E1F77FF08009C4C2E /* SideBySideTopList.swift in Sources */,
 				7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */,
@@ -1104,6 +1130,7 @@
 				7DD4918C1ABDA0F4002FD31C /* HttpClient.swift in Sources */,
 				7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */,
 				61AC37C02087CD74007A491C /* PlaylistPrefetcher.swift in Sources */,
+				7D792F972CF200B2009A5F3B /* WeekDaysSelector.swift in Sources */,
 				7D6756BD1B01094800BC0CA9 /* Persistence.swift in Sources */,
 				61BE408F1F769BFA00A0EEC5 /* PlayQueueController.swift in Sources */,
 				7D46557B1D1EC95300F6141D /* RecentEntry.swift in Sources */,
@@ -1122,6 +1149,7 @@
 				7DB1B3B01B10DBFE0012B8AE /* JsonKeys.swift in Sources */,
 				7DC359651B35E853003B01B6 /* UIImage+FontAwesome.m in Sources */,
 				7D28D42B1C2DD18400B3F62F /* ClockTime.swift in Sources */,
+				7DD7DA2F2CEA2DE000D841A9 /* AlarmsVM.swift in Sources */,
 				33498C3F23EB1089BEEAB8CC /* SnapTrackCell.swift in Sources */,
 				6145018A1F780F6000D8721E /* TopFlipController.swift in Sources */,
 				33498E03D12D1B46D6E4B9BA /* LibraryContainer.swift in Sources */,

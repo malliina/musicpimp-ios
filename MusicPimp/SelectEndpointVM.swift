@@ -7,6 +7,7 @@ class SelectEndpointVM: ObservableObject {
   private var cancellables: Set<AnyCancellable> = []
   
   @Published var savedEndpoints: [Endpoint] = []
+  
   var endpoints: [Endpoint] {
     [Endpoint.Local] + savedEndpoints
   }
@@ -15,7 +16,7 @@ class SelectEndpointVM: ObservableObject {
   
   init(source: EndpointSource) {
     self.source = source
-    settings.$endpointsEvent
+    source.endpointsPublished
       .receive(on: RunLoop.main)
       .assign(to: \.savedEndpoints, on: self)
       .store(in: &cancellables)

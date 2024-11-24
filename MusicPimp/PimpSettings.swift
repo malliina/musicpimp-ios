@@ -14,18 +14,24 @@ open class PimpSettings {
 
   public static let sharedInstance = PimpSettings(impl: UserPrefs.sharedInstance)
 
-  @Published var endpointsEvent: [Endpoint]
+  @Published var endpointsEvent: [Endpoint] = []
   @Published var cacheLimitChanged: StorageSize?
   @Published var cacheEnabledChanged: Bool?
   @Published var defaultAlarmEndpointChanged: Endpoint?
   @Published var notificationPermissionChanged: Bool?
-
+  @Published var token: PushToken?
+  
   let impl: Persistence
 
   init(impl: Persistence) {
     self.impl = impl
     notificationPermissionChanged = nil
+  }
+  
+  func initialize() {
     endpointsEvent = impl.load(PimpSettings.ENDPOINTS, EndpointsContainer.self)?.endpoints ?? []
+    defaultAlarmEndpointChanged = defaultNotificationEndpoint()
+    token = pushToken
   }
 
   var trackHistory: [Date] {
@@ -50,8 +56,9 @@ open class PimpSettings {
       return nil
     }
     set(newToken) {
-      let token = newToken ?? PushToken.noToken
-      let _ = impl.saveString(token.token, key: PimpSettings.PushTokenKey)
+      let pushToken = newToken ?? PushToken.noToken
+      let _ = impl.saveString(pushToken.token, key: PimpSettings.PushTokenKey)
+      token = newToken
     }
   }
 

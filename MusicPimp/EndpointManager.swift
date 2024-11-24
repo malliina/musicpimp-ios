@@ -1,11 +1,16 @@
 import Foundation
 
 protocol EndpointSource {
-  var settings: PimpSettings { get }
-  func endpoints() -> [Endpoint]
+  var endpointsPublished: Published<[Endpoint]>.Publisher { get }
   func loadActive() -> Endpoint
   func use(endpoint: Endpoint) async
   func remove(id: String) async -> [Endpoint]
+}
+
+extension EndpointSource {
+  var endpointsPublished: Published<[Endpoint]>.Publisher {
+    PimpSettings.sharedInstance.$endpointsEvent
+  }
 }
 
 class EndpointManager {

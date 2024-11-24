@@ -37,16 +37,14 @@ class PlayerManager: EndpointManager, EndpointSource {
   func onError(_ error: Error) {
     log.error("Player error \(error)")
   }
-}
-
-extension EndpointSource {
+  
   func endpoints() -> [Endpoint] {
     settings.endpoints()
   }
   
   func remove(id: String) async -> [Endpoint] {
     let active = loadActive()
-    var es = endpoints()
+    var es = settings.endpoints()
     if let idx = es.indexOf({$0.id == id}) {
       let removed = es.remove(at: idx)
       settings.saveAll(es)

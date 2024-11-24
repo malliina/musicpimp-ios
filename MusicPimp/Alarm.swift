@@ -37,6 +37,13 @@ class Alarm {
   }
 }
 
+extension Alarm {
+  var idOrEmpty: String { id?.id ?? "" }
+  var describe: String {
+    "\(track.title) at \(when.time.formatted())"
+  }
+}
+
 class MutableAlarm {
   let id: AlarmID?
   var track: Track?
@@ -96,7 +103,7 @@ class MutableAlarmTime {
   }
 }
 
-enum Day: String, Codable {
+enum Day: String, Codable, CaseIterable, Identifiable {
   case Mon = "mon"
   case Tue = "tue"
   case Wed = "wed"
@@ -104,6 +111,27 @@ enum Day: String, Codable {
   case Fri = "fri"
   case Sat = "sat"
   case Sun = "sun"
+  
+  var id: String { rawValue }
+  
+  var friendly: String {
+    return switch self {
+    case .Mon:
+      "Monday"
+    case .Tue:
+      "Tuesday"
+    case .Wed:
+      "Wednesday"
+    case .Thu:
+      "Thursday"
+    case .Fri:
+      "Friday"
+    case .Sat:
+      "Saturday"
+    case .Sun:
+      "Sunday"
+    }
+  }
 
   static func fromName(_ name: String) -> Day? {
     Day(rawValue: name)

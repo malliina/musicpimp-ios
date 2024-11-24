@@ -30,12 +30,6 @@ struct ThreeLabelRow: View {
       }
     }
   }
-  
-  private func subtitle(_ text: String) -> some View {
-    Text(text)
-      .foregroundColor(colors.subtitles)
-      .font(.system(size: 15))
-  }
 }
 
 struct ThreeLabelRowPreviews: PimpPreviewProvider, PreviewProvider {

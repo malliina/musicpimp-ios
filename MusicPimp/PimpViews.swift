@@ -6,6 +6,12 @@ func fullSizeText(_ text: String) -> some View {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
 }
 
+func subtitle(_ text: String) -> some View {
+  Text(text)
+    .foregroundColor(MusicColors.shared.subtitles)
+    .font(.system(size: 15))
+}
+
 func textField(_ placeholder: String, text: Binding<String>) -> some View {
   TextField(placeholder, text: text)
     .padding(6)

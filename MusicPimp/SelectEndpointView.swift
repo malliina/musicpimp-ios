@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct SelectEndpointView: View {
   let title: String
@@ -78,26 +79,7 @@ struct SelectEndpointView: View {
 }
 
 struct SelectEndpointPreviews: PimpPreviewProvider, PreviewProvider {
-  class Source: EndpointSource {
-    var settings: PimpSettings = PimpSettings.sharedInstance
-    
-    let e1 = Endpoint(id: "id1", serverType: .cloud, name: "Cloud", ssl: true, address: "todo", port: 1111, username: "test", password: "test")
-    let e2 = Endpoint(id: "id2", serverType: .cloud, name: "pi", ssl: true, address: "todo", port: 1111, username: "test", password: "test")
-    
-    func endpoints() -> [Endpoint] {
-      [ Endpoint.Local, e1, e2 ]
-    }
-    
-    func loadActive() -> Endpoint {
-      e1
-    }
-    
-    func use(endpoint: Endpoint) async {}
-    
-    func remove(id: String) async -> [Endpoint] { [] }
-  }
-  
   static var preview: some View {
-    SelectEndpointView(title: "Sources", endpointType: .source, vm: SelectEndpointVM(source: Source()))
+    SelectEndpointView(title: "Sources", endpointType: .source, vm: SelectEndpointVM(source: PreviewSource()))
   }
 }
