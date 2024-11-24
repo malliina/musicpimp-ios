@@ -5,18 +5,6 @@ import StoreKit
 import SwiftUI
 import UIKit
 
-struct AppRepresentable: UIViewControllerRepresentable {
-  func makeUIViewController(context: Context) -> PimpTabBarController {
-    PimpTabBarController()
-  }
-
-  func updateUIViewController(_ uiViewController: PimpTabBarController, context: Context) {
-
-  }
-
-  typealias UIViewControllerType = PimpTabBarController
-}
-
 struct ChangePlayerSuggestion {
   let to: Endpoint
   let title: String

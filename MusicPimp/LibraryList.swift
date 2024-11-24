@@ -48,7 +48,7 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
       let title = folder.folder.title
       ZStack {
         // Hack to navigate programmatically to the IAP page in an .alert action
-        NavigationLink(destination: IAPRepresentable(), isActive: $iapLinkActive) {
+        NavigationLink(destination: IAPView(), isActive: $iapLinkActive) {
           EmptyView()
         }
         folderView(folder: folder)

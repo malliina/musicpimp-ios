@@ -80,7 +80,7 @@ struct TopListsInternal: View {
     case .Loaded(let r):
       ZStack {
         // Hack to navigate programmatically to the IAP page in an .alert action
-        NavigationLink(destination: IAPRepresentable(), isActive: $iapLinkActive) {
+        NavigationLink(destination: IAPView(), isActive: $iapLinkActive) {
           EmptyView()
         }
         dataView(r)
