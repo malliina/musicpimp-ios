@@ -12,7 +12,7 @@ struct SelectEndpointView: View {
   
   var body: some View {
     ZStack {
-      NavigationLink(destination: EditEndpointView(endpoint: editable, endpointType: endpointType), isActive: $isEdit) {
+      NavigationLink(destination: EditEndpointView(editable: editable, endpointType: endpointType), isActive: $isEdit) {
         EmptyView()
       }
       List {
@@ -64,7 +64,7 @@ struct SelectEndpointView: View {
     }
     .sheet(isPresented: $isAddNew) {
       NavigationView {
-        EditEndpointView(endpoint: nil, endpointType: endpointType)
+        EditEndpointView(editable: nil, endpointType: endpointType)
           .toolbar {
             ToolbarItem(placement: .topBarLeading) {
               Button("Cancel") {

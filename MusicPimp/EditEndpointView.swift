@@ -42,29 +42,20 @@ struct EditEndpointView: View {
     Endpoint(id: endpoint?.id ?? randomId(), serverType: segment, name: segment == .cloud ? cloudId : name, ssl: proto == .https, address: address, port: Int(port) ?? 443, username: username, password: password)
   }
   
-  init(endpoint: Endpoint?, endpointType: EndpointType) {
-    self.endpoint = endpoint
+  init(editable: Endpoint?, endpointType: EndpointType) {
+    self.endpoint = editable
     self.endpointType = endpointType
-    if let endpoint = endpoint {
-      segment = endpoint.serverType == .cloud ? .cloud : .musicPimp
-      cloudId = endpoint.name
-      username = endpoint.username
-      password = endpoint.password
-      name = endpoint.name
-      address = endpoint.address
-      port = "\(endpoint.port)"
-      proto = endpoint.ssl ? .https : .http
-    } else {
-      segment = .cloud
-      cloudId = ""
-      username = ""
-      password = ""
-      name = ""
-      address = ""
-      port = "443"
-      proto = .https
-    }
-    activate = true
+    let dummy = Endpoint(id: "unused", serverType: .cloud, name: "", ssl: true, address: "", port: 443, username: "", password: "")
+    let template = editable ?? dummy
+    _segment = State(initialValue: template.serverType == .cloud ? .cloud : .musicPimp)
+    _cloudId = State(initialValue: template.name)
+    _username = State(initialValue: template.username)
+    _password = State(initialValue: template.password)
+    _name = State(initialValue: template.name)
+    _address = State(initialValue: template.address)
+    _port = State(initialValue: "\(template.port)")
+    _proto =  State(initialValue: template.ssl ? .https : .http)
+    _activate = State(initialValue: true)
   }
   
   func randomId() -> String {
@@ -150,6 +141,6 @@ struct EditEndpointView: View {
 
 struct EditEndpointPreviews: PimpPreviewProvider, PreviewProvider {
   static var preview: some View {
-    EditEndpointView(endpoint: nil, endpointType: .source)
+    EditEndpointView(editable: nil, endpointType: .source)
   }
 }
