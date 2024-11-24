@@ -26,7 +26,10 @@ struct LibraryListInternal<T, D>: View where T: LibraryVMLike, D: DownloaderLike
       .task {
         switch vm.appearAction {
         case .Reload:
-          await vm.load()
+          // Sometimes this .task is triggered twice, cancelling the previous one inadvertently, so as a workaround, load in a detached task
+          Task {
+            await vm.load()
+          }
         case .Dismiss:
           dismiss()
         case .Noop:

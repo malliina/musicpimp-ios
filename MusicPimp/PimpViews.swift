@@ -67,6 +67,11 @@ func outcomeView<T, A>(outcome: Outcome<T>, @ViewBuilder render: (T) -> A) -> so
   case .Loaded(let t):
     render(t)
   case .Err(let error):
-    fullSizeText("Error. \(error)")
+    let message = switch error {
+      case let err as PimpError: err.message
+      case _ as URLError: "A network error occurred."
+      default: "An error occurred."
+    }
+    fullSizeText(message)
   }
 }
