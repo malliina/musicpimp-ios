@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -136,7 +136,6 @@
 		7DD7DA312CEA3A3C00D841A9 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA302CEA3A3A00D841A9 /* PreviewData.swift */; };
 		7DD7DA332CEA509F00D841A9 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD7DA322CEA509C00D841A9 /* EditAlarmView.swift */; };
 		7DDBE03C27C021080045712A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBE03B27C021080045712A /* WebSocket.swift */; };
-		7DDBE04927C0258F0045712A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBE04827C0258F0045712A /* SnapKit */; };
 		7DDE246C1B5BE871007D810E /* ExternalCommandDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE246B1B5BE871007D810E /* ExternalCommandDelegate.swift */; };
 		7DDE24761B764C3D007D810E /* BackgroundDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24751B764C3D007D810E /* BackgroundDownloader.swift */; };
 		7DDE24791B7E5B78007D810E /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE24781B7E5B78007D810E /* Throttler.swift */; };
@@ -322,7 +321,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D288ECE1C4430B300A08109 /* StoreKit.framework in Frameworks */,
-				7DDBE04927C0258F0045712A /* SnapKit in Frameworks */,
 				7D0730761B1A0DA3000D416D /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,7 +665,6 @@
 			);
 			name = MusicPimp;
 			packageProductDependencies = (
-				7DDBE04827C0258F0045712A /* SnapKit */,
 			);
 			productName = MusicPimp;
 			productReference = 7DC206A11A1547370032C01D /* MusicPimp.app */;
@@ -704,7 +701,9 @@
 				TargetAttributes = {
 					7DC206A01A1547370032C01D = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = D2T2QC36Z9;
 						LastSwiftMigration = 1020;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -716,6 +715,7 @@
 					};
 					7DC206B71A1547380032C01D = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = D2T2QC36Z9;
 						LastSwiftMigration = 1020;
 						TestTargetID = 7DC206A01A1547370032C01D;
 					};
@@ -732,7 +732,6 @@
 			);
 			mainGroup = 7DC206981A1547370032C01D;
 			packageReferences = (
-				7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 7DC206A21A1547370032C01D /* Products */;
 			projectDirPath = "";
@@ -1032,9 +1031,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1053,10 +1051,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.8.25;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1081,10 +1076,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.8.25;
 				PRODUCT_BUNDLE_IDENTIFIER = org.musicpimp.MusicPimp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1107,11 +1099,7 @@
 				);
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 1.8.25;
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1127,11 +1115,7 @@
 				DEVELOPMENT_TEAM = D2T2QC36Z9;
 				INFOPLIST_FILE = MusicPimpTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 1.8.25;
 				PRODUCT_BUNDLE_IDENTIFIER = "mle.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1171,25 +1155,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				kind = exactVersion;
-				version = 5.0.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		7DDBE04827C0258F0045712A /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7DDBE04727C0258F0045712A /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7DC206991A1547370032C01D /* Project object */;
 }
