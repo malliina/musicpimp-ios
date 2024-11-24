@@ -12,8 +12,8 @@ class IAPVM: NSObject, ObservableObject {
   var premiumProduct: SKProduct? {
     products.find { $0.productIdentifier == PurchaseHelper.PremiumId }
   }
-  
-  @Published var status: String = IAPViewController.loadingText
+  static let loadingText = "Loading products..."
+  @Published var status: String = IAPVM.loadingText
   @Published var showPurchaseViews: Bool = false
   
   private var request: SKProductsRequest? = nil
@@ -44,7 +44,7 @@ class IAPVM: NSObject, ObservableObject {
     if PimpSettings.sharedInstance.isUserPremium {
       await showUserOwnsPremium()
     } else {
-      await on(status: IAPViewController.loadingText)
+      await on(status: IAPVM.loadingText)
       let request = SKProductsRequest(productIdentifiers: [PurchaseHelper.PremiumId])
       self.request = request
       request.delegate = self

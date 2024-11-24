@@ -73,3 +73,7 @@ extension ObservableObject {
   var player: PlayerType { playerManager.playerChanged }
   var settings: PimpSettings { PimpSettings.sharedInstance }
 }
+
+extension Error {
+  var message: String { Util.message(error: self) }
+}
