@@ -72,9 +72,14 @@ class PlayerVM: PlayerVMLike {
       return player.stateEvent
     }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
   }
+  var playlistIndexUpdates: AnyPublisher<Int?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.playlist.indexPublisher
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
   var playlistUpdates: AnyPublisher<Playlist?, Never> {
     playerManager.$playerChanged.flatMap { player in
-      return player.playlist.updates
+      return player.playlist.playlistPublisher
     }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
   }
   
@@ -107,7 +112,12 @@ class PlayerVM: PlayerVMLike {
         await on(playlist: newList)
       }
     }
-    cancellables = [c2, c3, c4, c5, c6]
+    let c7 = Task {
+      for await idx in playlistIndexUpdates.values {
+        await on(playlistIndex: idx)
+      }
+    }
+    cancellables = [c2, c3, c4, c5, c6, c7]
   }
   
   @MainActor
@@ -121,6 +131,12 @@ class PlayerVM: PlayerVMLike {
   @MainActor
   func on(playlist: Playlist?) async {
     await on(update: PlayerMeta(track: state.track, state: state.state, time: state.time, volume: state.volume, playlist: playlist))
+  }
+  @MainActor
+  func on(playlistIndex: Int?) async {
+    if let list = state.playlist {
+      await on(update: PlayerMeta(track: state.track, state: state.state, time: state.time, volume: state.volume, playlist: Playlist(tracks: list.tracks, index: playlistIndex)))
+    }
   }
   @MainActor
   func on(song: Track?) async {
@@ -137,7 +153,7 @@ class PlayerVM: PlayerVMLike {
     if update != state {
       self.state = update
     } else {
-      log.info("Identical state, doing nothing.")
+      //log.info("Identical state, doing nothing.")
     }
   }
   

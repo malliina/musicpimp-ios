@@ -95,7 +95,7 @@ struct TopListsInternal: View {
   
   func topList<T>(entries: [T], vm: TopData<T>, subRight: @escaping (T) -> String) -> some View where T: TopEntry {
     List {
-      ForEach(entries, id: \.entry.idStr) { recent in
+      ForEach(entries, id: \.id) { recent in
         Button {
           Task {
             await controls.play(recent.entry)

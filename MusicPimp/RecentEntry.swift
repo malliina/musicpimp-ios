@@ -13,4 +13,5 @@ struct RecentEntry: Codable, TopEntry {
   let when: UInt64
 
   var timestamp: Date { Date(timeIntervalSince1970: Double(when) / 1000) }
+  var id: String { "\(track.id)-\(when)" }
 }
