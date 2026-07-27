@@ -42,24 +42,102 @@ extension PlayerVMLike {
 class PlayerVM: PlayerVMLike {
   let log = LoggerFactory.shared.vc(PlayerVM.self)
   
-  @Published var state: PlayerMeta = PlayerMeta.empty
+  @Published var state: PlayerMeta
   @Published var savedPlaylists: Outcome<[SavedPlaylist]> = Outcome.Idle
   @Published var activePlaylist: SavedPlaylist? = nil
   @Published var cover: UIImage = CoverService.defaultCover!
 
   var updates: AnyPublisher<PlayerMeta, Never> {
     playerManager.$playerChanged.flatMap { player in
-      player.updates
+      return player.updates
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
+  var trackUpdates: AnyPublisher<Track?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.trackEvent
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
+  var timeUpdates: AnyPublisher<Duration?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.timeEvent
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
+  var volumeUpdates: AnyPublisher<VolumeValue?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.volumeEvent
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
+  var stateUpdates: AnyPublisher<PlaybackState?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.stateEvent
+    }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
+  }
+  var playlistUpdates: AnyPublisher<Playlist?, Never> {
+    playerManager.$playerChanged.flatMap { player in
+      return player.playlist.updates
     }.receive(on: DispatchQueue.main).removeDuplicates().eraseToAnyPublisher()
   }
   
-  private var cancellable: Task<(), Never>? = nil
+  private var cancellables: [Task<(), Never>] = []
   
   init() {
-    cancellable = Task {
-      for await meta in updates.values {
-        await on(update: meta)
+    state = PlayerMeta.empty
+    let c2 = Task {
+      for await time in timeUpdates.values {
+        await on(time: time)
       }
+    }
+    let c3 = Task {
+      for await t in trackUpdates.values {
+        await on(song: t)
+      }
+    }
+    let c4 = Task {
+      for await volume in volumeUpdates.values {
+        await on(volume: volume)
+      }
+    }
+    let c5 = Task {
+      for await newState in stateUpdates.values {
+        await on(playState: newState)
+      }
+    }
+    let c6 = Task {
+      for await newList in playlistUpdates.values {
+        await on(playlist: newList)
+      }
+    }
+    cancellables = [c2, c3, c4, c5, c6]
+  }
+  
+  @MainActor
+  func on(time: Duration?) async {
+    await on(update: PlayerMeta(track: state.track, state: state.state, time: time, volume: state.volume, playlist: state.playlist))
+  }
+  @MainActor
+  func on(volume: VolumeValue?) async {
+    await on(update: PlayerMeta(track: state.track, state: state.state, time: state.time, volume: volume, playlist: state.playlist))
+  }
+  @MainActor
+  func on(playlist: Playlist?) async {
+    await on(update: PlayerMeta(track: state.track, state: state.state, time: state.time, volume: state.volume, playlist: playlist))
+  }
+  @MainActor
+  func on(song: Track?) async {
+    await on(update: PlayerMeta(track: song, state: state.state, time: state.time, volume: state.volume, playlist: state.playlist))
+  }
+  @MainActor
+  func on(playState: PlaybackState?) async {
+    await on(update: PlayerMeta(track: state.track, state: playState, time: state.time, volume: state.volume, playlist: state.playlist))
+  }
+  
+  @MainActor
+  func on(update: PlayerMeta) async {
+    //log.info("State update to \(update) from \(state)")
+    if update != state {
+      self.state = update
+    } else {
+      log.info("Identical state, doing nothing.")
     }
   }
   
@@ -85,16 +163,7 @@ class PlayerVM: PlayerVMLike {
     let _ = await player.seek(to)
   }
   
-  @MainActor
-  func on(update: PlayerMeta) async {
-//    log.info("State update \(update)")
-    if update != state {
-      state = update
-    }
-  }
-  
   func on(track: Track?) async {
-    log.info("Track changed to \(track?.title ?? "no track")")
     var image = CoverService.defaultCover!
     if let track = track {
       let result = await CoverService.sharedInstance.cover(track.artist, album: track.album)

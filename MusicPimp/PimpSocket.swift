@@ -40,6 +40,7 @@ class PimpSocket: PlayerSocket {
   }
 
   override func on(message: String) async {
+    //log.info("Got \(message), parsing...")
     guard let data = message.data(using: String.Encoding.utf8, allowLossyConversion: false) else {
       log.error("Cannot read message data from: '\(message)'.")
       return
@@ -49,30 +50,30 @@ class PimpSocket: PlayerSocket {
       let event = try decoder.decode(KeyedEvent.self, from: data)
       switch event.event {
       case JsonKeys.TIME_UPDATED:
-        delegate.onTimeUpdated(try decoder.decode(TimeUpdated.self, from: data).position)
+        await delegate.onTimeUpdated(try decoder.decode(TimeUpdated.self, from: data).position)
         break
       case JsonKeys.TRACK_CHANGED:
-        delegate.onTrackChanged(try decoder.decode(TrackChanged.self, from: data).track)
+        await delegate.onTrackChanged(try decoder.decode(TrackChanged.self, from: data).track)
         break
       case JsonKeys.MUTE_TOGGLED:
-        delegate.onMuteToggled(try decoder.decode(MuteToggled.self, from: data).mute)
+        await delegate.onMuteToggled(try decoder.decode(MuteToggled.self, from: data).mute)
         break
       case JsonKeys.VOLUME_CHANGED:
-        delegate.onVolumeChanged(
+        await delegate.onVolumeChanged(
           VolumeValue(volume: try decoder.decode(VolumeChanged.self, from: data).volume))
         break
       case JsonKeys.PLAYSTATE_CHANGED:
-        delegate.onStateChanged(try decoder.decode(PlayStateChanged.self, from: data).playbackState)
+        await delegate.onStateChanged(try decoder.decode(PlayStateChanged.self, from: data).playbackState)
         break
       case JsonKeys.INDEX_CHANGED:
         let idx = try decoder.decode(IndexChanged.self, from: data).index
-        delegate.onIndexChanged(idx >= 0 ? idx : nil)
+        await delegate.onIndexChanged(idx >= 0 ? idx : nil)
         break
       case JsonKeys.PLAYLIST_MODIFIED:
-        delegate.onPlaylistModified(try decoder.decode(PlaylistModified.self, from: data).playlist)
+        await delegate.onPlaylistModified(try decoder.decode(PlaylistModified.self, from: data).playlist)
         break
       case JsonKeys.STATUS:
-        delegate.onState(try decoder.decode(PlayerStateJson.self, from: data))
+        await delegate.onState(try decoder.decode(PlayerStateJson.self, from: data))
         break
       case JsonKeys.WELCOME:
         if let err = await send(SimpleCommand(cmd: JsonKeys.STATUS)) {

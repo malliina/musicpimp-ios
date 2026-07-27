@@ -1,20 +1,21 @@
 import Foundation
 
 protocol PlayerEventDelegate {
+  @MainActor
   func onTimeUpdated(_ pos: Duration)
-
+  @MainActor
   func onTrackChanged(_ track: Track?)
-
+  @MainActor
   func onMuteToggled(_ mute: Bool)
-
+  @MainActor
   func onVolumeChanged(_ volume: VolumeValue)
-
+  @MainActor
   func onStateChanged(_ state: PlaybackState)
-
+  @MainActor
   func onIndexChanged(_ index: Int?)
-
+  @MainActor
   func onPlaylistModified(_ tracks: [Track])
-
+  @MainActor
   func onState(_ state: PlayerStateJson)
 }
 

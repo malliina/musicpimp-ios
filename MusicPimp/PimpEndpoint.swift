@@ -12,7 +12,7 @@ class PimpEndpoint: BasePlayer {
 
   func postDict<T: Encodable>(_ json: T) async {
     do {
-      let t = try await client.pimpPost(Endpoints.PLAYBACK, payload: json)
+      let _ = try await client.pimpPost(Endpoints.PLAYBACK, payload: json)
     } catch {
       log.info("Player error: \(error.message)")
     }

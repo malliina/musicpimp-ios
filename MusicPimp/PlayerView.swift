@@ -26,6 +26,7 @@ struct PlayerViewInternal<T>: View where T: PlayerVMLike {
   @State var playbackPosition: Float = 0
   @State var isSeeking: Bool = false
   @State var seekEnded: Date = Date.now.addingTimeInterval(-1)
+  @State var latestTrack: Track? = nil
 
   var positionText: String { playbackPosition.description }
   var position: Duration { playbackPosition.seconds ?? Duration.Zero }
@@ -48,7 +49,7 @@ struct PlayerViewInternal<T>: View where T: PlayerVMLike {
             .aspectRatio(contentMode: .fit)
             .padding(.vertical, 12)
           Spacer()
-          Text(vm.track?.title ?? "No track")
+          Text(vm.state.track?.title ?? "No track")
             .font(.system(size: 28))
           if let track = vm.track {
             Spacer()
@@ -190,15 +191,17 @@ struct PlayerViewInternal<T>: View where T: PlayerVMLike {
       }
       PlaybackFooter(vm: PlaybackVM.shared)
     }
-    .onChange(of: vm.track) { track in
-      Task {
-        await vm.on(track: track)
-      }
-    }
     .onReceive(vm.updates) { meta in
       let timeHasPassed = Date.now.timeIntervalSince(seekEnded) >= 1
       if !isSeeking && timeHasPassed {
         playbackPosition = meta.time?.secondsFloat ?? 0
+      }
+      if meta.track?.id != latestTrack?.id {
+        latestTrack = meta.track
+        //log.info("Track updated.")
+        Task {
+          await vm.on(track: meta.track)
+        }
       }
     }
     .navigationTitle("PLAYER")

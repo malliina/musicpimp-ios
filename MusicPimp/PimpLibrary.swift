@@ -64,7 +64,7 @@ open class PimpLibrary: BaseLibrary {
   }
 
   override func deletePlaylist(_ id: PlaylistID) async throws -> HttpResponse {
-    try await client.pimpPostEmpty("\(Endpoints.PLAYLIST_DELETE)/\(id.id)")
+    try await client.pimpPost("\(Endpoints.PLAYLIST_DELETE)/\(id.id)", payload: Dummy(value: "dummy"))
   }
 
   override func search(_ term: String) async throws -> [Track] {

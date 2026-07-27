@@ -1,4 +1,5 @@
 class EditEndpointVM: ObservableObject {
+  let log = LoggerFactory.shared.vc(EditEndpointVM.self)
   @Published var testStatus: String = ""
   
   func test(endpoint: Endpoint) async {

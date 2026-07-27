@@ -39,7 +39,12 @@ struct EditEndpointView: View {
   }
   
   var currentInput: Endpoint {
-    Endpoint(id: endpoint?.id ?? randomId(), serverType: segment, name: segment == .cloud ? cloudId : name, ssl: proto == .https, address: address, port: Int(port) ?? 443, username: username, password: password)
+    switch segment {
+    case .cloud:
+      Endpoint.cloud(id: endpoint?.id ?? randomId(), cloudID: cloudId, username: username, password: password)
+    default:
+      Endpoint(id: endpoint?.id ?? randomId(), serverType: segment, name: segment == .cloud ? cloudId : name, ssl: proto == .https, address: address, port: Int(port) ?? 443, username: username, password: password)
+    }
   }
   
   init(editable: Endpoint?, endpointType: EndpointType) {

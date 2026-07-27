@@ -43,7 +43,6 @@ struct MusicPimpApp: App {
         .ignoresSafeArea(.all)
         .onChange(of: scenePhase) { phase in
           if phase == .active {
-            log.info("Active!")
 //            changePlayerSuggestion = players.playerChangeSuggestionIfNecessary()
 //            suggestPlayerChange = changePlayerSuggestion != nil
             delegate.connectToPlayer()
@@ -51,7 +50,6 @@ struct MusicPimpApp: App {
           if phase == .background {
             PlayerManager.sharedInstance.playerChanged.close()
             PimpSettings.sharedInstance.trackHistory = Limiter.sharedInstance.history
-            log.info("Entered background")
           }
         }
         .alert(

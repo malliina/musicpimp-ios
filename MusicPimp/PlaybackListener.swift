@@ -135,6 +135,7 @@ class PlaybackListener: BaseListener {
   }
 
   private func subscribe(to newPlayer: PlayerType) -> [Task<(), Never>] {
+    log.info("Subscribing to \(newPlayer.id)...")
     let t1 = Task {
       for await playlist in player.playlist.playlistPublisher.nonNilValues() {
         playlists?.onNewPlaylist(playlist)

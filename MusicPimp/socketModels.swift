@@ -37,3 +37,7 @@ struct IndexChanged: Codable {
 struct PlaylistModified: Codable {
   let playlist: [Track]
 }
+
+struct Dummy: Codable {
+  let value: String
+}

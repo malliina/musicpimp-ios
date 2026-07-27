@@ -75,11 +75,13 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     await socket.send(SimpleCommand(cmd: cmd))
   }
 
+  @MainActor
   func onTimeUpdated(_ pos: Duration) {
     currentState.position = pos
     time = pos
   }
 
+  @MainActor
   func onTrackChanged(_ track: Track?) {
     currentState.track = track
     self.track = track
@@ -88,31 +90,37 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     }
   }
 
+  @MainActor
   func onMuteToggled(_ mute: Bool) {
     currentState.mute = mute
     muteEvent = mute
   }
 
+  @MainActor
   func onVolumeChanged(_ volume: VolumeValue) {
     currentState.volume = volume
     self.volume = volume
   }
 
+  @MainActor
   func onStateChanged(_ state: PlaybackState) {
     currentState.state = state
     self.state = state
   }
 
+  @MainActor
   func onIndexChanged(_ index: Int?) {
     currentState.playlistIndex = index
     playlist.indexEvent = index
   }
 
+  @MainActor
   func onPlaylistModified(_ tracks: [Track]) {
     currentState.playlist = tracks
     playlist.playlistEvent = Playlist(tracks: tracks, index: currentState.playlistIndex)
   }
 
+  @MainActor
   func onState(_ state: PlayerStateJson) {
     currentState = state.mutable()
     onPlaylistModified(state.playlist)
@@ -122,5 +130,6 @@ class PimpPlayer: PimpEndpoint, PlayerType, PlayerEventDelegate {
     onVolumeChanged(state.volume)
     onTimeUpdated(state.position)
     onStateChanged(state.playbackState)
+    //log.info("Title in state is \(currentState.track?.title ?? "none") in track \(track?.title ?? "none")")
   }
 }
