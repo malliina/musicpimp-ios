@@ -98,6 +98,37 @@
 		7D9E48A71AD972A800D5CDDF /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A61AD972A800D5CDDF /* Log.swift */; };
 		7D9E48AA1ADA78D900D5CDDF /* LocalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */; };
 		7D9E48AC1ADA7FFC00D5CDDF /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */; };
+		7DA6F55F30179581002835AF /* email_address.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54830179581002835AF /* email_address.txt */; };
+		7DA6F56030179581002835AF /* report.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55D30179581002835AF /* report.xml */; };
+		7DA6F56130179581002835AF /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55630179581002835AF /* README.txt */; };
+		7DA6F56230179581002835AF /* first_name.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54930179581002835AF /* first_name.txt */; };
+		7DA6F56330179581002835AF /* demo_user.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54730179581002835AF /* demo_user.txt */; };
+		7DA6F56430179581002835AF /* last_name.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54A30179581002835AF /* last_name.txt */; };
+		7DA6F56530179581002835AF /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55A30179581002835AF /* Fastfile */; };
+		7DA6F56630179581002835AF /* apple_tv_privacy_policy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F53B30179581002835AF /* apple_tv_privacy_policy.txt */; };
+		7DA6F56730179581002835AF /* secondary_second_sub_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55430179581002835AF /* secondary_second_sub_category.txt */; };
+		7DA6F56830179581002835AF /* name.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F53F30179581002835AF /* name.txt */; };
+		7DA6F56930179581002835AF /* privacy_url.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54030179581002835AF /* privacy_url.txt */; };
+		7DA6F56A30179581002835AF /* support_url.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54430179581002835AF /* support_url.txt */; };
+		7DA6F56B30179581002835AF /* keywords.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F53D30179581002835AF /* keywords.txt */; };
+		7DA6F56C30179581002835AF /* promotional_text.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54130179581002835AF /* promotional_text.txt */; };
+		7DA6F56D30179581002835AF /* copyright.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54E30179581002835AF /* copyright.txt */; };
+		7DA6F56E30179581002835AF /* primary_second_sub_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55130179581002835AF /* primary_second_sub_category.txt */; };
+		7DA6F56F30179581002835AF /* marketing_url.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F53E30179581002835AF /* marketing_url.txt */; };
+		7DA6F57030179581002835AF /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54B30179581002835AF /* notes.txt */; };
+		7DA6F57130179581002835AF /* demo_password.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54630179581002835AF /* demo_password.txt */; };
+		7DA6F57230179581002835AF /* Pluginfile in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55B30179581002835AF /* Pluginfile */; };
+		7DA6F57330179581002835AF /* primary_first_sub_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55030179581002835AF /* primary_first_sub_category.txt */; };
+		7DA6F57430179581002835AF /* secondary_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55230179581002835AF /* secondary_category.txt */; };
+		7DA6F57530179581002835AF /* phone_number.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54C30179581002835AF /* phone_number.txt */; };
+		7DA6F57630179581002835AF /* Appfile in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55830179581002835AF /* Appfile */; };
+		7DA6F57730179581002835AF /* description.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F53C30179581002835AF /* description.txt */; };
+		7DA6F57830179581002835AF /* Deliverfile in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55930179581002835AF /* Deliverfile */; };
+		7DA6F57930179581002835AF /* primary_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54F30179581002835AF /* primary_category.txt */; };
+		7DA6F57A30179581002835AF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55C30179581002835AF /* README.md */; };
+		7DA6F57B30179581002835AF /* subtitle.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54330179581002835AF /* subtitle.txt */; };
+		7DA6F57C30179581002835AF /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F54230179581002835AF /* release_notes.txt */; };
+		7DA6F57D30179581002835AF /* secondary_first_sub_category.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DA6F55330179581002835AF /* secondary_first_sub_category.txt */; };
 		7DB1B3A41B0E44BE0012B8AE /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */; };
 		7DB1B3A61B108CD60012B8AE /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3A51B108CD60012B8AE /* Files.swift */; };
 		7DB1B3A91B10C0990012B8AE /* PimpPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB1B3A81B10C0990012B8AE /* PimpPlayer.swift */; };
@@ -256,6 +287,37 @@
 		7D9E48A61AD972A800D5CDDF /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		7D9E48A91ADA78D900D5CDDF /* LocalPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPlayer.swift; sourceTree = "<group>"; };
 		7D9E48AB1ADA7FFC00D5CDDF /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		7DA6F53B30179581002835AF /* apple_tv_privacy_policy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = apple_tv_privacy_policy.txt; sourceTree = "<group>"; };
+		7DA6F53C30179581002835AF /* description.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = description.txt; sourceTree = "<group>"; };
+		7DA6F53D30179581002835AF /* keywords.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = keywords.txt; sourceTree = "<group>"; };
+		7DA6F53E30179581002835AF /* marketing_url.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = marketing_url.txt; sourceTree = "<group>"; };
+		7DA6F53F30179581002835AF /* name.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = name.txt; sourceTree = "<group>"; };
+		7DA6F54030179581002835AF /* privacy_url.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = privacy_url.txt; sourceTree = "<group>"; };
+		7DA6F54130179581002835AF /* promotional_text.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = promotional_text.txt; sourceTree = "<group>"; };
+		7DA6F54230179581002835AF /* release_notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
+		7DA6F54330179581002835AF /* subtitle.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = subtitle.txt; sourceTree = "<group>"; };
+		7DA6F54430179581002835AF /* support_url.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = support_url.txt; sourceTree = "<group>"; };
+		7DA6F54630179581002835AF /* demo_password.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = demo_password.txt; sourceTree = "<group>"; };
+		7DA6F54730179581002835AF /* demo_user.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = demo_user.txt; sourceTree = "<group>"; };
+		7DA6F54830179581002835AF /* email_address.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = email_address.txt; sourceTree = "<group>"; };
+		7DA6F54930179581002835AF /* first_name.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = first_name.txt; sourceTree = "<group>"; };
+		7DA6F54A30179581002835AF /* last_name.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = last_name.txt; sourceTree = "<group>"; };
+		7DA6F54B30179581002835AF /* notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
+		7DA6F54C30179581002835AF /* phone_number.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = phone_number.txt; sourceTree = "<group>"; };
+		7DA6F54E30179581002835AF /* copyright.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = copyright.txt; sourceTree = "<group>"; };
+		7DA6F54F30179581002835AF /* primary_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = primary_category.txt; sourceTree = "<group>"; };
+		7DA6F55030179581002835AF /* primary_first_sub_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = primary_first_sub_category.txt; sourceTree = "<group>"; };
+		7DA6F55130179581002835AF /* primary_second_sub_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = primary_second_sub_category.txt; sourceTree = "<group>"; };
+		7DA6F55230179581002835AF /* secondary_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = secondary_category.txt; sourceTree = "<group>"; };
+		7DA6F55330179581002835AF /* secondary_first_sub_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = secondary_first_sub_category.txt; sourceTree = "<group>"; };
+		7DA6F55430179581002835AF /* secondary_second_sub_category.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = secondary_second_sub_category.txt; sourceTree = "<group>"; };
+		7DA6F55630179581002835AF /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		7DA6F55830179581002835AF /* Appfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
+		7DA6F55930179581002835AF /* Deliverfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deliverfile; sourceTree = "<group>"; };
+		7DA6F55A30179581002835AF /* Fastfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; };
+		7DA6F55B30179581002835AF /* Pluginfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pluginfile; sourceTree = "<group>"; };
+		7DA6F55C30179581002835AF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7DA6F55D30179581002835AF /* report.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = report.xml; sourceTree = "<group>"; };
 		7DB1B3A31B0E44BE0012B8AE /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		7DB1B3A51B108CD60012B8AE /* Files.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
 		7DB1B3A81B10C0990012B8AE /* PimpPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PimpPlayer.swift; sourceTree = "<group>"; };
@@ -449,6 +511,76 @@
 			name = Audio;
 			sourceTree = "<group>";
 		};
+		7DA6F54530179581002835AF /* en-US */ = {
+			isa = PBXGroup;
+			children = (
+				7DA6F53B30179581002835AF /* apple_tv_privacy_policy.txt */,
+				7DA6F53C30179581002835AF /* description.txt */,
+				7DA6F53D30179581002835AF /* keywords.txt */,
+				7DA6F53E30179581002835AF /* marketing_url.txt */,
+				7DA6F53F30179581002835AF /* name.txt */,
+				7DA6F54030179581002835AF /* privacy_url.txt */,
+				7DA6F54130179581002835AF /* promotional_text.txt */,
+				7DA6F54230179581002835AF /* release_notes.txt */,
+				7DA6F54330179581002835AF /* subtitle.txt */,
+				7DA6F54430179581002835AF /* support_url.txt */,
+			);
+			path = "en-US";
+			sourceTree = "<group>";
+		};
+		7DA6F54D30179581002835AF /* review_information */ = {
+			isa = PBXGroup;
+			children = (
+				7DA6F54630179581002835AF /* demo_password.txt */,
+				7DA6F54730179581002835AF /* demo_user.txt */,
+				7DA6F54830179581002835AF /* email_address.txt */,
+				7DA6F54930179581002835AF /* first_name.txt */,
+				7DA6F54A30179581002835AF /* last_name.txt */,
+				7DA6F54B30179581002835AF /* notes.txt */,
+				7DA6F54C30179581002835AF /* phone_number.txt */,
+			);
+			path = review_information;
+			sourceTree = "<group>";
+		};
+		7DA6F55530179581002835AF /* metadata */ = {
+			isa = PBXGroup;
+			children = (
+				7DA6F54530179581002835AF /* en-US */,
+				7DA6F54D30179581002835AF /* review_information */,
+				7DA6F54E30179581002835AF /* copyright.txt */,
+				7DA6F54F30179581002835AF /* primary_category.txt */,
+				7DA6F55030179581002835AF /* primary_first_sub_category.txt */,
+				7DA6F55130179581002835AF /* primary_second_sub_category.txt */,
+				7DA6F55230179581002835AF /* secondary_category.txt */,
+				7DA6F55330179581002835AF /* secondary_first_sub_category.txt */,
+				7DA6F55430179581002835AF /* secondary_second_sub_category.txt */,
+			);
+			path = metadata;
+			sourceTree = "<group>";
+		};
+		7DA6F55730179581002835AF /* screenshots */ = {
+			isa = PBXGroup;
+			children = (
+				7DA6F55630179581002835AF /* README.txt */,
+			);
+			path = screenshots;
+			sourceTree = "<group>";
+		};
+		7DA6F55E30179581002835AF /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				7DA6F55530179581002835AF /* metadata */,
+				7DA6F55730179581002835AF /* screenshots */,
+				7DA6F55830179581002835AF /* Appfile */,
+				7DA6F55930179581002835AF /* Deliverfile */,
+				7DA6F55A30179581002835AF /* Fastfile */,
+				7DA6F55B30179581002835AF /* Pluginfile */,
+				7DA6F55C30179581002835AF /* README.md */,
+				7DA6F55D30179581002835AF /* report.xml */,
+			);
+			path = fastlane;
+			sourceTree = "<group>";
+		};
 		7DB1B3A71B10C08A0012B8AE /* Pimp */ = {
 			isa = PBXGroup;
 			children = (
@@ -508,6 +640,7 @@
 		7DC206981A1547370032C01D = {
 			isa = PBXGroup;
 			children = (
+				7DA6F55E30179581002835AF /* fastlane */,
 				B0DA198A2B8A74190092C070 /* README.md */,
 				B07DC3DA2A9FB85C007A3BA8 /* .github */,
 				1A6A61E06A765CCD8765B423 /* .gitignore */,
@@ -754,6 +887,37 @@
 				7DC206B01A1547370032C01D /* Images.xcassets in Resources */,
 				618A5A4B1F73010F00AB45CA /* pimp-1024.png in Resources */,
 				7D2C77991B933A810066A7B5 /* more-50.png in Resources */,
+				7DA6F55F30179581002835AF /* email_address.txt in Resources */,
+				7DA6F56030179581002835AF /* report.xml in Resources */,
+				7DA6F56130179581002835AF /* README.txt in Resources */,
+				7DA6F56230179581002835AF /* first_name.txt in Resources */,
+				7DA6F56330179581002835AF /* demo_user.txt in Resources */,
+				7DA6F56430179581002835AF /* last_name.txt in Resources */,
+				7DA6F56530179581002835AF /* Fastfile in Resources */,
+				7DA6F56630179581002835AF /* apple_tv_privacy_policy.txt in Resources */,
+				7DA6F56730179581002835AF /* secondary_second_sub_category.txt in Resources */,
+				7DA6F56830179581002835AF /* name.txt in Resources */,
+				7DA6F56930179581002835AF /* privacy_url.txt in Resources */,
+				7DA6F56A30179581002835AF /* support_url.txt in Resources */,
+				7DA6F56B30179581002835AF /* keywords.txt in Resources */,
+				7DA6F56C30179581002835AF /* promotional_text.txt in Resources */,
+				7DA6F56D30179581002835AF /* copyright.txt in Resources */,
+				7DA6F56E30179581002835AF /* primary_second_sub_category.txt in Resources */,
+				7DA6F56F30179581002835AF /* marketing_url.txt in Resources */,
+				7DA6F57030179581002835AF /* notes.txt in Resources */,
+				7DA6F57130179581002835AF /* demo_password.txt in Resources */,
+				7DA6F57230179581002835AF /* Pluginfile in Resources */,
+				7DA6F57330179581002835AF /* primary_first_sub_category.txt in Resources */,
+				7DA6F57430179581002835AF /* secondary_category.txt in Resources */,
+				7DA6F57530179581002835AF /* phone_number.txt in Resources */,
+				7DA6F57630179581002835AF /* Appfile in Resources */,
+				7DA6F57730179581002835AF /* description.txt in Resources */,
+				7DA6F57830179581002835AF /* Deliverfile in Resources */,
+				7DA6F57930179581002835AF /* primary_category.txt in Resources */,
+				7DA6F57A30179581002835AF /* README.md in Resources */,
+				7DA6F57B30179581002835AF /* subtitle.txt in Resources */,
+				7DA6F57C30179581002835AF /* release_notes.txt in Resources */,
+				7DA6F57D30179581002835AF /* secondary_first_sub_category.txt in Resources */,
 				7D045D67265845FE00B92EE8 /* chevron-right-100.png in Resources */,
 				7DC891511D623E8100331A4D /* pimp-4096.png in Resources */,
 				7DC359571B35BE3B003B01B6 /* FontAwesome.ttf in Resources */,
